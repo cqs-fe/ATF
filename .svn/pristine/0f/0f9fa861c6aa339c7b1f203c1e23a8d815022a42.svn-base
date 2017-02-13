@@ -1,0 +1,73 @@
+@import 'mixins.scss';
+
+.alert-out {
+  z-index: 1999;
+
+  .alert-body {
+    z-index: 99;
+    position: fixed;
+    background: #fff;
+    min-height: 5rem;
+    width: 16rem;
+    left: 50%;
+    top: 50%;
+    @include transform-scale(-50%, -50%, 1.185);
+    @include transition(0.5s);
+    border-radius: 0.5rem;
+    opacity: 0;
+
+    .alert-head {
+      text-align: center;
+      padding-top: 0.5rem;
+      font-size: 0.86rem;
+    }
+    .alert-message {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      text-align: center;
+    }
+    .alert-foot {
+      text-align: center;
+      border-top: 1px solid #f4f4f4;
+
+      span {
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        padding: 0.8rem 0;
+      }
+      .flex-item {
+        line-height: normal;
+        border-right: 1px solid #f4f4f4;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+  .alert-mask {
+    z-index: 98;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.4);
+  }
+  &.alert-show .alert-body {
+    @include transform-scale(-50%, -50%, 1);
+    opacity: 1;
+  }
+  &.alert-hide {
+    .alert-body {
+      @include transform-scale(-50%, -50%, 0.815);
+      opacity: 0;
+    }
+    .alert-mask {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,63 @@
+.top-btn{
+	margin-bottom: 15px;
+}
+.btn-white {
+    border-color: #CCC;
+    color: #444;
+    background-color: #FFF;
+}
+.btn-white:hover{
+	background-color: #ddd;
+}
+.btn-white>i{
+	color: #FF6C60;
+}
+.dataTables_paginate.paging_bootstrap.pagination {
+    float: right;
+    margin-right: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.filter-show{
+	margin-top: 10px;
+	margin-left: 18px;
+}
+.form-horizontal .control-label {
+    font-weight: 300;
+    font-size: 14px;
+    text-align: right;
+}
+.filter{
+	margin-top: 5px;
+}
+.btn-filter{
+	border-color: #CCC;
+    color: #444;
+    background-color: #FFF;
+    margin-left: 30px;
+}
+.btn-filter:hover{
+	background-color: #41cac0;
+	border-color: #41cac0;
+	color: #fff;
+}
+.filter-checkbox>label{
+	margin-left: 15px;
+}
+.form-control {
+    border: 1px solid #ccc;
+    box-shadow: none;
+    color: #555;
+}
+#show{
+    display: none;
+}
+#hide{
+    display: inline-block;
+}
+.collapsed #show{
+    display: inline-block;
+}
+.collapsed #hide{
+    display: none;
+}

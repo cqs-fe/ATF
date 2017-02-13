@@ -1,0 +1,63 @@
+@import 'mixins.scss';
+.btn{
+	display: block;
+	background: #fc4548;
+	color: #fff;
+	height: 2.8rem;
+	line-height: 2.8rem;
+	width: 92.5%;
+	margin: 0 auto;
+	cursor: pointer;
+	border-radius: 0.2rem;
+	@include transition(0.3s);
+	text-align: center;
+	overflow: hidden;
+}
+.btn-middle{
+	width: 60%;
+}
+.btn-small{
+	width: 5rem;
+	height: 2.2rem;
+	line-height: 2.2rem;
+	font-size: 0.9rem;
+}
+.btn-success{
+	background: #11cd6e;
+}
+.btn-disabled{
+	background: #ccc;
+}
+.btn:active{
+	background: #c93239;
+}
+.btn-success:active{
+	background: #13af60;
+}
+.btn-disabled:active{
+	background: #ccc;
+}
+.btn-disabled.btn:hover{
+	cursor: not-allowed;
+}
+.btn-disabled.btn:hover:after{
+	opacity:0;
+}
+.btn:after{
+	content:' ';
+	width: 100%;
+	padding-bottom: 100%;
+	background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+	top: 50%;
+	opacity: 0;
+	@include transition(0.5s);
+	@include transform-scale(-50%, -50%, 0.2);
+}
+.btn:hover:after{
+	opacity:1;
+	background: rgba(0, 0, 0, 0.15);
+	@include transform-scale(-50%, -50%, 2);
+}

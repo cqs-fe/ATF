@@ -1,0 +1,33 @@
+.color-red{
+	color: #fc4548!important;
+}
+.color-blue{
+	color: #66ccff!important;
+}
+.color-orange{
+	color: #f56218!important;
+}
+.color-green{
+	color: #11cd6e!important;
+}
+.color-96{
+	color: #969696!important;
+}
+.color-c8{
+	color: #c8c8c8!important;
+}
+.color-fff{
+	color: #fff!important;
+}
+.bgcolor-red{
+	background-color: #fc4548!important;
+}
+.bgcolor-blue{
+	background-color: #66ccff!important;
+}
+.bgcolor-orange{
+	background-color: #f56218!important;
+}
+.bgcolor-green{
+	background-color: #11cd6e!important;
+}
