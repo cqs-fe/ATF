@@ -11,7 +11,8 @@ var app = new Vue({
 			header: '我是头部',
 			body: '这是demo页面body1',
 			footer: '我是尾部'
-		}
+		},
+		isShow:false
 	},
 	methods: {
 		alertShow: function(){
@@ -38,7 +39,10 @@ var app = new Vue({
 					},600);
 				}
 			});
-		}
+		},
+		toggle: function() {
+                this.isShow = !this.isShow;
+        }
 	}
 });
 

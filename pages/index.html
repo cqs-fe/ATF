@@ -333,7 +333,6 @@
                             <header class="panel-heading">
                                 案例管理
                             </header>
-                            <div id="box">
                                 <div class="filter">
                                     <div class="row">
                                         <div class="col-lg-2">
@@ -446,7 +445,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             <table class="table table-striped border-top" id="sample_1">
                                 <thead>
                                     <tr>
@@ -543,18 +541,4 @@
 <script type="text/javascript" src="../lib/DT_bootstrap.js"></script>
 <script src="../lib/dynamic-table.js"></script>
 <script type="text/javascript" src="../static/js/index.js"></script>
-<script type="text/javascript">
-window.onload = function() {
-    var vm = new Vue({
-        el: '#box',
-        data: {
-            isShow: false
-        },
-        methods: {
-            toggle: function() {
-                this.isShow = !this.isShow;
-            }
-        }
-    });
-}
-</script>
+
