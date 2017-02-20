@@ -56,14 +56,7 @@ $(document).ready(function() {
             },
             "search": "",
         }
-        // columns: [
-        //     { title: "Name" },
-        //     { title: "Position" },
-        //     { title: "Office" },
-        //     { title: "Extn." },
-        //     { title: "Start date" },
-        //     { title: "Salary" }
-        // ]
+
     });
     $(".dataTables_filter input").attr("placeholder", "请输入关键字");
     $('#example tbody').on('click', '#btn-viewRow', function() {
