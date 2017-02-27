@@ -3478,22 +3478,23 @@ table.sliders tr td {
 .has-js .label_check,
 .has-js .label_radio {
     padding-left: 34px;
+    padding-bottom: 3px;
 }
 
 .has-js .label_radio {
-    background: url(../../images/checkbox/radio-off.png) no-repeat;
+    background: url(../images/checkbox/radio-off.png) no-repeat;
 }
 
 .has-js .label_check {
-    background: url(../../images/checkbox/check-off.png) no-repeat;
+    background: url(../images/checkbox/check-off.png) no-repeat;
 }
 
 .has-js label.c_on {
-    background: url(../../images/checkbox/check-on.png) no-repeat;
+    background: url(../images/checkbox/check-on.png) no-repeat;
 }
 
 .has-js label.r_on {
-    background: url(../../images/checkbox/radio-on.png) no-repeat;
+    background: url(../images/checkbox/radio-on.png) no-repeat;
 }
 
 .has-js .label_check input,
