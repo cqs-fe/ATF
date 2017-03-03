@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="import" href="./common/header.html?__inline">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <title>Case Manager</title>
+</head>
+
+<body id="v-demo" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <link rel="import" href="./common/header-guide.html?__inline">
+        <!--header end-->
+        <!--sidebar start-->
+        <link rel="import" href="./common/aside-guide.html?__inline">
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!--top-button start-->
+                <div class="row">
+                    <div class="col-lg-12 top-btn">
+                        <a class="btn btn-white" data-toggle="modal" href="#addModal"><i class="icon-plus"></i> 添加</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#importModal"><i class="icon-share-alt"></i> 导入</a>
+                        <a class="btn btn-white"><i class="icon-reply"></i> 导出</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#assignModal"><i class="icon-user"></i> 分配</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#runModeModal"><i class="icon-retweet"></i> 更改执行方式</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#tradeModal"><i class="icon-cog"></i> 设置所属交易</a>
+                        <a class="btn btn-white"><i class="icon-file-alt"></i> 指定用例模板</a>
+                        <!-- addModal start -->
+                        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加用例</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <header class="panel-heading tab-bg-dark-navy-blue">
+                                                <ul class="nav nav-tabs nav-justified ">
+                                                    <li class="active">
+                                                        <a href="#single-case" data-toggle="tab">
+                                                              单用例
+                                                          </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#flow-case" data-toggle="tab">
+                                                              流程用例
+                                                          </a>
+                                                    </li>
+                                                </ul>
+                                            </header>
+                                            <div class="panel-body">
+                                                <div class="tab-content tasi-tab">
+                                                    <div class="tab-pane active" id="single-case">
+                                                        <form class="form-horizontal" role="form">
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">用例编号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">任务编号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">系统编号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">被测系统</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试点</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">功能码</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试意图</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">前置条件</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">数据需求</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试步骤</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">预期结果</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">附加检查点</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">用例性质</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>正常值</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">测试用例类型</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>联机</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">优先级</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>1级</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">评审者</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>葛晋鹏</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">执行者</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>葛晋鹏</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">执行方式</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>自动化</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">脚本管理方式</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option></option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">所属模板</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">用例使用状态</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>新增</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">备注</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="tab-pane" id="flow-case">
+                                                        <form class="form-horizontal" role="form">
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">用例编号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">任务编号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                 <label class="col-lg-2 control-label">测试点</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试意图</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">前置条件</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">数据需求</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试步骤</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">预期结果</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">附加检查点</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3">
+                                                                    </textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">用例性质</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>正常值</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">测试用例类型</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>联机</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">优先级</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>1级</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">评审者</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>葛晋鹏</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">执行者</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>葛晋鹏</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">执行方式</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>自动化</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">脚本管理方式</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option></option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">所属模板</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">用例使用状态</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1">
+                                                                        <option>新增</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">备注</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div id="addCaseNode"></div>
+                                                            <a class="btn" v-on:click="addCaseNode()"><i class="icon-plus-sign"></i>点击添加节点用例</a>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- addModal end -->
+                        <!-- importModal start-->
+                        <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">导入</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="exampleInputFile">请选择文件</label>
+                                            <input type="file" id="exampleInputFile">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button">确认</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- importModal end -->
+                        <!-- assignModal start -->
+                        <div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="assignModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">分配执行者</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">执行者</label>
+                                                <div class="col-lg-3">
+                                                    <select size="1" aria-controls="" class="form-control">
+                                                        <option>葛晋鹏</option>
+                                                        <option>潘彦</option>
+                                                        <option>朱庆广</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button">确认</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- assignModal end -->
+                        <!-- runModeModal start -->
+                        <div class="modal fade" id="runModeModal" tabindex="-1" role="dialog" aria-labelledby="runModeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">更改执行方式</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">执行方式</label>
+                                                <div class="col-lg-3">
+                                                    <select size="1" aria-controls="" class="form-control">
+                                                        <option>自动化</option>
+                                                        <option>手工</option>
+                                                        <option>配合</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button">确认</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- runModeModal end -->
+                        <!-- tradeModal start -->
+                        <div class="modal fade" id="tradeModal" tabindex="-1" role="dialog" aria-labelledby="tradeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">设置所属交易</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">被测系统</label>
+                                                <div class="col-lg-3">
+                                                    <select size="1" aria-controls="" class="form-control">
+                                                        <option>中国银行</option>
+                                                        <option>工商银行</option>
+                                                        <option>建设银行</option>
+                                                    </select>
+                                                </div>
+                                                <label class="col-lg-2 control-label">交易</label>
+                                                <div class="col-lg-3">
+                                                    <select size="1" aria-controls="" class="form-control">
+                                                        <option>中国银行</option>
+                                                        <option>工商银行</option>
+                                                        <option>建设银行</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button">确认</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- tradeModal end -->
+                    </div>
+                </div>
+                <!--topbutton end-->
+                <!-- table start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                案例管理
+                            </header>
+                            <div class="filter">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <div class="filter-show">
+                                            <h4 class="panel-title">
+                                                  <a class="btn btn-white" v-on:click="toggle()">
+                                                      <span>显示筛选</span>
+                                                      <i class="icon-angle-down"></i>
+                                                  </a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <form class="form-horizontal col-lg-10">
+                                        <div class="form-group">
+                                            <label class="col-lg-1 control-label">搜索</label>
+                                            <div class="col-lg-2">
+                                                <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号">
+                                            </div>
+                                            <label class="col-lg-2 control-label">浏览方式</label>
+                                            <div class="col-lg-2">
+                                                <select size="1" aria-controls="sample_1" class="form-control">
+                                                    <option value="1">测试点</option>
+                                                    <option>被测系统</option>
+                                                    <option>全部</option>
+                                                </select>
+                                            </div>
+                                            <label class="col-lg-2 control-label">展示条目</label>
+                                            <div class="col-lg-2">
+                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control">
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row" v-show="isShow">
+                                <div class="col-lg-12">
+                                    <div id="collapse1" class="panel-collapse collpase">
+                                        <div class="panel-body">
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            优先级：
+                                                            <!--   <a href="" class="btn btn-filter btn-sm">1级</a>
+                                                                <a href="" class="btn btn-filter btn-sm">2级</a>
+                                                                <a href="" class="btn btn-filter btn-sm">3级</a> -->
+                                                            <label class="label_radio" for="radio-01">
+                                                                <input type="radio" name="" id="radio-01" value="1">1级</label>
+                                                            <label class="label_radio" for="radio-02">
+                                                                <input type="radio" name="" id="radio-02" value="1">2级</label>
+                                                            <label class="label_radio" for="radio-03">
+                                                                <input type="radio" name="" id="radio-03" value="1">3级</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            执行方式：
+                                                            <label class="label_radio" for="radio-04">
+                                                                <input type="radio" name="" id="radio-04" value="1">自动化</label>
+                                                            <label class="label_radio" for="radio-05">
+                                                                <input type="radio" name="" id="radio-05" value="1">手工</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            用例类型：
+                                                            <label class="label_radio" for="radio-06">
+                                                                <input type="radio" name="" id="radio-06" value="1">接口</label>
+                                                            <label class="label_radio" for="radio-07">
+                                                                <input type="radio" name="" id="radio-07" value="1">界面</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="filter-checkbox">
+                                                            用例状态：
+                                                            <label class="label_radio" for="radio-08">
+                                                                <input type="radio" name="" id="radio-08" value="1">新增</label>
+                                                            <label class="label_radio" for="radio-09">
+                                                                <input type="radio" name="" id="radio-09" value="1">评审通过</label>
+                                                            <label class="label_radio" for="radio-10">
+                                                                <input type="radio" name="" id="radio-10" value="1">执行成功</label>
+                                                            <label class="label_radio" for="radio-11">
+                                                                <input type="radio" name="" id="radio-11" value="1">执行失败</label>
+                                                            <label class="label_radio" for="radio-12">
+                                                                <input type="radio" name="" id="radio-12" value="1">执行未完成</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="filter-checkbox">
+                                                            其他：
+                                                            <label class="label_radio" for="radio-13">
+                                                                <input type="radio" name="" id="radio-13" value="1">我编写的</label>
+                                                            <label class="label_radio" for="radio-14">
+                                                                <input type="radio" name="" id="radio-14" value="1">我执行的</label>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 表格 -->
+                            <table class="table table-striped border-top" id="sample_1">
+                                <thead>
+                                    <tr>
+                                        <th style="width:8px;">
+                                            <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" v-on:click="selectAll()"/>
+                                        </th>
+                                        <th>被测系统</th>
+                                        <th class="hidden-phone">交易</th>
+                                        <th class="hidden-phone">案例组成类型</th>
+                                        <th class="hidden-phone">案例编号</th>
+                                        <th class="hidden-phone">状态</th>
+                                        <th class="hidden-phone">脚本编辑者</th>
+                                        <th class="hidden-phone">执行者</th>
+                                        <th class="hidden-phone">执行方式</th>
+                                        <th class="hidden-phone">案例数</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="odd gradeX" v-for="product in productList">
+                                        <td>
+                                            <input type="checkbox" class="checkboxes" value="1" v-model="selectArr"/>
+                                        </td>
+                                        <td>{{ product.id }}</td>
+                                        <td class="hidden-phone">{{ product.autCode }}</td>
+                                        <td class="hidden-phone">{{ product.autName }}</td>
+                                        <td class="center hidden-phone">{{ product.version }}</td>
+                                        <td class="center hidden-phone">{{ product.autType }}</td>
+                                        <td class="center hidden-phone">{{ product.maincodeBegin }}</td>
+                                        <td class="center hidden-phone">{{ product.maincodeEnd }}</td>
+                                        <td class="center hidden-phone">{{ product.method }}</td>
+                                        <td class="hidden-phone">{{ product.caseNumber }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- 分页 -->
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <a class="btn btn-white" v-on:click="changePage(-1)" v-show="pageData.page!=1">上一页</a>
+                                    <span>当前第{{pageData.page}}页，共{{pageData.totalPage}}页</span>
+                                    <a class="btn btn-white" v-on:click="changePage(1)" v-show="pageData.page!=pageData.totalPage">下一页</a>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!-- table end -->
+                <link rel="import" href="./common/copy-right.html?__inline">
+            </section>
+        </section>
+        <!--main content end-->
+        <!-- <div class="footer">
+      <link rel="import" href="./common/copy-right.html?__inline">
+    </div> -->
+    </div>
+</body>
+
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+<!--script for this page only-->
+<!-- <script type="text/javascript" src="../lib/jquery.dataTables.js"></script>
+<script type="text/javascript" src="../lib/DT_bootstrap.js"></script>
+<<<<<<< HEAD
+<script src="../lib/dynamic-table.js"></script> -->
+<script src="../lib/vue-resource.min.js"></script>
+<script type="text/javascript" src="../static/js/caseManagement.js"></script>
+

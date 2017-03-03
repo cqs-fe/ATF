@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="import" href="./common/header.html?__inline">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <title>testProject</title>
+</head>
+
+<body id="v-testProject" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <link rel="import" href="./common/header-guide.html?__inline">
+        <!--header end-->
+        <!--sidebar start-->
+        <link rel="import" href="./common/aside-guide.html?__inline">
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!--top-button start-->
+                <div class="row">
+                    <div class="col-lg-12 top-btn">
+                        <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#updateModal"><i class="icon-edit"></i> 修改</a>
+                        <!-- insertModal start -->
+                        <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加测试任务</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="insertForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">测试任务编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="id">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">测试任务名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="testProjectName">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">类型</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="type">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">创建人编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="userId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">被测系统编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="autId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">测试系统产品线编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="productLineId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">创建时间</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="createDate">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">描述</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="taskDescription">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- insertModal end -->
+                        <!-- delModal start -->
+                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">删除测试任务</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <h4>确认删除测试任务？</h4>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">删除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- delModal end -->
+                        <!-- updateModal start -->
+                        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加测试任务</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="insertForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">测试任务编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="id">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">测试任务名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="testProjectName">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">类型</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="type">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">创建人编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="userId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">被测系统编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="autId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">测试系统产品线编号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="productLineId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">创建时间</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="createDate">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">描述</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="taskDescription">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- updateModal end -->
+                    </div>
+                </div>
+                <!--topbutton end-->
+                <!-- table start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                测试任务
+                            </header>
+                            <div class="filter">
+                              <!--   <div class="row"> -->
+                                    <form class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-lg-offset-7 control-label">展示条目</label>
+                                            <div class="col-lg-2">
+                                                <select id="mySelect" size="1" name="testProject_length" aria-controls="testProject" class="form-control">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="300">30</option>
+                                                    <option value="500">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                               <!--  </div> -->
+                            </div>
+                            <!-- 表格 -->
+                            <table class="table table-striped border-top" id="testProject">
+                                <thead>
+                                    <tr>
+                                        <th style="width:8px;">
+                                            <input type="checkbox" class="group-checkable" data-set="#testProject .checkboxes" v-model="checked" v-on:click="checkedAll()" />
+                                        </th>
+                                        <th>测试任务编号</th>
+                                        <th class="hidden-phone">测试任务名称</th>
+                                        <th class="hidden-phone">类型</th>
+                                        <th class="hidden-phone">创建人编号</th>
+                                        <th class="hidden-phone">被测系统编号</th>
+                                        <th class="hidden-phone">测试系统产品线编号</th>
+                                        <th class="hidden-phone">创建时间</th>
+                                        <th class="hidden-phone">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="odd gradeX" v-for="testProject in testProjectList">
+                                        <td>
+                                            <input type="checkbox" class="checkboxes" value="1" />
+                                        </td>
+                                        <td>{{ testProject.id }}</td>
+                                        <td class="hidden-phone">{{ testProject.testProjectName }}</td>
+                                        <td class="center hidden-phone">{{ testProject.type }}</td>
+                                        <td class="center hidden-phone">{{ testProject.user.id }}</td>
+                                        <td class="center hidden-phone">{{ testProject.aut.id }}</td>
+                                        <td class="center hidden-phone">{{ testProject.productLine.id }}</td>
+                                        <td class="center hidden-phone">{{ testProject.createDate }}</td>
+                                        <td class="hidden-phone">{{ testProject.taskDescription }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- 分页 -->
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <a class="btn btn-white" v-on:click="changePage(-1)" v-show="pageData.page!=1">上一页</a>
+                                    <span>当前第{{pageData.page}}页，共{{pageData.totalPage}}页</span>
+                                    <a class="btn btn-white" v-on:click="changePage(1)" v-show="pageData.page!=pageData.totalPage">下一页</a>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!-- table end -->
+                <link rel="import" href="./common/copy-right.html?__inline">
+            </section>
+        </section>
+    </div>
+</body>
+
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+<script src="../lib/vue-resource.min.js"></script>
+<script type="text/javascript" src="../static/js/testProject.js"></script>
