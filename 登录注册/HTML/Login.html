@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>无标题文档</title>
+
+
+    <!--<link href="../bootstrap-3.3.0-dist/dist/css/bootstrap.min.css" />-->
+    <link rel="stylesheet" href="../CSS/Login.css"/>
+    <script src="../jquery.min.js"></script>
+    <script src="../bootstrap-3.3.0-dist/dist/js/bootstrap.min.js"></script>
+    <!-- <script src="../JS/Login.js"></script> -->
+    <script type="text/javascript">
+        var baseurl = "http://10.108.226.152:8080/ATFCloud/";
+//        var baseurl = "http://127.0.0.1:8080/ATFCloud/";
+        function chageCode() {
+            $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random());//链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+        }
+        $(document).ready(function () {
+            $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random());
+            $('#loginInput').click(function () {
+                alert("123");
+                $.post("http://10.108.226.152:8080/ATFCloud/userController/login",$('#form').serialize(),function(data){
+                    alert(data.msg);
+
+                })
+
+                    }
+            )
+        })
+    </script>
+
+</head>
+
+<body>
+<div id="title">
+		<span class="titleATF">
+		ATF 
+		</span>
+		<span class="titleWord">
+		云测试平台
+		</span>
+</div>
+
+<div id="main">
+
+    <div id="introduction">
+        <div id="introductionATF">
+            ATF
+        </div>
+        <div id="welcome">
+            Welcome
+        </div>
+        <div id="introductionWord">
+            <ul>
+                <li>提供自动化测试工具</li>
+                <li>帮助管理测试项目</li>
+                <li>节约公司服务器成本</li>
+                <li>专业定制</li>
+            </ul>
+        </div>
+    </div>
+    <div id="Login">
+        <div id="loginTitle">
+            登 录
+        </div>
+        <div id="loginForm">
+            <form id="form" class="current1" method="post">
+                <div><span>用户名</span><input type="text" name="username"/></div>
+                <div><span>密&nbsp;&nbsp;码</span><input type="password" name="password"/></div>
+                <div><span>验证码</span><input id="authCode" name="authCode" type="text"/>
+                    <img type="image" id="codeImage" onclick="chageCode()" title="图片看不清？点击重新得到验证码"
+                         style="cursor:pointer;"/></div>
+                <div>
+                    <button id="loginInput">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="tips">
+        <span><a href="#">忘记密码?</a><a href="Rigester.html">注册</a></span>
+    </div>
+</div>
+</body>
+</html>

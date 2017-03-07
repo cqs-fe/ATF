@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户注册</title>
+<link rel="stylesheet" href="../CSS/Register.css" type="text/css" />
+</head>
+
+<body>
+<div class="title">
+	<span id="ATF">ATF</span>
+	<span id="title">用户注册</span>
+</div>
+<div id="stepBar" class="ui-stepBar-wrap">
+	<div class="ui-stepBar">
+		<div class="ui-stepProcess"></div>
+  </div>
+	<div class="ui-stepInfo-wrap">
+		<table class="ui-stepLayout" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="ui-stepInfo">
+					<a class="ui-stepSequence"></a>
+					<p class="ui-stepName">1 填写账户信息</p>
+				</td>
+				<td class="ui-stepInfo">
+					<a class="ui-stepSequence"></a>
+					<p class="ui-stepName">2 注册完成</p>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="main">
+<div class="bitian">
+    <span id="bitian" style="float:left;">必填信息</span><br />
+    <form action="" method="post" id="form1" name="form1">
+    <span>用户名</span> <input type="text" name="username" placeholder="最大长度不超过12个字" maxlength="12" /><br />
+     <span>姓名</span> <input type="text" name="name" placeholder="请输入姓名" /><br />
+    <span>密码</span> <input type="password" name="password"  placeholder="6—16字符" /><br />
+    <span>确认密码</span> <input type="password" name="passwordagain"  placeholder="请再次输入密码"/><br />
+    </form>
+</div>
+<div class="xuantian">
+    <span id="xuantian" style="float:left;">选填信息</span><br />
+    <span>所属部门</span> <input type="text" name="email" placeholder="请填写所属部门，例如“行政部”" /><br />
+    <span>手机号</span> <input type="tel" name="phonenumber"  placeholder="请填写手机号码"/><br />
+    <span>固定电话</span> <input type="tel" name="number" placeholder="请填写固定电话" /><br />
+    <span>电子邮箱</span> <input type="email" name="email"  placeholder="请填写邮箱"/><br /><br />
+    <span>验证码</span> <input type="text" name="email" placeholder="点击完成验证"/><br />
+</div>
+</div>
+<span class="button">
+        <input  type="button" name="cancel"  value="取消" width="60" style="background-color:#CCC";>
+        <a href="Register_suc.html"><input type="submit" name="submit"  value="提交" width="60" style="background-color:#F33";></a>
+</span>
+</body>
+</html>
