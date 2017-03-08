@@ -4,6 +4,7 @@
 <head>
     <link rel="import" href="./common/header.html?__inline">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <link rel="stylesheet" href="../static/css/fileinput.scss">
     <title>Case Manager</title>
 </head>
 
@@ -362,8 +363,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="exampleInputFile">请选择文件</label>
-                                            <input type="file" id="exampleInputFile">
+                                            <label for="input-1" class="control-label">请选择文件</label>
+                                            <input type="file" id="input-1" class="file" data-preview-file-type="text">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -534,54 +535,54 @@
                                                             <!--   <a href="" class="btn btn-filter btn-sm">1级</a>
                                                                 <a href="" class="btn btn-filter btn-sm">2级</a>
                                                                 <a href="" class="btn btn-filter btn-sm">3级</a> -->
-                                                            <label class="label_radio" for="radio-01">
-                                                                <input type="radio" name="" id="radio-01" value="1">1级</label>
-                                                            <label class="label_radio" for="radio-02">
-                                                                <input type="radio" name="" id="radio-02" value="1">2级</label>
-                                                            <label class="label_radio" for="radio-03">
-                                                                <input type="radio" name="" id="radio-03" value="1">3级</label>
+                                                            <label class="label_check" for="checkbox-01">
+                                                                <input type="checkbox" name="" id="checkbox-01" value="1">1级</label>
+                                                            <label class="label_check" for="checkbox-02">
+                                                                <input type="checkbox" name="" id="checkbox-02" value="1">2级</label>
+                                                            <label class="label_check" for="checkbox-03">
+                                                                <input type="checkbox" name="" id="checkbox-03" value="1">3级</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             执行方式：
-                                                            <label class="label_radio" for="radio-04">
-                                                                <input type="radio" name="" id="radio-04" value="1">自动化</label>
-                                                            <label class="label_radio" for="radio-05">
-                                                                <input type="radio" name="" id="radio-05" value="1">手工</label>
+                                                            <label class="label_check" for="checkbox-04">
+                                                                <input type="checkbox" name="" id="checkbox-04" value="1">自动化</label>
+                                                            <label class="label_check" for="checkbox-05">
+                                                                <input type="checkbox" name="" id="checkbox-05" value="1">手工</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             用例类型：
-                                                            <label class="label_radio" for="radio-06">
-                                                                <input type="radio" name="" id="radio-06" value="1">接口</label>
-                                                            <label class="label_radio" for="radio-07">
-                                                                <input type="radio" name="" id="radio-07" value="1">界面</label>
+                                                            <label class="label_check" for="checkbox-06">
+                                                                <input type="checkbox" name="" id="checkbox-06" value="1">接口</label>
+                                                            <label class="label_check" for="checkbox-07">
+                                                                <input type="checkbox" name="" id="checkbox-07" value="1">界面</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="filter-checkbox">
                                                             用例状态：
-                                                            <label class="label_radio" for="radio-08">
-                                                                <input type="radio" name="" id="radio-08" value="1">新增</label>
-                                                            <label class="label_radio" for="radio-09">
-                                                                <input type="radio" name="" id="radio-09" value="1">评审通过</label>
-                                                            <label class="label_radio" for="radio-10">
-                                                                <input type="radio" name="" id="radio-10" value="1">执行成功</label>
-                                                            <label class="label_radio" for="radio-11">
-                                                                <input type="radio" name="" id="radio-11" value="1">执行失败</label>
-                                                            <label class="label_radio" for="radio-12">
-                                                                <input type="radio" name="" id="radio-12" value="1">执行未完成</label>
+                                                            <label class="label_check" for="checkbox-08">
+                                                                <input type="checkbox" name="" id="checkbox-08" value="1">新增</label>
+                                                            <label class="label_check" for="checkbox-09">
+                                                                <input type="checkbox" name="" id="checkbox-09" value="1">评审通过</label>
+                                                            <label class="label_check" for="checkbox-10">
+                                                                <input type="checkbox" name="" id="checkbox-10" value="1">执行成功</label>
+                                                            <label class="label_check" for="checkbox-11">
+                                                                <input type="checkbox" name="" id="checkbox-11" value="1">执行失败</label>
+                                                            <label class="label_check" for="checkbox-12">
+                                                                <input type="checkbox" name="" id="checkbox-12" value="1">执行未完成</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="filter-checkbox">
                                                             其他：
-                                                            <label class="label_radio" for="radio-13">
-                                                                <input type="radio" name="" id="radio-13" value="1">我编写的</label>
-                                                            <label class="label_radio" for="radio-14">
-                                                                <input type="radio" name="" id="radio-14" value="1">我执行的</label>
+                                                            <label class="label_check" for="checkbox-13">
+                                                                <input type="checkbox" name="" id="checkbox-13" value="1">我编写的</label>
+                                                            <label class="label_check" for="checkbox-14">
+                                                                <input type="checkbox" name="" id="checkbox-14" value="1">我执行的</label>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -598,14 +599,13 @@
                                             <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" v-on:click="selectAll()"/>
                                         </th>
                                         <th>被测系统</th>
-                                        <th class="hidden-phone">交易</th>
+                                        <th class="hidden-phone">功能点</th>
                                         <th class="hidden-phone">案例组成类型</th>
                                         <th class="hidden-phone">案例编号</th>
                                         <th class="hidden-phone">状态</th>
                                         <th class="hidden-phone">脚本编辑者</th>
                                         <th class="hidden-phone">执行者</th>
                                         <th class="hidden-phone">执行方式</th>
-                                        <th class="hidden-phone">案例数</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -656,4 +656,12 @@
 <script src="../lib/dynamic-table.js"></script> -->
 <script src="../lib/vue-resource.min.js"></script>
 <script type="text/javascript" src="../static/js/caseManagement.js"></script>
-
+<script src="../lib/fileinput.min.js"></script>
+<script>
+    $("#input-1").fileinput({
+        showUpload: false,
+        browseClass: "btn btn-primary btn-sm",
+        fileType: "any",
+        overwriteInitial: false
+    });
+</script>
