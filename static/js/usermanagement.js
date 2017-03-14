@@ -1,6 +1,7 @@
 var dataSet = null;
 
 $(document).ready(function() {
+    // 立即执行函数，用于获取全部数据
     (function() {
         var xmlHttpRequest;
         if (window.XMLHttpRequest) {
@@ -148,9 +149,10 @@ $(document).ready(function() {
                 {
                     targets: -1,
                     data: null,
-                    defaultContent: "<button type='button' class='btn-tr btn-viewRow' id='' data-toggle='modal'>查看</button><button type='button' class='btn-tr btn-alterRow' id=''  data-toggle='modal'>修改</button><button type='button' class='btn-tr btn-deleteRow' id=''  data-toggle='modal'>删除</button>"
+                    defaultContent: "<button type='button' class='btn-tr btn-viewRow' id='' data-toggle='modal'>查看</button><button type='button' class='btn-tr btn-alterRow' id=''  data-toggle='modal'>修改</button>"
                 }
             ],
+            "pagingType":"full_numbers",
             "language": {
                 "info": "显示 _START_ 到 _END_ 项，总共 _TOTAL_ 项",
                 "lengthMenu": "显示 _MENU_ 条",
@@ -161,7 +163,20 @@ $(document).ready(function() {
                     "previous": "上一页"
                 },
                 "search": "",
-            }
+            },
+            "aLengthMenu": [[2, 10, 25, -1], ["2", "10", "25", "All"]],
+            'fnDrawCallback': function(table) {    
+            $("#example_paginate").append(`  到第 <input type='text' id='changePage' class='input-text' style='width:50px;height:27px'> 页 <a class='btn btn-default shiny' href='javascript:void(0);' id='dataTable-btn' style='text-align:center'>确认</a>`);    
+            var oTable = $("#example").dataTable();    
+            $('#dataTable-btn').click(function(e) {    
+                if($("#changePage").val() && $("#changePage").val() > 0) {    
+                    var redirectpage = $("#changePage").val() - 1;    
+                } else {    
+                    var redirectpage = 0;    
+                }    
+                oTable.fnPageChange(redirectpage);    
+            });    
+        }  
         });
         table.column(0).visible(false);
         $(".dataTables_filter input").attr("placeholder", "请输入关键字");
