@@ -114,7 +114,8 @@ function getList(page,listnum,order,sort){
 	$.ajax({
 		url: 'http://10.108.226.152:8080/ATFCloud/autController/selectAllByPage',
 		type: 'GET',
-		data:{'page':page,
+		data:{
+            'page':page,
 			'rows':listnum,
 			'order':order,
 			'sort':sort
@@ -152,4 +153,3 @@ function changeListNum(){
 			$("#mySelect").find("option[text='"+listnum+"']").attr("selected",true);
 			getList(1,listnum,'id','asc');
 })}
-//

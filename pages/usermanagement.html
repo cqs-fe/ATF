@@ -13,10 +13,7 @@
     <script src="../lib/jquery.dataTables.min.js"></script>
     <!--dataTables libs  ends-->
     <script type="text/javascript" src="../lib/vue.js"></script>
-    <title>Case Manager</title>
-    <style>
-
-    </style>
+    <title>usermanagement</title>
 </head>
 
 <body id="v-demo" v-cloak>
@@ -43,47 +40,56 @@
                                         <h4 class="modal-title">添加用户</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form class="form-horizontal col-lg-offset-1" role="form">
+                                        <form class="form-horizontal " role="form">
                                             <span class=""><strong>必填信息</strong></span>
                                             <div class="form-group">
                                                 <label for="username" class="col-lg-2 control-label">用户名</label>
                                                 <div class="col-lg-9 ">
                                                     <input type="text" id="username" class="form-control" required>
                                                 </div>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove" id="add-feedback-username"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="name">姓名</label>
                                                 <div class="col-lg-9 ">
                                                     <input type="text" id="name" required class="form-control">
                                                 </div>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove" id="add-feedback-name"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="password">密码</label>
                                                 <div class="col-lg-9 ">
                                                     <input type="password" id="password" required class="form-control">
                                                 </div>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-password"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="confirm">确认密码</label>
                                                 <div class="col-lg-9 ">
                                                     <input type="password" id="confirm" required class="form-control">
                                                 </div>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-confirmpassword"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="role">角色</label>
                                                 <div class="col-lg-4">
                                                     <select name="" id="role" class="form-control">
-                                                        <option value="function-tester">功能测试人员</option>
-                                                        <option value="others">其他人员</option>
-                                                        </select>
+                                                        <option value="01">测试主管</option>
+                                                        <option value="02">测试经理</option>
+                                                        <option value="03">测试组长</option>
+                                                        <option value="04">自动化技术人员</option>
+                                                        <option value="05">功能测试人员</option>
+                                                    </select>
                                                 </div>
+                                                <span class="col-lg-1 glyphicon hidden" id="add-feedback-role"></span>
                                                 <label class="col-lg-2 control-label" for="state">状态</label>
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-2">
                                                     <select name="" id="state" class="form-control">
-                                                        <option value="normal">正常</option>
-                                                        <option value="normal">不正常</option>
-                                                        </select>
+                                                        <option value="00">正常</option>
+                                                        <option value="01">不正常</option>
+                                                    </select>
                                                 </div>
+                                                <span class="col-lg-1 glyphicon hidden" id="add-feedback-status"></span>
                                             </div>
                                             <span class="input-tip"><strong>选填信息</strong></span>
                                             <div class="form-group">
@@ -111,10 +117,13 @@
                                                 </div>
                                             </div>
                                         </form>
+                                        <div class="alert alert-danger" style="margin-bottom: 0;" id="add-input-detecting">
+                                            输入信息不完整！
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button class="btn btn-success" type="button" id="btn-add">添加</button>
+                                        <button class="btn btn-success" type="button" disabled id="btn-add">添加</button>
                                     </div>
                                 </div>
                             </div>
@@ -124,19 +133,22 @@
                     <!--topbutton end-->
                     <!-- table start -->
                     <div class="col-lg-12 panel" style="overflow: scroll;">
-                        <table id="example" width="100%" class="display table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>用户名</th>
-                                    <th>姓名</th>
-                                    <th>角色</th>
-                                    <th>所属部门</th>
-                                    <th>手机号</th>
-                                    <th>状态</th>
-                                    <th>操作</th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="example" width="100%" class="display table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>用户名</th>
+                                        <th>姓名</th>
+                                        <th>角色</th>
+                                        <th>所属部门</th>
+                                        <th>手机号</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                         <!--deleteModal start-->
                         <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -168,59 +180,64 @@
                                             <h4 class="modal-title">查看用户</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <form class="form-horizontal col-lg-offset-1" role="form">
+                                            <form class="form-horizontal" role="form">
                                                 <span class=""><strong>必填信息</strong></span>
                                                 <div class="form-group">
-                                                    <label for="username" class="col-lg-2 control-label">用户名</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="view-username" class="form-control" required>
+                                                    <label for="username" class="col-lg-3 control-label">用户名</label>
+                                                    <div class="col-lg-8 ">
+                                                        <input type="text" id="view-username" class="form-control" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="view-name">姓名</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" required id="view-name" class="form-control">
+                                                    <label class="col-lg-3 control-label" for="view-name">姓名</label>
+                                                    <div class="col-lg-8 ">
+                                                        <input type="text" disabled id="view-name" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="view-role">角色</label>
-                                                    <div class="col-lg-4">
-                                                        <select name="" id="view-role" required class="form-control">
-                                                           <option value="function-tester">功能测试人员</option>
-                                                           <option value="others">其他人员</option>
+                                                    <label class="col-lg-3 control-label" for="view-role">角色</label>
+                                                    <div class="col-lg-8">
+                                                        <select name="" id="view-role" disabled class="form-control">
+                                                            <option value="01">测试主管</option>
+                                                            <option value="02">测试经理</option>
+                                                            <option value="03">测试组长</option>
+                                                            <option value="04">自动化技术人员</option>
+                                                            <option value="05">功能测试人员</option>
                                                         </select>
                                                     </div>
-                                                    <label class="col-lg-2 control-label" for="view-state">状态</label>
-                                                    <div class="col-lg-3">
-                                                        <select name="" id="view-state" required class="form-control">
-                                                            <option value="normal">正常</option>
-                                                            <option value="normal">不正常</option>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label" for="view-state">状态</label>
+                                                    <div class="col-lg-8">
+                                                        <select name="" id="view-state" disabled class="form-control">
+                                                            <option value="00">正常</option>
+                                                            <option value="01">不正常</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <span class="input-tip"><strong>选填信息</strong></span>
                                                 <div class="form-group">
-                                                    <label for="view-department" class="control-label col-lg-2">所属部门</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="view-department" class="form-control">
+                                                    <label for="view-department" class="control-label col-lg-3">所属部门</label>
+                                                    <div class="col-lg-8 ">
+                                                        <input type="text" id="view-department" disabled class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="view-phonenumber" class="control-label col-lg-2">手机号</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="view-phonenumber" class="form-control">
+                                                    <label for="view-phonenumber" class="control-label col-lg-3">手机号</label>
+                                                    <div class="col-lg-8 ">
+                                                        <input type="text" id="view-phonenumber" disabled class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="view-telephone" class="control-label col-lg-2">固定电话</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="view-telephone" class="form-control">
+                                                    <label for="view-telephone" class="control-label col-lg-3">固定电话</label>
+                                                    <div class="col-lg-8 ">
+                                                        <input type="text" id="view-telephone" disabled class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="view-email" class="control-label col-lg-2">电子邮箱</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="view-email" class="form-control">
+                                                    <label for="view-email" class="control-label col-lg-3">电子邮箱</label>
+                                                    <div class="col-lg-8 ">
+                                                        <input type="text" id="view-email" disabled class="form-control">
                                                     </div>
                                                 </div>
                                             </form>
@@ -238,81 +255,96 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">添加用户</h4>
+                                            <h4 class="modal-title">修改用户</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <form class="form-horizontal col-lg-offset-1" role="form">
+                                            <form class="form-horizontal " role="form">
                                                 <span class=""><strong>必填信息</strong></span>
+                                                <input type="text" id="alter-id" class="form-control hidden">
                                                 <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-username">用户名</label>
-                                                    <div class="col-lg-9 ">
+                                                    <label class="col-lg-3 control-label" for="alter-username">用户名</label>
+                                                    <div class="col-lg-8">
                                                         <input type="text" id="alter-username" class="form-control" required>
                                                     </div>
+                                                    <span class="col-lg-1 glyphicon hidden" id="alter-feedback-username"></span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-name">姓名</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" required id="alter-name" class="form-control">
+                                                    <label class="col-lg-3 control-label" for="alter-name">姓名</label>
+                                                    <div class="col-lg-8 ">
+                                                        <input type="text" required id="alter-name" class="form-control ">
                                                     </div>
+                                                    <span class="col-lg-1 glyphicon glyphicon-ok hidden" id="alter-feedback-name"></span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-password">密码</label>
-                                                    <div class="col-lg-9 ">
+                                                    <label class="col-lg-3 control-label" for="alter-password">密码</label>
+                                                    <div class="col-lg-8 ">
                                                         <input type="password" required id="alter-password" class="form-control">
                                                     </div>
+                                                    <span class="col-lg-1 glyphicon hidden" style="color:#b94a48;" id="alter-feedback-password"></span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-confirmpassword">确认密码</label>
-                                                    <div class="col-lg-9 ">
+                                                    <label class="col-lg-3 control-label" for="alter-confirmpassword">确认密码</label>
+                                                    <div class="col-lg-8 ">
                                                         <input type="password" required id="alter-confirmpassword" class="form-control">
                                                     </div>
+                                                    <span class="glyphicon col-lg-1 hidden" style="color:#b94a48;" id="alter-feedback-confirmpassword"></span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-role">角色</label>
-                                                    <div class="col-lg-4">
-                                                        <select name="" id="alter-role" class="form-control">
-                                                             <option value="function-tester">功能测试人员</option>
-                                                             <option value="others">其他人员</option>
+                                                    <label class="col-lg-3 control-label" for="alter-role">角色</label>
+                                                    <div class="col-lg-8">
+                                                        <select name="" required id="alter-role" class="form-control">
+                                                            <option value="01">测试主管</option>
+                                                            <option value="02">测试经理</option>
+                                                            <option value="03">测试组长</option>
+                                                            <option value="04">自动化技术人员</option>
+                                                            <option value="05">功能测试人员</option>
                                                         </select>
                                                     </div>
-                                                    <label class="col-lg-2 control-label" for="alter-state">状态</label>
-                                                    <div class="col-lg-3">
-                                                        <select name="" id="alter-state" class="form-control">
-                                                             <option value="normal">正常</option>
-                                                             <option value="normal">不正常</option>
+                                                    <span class="glyphicon col-lg-1" id="alter-feedback-role"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label" for="alter-state">状态</label>
+                                                    <div class="col-lg-8">
+                                                        <select name="" required id="alter-state" class="form-control">
+                                                            <option value="00">正常</option>
+                                                            <option value="01">不正常</option>
                                                         </select>
                                                     </div>
+                                                    <span class="col-lg-1 glyphicon" id="alter-feedback-state"></span>
                                                 </div>
                                                 <span class="input-tip"><strong>选填信息</strong></span>
                                                 <div class="form-group">
-                                                    <label for="alter-department" class="control-label col-lg-2">所属部门</label>
-                                                    <div class="col-lg-9 ">
+                                                    <label for="alter-department" class="control-label col-lg-3">所属部门</label>
+                                                    <div class="col-lg-8 ">
                                                         <input type="text" id="alter-department" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="alter-phonenumber" class="control-label col-lg-2">手机号</label>
-                                                    <div class="col-lg-9 ">
+                                                    <label for="alter-phonenumber" class="control-label col-lg-3">手机号</label>
+                                                    <div class="col-lg-8 ">
                                                         <input type="text" id="alter-phonenumber" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="alter-telephone" class="control-label col-lg-2">固定电话</label>
-                                                    <div class="col-lg-9 ">
+                                                    <label for="alter-telephone" class="control-label col-lg-3">固定电话</label>
+                                                    <div class="col-lg-8 ">
                                                         <input type="text" id="alter-telephone" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="alter-email" class="control-label col-lg-2">电子邮箱</label>
-                                                    <div class="col-lg-9 ">
+                                                    <label for="alter-email" class="control-label col-lg-3">电子邮箱</label>
+                                                    <div class="col-lg-8 ">
                                                         <input type="text" id="alter-email" class="form-control">
                                                     </div>
                                                 </div>
                                             </form>
+                                            <div class="alert alert-danger" role="alert" id="input-detecting">
+                                                输入信息不完整！
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                            <button class="btn btn-success" type="button" id="btn-alter">修改</button>
+                                            <button class="btn btn-success" type="button" disabled id="btn-alter">修改</button>
                                         </div>
                                     </div>
                                 </div>
@@ -330,9 +362,9 @@
         </div>
     </div>
     <!--content end -->
-
     <!--<link rel="import" href="./common/footer.html?__inline">-->
     <!--script for this page only-->
+    <script src="../static/js/config.js"></script>
     <script src="../static/js/usermanagement.js"></script>
     <script src="../lib/jquery.scrollTo.min.js"></script>
     <script src="../../lib/jquery.nicescroll.js" type="text/javascript"></script>

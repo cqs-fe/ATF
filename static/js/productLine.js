@@ -2,8 +2,6 @@ var app = new Vue({
     el: '#v-productLine',
     data: {
         productLineList: [],
-        checked: [],
-        checkboxModel: [],
         apiUrl: 'http://10.108.226.152:8080/ATFCloud/productLineController/selectAll',
         pageData: {
             pageSize: 10,
@@ -18,18 +16,7 @@ var app = new Vue({
         changeListNum();
     },
     methods: {
-        checkedAll: function() {
-            var _this = this;
-            console.log(_this.checkboxModel);
-            if (this.checked) { //反选
-                _this.checkboxModel = [];
-            } else { //全选
-                _this.checkboxModel = [];
-                _this.autList.forEach(function(item) {
-                    _this.checkboxModel.push(item.id);
-                });
-            }
-        },
+
         changePage: function(number) {
             listnum = $("#mySelect").children('option:selected').val();
             this.pageData.page = parseInt(this.pageData.page) + number;
@@ -37,7 +24,7 @@ var app = new Vue({
         },
 
 
-        insert: function insert() {
+        insert: function() {
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/productLineController/selectAll',
                 type: 'post',
@@ -54,50 +41,43 @@ var app = new Vue({
         }
 
     },
-    watch: { //深度watcher
-        'checkboxModel': {
-            handler: function(val, oldVal) {
-                if (this.checkboxModel.length === this.autList.length) {
-                    this.checked = true;
-                } else {
-                    this.checked = false;
-                }
-            },
-            deep: true
-        }
+
+        getList: function(page, listnum, order, sort) {
+
+                //获取list通用方法，只需要传入多个所需参数
+                $.ajax({
+                    url: 'http://10.108.226.152:8080/ATFCloud/productLineController/selectAll',
+                    type: 'GET',
+                    data: {
+                        'page': page,
+                        'rows': listnum,
+                        'order': order,
+                        'sort': sort
+                    },
+                    success: function(data) {
+                        console.info(data);
+                        console.info(data.obj);
+                        // var data = JSON.parse(data);
+                        app.productLineList = data.obj;
+                        var tt = data.total;
+
+                        app.pageData.totalPage = Math.ceil(tt / listnum);
+                        app.pageData.pageSize = listnum;
+                    }
+                });
+         },
+
+    changeListNum：function() {
+        $('#mySelect').change(function() {
+            listnum = $(this).children('option:selected').val();
+            $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+            getList(1, listnum, 'id', 'asc');
+        });
     }
+         
 });
 
-function getList(page, listnum, order, sort) {
 
-    //获取list通用方法，只需要传入多个所需参数
-    $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/productLineController/selectAll',
-        type: 'GET',
-        data: {
-            'page': page,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
-        success: function(data) {
-            console.info(data);
-            console.info(data.obj);
-            // var data = JSON.parse(data);
-            app.productLineList = data.obj;
-            var tt = data.total;
 
-            app.pageData.totalPage = Math.ceil(tt / listnum);
-            app.pageData.pageSize = listnum;
-        }
-    });
-}
 
-function changeListNum() {
-    $('#mySelect').change(function() {
-        listnum = $(this).children('option:selected').val();
-        $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-        getList(1, listnum, 'id', 'asc');
-    });
-}
 

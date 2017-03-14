@@ -3,9 +3,16 @@
 
 <head>
     <link rel="import" href="./common/header.html?__inline">
+    <!-- css for this page only -->
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" href="../static/css/fileinput.scss">
-    <title>Case Manager</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/zTreeStyle.css">
+    <!-- datatable css -->
+    <!-- <link rel="stylesheet" href="../static/css/dataTables.bootstrap.css"> -->
+    <!-- <link rel="stylesheet" href="../static/css/dataTables.fontAwesome.css"> -->
+    <!-- pagination css -->
+    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+    <title>Case Management</title>
 </head>
 
 <body id="v-demo" v-cloak>
@@ -28,7 +35,7 @@
                         <a class="btn btn-white" data-toggle="modal" href="#assignModal"><i class="icon-user"></i> 分配</a>
                         <a class="btn btn-white" data-toggle="modal" href="#runModeModal"><i class="icon-retweet"></i> 更改执行方式</a>
                         <a class="btn btn-white" data-toggle="modal" href="#tradeModal"><i class="icon-cog"></i> 设置所属交易</a>
-                        <a class="btn btn-white"><i class="icon-file-alt"></i> 指定用例模板</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#scriptModeFlag"><i class="icon-file-alt"></i> 指定用例模板</a>
                         <!-- addModal start -->
                         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -219,7 +226,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
-                                                                 <label class="col-lg-2 control-label">测试点</label>
+                                                                <label class="col-lg-2 control-label">测试点</label>
                                                                 <div class="col-lg-4">
                                                                     <input type="text" class="form-control">
                                                                 </div>
@@ -473,6 +480,25 @@
                             </div>
                         </div>
                         <!-- tradeModal end -->
+                        <!-- scriptModeFlag start -->
+                        <div class="modal fade" id="scriptModeFlag" tabindex="-1" role="dialog" aria-labelledby="scriptModeFlagLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">指定用例模板</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul id="treeDemo" class="ztree"></ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button">确认</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- scriptModeFlag end -->
                     </div>
                 </div>
                 <!--topbutton end-->
@@ -503,18 +529,16 @@
                                             </div>
                                             <label class="col-lg-2 control-label">浏览方式</label>
                                             <div class="col-lg-2">
-                                                <select size="1" aria-controls="sample_1" class="form-control">
-                                                    <option value="1">测试点</option>
-                                                    <option>被测系统</option>
-                                                    <option>全部</option>
+                                                <select size="1" class="form-control" v-model="selected">
+                                                    <option v-for="option in options" v-bind:value="option.value">{{option.text}}</option>
                                                 </select>
                                             </div>
                                             <label class="col-lg-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
-                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control">
-                                                    <option value="30">30</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
+                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize">
+                                                    <option value="30">1</option>
+                                                    <option value="50">3</option>
+                                                    <option value="100">5</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -532,48 +556,45 @@
                                                     <tr>
                                                         <td>
                                                             优先级：
-                                                            <!--   <a href="" class="btn btn-filter btn-sm">1级</a>
-                                                                <a href="" class="btn btn-filter btn-sm">2级</a>
-                                                                <a href="" class="btn btn-filter btn-sm">3级</a> -->
                                                             <label class="label_check" for="checkbox-01">
-                                                                <input type="checkbox" name="" id="checkbox-01" value="1">1级</label>
+                                                                <input type="checkbox" name="" id="checkbox-01" value="1" v-model="priority">1级</label>
                                                             <label class="label_check" for="checkbox-02">
-                                                                <input type="checkbox" name="" id="checkbox-02" value="1">2级</label>
+                                                                <input type="checkbox" name="" id="checkbox-02" value="1" v-model="priority">2级</label>
                                                             <label class="label_check" for="checkbox-03">
-                                                                <input type="checkbox" name="" id="checkbox-03" value="1">3级</label>
+                                                                <input type="checkbox" name="" id="checkbox-03" value="1" v-model="priority">3级</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             执行方式：
                                                             <label class="label_check" for="checkbox-04">
-                                                                <input type="checkbox" name="" id="checkbox-04" value="1">自动化</label>
+                                                                <input type="checkbox" name="" id="checkbox-04" value="1" v-model="executeMethod">自动化</label>
                                                             <label class="label_check" for="checkbox-05">
-                                                                <input type="checkbox" name="" id="checkbox-05" value="1">手工</label>
+                                                                <input type="checkbox" name="" id="checkbox-05" value="1" v-model="executeMethod">手工</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             用例类型：
                                                             <label class="label_check" for="checkbox-06">
-                                                                <input type="checkbox" name="" id="checkbox-06" value="1">接口</label>
+                                                                <input type="checkbox" name="" id="checkbox-06" value="1" v-model="casetype">接口</label>
                                                             <label class="label_check" for="checkbox-07">
-                                                                <input type="checkbox" name="" id="checkbox-07" value="1">界面</label>
+                                                                <input type="checkbox" name="" id="checkbox-07" value="1" v-model="casetype">界面</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="filter-checkbox">
                                                             用例状态：
                                                             <label class="label_check" for="checkbox-08">
-                                                                <input type="checkbox" name="" id="checkbox-08" value="1">新增</label>
+                                                                <input type="checkbox" name="" id="checkbox-08" value="1" v-model="useStatus">新增</label>
                                                             <label class="label_check" for="checkbox-09">
-                                                                <input type="checkbox" name="" id="checkbox-09" value="1">评审通过</label>
+                                                                <input type="checkbox" name="" id="checkbox-09" value="1" v-model="useStatus">评审通过</label>
                                                             <label class="label_check" for="checkbox-10">
-                                                                <input type="checkbox" name="" id="checkbox-10" value="1">执行成功</label>
+                                                                <input type="checkbox" name="" id="checkbox-10" value="1" v-model="useStatus">执行成功</label>
                                                             <label class="label_check" for="checkbox-11">
-                                                                <input type="checkbox" name="" id="checkbox-11" value="1">执行失败</label>
+                                                                <input type="checkbox" name="" id="checkbox-11" value="1" v-model="useStatus">执行失败</label>
                                                             <label class="label_check" for="checkbox-12">
-                                                                <input type="checkbox" name="" id="checkbox-12" value="1">执行未完成</label>
+                                                                <input type="checkbox" name="" id="checkbox-12" value="1" v-model="useStatus">执行未完成</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -596,41 +617,70 @@
                                 <thead>
                                     <tr>
                                         <th style="width:8px;">
-                                            <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" v-on:click="selectAll()"/>
+                                            <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" v-model="checkAll" v-on:click="checkedAll()" />
                                         </th>
-                                        <th>被测系统</th>
-                                        <th class="hidden-phone">功能点</th>
-                                        <th class="hidden-phone">案例组成类型</th>
-                                        <th class="hidden-phone">案例编号</th>
-                                        <th class="hidden-phone">状态</th>
-                                        <th class="hidden-phone">脚本编辑者</th>
-                                        <th class="hidden-phone">执行者</th>
-                                        <th class="hidden-phone">执行方式</th>
+                                        <th @click="sortBy('caselibId')">被测系统</th>
+                                        <th class="hidden-phone" @click="sortBy('testPoint')">功能点</th>
+                                        <th class="hidden-phone" @click="sortBy('caseCompositeType')">案例组成类型</th>
+                                        <th class="hidden-phone" @click="sortBy('id')">案例编号</th>
+                                        <th class="hidden-phone" @click="sortBy('useStatus')">状态</th>
+                                        <th class="hidden-phone" @click="sortBy('author')">脚本编辑者</th>
+                                        <th class="hidden-phone" @click="sortBy('executor')">执行者</th>
+                                        <th class="hidden-phone" @click="sortBy('executeMethod')">执行方式</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="odd gradeX" v-for="product in productList">
+                                    <tr class="odd gradeX" v-for="product in productList | filterBy priority | filterBy executeMethod | filterBy casetype| filterBy useStatus|limitBy pag | orderBy sortparam">
                                         <td>
-                                            <input type="checkbox" class="checkboxes" value="1" v-model="selectArr"/>
+                                            <input type="checkbox" class="checkboxes" value="1" v-model="ischeckdate" />
                                         </td>
-                                        <td>{{ product.id }}</td>
-                                        <td class="hidden-phone">{{ product.autCode }}</td>
-                                        <td class="hidden-phone">{{ product.autName }}</td>
-                                        <td class="center hidden-phone">{{ product.version }}</td>
-                                        <td class="center hidden-phone">{{ product.autType }}</td>
-                                        <td class="center hidden-phone">{{ product.maincodeBegin }}</td>
-                                        <td class="center hidden-phone">{{ product.maincodeEnd }}</td>
-                                        <td class="center hidden-phone">{{ product.method }}</td>
-                                        <td class="hidden-phone">{{ product.caseNumber }}</td>
+                                        <td>{{ product.caselibId }}</td>
+                                        <td class="hidden-phone">{{ product.testPoint }}</td>
+                                        <td class="hidden-phone">{{ product.caseCompositeType }}</td>
+                                        <td class="center hidden-phone">{{ product.id }}</td>
+                                        <td class="center hidden-phone">{{ product.useStatus }}</td>
+                                        <td class="center hidden-phone">{{ product.author }}</td>
+                                        <td class="center hidden-phone">{{ product.executor }}</td>
+                                        <td class="center hidden-phone">{{ product.executeMethod }}</td>
                                     </tr>
                                 </tbody>
                             </table>
                             <!-- 分页 -->
                             <div class="row">
                                 <div class="col-lg-12 text-center">
-                                    <a class="btn btn-white" v-on:click="changePage(-1)" v-show="pageData.page!=1">上一页</a>
-                                    <span>当前第{{pageData.page}}页，共{{pageData.totalPage}}页</span>
-                                    <a class="btn btn-white" v-on:click="changePage(1)" v-show="pageData.page!=pageData.totalPage">下一页</a>
+                                    <div class="pagination-wrap" v-if="totalPage!=0">
+                                        <ul class="pagination">
+                                            <li :class="currentPage==1?'disabled':''"><a href="javascript:;" @click="turnToPage(1)">首页</a></li>
+                                            <li :class="currentPage==1?'disabled':''"><a @click="turnToPage(currentPage-1)" href="javascript:;">上一页</a></li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-3)" v-text="currentPage-3" v-if="currentPage-3>0"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-2)" v-text="currentPage-2" v-if="currentPage-2>0"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-1)" v-text="currentPage-1" v-if="currentPage-1>0"></a>
+                                            </li>
+                                            <li class="active"><a href="javascript:;" @click="turnToPage(currentPage)" v-text="currentPage">3</a></li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+1)" v-text="currentPage+1" v-if="currentPage+1<totalPage"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+2)" v-text="currentPage+2" v-if="currentPage+2<totalPage"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+3)" v-text="currentPage+3" v-if="currentPage+3<totalPage"></a>
+                                            </li>
+                                            <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(currentPage+1)">下一页</a></li>
+                                            <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(totalPage)">尾页</a></li>
+                                        </ul>
+                                        <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> 页，共有 <span class="text-primary" v-text="totalPage"></span> 页</small>
+                                        <div class="go">
+                                            <div :class="isPageNumberError?'input-group error':'input-group'">
+                                                <input class="form-control" type="number" v-model="goToPage"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -650,18 +700,98 @@
 </html>
 <link rel="import" href="./common/footer.html?__inline">
 <!--script for this page only-->
-<!-- <script type="text/javascript" src="../lib/jquery.dataTables.js"></script>
+<script type="text/javascript" src="../lib/jquery.dataTables.js"></script>
 <script type="text/javascript" src="../lib/DT_bootstrap.js"></script>
-<<<<<<< HEAD
-<script src="../lib/dynamic-table.js"></script> -->
+<script src="../lib/dynamic-table.js"></script>
 <script src="../lib/vue-resource.min.js"></script>
 <script type="text/javascript" src="../static/js/caseManagement.js"></script>
 <script src="../lib/fileinput.min.js"></script>
 <script>
-    $("#input-1").fileinput({
-        showUpload: false,
-        browseClass: "btn btn-primary btn-sm",
-        fileType: "any",
-        overwriteInitial: false
-    });
+$("#input-1").fileinput({
+    showUpload: false,
+    browseClass: "btn btn-primary btn-sm",
+    fileType: "any",
+    overwriteInitial: false
+});
+</script>
+<script type="text/javascript" src="../static/js/jquery.ztree.core.js"></script>
+<script type="text/javascript">
+var setting = {};
+
+var zNodes = [{
+        name: "父节点1 - 展开",
+        open: true,
+        children: [{
+            name: "父节点11 - 折叠",
+            children: [{
+                name: "叶子节点111"
+            }, {
+                name: "叶子节点112"
+            }, {
+                name: "叶子节点113"
+            }, {
+                name: "叶子节点114"
+            }]
+        }, {
+            name: "父节点12 - 折叠",
+            children: [{
+                name: "叶子节点121"
+            }, {
+                name: "叶子节点122"
+            }, {
+                name: "叶子节点123"
+            }, {
+                name: "叶子节点124"
+            }]
+        }, {
+            name: "父节点13 - 没有子节点",
+            isParent: true
+        }]
+    }, {
+        name: "父节点2 - 折叠",
+        children: [{
+            name: "父节点21 - 展开",
+            open: true,
+            children: [{
+                name: "叶子节点211"
+            }, {
+                name: "叶子节点212"
+            }, {
+                name: "叶子节点213"
+            }, {
+                name: "叶子节点214"
+            }]
+        }, {
+            name: "父节点22 - 折叠",
+            children: [{
+                name: "叶子节点221"
+            }, {
+                name: "叶子节点222"
+            }, {
+                name: "叶子节点223"
+            }, {
+                name: "叶子节点224"
+            }]
+        }, {
+            name: "父节点23 - 折叠",
+            children: [{
+                name: "叶子节点231"
+            }, {
+                name: "叶子节点232"
+            }, {
+                name: "叶子节点233"
+            }, {
+                name: "叶子节点234"
+            }]
+        }]
+    }, {
+        name: "父节点3 - 没有子节点",
+        isParent: true
+    }
+
+];
+
+$(document).ready(function() {
+    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+});
 </script>

@@ -62,3 +62,4 @@ fis.media('push').match('{/static/**,/lib/**}', {
     to: '/var/www/RO_DZ/public'
   })
 });
+

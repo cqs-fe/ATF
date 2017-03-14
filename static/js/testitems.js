@@ -43,6 +43,8 @@ $(document).ready(function() {
 
     })();
 
+    initialTable();
+
     function initialTable() {
         let table = $('#example').DataTable({
             "data": dataSet,
@@ -78,6 +80,4 @@ $(document).ready(function() {
 
         });
     }
-
-
 });

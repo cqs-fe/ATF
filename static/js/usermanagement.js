@@ -31,8 +31,8 @@ $(document).ready(function() {
         $(".glyphicon").removeClass("show").addClass("hidden");
         $("#alter-password").val("")
         $("#alter-confirmpassword").val("");
-        $("#alter-feedback-password").attr({ "class": "glyphicon glyphicon-remove", style: "color: #b94a48" });
-        $("#alter-feedback-confirmpassword").attr({ "class": "glyphicon glyphicon-remove", style: "color: #b94a48" });
+        $("#alter-feedback-password").attr({ "class": "glyphicon hidden", style: "color: #b94a48" });
+        $("#alter-feedback-confirmpassword").attr({ "class": "glyphicon hidden", style: "color: #b94a48" });
         $("#btn-alter").prop("disabled", true);
         $("#input-detecting").show();
         $("#input-detecting").text("输入信息不完整");
@@ -84,7 +84,7 @@ $(document).ready(function() {
         $("#alter-feedback-state").addClass("glyphicon-ok show").removeClass("hidden").attr("style", "color:#468847;");
         detectInput();
     };
-
+    var row;
     $("#btn-alter").click(() => {
         let id = $("#alter-id").val();
         let username = $("#alter-username").val();
@@ -108,6 +108,15 @@ $(document).ready(function() {
             phone: telephone,
             status: state
         };
+        let newData = {
+            id: id,
+            username: username,
+            reallyname: name,
+            role: role,
+            dept: department,
+            phone: phonenumber,
+            status: state
+        }
         $.ajax({
             url: address + "userController/updateByPrimaryKey",
             data: data,
@@ -115,8 +124,9 @@ $(document).ready(function() {
             dataType: "json",
             success: (data, textStatus) => {
                 if (data.success === true) {
+                    $("#alterModal").modal("hide");
                     alert("修改成功");
-                    table.ajax.reload(null, false);
+                    row.data(newData);
                 } else {
                     alert("修改shibai");
                 }
@@ -138,7 +148,7 @@ $(document).ready(function() {
                 {
                     targets: -1,
                     data: null,
-                    defaultContent: "<button type='button' class='btn-tr' id='btn-viewRow' data-toggle='modal'>查看</button><button type='button' class='btn-tr' id='btn-alterRow'  data-toggle='modal'>修改</button><button type='button' class='btn-tr' id='btn-deleteRow'  data-toggle='modal'>删除</button>"
+                    defaultContent: "<button type='button' class='btn-tr btn-viewRow' id='' data-toggle='modal'>查看</button><button type='button' class='btn-tr btn-alterRow' id=''  data-toggle='modal'>修改</button><button type='button' class='btn-tr btn-deleteRow' id=''  data-toggle='modal'>删除</button>"
                 }
             ],
             "language": {
@@ -155,7 +165,7 @@ $(document).ready(function() {
         });
         table.column(0).visible(false);
         $(".dataTables_filter input").attr("placeholder", "请输入关键字");
-        $('#example tbody').on('click', '#btn-viewRow', function() {
+        $('#example tbody').on('click', '.btn-viewRow', function() {
             $('#viewModal').modal('show');
             let id = table.row($(this).parents('tr')).data().id;
             $.ajax({
@@ -175,9 +185,10 @@ $(document).ready(function() {
                 }
             });
         });
-        $('#example tbody').on('click', '#btn-alterRow', function() {
+        $('#example tbody').on('click', '.btn-alterRow', function() {
             $('#alterModal').modal('show');
-            let id = table.row($(this).parents('tr')).data().id;
+            row = table.row($(this).parents('tr'));
+            let id = row.data().id;
             $.ajax({
                 url: address + "userController/selectByPrimaryKey",
                 type: "post",
@@ -204,6 +215,137 @@ $(document).ready(function() {
         if (tooltips.length === 0) {
             $("#btn-alter").prop("disabled", false);
             $("#input-detecting").hide();
+        } else {
+            $("#btn-alter").prop("disabled", true);
+            $("#input-detecting").show();
         }
     }
+
+    // addModal input detection
+    document.querySelector("#username").oninput = function() {
+        if (this.value === '') {
+            $("#add-feedback-username").removeClass("glyphicon-ok").addClass("glyphicon-remove").attr("style", "color:#b94a48;");
+        } else {
+            $("#add-feedback-username").removeClass("glyphicon-remove").addClass("glyphicon-ok").attr("style", "color:#468847;");
+        }
+        detectAddInput();
+    };
+    document.querySelector('#name').oninput = function() {
+        if (this.value === '') {
+            $("#add-feedback-name").removeClass("glyphicon-ok").addClass("glyphicon-remove").attr("style", "color:#b94a48;");
+        } else {
+            $("#add-feedback-name").removeClass("glyphicon-remove").addClass("glyphicon-ok").attr("style", "color:#468847;");
+        }
+        detectAddInput();
+    }
+
+    document.querySelector("#password").oninput = function() {
+        if (this.value === "") {
+            $("#add-feedback-password").addClass("glyphicon-remove show").removeClass("glyphicon-ok hidden").attr("style", "color:#b94a48;");
+        } else {
+            $("#add-feedback-password").addClass("glyphicon-ok show").removeClass("glyphicon-remove hidden").attr("style", "color:#468847;");
+        }
+        let confirmpassword = $("#confirm").val();
+        if (confirmpassword !== "" && confirmpassword === this.value) {
+            $("#add-feedback-confirmpassword").addClass("glyphicon-ok show").removeClass("glyphicon-remove hidden").attr("style", "color:#468847;");
+        } else {
+            $("#add-feedback-confirmpassword").addClass("glyphicon-remove show").removeClass("glyphicon-ok hidden").attr("style", "color:#b94a48;");
+        }
+        detectAddInput();
+    };
+    document.querySelector("#confirm").oninput = function() {
+        let password = $("#password").val();
+        if (this.value !== "" && this.value === password) {
+            $("#add-feedback-confirmpassword").addClass("glyphicon-ok show").removeClass("glyphicon-remove hidden").attr("style", "color:#468847;");
+        } else {
+            $("#add-feedback-confirmpassword").addClass("glyphicon-remove show").removeClass("glyphicon-ok hidden").attr("style", "color:#b94a48;");
+        }
+        detectAddInput();
+    };
+    document.querySelector("#role").onchange = function() {
+        $("#add-feedback-role").addClass("glyphicon-ok show").removeClass("hidden").attr("style", "color:#468847;");
+        detectAddInput();
+    };
+    document.querySelector("#state").onchange = function() {
+        $("#add-feedback-status").addClass("glyphicon-ok show").removeClass("hidden").attr("style", "color:#468847;");
+        detectAddInput();
+    };
+    // 随时检测输入的内容  for 添加
+    function detectAddInput() {
+        let tooltips = $("#addModal .glyphicon-remove");
+        if (tooltips.length === 0) {
+            $("#btn-add").prop("disabled", false);
+            $("#add-input-detecting").hide();
+        } else {
+            $("#btn-add").prop("disabled", true);
+            $("#add-input-detecting").show();
+        }
+    }
+    document.querySelector('#btn-add').onclick = function() {
+        let username = $("#username").val();
+        let name = $('#name').val();
+        let password = $("#password").val()
+        let role = $("#role").val();
+        let dept = $('#department').val();
+        let tel = $('#phonenumber').val();
+        let phone = $('#telephone').val();
+        let email = $('#email').val();
+        let status = $('#state').val();
+        let data = {
+            username: username,
+            reallyname: name,
+            password: password,
+            role: role,
+            dept: dept,
+            tel: tel,
+            phone: phone,
+            email: email,
+            status: status
+        };
+        $.ajax({
+            url: address + 'userController/insert',
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            success: (jsonDdata, textStatus) => {
+                if (jsonDdata.success === true) {
+                    alert(data.success);
+                    $.ajax({
+                        url: address + 'userController/selectAllByPage',
+                        type: 'post',
+                        dataType: 'json',
+                        data: "page=1" + "&rows=10000" + "&order=" + 'id' + "&sort=asc&username=&reallyname=&role=&tel=&dept=",
+                        success: (jsonDdata, textStatus) => {
+                            let id = jsonDdata.total;
+                            data.id = id;
+                            table.row.add(data).draw();
+                        }
+                    });
+                } else {
+                    alert(jsonDdata.msg);
+                }
+            }
+        });
+    }
+    $("#addModal").on("hidden.bs.modal", (e) => {
+        $(".glyphicon").removeClass("glyphicon-ok").addClass("glyphicon-remove");
+        $("#username").val('');
+        $('#name').val('');
+        $("#password").val("")
+        $("#confirm").val("");
+        $('#department').val('');
+        $('#phonenumber').val('');
+        $('#telephone').val('');
+        $('#email').val('');
+        $('#confirm').val('');
+        $("#add-feedback-username").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-name").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-password").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-confirmpassword").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-role").attr({ "class": "col-lg-1 glyphicon hidden", style: "color: #b94a48" });
+        $("#add-feedback-status").attr({ "class": "col-lg-1 glyphicon hidden ", style: "color: #b94a48" });
+        $("#btn-add").prop("disabled", true);
+        $("#add-input-detecting").show();
+        // $("#add-input-detecting").text("输入信息不完整");
+    });
 });
