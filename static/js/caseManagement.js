@@ -17,7 +17,7 @@ var app = new Vue({
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
-        ids: ""
+        //ids: ""
     },
     ready: function() {
         getCase(1, 10, 'id', 'asc');
@@ -34,9 +34,9 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                        alert("添加成功！");
+                       $('#successModal').modal();
                     } else {
-                        alert("添加失败！");
+                        $('#failModal').modal();
                     }
                 }
             });
@@ -50,80 +50,97 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                        alert("导入成功！");
+                       $('#successModal').modal();
                     } else {
-                        alert("导入失败！");
+                        $('#failModal').modal();
                     }
                 }
             });
         },
         //导出excel
-        exportExcel: function() {
+        // exportExcel: function() {
+        //     var id_array = new Array();
+        //     $('input[name="chk_list"]:checked').each(function() {
+        //         id_array.push($(this).attr('id'));
+        //     });
+        //     app.ids = id_array.join(',');
+        //     //console.log(app.ids);
+        //     $.ajax({
+        //         url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel',
+        //         type: 'post',
+        //         data: {"ids":app.ids,"fanwei":"part"},                  //$("#exportExcel").serializeArray(),
+        //         success: function(data) {
+        //             console.log(data)
+        //             if (data.success) {
+        //                 document.location.href="10.108.226.152:8080/ATFCloud/pages?page=testcase"+data;
+        //                 //alert("导出成功！");
+        //             } else {
+        //                 alert("导出失败！");
+        //             }
+        //         }
+        //     });
+        // },
+
+        //分配执行者
+        executor: function() {
             var id_array = new Array();
             $('input[name="chk_list"]:checked').each(function() {
                 id_array.push($(this).attr('id'));
             });
-            app.ids = id_array.join(',');
-            //console.log(app.ids);
-            $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel',
-                type: 'post',
-                data:$("#exportExcel").serializeArray(),
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        alert("导出成功！");
-                    } else {
-                        alert("导出失败！");
-                    }
-                }
-            });
-        },
-
-        //分配执行者
-        executor: function() {
+            //app.ids = id_array.join(',');
+            $('input[name="ids"]').val(id_array.join(','));
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/excutor',
                 type: 'post',
                 data: $("#executorForm").serializeArray(),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        alert("分配成功！");
+                    console.info(data.msg);
+                    if (data.msg=="完成") {
+                        $('#successModal').modal();
                     } else {
-                        alert("分配失败！");
+                        $('#failModal').modal();
                     }
                 }
             });
         },
         //更改执行方式
-        executeMethod: function() {
+        execute_method: function() {
+             var id_array = new Array();
+            $('input[name="chk_list"]:checked').each(function() {
+                id_array.push($(this).attr('id'));
+            });
+            $('input[name="ids"]').val(id_array.join(','));
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/execute_mothord',
                 type: 'post',
                 data: $("#executeMethodForm").serializeArray(),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
-                        alert("更改成功！");
+                     if (data.success) {
+                       $('#successModal').modal();
                     } else {
-                        alert("更改失败！");
+                        $('#failModal').modal();
                     }
                 }
             });
         },
         //设置功能点
         transid: function() {
+              var id_array = new Array();
+            $('input[name="chk_list"]:checked').each(function() {
+                id_array.push($(this).attr('id'));
+            });
+            $('input[name="ids"]').val(id_array.join(','));
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/trans_id',
                 type: 'post',
                 data: $("#transidForm").serializeArray(),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
-                        alert("设置成功！");
+                  if (data.success) {
+                       $('#successModal').modal();
                     } else {
-                        alert("设置失败！");
+                        $('#failModal').modal();
                     }
                 }
             });
@@ -200,4 +217,3 @@ function changeListNum() {
 $("#chk_all").click(function() {　　
     $("input[name='chk_list']").prop("checked", $(this).prop("checked"));　
 });
-

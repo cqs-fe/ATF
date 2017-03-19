@@ -5,13 +5,12 @@
     <link rel="import" href="./common/header.html?__inline">
     <!-- css for this page only -->
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    <link rel="stylesheet" href="../static/css/fileinput.scss">
-    <link rel="stylesheet" type="text/css" href="../static/css/zTreeStyle.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+    <link rel="stylesheet" href="../static/css/fileinput.min.css">
     <!-- datatable css -->
     <!-- <link rel="stylesheet" href="../static/css/dataTables.bootstrap.css"> -->
     <!-- <link rel="stylesheet" href="../static/css/dataTables.fontAwesome.css"> -->
     <!-- pagination css -->
-    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <title>Case Management</title>
 </head>
 
@@ -392,26 +391,26 @@
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                         <h4 class="modal-title">导出</h4>
                                     </div>
-                                    <div class="modal-body">
-                                        <form role="form" id="exportForm">
-                                            <div class="form-group hidden">
-                                                <label  class="col-lg-2 control-label">id列表</label>
-                                                <div class="col-lg-3">
-                                                     <input type="text" name="ids" class="form-control" value="{{ids}}">
+                                    <form role="form" id="exportForm" action="http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel" method="post">
+                                        <div class="modal-body">
+                                            <div class="form-group ">
+                                                <label class="col-lg-2 control-label">id列表</label>
+                                                <div class="col-lg-4">
+                                                    <input type="text" name="ids" class="form-control" value="{{ids}}">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-lg-2">导出范围(part,all)</label>
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <input type="text" name="fanwei" class="form-control">
                                                 </div>
                                             </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="exportExcel()">确认</button>
-                                    </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                            <button class="btn btn-success" type="submit">确认</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -427,14 +426,20 @@
                                     <div class="modal-body">
                                         <form class="form-horizontal" id="executorForm">
                                             <div class="form-group">
+                                                <label class="col-lg-2 control-label hidden">id列表</label>
+                                                <div class="col-lg-4 hidden">
+                                                    <input type="text" name="ids" class="form-control" value="">
+                                                </div>
                                                 <label class="col-lg-2 control-label">执行者</label>
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <select size="1" aria-controls="" class="form-control" name="executor">
-                                                        <option>葛晋鹏</option>
-                                                        <option>潘彦</option>
-                                                        <option>朱庆广</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
                                                     </select>
                                                 </div>
+                                            </div>
+                                            <div class="form-group">
                                             </div>
                                         </form>
                                     </div>
@@ -457,12 +462,16 @@
                                     <div class="modal-body">
                                         <form class="form-horizontal" id="executeMethodForm">
                                             <div class="form-group">
+                                                <label class="col-lg-2 control-label hidden">id列表</label>
+                                                <div class="col-lg-4 hidden">
+                                                    <input type="text" name="ids" class="form-control" value="">
+                                                </div>
                                                 <label class="col-lg-2 control-label">执行方式</label>
                                                 <div class="col-lg-3">
                                                     <select size="1" aria-controls="" class="form-control" name="executemethord">
-                                                        <option>自动化</option>
-                                                        <option>手工</option>
-                                                        <option>配合</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -470,7 +479,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="executeMethod()">确认</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="execute_method()">确认</button>
                                     </div>
                                 </div>
                             </div>
@@ -487,16 +496,14 @@
                                     <div class="modal-body">
                                         <form class="form-horizontal" id="transidForm">
                                             <div class="form-group">
-                                                <label class="col-lg-2 control-label">id列表</label>
-                                                <div class="col-lg-3">
-                                                    <input type="text" name="ids" class="form-control">
+                                                <label class="col-lg-2 control-label hidden">id列表</label>
+                                                <div class="col-lg-4 hidden">
+                                                    <input type="text" name="ids" class="form-control" value="">
                                                 </div>
                                                 <label class="col-lg-3 control-label">被测系统id</label>
                                                 <div class="col-lg-3">
                                                     <input type="text" name="autid" class="form-control">
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
                                                 <label class="col-lg-2 control-label">功能码id</label>
                                                 <div class="col-lg-3">
                                                     <input type="text" name="transid" class="form-control">
@@ -506,31 +513,48 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="transid()">确认</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="transid">确认</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- tradeModal end -->
-                        <!-- scriptModeFlag start -->
-                        <div class="modal fade" id="scriptModeFlag" tabindex="-1" role="dialog" aria-labelledby="scriptModeFlagLabel" aria-hidden="true">
+                        <!-- successModal start -->
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">指定用例模板</h4>
+                                        <h4 class="modal-title">操作成功</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <ul id="treeDemo" class="ztree"></ul>
+                                        <h3>操作成功！</h3>
                                     </div>
                                     <div class="modal-footer">
-                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button class="btn btn-success" type="button">确认</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- scriptModeFlag end -->
+                        <!-- successModal end -->
+                        <!-- failModal start -->
+                        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h3>操作失败！</h3>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- failModal end -->
                     </div>
                 </div>
                 <!--topbutton end-->
@@ -559,13 +583,7 @@
                                             <div class="col-lg-2">
                                                 <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号">
                                             </div>
-                                            <label class="col-lg-2 control-label">浏览方式</label>
-                                            <div class="col-lg-2">
-                                                <select size="1" class="form-control" v-model="selected">
-                                                    <option v-for="option in options" v-bind:value="option.value">{{option.text}}</option>
-                                                </select>
-                                            </div>
-                                            <label class="col-lg-2 control-label">展示条目</label>
+                                            <label class="col-lg-2 col-lg-offset-4 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
                                                     <option value="1" selected>1</option>
@@ -589,53 +607,53 @@
                                                         <td>
                                                             优先级：
                                                             <label class="label_check" for="checkbox-01">
-                                                                <input type="checkbox" name="" id="checkbox-01" value="1" v-model="priority">1级</label>
+                                                                <input type="checkbox" name="" id="checkbox-01" v-model="priority">1级</label>
                                                             <label class="label_check" for="checkbox-02">
-                                                                <input type="checkbox" name="" id="checkbox-02" value="1" v-model="priority">2级</label>
+                                                                <input type="checkbox" name="" id="checkbox-02" v-model="priority">2级</label>
                                                             <label class="label_check" for="checkbox-03">
-                                                                <input type="checkbox" name="" id="checkbox-03" value="1" v-model="priority">3级</label>
+                                                                <input type="checkbox" name="" id="checkbox-03" v-model="priority">3级</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             执行方式：
                                                             <label class="label_check" for="checkbox-04">
-                                                                <input type="checkbox" name="" id="checkbox-04" value="1" v-model="executeMethod">自动化</label>
+                                                                <input type="checkbox" name="" id="checkbox-04" v-model="executeMethod">自动化</label>
                                                             <label class="label_check" for="checkbox-05">
-                                                                <input type="checkbox" name="" id="checkbox-05" value="1" v-model="executeMethod">手工</label>
+                                                                <input type="checkbox" name="" id="checkbox-05" v-model="executeMethod">手工</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             用例类型：
                                                             <label class="label_check" for="checkbox-06">
-                                                                <input type="checkbox" name="" id="checkbox-06" value="1" v-model="casetype">接口</label>
+                                                                <input type="checkbox" name="" id="checkbox-06" v-model="casetype">接口</label>
                                                             <label class="label_check" for="checkbox-07">
-                                                                <input type="checkbox" name="" id="checkbox-07" value="1" v-model="casetype">界面</label>
+                                                                <input type="checkbox" name="" id="checkbox-07" v-model="casetype">界面</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="filter-checkbox">
                                                             用例状态：
                                                             <label class="label_check" for="checkbox-08">
-                                                                <input type="checkbox" name="" id="checkbox-08" value="1" v-model="useStatus">新增</label>
+                                                                <input type="checkbox" name="" id="checkbox-08" v-model="useStatus">新增</label>
                                                             <label class="label_check" for="checkbox-09">
-                                                                <input type="checkbox" name="" id="checkbox-09" value="1" v-model="useStatus">评审通过</label>
+                                                                <input type="checkbox" name="" id="checkbox-09" v-model="useStatus">评审通过</label>
                                                             <label class="label_check" for="checkbox-10">
-                                                                <input type="checkbox" name="" id="checkbox-10" value="1" v-model="useStatus">执行成功</label>
+                                                                <input type="checkbox" name="" id="checkbox-10" v-model="useStatus">执行成功</label>
                                                             <label class="label_check" for="checkbox-11">
-                                                                <input type="checkbox" name="" id="checkbox-11" value="1" v-model="useStatus">执行失败</label>
+                                                                <input type="checkbox" name="" id="checkbox-11" v-model="useStatus">执行失败</label>
                                                             <label class="label_check" for="checkbox-12">
-                                                                <input type="checkbox" name="" id="checkbox-12" value="1" v-model="useStatus">执行未完成</label>
+                                                                <input type="checkbox" name="" id="checkbox-12" v-model="useStatus">执行未完成</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="filter-checkbox">
                                                             其他：
                                                             <label class="label_check" for="checkbox-13">
-                                                                <input type="checkbox" name="" id="checkbox-13" value="1">我编写的</label>
+                                                                <input type="checkbox" name="" id="checkbox-13">我编写的</label>
                                                             <label class="label_check" for="checkbox-14">
-                                                                <input type="checkbox" name="" id="checkbox-14" value="1">我执行的</label>
+                                                                <input type="checkbox" name="" id="checkbox-14">我执行的</label>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -645,26 +663,26 @@
                                 </div>
                             </div>
                             <!-- 表格 -->
-                            <table class="table table-striped border-top" id="sample_1">
+                            <table class="table table-bordered border-top text-center" id="sample_1">
                                 <thead>
                                     <tr>
                                         <th style="width:8px;">
                                             <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                         </th>
-                                        <th @click="sortBy('caselibId')">被测系统</th>
-                                        <th class="hidden-phone" @click="sortBy('testPoint')">功能点</th>
-                                        <th class="hidden-phone" @click="sortBy('caseCompositeType')">案例组成类型</th>
-                                        <th class="hidden-phone" @click="sortBy('id')">案例编号</th>
-                                        <th class="hidden-phone" @click="sortBy('useStatus')">状态</th>
-                                        <th class="hidden-phone" @click="sortBy('author')">脚本编辑者</th>
-                                        <th class="hidden-phone" @click="sortBy('executor')">执行者</th>
-                                        <th class="hidden-phone" @click="sortBy('executeMethod')">执行方式</th>
+                                        <th @click="sortBy('caselibId')" class="text-center">被测系统</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('testPoint')">功能点</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('caseCompositeType')">案例组成类型</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('id')">案例编号</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('useStatus')">状态</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('author')">脚本编辑者</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('executor')">执行者</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('executeMethod')">执行方式</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="odd gradeX" v-for="product in productList">
+                                    <tr class="odd gradeX" v-for="product in productList | orderBy sortparam">
                                         <td>
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{product.id}}"/>
+                                            <input type="checkbox" v-model="" name="chk_list" id="{{product.id}}" />
                                         </td>
                                         <td>{{ product.caselibId }}</td>
                                         <td class="hidden-phone">{{ product.testPoint }}</td>
@@ -738,92 +756,25 @@
 <script src="../lib/vue-resource.min.js"></script>
 <script type="text/javascript" src="../static/js/caseManagement.js"></script>
 <script src="../lib/fileinput.min.js"></script>
+<script src="../lib/zh.js"></script>
 <script>
 $("#input-1").fileinput({
-    showUpload: false,
-    browseClass: "btn btn-primary",
-    fileType: "any",
-    overwriteInitial: false
-});
-</script>
-<script type="text/javascript" src="../static/js/jquery.ztree.core.js"></script>
-<script type="text/javascript">
-var setting = {};
-
-var zNodes = [{
-        name: "父节点1 - 展开",
-        open: true,
-        children: [{
-            name: "父节点11 - 折叠",
-            children: [{
-                name: "叶子节点111"
-            }, {
-                name: "叶子节点112"
-            }, {
-                name: "叶子节点113"
-            }, {
-                name: "叶子节点114"
-            }]
-        }, {
-            name: "父节点12 - 折叠",
-            children: [{
-                name: "叶子节点121"
-            }, {
-                name: "叶子节点122"
-            }, {
-                name: "叶子节点123"
-            }, {
-                name: "叶子节点124"
-            }]
-        }, {
-            name: "父节点13 - 没有子节点",
-            isParent: true
-        }]
-    }, {
-        name: "父节点2 - 折叠",
-        children: [{
-            name: "父节点21 - 展开",
-            open: true,
-            children: [{
-                name: "叶子节点211"
-            }, {
-                name: "叶子节点212"
-            }, {
-                name: "叶子节点213"
-            }, {
-                name: "叶子节点214"
-            }]
-        }, {
-            name: "父节点22 - 折叠",
-            children: [{
-                name: "叶子节点221"
-            }, {
-                name: "叶子节点222"
-            }, {
-                name: "叶子节点223"
-            }, {
-                name: "叶子节点224"
-            }]
-        }, {
-            name: "父节点23 - 折叠",
-            children: [{
-                name: "叶子节点231"
-            }, {
-                name: "叶子节点232"
-            }, {
-                name: "叶子节点233"
-            }, {
-                name: "叶子节点234"
-            }]
-        }]
-    }, {
-        name: "父节点3 - 没有子节点",
-        isParent: true
-    }
-
-];
-
-$(document).ready(function() {
-    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    language: "zh",
+    overwriteInitial: false,
+    uploadUrl: "http://10.108.226.152:8080/ATFCloud/TestcaseController/importexcel", //上传的地址(访问接口地址)
+    allowedFileExtensions: ['xls'], //接收的文件后缀
+    uploadAsync: true, //默认异步上传
+    showUpload: true, //是否显示上传按钮
+    showRemove: true, //显示移除按钮
+    showPreview: true, //是否显示预览
+    showCaption: true, //是否显示标题
+    browseClass: "btn btn-primary", //按钮样式  
+    dropZoneEnabled: true, //是否显示拖拽区域
+    //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+    maxFileCount: 10, //表示允许同时上传的最大文件个数
+    enctype: 'multipart/form-data',
+    validateInitialCount: true,
+    previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+    msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
 });
 </script>
