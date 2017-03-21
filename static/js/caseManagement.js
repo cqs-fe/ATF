@@ -2,14 +2,18 @@ var app = new Vue({
     el: '#v-demo',
     data: {
         isShow: false,
-        caseNode: '<h3>流程节点用例</h3><div class="form-group"><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid"><option></option></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><select class="form-control" size="1" name="subversioncode"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option>葛晋鹏</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option></option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
-        productList: [],
+        caseNode: '<h3>流程节点用例</h3><div class="form-group"><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid"><option></option></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><select class="form-control" size="1" name="subversioncode"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
+        productList: [], //案例
+        autList: [], //测试系统
+        selectedAut: '', //当前选中的测试系统
+        userList: [], //用户
         priority: [],
         executeMethod: [],
         casetype: [],
         useStatus: [],
         sortparam: '',
         //apiUrl: '../mock/caseManagement.json',
+        tt: "", //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
         totalPage: 10, //总页数
@@ -22,8 +26,25 @@ var app = new Vue({
     ready: function() {
         getCase(1, 10, 'id', 'asc');
         changeListNum();
+        getAut();
+        getUser();
     },
-
+    computed: {
+        //功能点
+        transactList: function() {
+            var transactList = [],
+                selectedAut = this.$data.selectedAut;
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+                type: 'get',
+                data: { 'autlistselect': selectedAut },
+                success: function(data) {
+                    transactList = data.o;
+                    console.log(transactList);
+                }
+            });
+        }
+    },
     methods: {
         //添加用例
         insert: function() {
@@ -34,7 +55,7 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                       $('#successModal').modal();
+                        $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }
@@ -50,7 +71,7 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                       $('#successModal').modal();
+                        $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }
@@ -95,7 +116,7 @@ var app = new Vue({
                 data: $("#executorForm").serializeArray(),
                 success: function(data) {
                     console.info(data.msg);
-                    if (data.msg=="完成") {
+                    if (data.msg == "完成") {
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -105,7 +126,7 @@ var app = new Vue({
         },
         //更改执行方式
         execute_method: function() {
-             var id_array = new Array();
+            var id_array = new Array();
             $('input[name="chk_list"]:checked').each(function() {
                 id_array.push($(this).attr('id'));
             });
@@ -116,8 +137,8 @@ var app = new Vue({
                 data: $("#executeMethodForm").serializeArray(),
                 success: function(data) {
                     console.info(data);
-                     if (data.success) {
-                       $('#successModal').modal();
+                    if (data.success) {
+                        $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }
@@ -126,7 +147,7 @@ var app = new Vue({
         },
         //设置功能点
         transid: function() {
-              var id_array = new Array();
+            var id_array = new Array();
             $('input[name="chk_list"]:checked').each(function() {
                 id_array.push($(this).attr('id'));
             });
@@ -137,8 +158,8 @@ var app = new Vue({
                 data: $("#transidForm").serializeArray(),
                 success: function(data) {
                     console.info(data);
-                  if (data.success) {
-                       $('#successModal').modal();
+                    if (data.success) {
+                        $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }
@@ -180,7 +201,17 @@ var app = new Vue({
             var element = $("#addCaseNode").append(this.caseNode);
             this.$compile(element.get(0));
         },
-
+        //搜索案例
+        searchCase: function(id) {
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/viewtestcase',
+                type: 'GET',
+                data: { 'id': id },
+                success: function() {
+                    this.$data.productList = data.o;
+                }
+            });
+        }
     },
 
 });
@@ -196,12 +227,38 @@ function getCase(currentPage, listnum, order, sort) {
             'sort': sort
         },
         success: function(data) {
-            console.info(data);
-            console.info(data.o.rows);
+            // console.info(data);
+            // console.info(data.o.rows);
             app.productList = data.o.rows;
-            var tt = data.o.total;
-            app.totalPage = Math.ceil(tt / listnum);
+            app.tt = data.o.total;
+            app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
+        }
+    });
+}
+//获取测试系统
+function getAut() {
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/autController/selectAll',
+        type: 'GET',
+        //data: {},
+        success: function(data) {
+            // console.info(data);
+            // console.info(data.obj);
+            app.autList = data.obj;
+        }
+    });
+}
+//获取用户
+function getUser() {
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/userController/selectAll',
+        type: 'GET',
+        //data: {},
+        success: function(data) {
+            // console.info(data);
+            //console.info(data.obj);
+            app.userList = data.obj;
         }
     });
 }
@@ -217,3 +274,89 @@ function changeListNum() {
 $("#chk_all").click(function() {　　
     $("input[name='chk_list']").prop("checked", $(this).prop("checked"));　
 });
+
+
+//三级联动
+$(document).ready(function(e) {
+
+    yiji(); //第一级函数
+    erji(); //第二级函数
+    sanji(); //第三极函数
+    $("#yiji").change(function() {
+        erji(); 
+    })
+    $("#erji").change(function() {
+        sanji();
+    })
+});
+
+function yiji() {
+    $.ajax({
+        async: false,
+        url: "yiji.php",
+        dataType: "TEXT",
+        success: function(r) {
+            var lie = r.split("|");
+            var str = "";
+            for (var i = 0; i < lie.length; i++) {
+
+                str += " <option value='" + lie[i] + "' >" + lie[i] + "</option> ";
+            }
+
+            $("#yiji").html(str);
+
+        }
+    });
+}
+//二级
+function erji() {
+    var val = $("#yiji").val();
+    $.ajax({
+        async: false,
+        url: "erji.php",
+        dataType: "TEXT",
+        data: { e: val },
+        type: "POST",
+        success: function(r) {
+            var lie = r.split("|");
+            var str = "";
+            for (var i = 0; i < lie.length; i++) {
+
+                str += " <option value='" + lie[i] + "'>" + lie[i] + "</option> ";
+            }
+            $("#erji").html(str);
+
+        }
+
+    });
+}
+
+
+//三级
+function sanji() {
+
+    var val = $("#erji").val();
+    if (val !== "") //有些特别行政区没有下一区县，例如香港
+    {
+        $.ajax({
+            url: "sanji.php",
+            dataType: "TEXT",
+            data: { e: val },
+            type: "POST",
+            success: function(r) {
+
+                var lie = r.split("|");
+                var str = "";
+                for (var i = 0; i < lie.length; i++) {
+
+                    str += " <option value='" + lie[i] + "'>" + lie[i] + "</option> ";
+                }
+                $("#sanji").html(str);
+
+            }
+
+        });
+    } else {
+        $("#sanji").empty();
+    }
+}

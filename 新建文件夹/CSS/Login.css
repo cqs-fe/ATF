@@ -1,0 +1,243 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	background-color:#666;
+}
+#title{
+	width:800px;
+	height:30px;
+	text-align:center;
+	font-size:30px;
+	line-height:30px;
+	position:absolute;
+	left:50%;
+	top:20%;
+	margin: -20px 0 0 -400px;
+	font-weight:700; 
+}
+
+.titleATF{
+
+	font-family:Verdana, Geneva, sans-serif;
+
+	color:#F33;
+	
+}
+.titleWord{
+	font-family:Comic Sans MS, cursive;
+	color:#FFF;
+}
+#main{
+	width:800px;
+	height:350px;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin: -150px 0 0 -400px;
+	font-weight:700; 
+}
+#introduction{
+
+	width:300px;
+	height:300px;
+	float:left;
+	background-color:#F33;
+	border-radius:3px;
+	padding-top:50px;
+}
+#introductionATF{
+	font-family:Comic Sans MS, cursive;
+	font-weight:600; 
+	font-size:24px; 
+	color:#FFF;
+	width:50px;height:50px;
+}
+
+#welcome{
+
+	text-align:center;
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:300; 
+	font-size:22px; 
+	color:#FFF;
+}
+
+#introductionWord{
+
+	text-align:center;
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:300; 
+	font-size:16px; 
+	color:#FFF;
+	text-align:left;
+	padding-top:100px;
+	padding-left:40px;
+}
+#Login{
+
+	width:460px;
+	height:300px;
+	float:left;
+	background-color:#FFF;
+	border-radius:3px;
+	padding-top:50px;
+	padding-left:40px
+}
+
+#loginTitle{
+
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:600; 
+	font-size:24px; 
+	color:#F33;
+	margin-left:30px;
+
+}
+#result{
+	font-size:20px; 
+	color:#000;
+}
+#loginForm{
+
+	font-family:Verdana, Geneva, sans-serif;
+	text-align:left;
+	float:left;
+	font-size:18px; 
+
+}
+#loginForm div{
+	margin:22px 0 15px 30px;
+}
+.clear{
+        clear:borh
+}
+#loginInput{
+	height:30px;
+	width:325px;
+	text-align:center;
+	background-color:#F33;
+	color:#FFF;
+    position:absolute;
+	left:370px;
+	top:280px;
+}
+.username{
+	width:250px;
+	height:25px;
+}
+.password{
+	width:250px;
+    height:25px;
+}
+.authCode{
+	width:120px;
+    height:25px;
+}
+.error{
+	display:none
+}
+#codeImage{
+	width:103px;
+    height:30px;
+	position:relative;
+	top:9px;
+	left:20px;
+}
+#tips{
+	width:200px;
+	height:20px;
+	text-align:center;
+	font-size:16px;
+	line-height:20px;
+	position:absolute;
+	left:45%;
+	top:50%;
+	margin: 220px 0 0 -50px;
+	font-weight:700; 
+}
+#tips a{
+	text-decoration:none;
+	color:#FFF;
+}
+div input{
+	margin-left:15px;
+	text-align:left;
+}
+div span{
+	width:100px;
+	text-align:right;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+.error1 {
+    display: none;
+    position: absolute;
+    bottom:24%;
+    right:4%;
+    font-size:12px;
+    color:#F33;
+}
+.error2 {
+    display: none;
+    position: absolute;
+    bottom:24%;
+    right:5.5%;
+    font-size:12px;
+    color:#F33;
+}
+.error3 {
+    display: none;
+    position: absolute;
+    bottom:24%;
+    right:5.5%;
+    font-size:12px;
+    color:#F33;
+}
+.clsShow
+  {
+   font-size: 13px;
+   border: solid 1px #cc3300;
+   padding: 2px;
+   display: none;
+   margin-bottom: 5px;
+   background-color: #ffe0a3;
+   line-height: 2.0em;
+  }
+ .div1{
+/* Rotate div */
+transform:rotate(-30deg);
+-ms-transform:rotate(-30deg); /* Internet Explorer */
+-moz-transform:rotate(-30deg); /* Firefox */
+-webkit-transform:rotate(-30deg); /* Safari �� Chrome */
+-o-transform:rotate(-30deg); /* Opera */
+position:absolute;
+top:50px;
+left:110px;
+font-weight:300;
+font-family:Georgia, "Times New Roman", Times, serif;
+}
+.div2{
+/* Rotate div */
+position:absolute;
+top:30px;
+left:140px;
+font-weight:300;
+font-family:Georgia, "Times New Roman", Times, serif;
+}
+.div3{
+/* Rotate div */
+transform-origin: 0 0 0;
+transform:rotate(30deg);
+-ms-transform:rotate(30deg); /* Internet Explorer */
+-moz-transform:rotate(30deg); /* Firefox */
+-webkit-transform:rotate(30deg); /* Safari �� Chrome */
+-o-transform:rotate(30deg); /* Opera */
+position:absolute;
+top:50px;
+left:180px;
+font-weight:300;
+font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+.clear{
+  clear:both;
+}
