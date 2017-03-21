@@ -1,0 +1,19 @@
+@charset "utf-8";
+*{padding:0;margin:0;}
+
+#ATF{font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:24px; color:#F33;}
+#title{font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:18px; color:#000; margin-left:10px;}
+.title{width:60%;height:30px;margin: 50px auto;}
+
+.ui-stepBar-wrap{width: 60%; margin: 0 auto;}
+.ui-stepBar-wrap .ui-stepBar{}
+.ui-stepBar-wrap .ui-stepBar .ui-stepProcess1{width:50%;height:5px;background:#ccc;float: left}
+.ui-stepBar-wrap .ui-stepBar .ui-stepProcess2{width:50%;height:5px;background:#F33;float: left}
+.clear{
+	clear: both;
+}
+.ui-stepBar-wrap .ui-stepInfo-wrap{height:30px;margin: 0 auto;}
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo{width:50%;float: left;font-weight:bold; text-align: center;}
+.link{width:60%;height:300px;margin: 0 auto; text-align: center;line-height: 300px;}
+#word{font-size:18px; font-weight:400; color:#000};
+
