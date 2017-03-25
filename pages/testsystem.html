@@ -45,29 +45,35 @@
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label" for="autcode">系统编号</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="autcode" name="autCode">
+                                                    <input type="text" required class="form-control" id="autCode" name="autCode">
                                                 </div>
-                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-itemname" style="color: #b94a48;"></span>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-autCode" style="color: #b94a48;"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label" for="systemname">系统名称</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="systemname" name="testProjectName">
+                                                    <input type="text" required class="form-control" id="autName" name="autName">
                                                 </div>
-                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-itemname" style="color: #b94a48;"></span>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-autName" style="color: #b94a48;"></span>
                                             </div>
-
                                             <div class="form-group">
-                                                <label for="itemtype" class="col-lg-3 control-label">类型</label>
+                                                <label class="col-lg-3 control-label" for="version">系统版本</label>
                                                 <div class="col-lg-8">
-                                                    <select id="itemtype" class="form-control" name="type">
+                                                    <input type="text" required class="form-control" id="version" name="version">
+                                                </div>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-version" style="color: #b94a48;"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="autType" class="col-lg-3 control-label">系统类型</label>
+                                                <div class="col-lg-8">
+                                                    <select id="autType" class="form-control" name="autType">
                                                       <option value="01">需求类</option>
                                                       <option value="02">问题修复类</option>
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label for="createUser" class="col-lg-3 control-label">创建人编号</label>
                                                 <div class="col-lg-8">
                                                     <select name="userId" id="createUser" class="form-control">
@@ -92,7 +98,7 @@
                                                 <div class="col-lg-8">
                                                     <textarea rows="10" cols="50" id="itemdesc" class="form-control" name="taskDescription" style="resize: none;"></textarea>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </form>
                                         <div class="alert alert-danger" style="margin-bottom: 0;" id="add-input-detecting">
                                             输入信息不完整！
@@ -111,7 +117,7 @@
                     <!-- table start -->
                     <div class="col-lg-12 panel" style="overflow: scroll;">
                         <div class="table-tool container">
-                            <form class="table-search col-lg-6">
+                            <!-- <form class="table-search col-lg-6">
                                 <select id="search-type" class="form-control inline-block">
                                     <option value="testProjectName">任务名称</option>
                                     <option value="type">任务类型</option>
@@ -121,7 +127,7 @@
                                 </select>
                                 <input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
                                 <button type="button" class="btn btn-danger inline-block" id="btn-search">搜索</button>
-                            </form>
+                            </form> -->
                             <div class="display-items col-lg-2 col-lg-offset-4">
                                 <label class="inline-block">展示条目</label>
                                 <select class="form-control inline-block" id="showRows">
@@ -134,13 +140,11 @@
                         <table id="example" class="table  table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th data-order="id" data-sort="desc" onclick="resort(this);">任务编号&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
-                                    <th>任务名称&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th data-order="type" data-sort="desc" onclick="resort(this);">类型&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>所属产品线&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>所属测试系统&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>描述</th>
-                                    <th>操作</th>
+                                    <th data-order="id" data-sort="desc" onclick="resort(this);">系统ID&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
+                                    <th>系统编号</th>
+                                    <th>系统名称</th>
+                                    <th>系统版本</th>
+                                    <th>系统类型</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -170,7 +174,7 @@
                         </div>
                         <div class="col-lg-12">
                             <!-- viewModal start -->
-                            <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+                           <!--  <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -235,7 +239,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- viewModal end -->
                             <!-- alterModal start -->
                             <div class="modal fade " id="alterModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -243,53 +247,39 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">修改任务</h4>
+                                        <h4 class="modal-title">修改系统</h4>
                                     </div>
                                     <div class="modal-body">
                                         <form class="form-horizontal " role="form" id="alterForm">
                                             <div class="form-group">
-                                                <label class="col-lg-3 control-label" for="alter-itemname">任务名称</label>
+                                                <label class="col-lg-3 control-label" for="alter-autCode">系统编码</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="alter-itemname" name="testProjectName">
-                                                    <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-itemname" style="color: #468847;"></span>
+                                                    <input type="text" required class="form-control" id="alter-autCode" name="autCode">
+                                                    <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-autCode" style="color: #468847;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label" for="alter-autName">系统名称</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" required class="form-control" id="alter-autName" name="autName">
+                                                    <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-autName" style="color: #468847;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label" for="alter-version">系统版本</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" required class="form-control" id="alter-version" name="version">
+                                                    <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-version" style="color: #468847;"></span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="alter-itemtype" class="col-lg-3 control-label">类型</label>
+                                                <label for="alter-autType" class="col-lg-3 control-label">系统类型</label>
                                                 <div class="col-lg-8">
-                                                    <select id="alter-itemtype" class="form-control" name="type">
+                                                    <select id="alter-autType" class="form-control" name="autType">
                                                     <option value="01">需求类</option>
                                                       <option value="02">问题修复类</option>
                                                     </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-itemcode" class="col-lg-3 control-label">创建人编号</label>
-                                                <div class="col-lg-8 ">
-                                                    <select id="alter-createUser" name="userId" class="form-control" required>
-                                                
-                                                    </select>  
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-itemline" class="col-lg-3 control-label">所属产品线</label>
-                                                <div class="col-lg-8">
-                                                    <select id="alter-itemline" class="form-control" name="productLineId">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-itembelong" class="control-label col-lg-3">所属测试系统</label>
-                                                <div class="col-lg-8">
-                                                    <select id="alter-itembelong" class="form-control" name="autId">
-                                                </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-itemdesc" class="control-label col-lg-3">任务描述</label>
-                                                <div class="col-lg-8">
-                                                    <textarea rows="10" cols="50" id="alter-itemdesc" class="form-control" name="taskDescription"></textarea>
                                                 </div>
                                             </div>
                                         </form>

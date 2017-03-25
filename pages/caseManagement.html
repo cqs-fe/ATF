@@ -30,10 +30,13 @@
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#addModal"><i class="icon-plus"></i> 添加</a>
                         <a class="btn btn-white" data-toggle="modal" href="#importModal"><i class="icon-share-alt"></i> 导入</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#exportModal"><i class="icon-reply"></i> 导出</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#exportModal" @click="getIds()"><i class="icon-reply"></i> 导出</a>
                         <a class="btn btn-white" data-toggle="modal" href="#assignModal"><i class="icon-user"></i> 分配</a>
                         <a class="btn btn-white" data-toggle="modal" href="#runModeModal"><i class="icon-retweet"></i> 更改执行方式</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#transid"><i class="icon-cog"></i> 设置功能点及模板脚本</a>
+<<<<<<< HEAD
+=======
+                        <a class="btn btn-white" data-toggle="modal" href="#transid" @click="getIds()"><i class="icon-cog"></i> 设置功能点及模板脚本</a>
+>>>>>>> origin/cqs
                         <!-- addModal start -->
                         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -67,7 +70,10 @@
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label hidden">用例组成类型</label>
                                                                 <div class="col-lg-4 hidden">
-                                                                    <input type="text" class="form-control" name="casecaseCompositeType" value="1">
+<<<<<<< HEAD
+=======
+                                                                    <input type="text" class="form-control" name="caseCompositeType" value="1">
+>>>>>>> origin/cqs
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">用例编号</label>
                                                                 <div class="col-lg-4">
@@ -79,14 +85,30 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="col-lg-2 control-label">系统编号</label>
-                                                                <div class="col-lg-4">
-                                                                    <input type="text" class="form-control" name="autid">
-                                                                </div>
                                                                 <label class="col-lg-2 control-label">被测系统</label>
                                                                 <div class="col-lg-4">
-                                                                    <select class="form-control" v-model="selectedAut">
-                                                                        <option v-for="aut in autList" value="{{aut.id}}">{{aut.autName}}</option>
+                                                                    <select type="text" class="form-control" name="autid"></select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">版本号</label>
+                                                                <div class="col-lg-4">
+<<<<<<< HEAD
+=======
+                                                                    <input type="text" class="form-control" name="versioncode">
+>>>>>>> origin/cqs
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">功能点</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" id="" name="transid">
+                                                                    </select>
+                                                                </div>
+<<<<<<< HEAD
+=======
+                                                                <label class="col-lg-2 control-label">所属模板</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="scriptmodeflag" id="">
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -94,12 +116,6 @@
                                                                 <label class="col-lg-2 control-label">测试点</label>
                                                                 <div class="col-lg-4">
                                                                     <input type="text" class="form-control" name="testpoint">
-                                                                </div>
-                                                                <label class="col-lg-2 control-label">功能点</label>
-                                                                <div class="col-lg-4">
-                                                                    <select class="form-control">
-                                                                        <option v-for="trans in transactList" value="{{trans.id}}">{{trans.transname}}</option>
-                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -148,19 +164,25 @@
                                                                 <label class="col-lg-2 control-label">用例性质</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="caseproperty">
-                                                                        <option>正常值</option>
-                                                                        <option>错误值</option>
-                                                                        <option>边界值</option>
-                                                                        <option>要素级</option>
-                                                                        <option>流程级</option>
+<<<<<<< HEAD
+=======
+                                                                        <option value="1">正常值</option>
+                                                                        <option value="2">错误值</option>
+                                                                        <option value="3">边界值</option>
+                                                                        <option value="4">要素级</option>
+                                                                        <option value="5">流程级</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">测试用例类型</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="casetype">
-                                                                        <option>联机</option>
-                                                                        <option>批量</option>
-                                                                        <option>接口</option>
+<<<<<<< HEAD
+=======
+                                                                        <option value="1">联机</option>
+                                                                        <option value="2">批量</option>
+                                                                        <option value="3">接口</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -179,49 +201,64 @@
                                                                         <option>9级</option>
                                                                     </select>
                                                                 </div>
+                                                                <label class="col-lg-2 control-label">作者</label>
+                                                                <div class="col-lg-4">
+<<<<<<< HEAD
+=======
+                                                                    <select class="form-control" size="1" name="author">
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
+>>>>>>> origin/cqs
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <label class="col-lg-2 control-label">评审者</label>
                                                                 <div class="col-lg-4">
-                                                                    <select class="form-control" size="1" name="reviewer">
-                                                                        <option v-for="user in userList" value="{{user.id}}">{{user.username}}</option>
+<<<<<<< HEAD
+=======
+                                                                    <select class="form-control" name="reviewer">
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
                                                                 <label class="col-lg-2 control-label">执行者</label>
                                                                 <div class="col-lg-4">
+<<<<<<< HEAD
+=======
                                                                     <select class="form-control" name="executor">
-                                                                        <option v-for="user in userList" value="{{user.id}}">{{user.username}}</option>
-                                                                    </select>
-                                                                </div>
-                                                                <label class="col-lg-2 control-label">执行方式</label>
-                                                                <div class="col-lg-4">
-                                                                    <select class="form-control" size="1" name="executemethod">
-                                                                        <option>自动化</option>
-                                                                        <option>手工</option>
-                                                                        <option>配合</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
+                                                                <label class="col-lg-2 control-label">执行方式</label>
+                                                                <div class="col-lg-4">
+<<<<<<< HEAD
+=======
+                                                                    <select class="form-control" size="1" name="executemethod">
+                                                                        <option value="1">手工</option>
+                                                                        <option value="2">自动化</option>
+                                                                        <option value="3">配合</option>
+>>>>>>> origin/cqs
+                                                                    </select>
+                                                                </div>
                                                                 <label class="col-lg-2 control-label">脚本管理方式</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" name="scriptmode">
                                                                         <option value="1">模板</option>
                                                                     </select>
                                                                 </div>
-                                                                <label class="col-lg-2 control-label">所属模板</label>
-                                                                <div class="col-lg-4">
-                                                                    <select class="form-control" size="1" name="scriptmodeflag">
-                                                                        <option></option>
-                                                                    </select>
-                                                                </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">用例使用状态</label>
                                                                 <div class="col-lg-4">
-                                                                    <select class="form-control" size="1">
-                                                                        <option>新增</option>
-                                                                        <option>评审通过</option>
+<<<<<<< HEAD
+=======
+                                                                    <select class="form-control" size="1" name="usestatus">
+                                                                        <option value="1">新增</option>
+                                                                        <option value="2">评审通过</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -239,7 +276,10 @@
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label hidden">用例组成类型</label>
                                                                 <div class="col-lg-4 hidden">
-                                                                    <input type="text" class="form-control" name="casecaseCompositeType" value="2">
+<<<<<<< HEAD
+=======
+                                                                    <input type="text" class="form-control" name="caseCompositeType" value="2">
+>>>>>>> origin/cqs
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">用例编号</label>
                                                                 <div class="col-lg-4">
@@ -248,6 +288,28 @@
                                                                 <label class="col-lg-2 control-label">任务编号</label>
                                                                 <div class="col-lg-4">
                                                                     <input type="text" class="form-control" name="submissionid">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">被测系统</label>
+                                                                <div class="col-lg-4">
+                                                                    <select type="text" class="form-control" name="autid"></select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">版本号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control" name="versioncode">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">功能点</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" id="" name="transid">
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">所属模板</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="scriptmodeflag" id="">
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -302,19 +364,25 @@
                                                                 <label class="col-lg-2 control-label">用例性质</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="caseproperty">
-                                                                        <option>正常值</option>
-                                                                        <option>错误值</option>
-                                                                        <option>边界值</option>
-                                                                        <option>要素级</option>
-                                                                        <option>流程级</option>
+<<<<<<< HEAD
+=======
+                                                                        <option value="1">正常值</option>
+                                                                        <option value="2">错误值</option>
+                                                                        <option value="3">边界值</option>
+                                                                        <option value="4">要素级</option>
+                                                                        <option value="5">流程级</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">测试用例类型</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="casetype">
-                                                                        <option>联机</option>
-                                                                        <option>批量</option>
-                                                                        <option>接口</option>
+<<<<<<< HEAD
+=======
+                                                                        <option value="1">联机</option>
+                                                                        <option value="2">批量</option>
+                                                                        <option value="3">接口</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -333,49 +401,64 @@
                                                                         <option>9级</option>
                                                                     </select>
                                                                 </div>
+                                                                <label class="col-lg-2 control-label">作者</label>
+                                                                <div class="col-lg-4">
+<<<<<<< HEAD
+=======
+                                                                    <select class="form-control" size="1" name="author">
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
+>>>>>>> origin/cqs
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <label class="col-lg-2 control-label">评审者</label>
                                                                 <div class="col-lg-4">
+<<<<<<< HEAD
+=======
                                                                     <select class="form-control" name="reviewer">
-                                                                        <option v-for="user in userList" value="{{user.id}}">{{user.username}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
                                                                 <label class="col-lg-2 control-label">执行者</label>
                                                                 <div class="col-lg-4">
+<<<<<<< HEAD
+=======
                                                                     <select class="form-control" name="executor">
-                                                                        <option v-for="user in userList" value="{{user.id}}">{{user.username}}</option>
-                                                                    </select>
-                                                                </div>
-                                                                <label class="col-lg-2 control-label">执行方式</label>
-                                                                <div class="col-lg-4">
-                                                                    <select class="form-control" size="1" name="executemethod">
-                                                                        <option>自动化</option>
-                                                                        <option>手工</option>
-                                                                        <option>配合</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="col-lg-2 control-label">脚本管理方式</label>
+                                                                <label class="col-lg-2 control-label">执行方式</label>
                                                                 <div class="col-lg-4">
-                                                                    <select class="form-control" size="1" name="scriptmode">
-                                                                        <option value="1">模板</option>
+<<<<<<< HEAD
+=======
+                                                                    <select class="form-control" size="1" name="executemethod">
+                                                                        <option value="1">手工</option>
+                                                                        <option value="2">自动化</option>
+                                                                        <option value="3">配合</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
-                                                                <label class="col-lg-2 control-label">所属模板</label>
+                                                                <label class="col-lg-2 control-label">脚本管理方式</label>
                                                                 <div class="col-lg-4">
-                                                                    <select class="form-control" size="1" name="scriptmodeflag">
-                                                                        <option></option>
+                                                                    <select class="form-control" name="scriptmode">
+                                                                        <option value="1">模板</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">用例使用状态</label>
                                                                 <div class="col-lg-4">
-                                                                    <select class="form-control" size="1" name="subusestatus">
-                                                                        <option>新增</option>
-                                                                        <option>评审通过</option>
+<<<<<<< HEAD
+=======
+                                                                    <select class="form-control" size="1" name="usestatus">
+                                                                        <option value="1">新增</option>
+                                                                        <option value="2">评审通过</option>
+>>>>>>> origin/cqs
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -436,7 +519,7 @@
                                     </div>
                                     <form role="form" id="exportForm" action="http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel" method="post">
                                         <div class="modal-body">
-                                            <div class="form-group ">
+                                            <div class="form-group hidden">
                                                 <label class="col-lg-2 control-label">id列表</label>
                                                 <div class="col-lg-4">
                                                     <input type="text" name="ids" class="form-control" value="{{ids}}">
@@ -478,10 +561,8 @@
                                                 </div>
                                                 <label class="col-lg-2 control-label">执行者</label>
                                                 <div class="col-lg-4">
-                                                    <select size="1" aria-controls="" class="form-control" name="executor">
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
+                                                    <select class="form-control" name="executor">
+                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -491,7 +572,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="executor()">确认</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" onclick="executor()">确认</button>
                                     </div>
                                 </div>
                             </div>
@@ -515,9 +596,9 @@
                                                 <label class="col-lg-2 control-label">执行方式</label>
                                                 <div class="col-lg-3">
                                                     <select size="1" aria-controls="" class="form-control" name="executemethord">
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
+                                                        <option value="1">自动化</option>
+                                                        <option value="2">手工</option>
+                                                        <option value="3">配合</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -544,26 +625,29 @@
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label hidden">id列表</label>
                                                 <div class="col-lg-4 hidden">
-                                                    <input type="text" name="ids" class="form-control" value="">
+                                                    <input type="text" name="ids" class="form-control">
                                                 </div>
                                                 <label class="col-lg-3 control-label">被测系统</label>
                                                 <div class="col-lg-3">
-                                                    <select class="form-control" v-model="selectedAut" id="yiji">
-                                                        <!-- <option v-for="aut in autList" value="{{aut.id}}">{{aut.autName}}</option> -->
+                                                    <select class="form-control" id="1ji" name="autid">
                                                     </select>
                                                 </div>
-                                                <label class="col-lg-2 control-label">功能码</label>
+<<<<<<< HEAD
+=======
+                                                <label class="col-lg-2 control-label">功能点</label>
                                                 <div class="col-lg-3">
-                                                    <select class="form-control" name="transid" id="erji">
-                                                        <option v-for=""></option>
+                                                    <select class="form-control" name="transid" id="2ji">
+>>>>>>> origin/cqs
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">模板脚本</label>
                                                 <div class="col-lg-3">
-                                                    <select class="form-control" name="scriptmodeflag" id="sanji">
-                                                        <option></option>
+<<<<<<< HEAD
+=======
+                                                    <select class="form-control" name="scriptmodeflag" id="3ji">
+>>>>>>> origin/cqs
                                                     </select>
                                                 </div>
                                             </div>
@@ -571,7 +655,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="transid">确认</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" onclick="transid()">确认</button>
                                     </div>
                                 </div>
                             </div>
@@ -586,7 +670,7 @@
                                         <h4 class="modal-title">操作成功</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <h3>操作成功！</h3>
+                                        <h4>操作成功！</h4>
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
@@ -604,7 +688,7 @@
                                         <h4 class="modal-title">操作失败</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <h3>操作失败！</h3>
+                                        <h4>操作失败！</h4>
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
@@ -639,12 +723,15 @@
                                         <div class="form-group">
                                             <label class="col-lg-1 control-label">搜索</label>
                                             <div class="col-lg-2">
-                                                <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号" name="id">
+<<<<<<< HEAD
+=======
+                                                <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号" name="casecode" v-model="casecode">
                                             </div>
                                             <div class="col-lg-1">
-                                                <a class="btn btn-white" v-on:click="searchCase()">搜索</a>
+                                                <a class="btn btn-white" onclick="queryCase()">搜索</a>
                                             </div>
-                                            <label class="col-lg-2 col-lg-offset-3 control-label">展示条目</label>
+                                            <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
+>>>>>>> origin/cqs
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
                                                     <option value="1" selected>1</option>
@@ -652,6 +739,7 @@
                                                     <option value="5">5</option>
                                                 </select>
                                             </div>
+                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, 10, 'id', 'asc')">刷新</a></div>
                                         </div>
                                         <div class="form-group">
                                         </div>
@@ -667,68 +755,83 @@
                                                     <tr>
                                                         <td>
                                                             优先级：
-                                                            <label class="label_check" for="checkbox-01">
-                                                                <input type="checkbox" name="" id="checkbox-01" v-model="priority">1级</label>
-                                                            <label class="label_check" for="checkbox-02">
-                                                                <input type="checkbox" name="" id="checkbox-02" v-model="priority">2级</label>
-                                                            <label class="label_check" for="checkbox-03">
-                                                                <input type="checkbox" name="" id="checkbox-03" v-model="priority">3级</label>
-                                                            <label class="label_check" for="checkbox-04">
-                                                                <input type="checkbox" name="" id="checkbox-04" v-model="priority">4级</label>
-                                                            <label class="label_check" for="checkbox-05">
-                                                                <input type="checkbox" name="" id="checkbox-05" v-model="priority">5级</label>
-                                                            <label class="label_check" for="checkbox-06">
-                                                                <input type="checkbox" name="" id="checkbox-06" v-model="priority">6级</label>
-                                                            <label class="label_check" for="checkbox-07">
-                                                                <input type="checkbox" name="" id="checkbox-07" v-model="priority">7级</label>
-                                                            <label class="label_check" for="checkbox-08">
-                                                                <input type="checkbox" name="" id="checkbox-08" v-model="priority">8级</label>
-                                                            <label class="label_check" for="checkbox-09">
-                                                                <input type="checkbox" name="" id="checkbox-09" v-model="priority">9级</label>
+<<<<<<< HEAD
+=======
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" v-model="priority" value="1">1级</label>
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" v-model="priority" value="2">2级</label>
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" v-model="priority" value="3">3级</label>
+                                                            <label class="checkbox-inline" for="checkbox-04">
+                                                                <input type="checkbox" v-model="priority" value="4">4级</label>
+                                                            <label class="checkbox-inline" for="checkbox-05">
+                                                                <input type="checkbox" v-model="priority" value="5">5级</label>
+                                                            <label class="checkbox-inline" for="checkbox-06">
+                                                                <input type="checkbox" v-model="priority" value="6">6级</label>
+                                                            <label class="checkbox-inline" for="checkbox-07">
+                                                                <input type="checkbox" v-model="priority" value="7">7级</label>
+                                                            <label class="checkbox-inline" for="checkbox-08">
+                                                                <input type="checkbox" v-model="priority" value="8">8级</label>
+                                                            <label class="checkbox-inline" for="checkbox-09">
+                                                                <input type="checkbox" v-model="priority" value="9">9级</label>
+>>>>>>> origin/cqs
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             执行方式：
-                                                            <label class="label_check" for="checkbox-10">
-                                                                <input type="checkbox" name="" id="checkbox-10" v-model="executeMethod">自动化</label>
-                                                            <label class="label_check" for="checkbox-11">
-                                                                <input type="checkbox" name="" id="checkbox-11" v-model="executeMethod">手工</label>
-                                                            <label class="label_check" for="checkbox-12">
-                                                                <input type="checkbox" name="" id="checkbox-12" v-model="executeMethod">配合</label>
+<<<<<<< HEAD
+=======
+                                                            <label class="checkbox-inline" for="checkbox-10">
+                                                                <input type="checkbox" v-model="executeMethod" value="1">手工</label>
+                                                            <label class="checkbox-inline" for="checkbox-11">
+                                                                <input type="checkbox" v-model="executeMethod" value="2">自动化</label>
+                                                            <label class="checkbox-inline" for="checkbox-12">
+                                                                <input type="checkbox" v-model="executeMethod" value="3">配合</label>
+>>>>>>> origin/cqs
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             用例类型：
-                                                            <label class="label_check" for="checkbox-13">
-                                                                <input type="checkbox" name="" id="checkbox-13" v-model="casetype">接口</label>
-                                                            <label class="label_check" for="checkbox-14">
-                                                                <input type="checkbox" name="" id="checkbox-14" v-model="casetype">联机</label>
-                                                            <label class="label_check" for="checkbox-15">
-                                                                <input type="checkbox" name="" id="checkbox-15" v-model="casetype">批量</label>
+<<<<<<< HEAD
+=======
+                                                            <label class="checkbox-inline" for="checkbox-13">
+                                                                <input type="radio" v-model="caseCompositeType" value="1">单用例</label>
+                                                            <label class="checkbox-inline" for="checkbox-14">
+                                                                <input type="radio" v-model="caseCompositeType" value="2">流程用例</label>
+                                                            <label class="checkbox-inline" for="checkbox-15">
+                                                                <input type="radio" v-model="caseCompositeType" value="3">流程节点</label>
+>>>>>>> origin/cqs
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="filter-checkbox">
                                                             用例状态：
-                                                            <label class="label_check" for="checkbox-16">
-                                                                <input type="checkbox" name="" id="checkbox-16" v-model="useStatus">新增</label>
-                                                            <label class="label_check" for="checkbox-17">
-                                                                <input type="checkbox" name="" id="checkbox-17" v-model="useStatus">评审通过</label>
+<<<<<<< HEAD
+=======
+                                                            <label class="checkbox-inline" for="checkbox-16">
+                                                                <input type="checkbox" v-model="useStatus" value="1">新增</label>
+                                                            <label class="checkbox-inline" for="checkbox-17">
+                                                                <input type="checkbox" v-model="useStatus" value="2">评审通过</label>
+>>>>>>> origin/cqs
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="filter-checkbox">
                                                             其他：
-                                                            <label class="label_check" for="checkbox-18">
-                                                                <input type="checkbox" name="" id="checkbox-18">我编写的</label>
-                                                            <label class="label_check" for="checkbox-19">
-                                                                <input type="checkbox" name="" id="checkbox-19">我执行的</label>
+<<<<<<< HEAD
+=======
+                                                            <label class="checkbox-inline" for="checkbox-18">
+                                                                <input type="checkbox">我编写的</label>
+                                                            <label class="checkbox-inline" for="checkbox-19">
+                                                                <input type="checkbox">我执行的</label>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><a class="btn btn-primary" v-on:click="">筛选</a></td>
+                                                        <td><a class="btn btn-primary" onclick="queryCase()">筛选</a></td>
+>>>>>>> origin/cqs
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -743,9 +846,12 @@
                                         <th style="width:8px;">
                                             <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                         </th>
-                                        <th class="hidden-phone text-center" @click="sortBy('id')">案例编号</th>
-                                        <th @click="sortBy('caselibId')" class="text-center">被测系统</th>
-                                        <th class="hidden-phone text-center" @click="sortBy('testPoint')">功能点</th>
+<<<<<<< HEAD
+=======
+                                        <th class="hidden-phone text-center" @click="sortBy('casecode')">案例编号</th>
+                                        <th @click="sortBy('autId')" class="text-center">被测系统</th>
+                                        <th class="hidden-phone text-center" @click="sortBy('transId')">功能点</th>
+>>>>>>> origin/cqs
                                         <th class="hidden-phone text-center" @click="sortBy('caseCompositeType')">案例组成类型</th>
                                         <th class="hidden-phone text-center" @click="sortBy('useStatus')">状态</th>
                                         <th class="hidden-phone text-center" @click="sortBy('author')">脚本编辑者</th>
@@ -759,7 +865,10 @@
                                             <input type="checkbox" v-model="" name="chk_list" id="{{product.id}}" />
                                         </td>
                                         <td class="center hidden-phone">{{ product.casecode }}</td>
-                                        <td>{{ product.caselibId }}</td>
+<<<<<<< HEAD
+=======
+                                        <td>{{ product.autId }}</td>
+>>>>>>> origin/cqs
                                         <td class="hidden-phone">{{ product.transId }}</td>
                                         <td class="hidden-phone">{{ product.caseCompositeType }}</td>
                                         <td class="center hidden-phone">{{ product.useStatus }}</td>
@@ -811,13 +920,13 @@
                     </div>
                 </div>
                 <!-- table end -->
-                <link rel="import" href="./common/copy-right.html?__inline">
             </section>
+            <link rel="import" href="./common/copy-right.html?__inline">
         </section>
         <!--main content end-->
         <!-- <div class="footer">
-      <link rel="import" href="./common/copy-right.html?__inline">
-    </div> -->
+            <link rel="import" href="./common/copy-right.html?__inline">
+        </div> -->
     </div>
 </body>
 
