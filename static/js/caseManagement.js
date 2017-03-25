@@ -326,7 +326,6 @@ $(document).ready(function(e) {
     })
 });
 
-<< << << < HEAD
 //一级 测试系统
 function yiji() {
     $.ajax({
