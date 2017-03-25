@@ -123,7 +123,7 @@ $(document).ready(function() {
             data: data,
             type: "post",
             dataType: "json",
-            success: (data, textStatus) => {
+            success: function(data, textStatus){
                 if (data.success === true) {
                     $("#alterModal").modal("hide");
                     alert("修改成功");

@@ -3,14 +3,14 @@
 
 <head>
     <link rel="import" href="./common/header.html?__inline">
+    <link rel="import" href="./noLoginAlert.html?__inline">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    <link rel="stylesheet" href="../static/css/dataTables.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/testitems.scss">
     <!--dataTables libs start-->
-    <link rel="stylesheet" type="text/css" href="../static/css/jquery.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../static/css/jquery.dataTables.min.css"> -->
     <script src="../lib/jquery.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
-    <script src="../lib/jquery.dataTables.min.js"></script>
     <!--dataTables libs  ends-->
     <script type="text/javascript" src="../lib/vue.js"></script>
     <title>Case Manager</title>
@@ -32,68 +32,75 @@
             <section class="wrapper">
                 <div class="row">
                     <div class="col-lg-12 top-btn">
-                        <a class="btn btn-white" data-toggle="modal" href="#addModal"><i class="icon-plus"></i> 添加</a>
-                        <!--<a href="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-minus"></i> 删除</a>-->
-                        <!-- addModal start -->
+                        <a class="btn btn-white" data-toggle="modal" id="addModalBtn"><i class="icon-plus"></i>添加</a>
                         <div class="modal fade " id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">添加任务</h4>
+                                        <h4 class="modal-title">添加系统</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form class="form-horizontal " role="form">
+                                        <form class="form-horizontal " role="form" id="addForm">
                                             <div class="form-group">
-                                                <label for="itemcode" class="col-lg-3 control-label">任务编号</label>
-                                                <div class="col-lg-8 ">
-                                                    <input type="text" id="itemcode" class="form-control" required>
+                                                <label class="col-lg-3 control-label" for="autcode">系统编号</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" required class="form-control" id="autcode" name="autCode">
                                                 </div>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-itemname" style="color: #b94a48;"></span>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-lg-3 control-label" for="itemname">任务名称</label>
+                                                <label class="col-lg-3 control-label" for="systemname">系统名称</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="itemname">
+                                                    <input type="text" required class="form-control" id="systemname" name="testProjectName">
                                                 </div>
+                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-itemname" style="color: #b94a48;"></span>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="itemtype" class="col-lg-3 control-label">类型</label>
                                                 <div class="col-lg-8">
-                                                    <select id="itemtype" class="form-control">
-                                                      <option value="">需求类</option>
+                                                    <select id="itemtype" class="form-control" name="type">
+                                                      <option value="01">需求类</option>
+                                                      <option value="02">问题修复类</option>
                                                     </select>
                                                 </div>
                                             </div>
 
+                                            <div class="form-group">
+                                                <label for="createUser" class="col-lg-3 control-label">创建人编号</label>
+                                                <div class="col-lg-8">
+                                                    <select name="userId" id="createUser" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="itemline" class="col-lg-3 control-label">所属产品线</label>
                                                 <div class="col-lg-8">
-                                                    <select id="itemline" class="form-control">
-                                                      <option value="">产品线</option>
+                                                    <select id="itemLine" class="form-control" name="productLineId">
                                                     </select>
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <label for="itembelong" class="control-label col-lg-3">所属项目</label>
+                                                <label for="itembelong" class="control-label col-lg-3">所属测试系统</label>
                                                 <div class="col-lg-8">
-                                                    <select id="itembelong" class="form-control">
-                                                  <option value="">中国银行</option>
-                                                </select>
+                                                    <select name="autId" class="form-control" id="itemAut"></select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="itemdesc" class="control-label col-lg-3">任务描述</label>
                                                 <div class="col-lg-8">
-                                                    <textarea rows="10" cols="50" id="itemdesc" class="form-control"></textarea>
+                                                    <textarea rows="10" cols="50" id="itemdesc" class="form-control" name="taskDescription" style="resize: none;"></textarea>
                                                 </div>
                                             </div>
                                         </form>
+                                        <div class="alert alert-danger" style="margin-bottom: 0;" id="add-input-detecting">
+                                            输入信息不完整！
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button class="btn btn-success" type="button" id="btn-add">添加</button>
+                                        <button class="btn btn-success" type="button" disabled id="btn-add">添加</button>
                                     </div>
                                 </div>
                             </div>
@@ -103,41 +110,64 @@
                     <!--topbutton end-->
                     <!-- table start -->
                     <div class="col-lg-12 panel" style="overflow: scroll;">
-                        <table id="example" width="100%" class="display table table-striped table-bordered">
+                        <div class="table-tool container">
+                            <form class="table-search col-lg-6">
+                                <select id="search-type" class="form-control inline-block">
+                                    <option value="testProjectName">任务名称</option>
+                                    <option value="type">任务类型</option>
+                                    <option value="userId">创建人编号</option>
+                                    <option value="autId">被测系统编号</option>
+                                    <option value="productLineId">测试系统产品线编号</option>
+                                </select>
+                                <input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
+                                <button type="button" class="btn btn-danger inline-block" id="btn-search">搜索</button>
+                            </form>
+                            <div class="display-items col-lg-2 col-lg-offset-4">
+                                <label class="inline-block">展示条目</label>
+                                <select class="form-control inline-block" id="showRows">
+                                    <option value="1">01</option>
+                                    <option value="2">02</option>
+                                    <option value="3">03</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table id="example" class="table  table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>任务编号</th>
-                                    <th>autCode</th>
-                                    <th>autName</th>
-                                    <th>version</th>
-                                    <th>autType</th>
-                                    <th>maincodeBegin</th>
-                                    <th>maincodeEnd</th>
+                                    <th data-order="id" data-sort="desc" onclick="resort(this);">任务编号&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
+                                    <th>任务名称&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th data-order="type" data-sort="desc" onclick="resort(this);">类型&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th>所属产品线&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th>所属测试系统&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th>描述</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                
+                            </tbody>
                         </table>
-                        <!--deleteModal start-->
-                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-header">提示框</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="col-lg-9  col-lg-offset-2">
-                                            <p class="text-danger" style="font-size: 18px;">确认删除该任务吗？</p>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-default" data-dismiss="modal" type="button">取消</button>
-                                        <button class="btn btn-success" type="button" id="btn-confirm">确认</button>
-                                    </div>
+                        <div class="col-lg-12 col-md-12 text-center">
+                            <ul class="pagination " id="pagination">
+                                <li><a href="javascript:void(0)" id="firstPage">首页</a></li>
+                                <li><a href="javascript:void(0)" id="previousPage">上一页</a></li>
+                                <li><a href="javascript:void(0)" id="nextPage">下一页</a></li>
+                                <li><a href="javascript:void(0)" id="lastPage">尾页</a></li>
+                            </ul>
+                            <small class="page-tooltip">
+                                当前第<span id="currentPageId">1</span>页,
+                                共有<span id="totalPages">4</span>页
+                            </small>
+                            <div class="go">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="gotoPage" min="1">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" id="btn-gotoPage" type="button">Go</button>
+                                    </span>
                                 </div>
                             </div>
+                            
                         </div>
-                        <!--deleteModal end-->
                         <div class="col-lg-12">
                             <!-- viewModal start -->
                             <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
@@ -168,7 +198,6 @@
                                                         <input type="text" name="" id="view-itemtype" class="form-control" value="Leixing" disabled>
                                                     </div>
                                                 </div>
-
                                                 <div class="form-group">
                                                     <label for="view-itemline" class="col-lg-3 control-label">所属产品线</label>
                                                     <div class="col-lg-8">
@@ -176,15 +205,27 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="view-itembelong" class="control-label col-lg-3">所属项目</label>
+                                                    <label for="view-itembelong" class="control-label col-lg-3">所属测试系统</label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" name="" value="中国银行" class="form-control" disabled>
+                                                        <input type="text" name="" value="中国银行" id="view-itembelong" class="form-control" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="view-createUser" class="control-label col-lg-3">创建人</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" name="" value="中国银行" id="view-createUser" class="form-control" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="view-createDate" class="control-label col-lg-3">创建时间</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" name="" value="中国银行" id="view-createDate" class="form-control" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="view-itemdesc" class="control-label col-lg-3">任务描述</label>
                                                     <div class="col-lg-8 ">
-                                                        <textarea rows="10" class="form-control" cols="20"></textarea>
+                                                        <textarea rows="10" class="form-control" id="view-itemdesc" cols="20"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -197,90 +238,72 @@
                             </div>
                             <!-- viewModal end -->
                             <!-- alterModal start -->
-                            <div class="modal fade" id="alterModal" tabindex="-1" role="dialog" aria-labelledby="alterModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">添加用户</h4>
+                            <div class="modal fade " id="alterModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">修改任务</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal " role="form" id="alterForm">
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label" for="alter-itemname">任务名称</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" required class="form-control" id="alter-itemname" name="testProjectName">
+                                                    <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-itemname" style="color: #468847;"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="alter-itemtype" class="col-lg-3 control-label">类型</label>
+                                                <div class="col-lg-8">
+                                                    <select id="alter-itemtype" class="form-control" name="type">
+                                                    <option value="01">需求类</option>
+                                                      <option value="02">问题修复类</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="alter-itemcode" class="col-lg-3 control-label">创建人编号</label>
+                                                <div class="col-lg-8 ">
+                                                    <select id="alter-createUser" name="userId" class="form-control" required>
+                                                
+                                                    </select>  
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="alter-itemline" class="col-lg-3 control-label">所属产品线</label>
+                                                <div class="col-lg-8">
+                                                    <select id="alter-itemline" class="form-control" name="productLineId">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="alter-itembelong" class="control-label col-lg-3">所属测试系统</label>
+                                                <div class="col-lg-8">
+                                                    <select id="alter-itembelong" class="form-control" name="autId">
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="alter-itemdesc" class="control-label col-lg-3">任务描述</label>
+                                                <div class="col-lg-8">
+                                                    <textarea rows="10" cols="50" id="alter-itemdesc" class="form-control" name="taskDescription"></textarea>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="alert alert-danger hide" style="margin-bottom: 0;" id="alter-input-detecting">
+                                            输入信息不完整！
                                         </div>
-                                        <div class="modal-body">
-                                            <form class="form-horizontal col-lg-offset-1" role="form">
-                                                <span class=""><strong>必填信息</strong></span>
-                                                <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-username">用户名</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="alter-username" class="form-control" required>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group has-success">
-                                                    <label class="col-lg-2 control-label" for="alter-name">姓名</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" required id="alter-name" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-password">密码</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="password" required id="alter-password" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-confirmpassword">确认密码</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="password" required id="alter-confirmpassword" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-2 control-label" for="alter-role">角色</label>
-                                                    <div class="col-lg-4">
-                                                        <select name="" id="alter-role" class="form-control">
-                                                                        <option value="function-tester">功能测试人员</option>
-                                                                        <option value="others">其他人员</option>
-                                                                    </select>
-                                                    </div>
-                                                    <label class="col-lg-2 control-label" for="alter-state">状态</label>
-                                                    <div class="col-lg-3">
-                                                        <select name="" id="alter-state" class="form-control">
-                                                                        <option value="normal">正常</option>
-                                                                        <option value="normal">不正常</option>
-                                                                    </select>
-                                                    </div>
-                                                </div>
-                                                <span class="input-tip"><strong>选填信息</strong></span>
-                                                <div class="form-group">
-                                                    <label for="alter-department" class="control-label col-lg-2">所属部门</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="alter-department" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="alter-phonenumber" class="control-label col-lg-2">手机号</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="alter-phonenumber" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="alter-telephone" class="control-label col-lg-2">固定电话</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="alter-telephone" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="alter-email" class="control-label col-lg-2">电子邮箱</label>
-                                                    <div class="col-lg-9 ">
-                                                        <input type="text" id="alter-email" class="form-control">
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                            <button class="btn btn-success" type="button">添加</button>
-                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button" id="btn-alter">修改</button>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                             <!-- alterModal end -->
                         </div>
                     </div>
