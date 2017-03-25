@@ -6,7 +6,7 @@
         <title>
             用戶登录
         </title>
-        <link href="../CSS/Login.css" rel="stylesheet"/>
+        <link href="../static/css/Login.css" rel="stylesheet"/>
     </head>
     <body>
         <div id="title">
@@ -65,7 +65,7 @@
                                 用户名
                             </span>
                             <input class="username" id="username" name="username" type="text"/>
-                            <img class="error" src="../IMG/error.png">
+                            <img class="error" src="../static/images/error.png">
                             </img>
                         </div>
                         <div class="form-group">
@@ -73,7 +73,7 @@
                                 密    码
                             </span>
                             <input class="password" id="password" name="password" type="password"/>
-                            <img class="error" src="../IMG/error.png">
+                            <img class="error" src="../static/images/error.png">
                             </img>
                         </div>
                         <div class="form-group">
@@ -82,7 +82,7 @@
                             </span>
                             <input class="authCode" id="authCode" keyup="validate()" name="authCode" type="text"/>
                             <img id="codeImage" onclick="chageCode()"  title="图片看不清？点击重新得到验证码" type="image"/>
-                            <img class="error" src="../IMG/error.png">
+                            <img class="error" src="../static/images/error.png">
                             </img>
                         </div>
                         <button id="loginInput" type="button">
@@ -119,7 +119,7 @@
                 </span>
             </div>
         </div>
-        <script src="../jquery.min.js">
+        <script src="../lib/jquery.js">
         </script>
         <script type="text/javascript">
             var baseurl = "http://10.108.226.152:8080/ATFCloud/";
@@ -178,6 +178,7 @@
                         console.info(data);
                         if(data.success){
                                     console.info(data.success);//跳转到登录成功页
+                                    window.location.href = "testitems.html";
                                 }else{
 
                                     setHtml("#result",data.msg);
