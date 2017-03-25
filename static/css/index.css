@@ -60,3 +60,15 @@
 .collapsed #hide{
     display: none;
 }
+.copy-right{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    height: 100px;
+    background: #f1f2f9;
+    padding-top: 20px;
+    z-index: 2;
+}
+.wrapper{
+    padding-bottom: 80px;
+}

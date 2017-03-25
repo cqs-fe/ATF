@@ -2,54 +2,47 @@ var app = new Vue({
     el: '#v-demo',
     data: {
         isShow: false,
-        caseNode: '<h3>流程节点用例</h3><div class="form-group"><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid"><option></option></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><select class="form-control" size="1" name="subversioncode"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"><option></option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
+        caseNodeNum:0,
+        caseNode:'</h3><div class="form-group"><label class="col-lg-2 control-label hidden">用例组成类型</label><div class="col-lg-4 hidden"><input type="text" class="form-control" name="caseCompositeType" value="3"></div><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid" id=""></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><input class="form-control" name="subversioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option>模板</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option v-for="user in users" value="{{user.id}}">{{user.username}}</option></select></div><label class="col-lg-2 control-label">测试顺序</label><div class="col-lg-4"><input class="form-control" name="steporder"></div></div><div class="form-group"><label class="col-lg-2 control-label">用例使用状态</label><div class="col-lg-4"><select class="form-control" size="1" name="subusestatus"><option value="1">新增</option><option value="2">评审通过</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
         productList: [], //案例
-        autList: [], //测试系统
-        selectedAut: '', //当前选中的测试系统
-        userList: [], //用户
-        priority: [],
-        executeMethod: [],
-        casetype: [],
-        useStatus: [],
-        sortparam: '',
-        //apiUrl: '../mock/caseManagement.json',
+        users: [], //所有用户
+        priority: [], // 优先级
+        executeMethod: [], // 执行方式
+        caseCompositeType: '', // 用例组成类型
+        useStatus: [], // 用例状态
+        testpoint: '', // 测试点
+        author: '', //编写者
+        executor: '', //执行者
+        testdesign: '', //测试意图
+        autid: '', //被测系统
+        transid: '', //功能码
+        scriptmodeflag: '', //脚本模板
+        casecode: '', //搜索时输入的案例编号
+
+        sortparam: '', //排序参数
         tt: "", //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
         totalPage: 10, //总页数
         listnum: 10, //页面大小
+        order: 'id',
+        sort: 'asc',
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
-        //ids: ""
     },
     ready: function() {
         getCase(1, 10, 'id', 'asc');
         changeListNum();
-        getAut();
-        getUser();
+        getUsers();
     },
-    computed: {
-        //功能点
-        transactList: function() {
-            var transactList = [],
-                selectedAut = this.$data.selectedAut;
-            $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
-                type: 'get',
-                data: { 'autlistselect': selectedAut },
-                success: function(data) {
-                    transactList = data.o;
-                    console.log(transactList);
-                }
-            });
-        }
-    },
+
     methods: {
-        //添加用例
+
+        //添加单用例
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/import11',
+                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/import111',
                 type: 'post',
                 data: $("#insertSingleForm").serializeArray(),
                 success: function(data) {
@@ -59,9 +52,13 @@ var app = new Vue({
                     } else {
                         $('#failModal').modal();
                     }
+                },
+                error: function() {
+                    $('#failModal').modal();
                 }
             });
         },
+
         //导入excel
         importExcel: function() {
             $.ajax({
@@ -75,32 +72,22 @@ var app = new Vue({
                     } else {
                         $('#failModal').modal();
                     }
+                },
+                error: function() {
+                    $('#failModal').modal();
                 }
             });
         },
-        //导出excel
-        // exportExcel: function() {
-        //     var id_array = new Array();
-        //     $('input[name="chk_list"]:checked').each(function() {
-        //         id_array.push($(this).attr('id'));
-        //     });
-        //     app.ids = id_array.join(',');
-        //     //console.log(app.ids);
-        //     $.ajax({
-        //         url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel',
-        //         type: 'post',
-        //         data: {"ids":app.ids,"fanwei":"part"},                  //$("#exportExcel").serializeArray(),
-        //         success: function(data) {
-        //             console.log(data)
-        //             if (data.success) {
-        //                 document.location.href="10.108.226.152:8080/ATFCloud/pages?page=testcase"+data;
-        //                 //alert("导出成功！");
-        //             } else {
-        //                 alert("导出失败！");
-        //             }
-        //         }
-        //     });
-        // },
+
+        //获取选中的id
+        getIds: function() {
+            var id_array = new Array();
+            $('input[name="chk_list"]:checked').each(function() {
+                id_array.push($(this).attr('id'));
+            });
+            //app.ids = id_array.join(',');
+            $('input[name="ids"]').val(id_array.join(','));
+        },
 
         //分配执行者
         executor: function() {
@@ -108,7 +95,6 @@ var app = new Vue({
             $('input[name="chk_list"]:checked').each(function() {
                 id_array.push($(this).attr('id'));
             });
-            //app.ids = id_array.join(',');
             $('input[name="ids"]').val(id_array.join(','));
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/excutor',
@@ -121,6 +107,9 @@ var app = new Vue({
                     } else {
                         $('#failModal').modal();
                     }
+                },
+                error: function() {
+                    $('#failModal').modal();
                 }
             });
         },
@@ -142,16 +131,14 @@ var app = new Vue({
                     } else {
                         $('#failModal').modal();
                     }
+                },
+                error: function() {
+                    $('#failModal').modal();
                 }
             });
         },
-        //设置功能点
+        //设置功能点及模板脚本
         transid: function() {
-            var id_array = new Array();
-            $('input[name="chk_list"]:checked').each(function() {
-                id_array.push($(this).attr('id'));
-            });
-            $('input[name="ids"]').val(id_array.join(','));
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/trans_id',
                 type: 'post',
@@ -163,6 +150,9 @@ var app = new Vue({
                     } else {
                         $('#failModal').modal();
                     }
+                },
+                error: function() {
+                    $('#failModal').modal();
                 }
             });
         },
@@ -198,20 +188,23 @@ var app = new Vue({
         },
         // 流程用例添加节点用例
         addCaseNode: function() {
-            var element = $("#addCaseNode").append(this.caseNode);
+            this.caseNodeNum++;
+            var cNode=$('<h3>流程节点用例'+this.caseNodeNum+this.caseNode);
+            var element = $("#addCaseNode").append(cNode);
             this.$compile(element.get(0));
-        },
-        //搜索案例
-        searchCase: function(id) {
-            $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/viewtestcase',
-                type: 'GET',
-                data: { 'id': id },
-                success: function() {
-                    this.$data.productList = data.o;
-                }
+            getUsers();
+            diyi(); //第一级函数
+            dier(); //第二级函数
+            disan(); //第三极函数
+            $('select[name="subautid"]').change(function() {
+                dier();
+                disan();
             });
-        }
+            $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').change(function() {
+                disan();
+            });
+        },
+
     },
 
 });
@@ -236,32 +229,55 @@ function getCase(currentPage, listnum, order, sort) {
         }
     });
 }
-//获取测试系统
-function getAut() {
-    $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/autController/selectAll',
-        type: 'GET',
-        //data: {},
-        success: function(data) {
-            // console.info(data);
-            // console.info(data.obj);
-            app.autList = data.obj;
-        }
-    });
-}
 //获取用户
-function getUser() {
+function getUsers() {
     $.ajax({
         url: 'http://10.108.226.152:8080/ATFCloud/userController/selectAll',
         type: 'GET',
-        //data: {},
         success: function(data) {
             // console.info(data);
-            //console.info(data.obj);
-            app.userList = data.obj;
+            // console.info(data.o.rows);
+            app.users = data.obj;
         }
     });
 }
+//筛选查询用例
+function queryCase() {
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/testcasequeryByPage',
+        type: 'POST',
+        data: {
+            'page': app.currentPage,
+            'rows': app.listnum,
+            'order': app.order,
+            'sort': app.sort,
+            'caseCompositeType': app.caseCompositeType,
+            'priority': app.priority.join(","),
+            'executemethod': app.executeMethod.join(","),
+            'usestatus': app.useStatus.join(","),
+            'casecode': app.casecode,
+            'informationtype': 'testcase',
+            'testpoint': app.testpoint,
+            'author': app.author,
+            'executor': app.executor,
+            'testdesign': app.testdesign,
+            'autid': app.autid,
+            'transid': app.transid,
+            'scriptmodeflag': app.scriptmodeflag,
+
+        },
+        success: function(data) {
+            app.productList = data.o.rows;
+            app.tt = data.o.total;
+            app.totalPage = Math.ceil(app.tt / app.listnum);
+            app.pageSize = app.listnum;
+        },
+        error: function() {
+            $('#failModal').modal();
+        }
+    });
+}
+
 //改变页面大小
 function changeListNum() {
     $('#mySelect').change(function() {
@@ -270,6 +286,7 @@ function changeListNum() {
         getCase(1, listnum, 'id', 'asc');
     })
 }
+
 //全选反选
 $("#chk_all").click(function() {　　
     $("input[name='chk_list']").prop("checked", $(this).prop("checked"));　
@@ -282,81 +299,272 @@ $(document).ready(function(e) {
     yiji(); //第一级函数
     erji(); //第二级函数
     sanji(); //第三极函数
-    $("#yiji").change(function() {
-        erji(); 
+    $('select[name="autid"]').change(function() {
+        erji();
+        sanji();
     })
-    $("#erji").change(function() {
+    $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').change(function() {
         sanji();
     })
 });
 
+//一级 测试系统
 function yiji() {
     $.ajax({
         async: false,
-        url: "yiji.php",
-        dataType: "TEXT",
-        success: function(r) {
-            var lie = r.split("|");
+        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        type: "POST",
+        success: function(data) {
+            var autList = data.obj;
             var str = "";
-            for (var i = 0; i < lie.length; i++) {
+            for (var i = 0; i < autList.length; i++) {
 
-                str += " <option value='" + lie[i] + "' >" + lie[i] + "</option> ";
+                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
             }
 
-            $("#yiji").html(str);
+            $('select[name="autid"]').html(str);
 
         }
     });
 }
-//二级
+
+//二级 功能点
 function erji() {
-    var val = $("#yiji").val();
+    var val = $('select[name="autid"]').val();
     $.ajax({
         async: false,
-        url: "erji.php",
-        dataType: "TEXT",
-        data: { e: val },
+        url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+        data: { 'autlistselect': val },
         type: "POST",
-        success: function(r) {
-            var lie = r.split("|");
+        success: function(data) {
+            var transactList = data.o;
             var str = "";
-            for (var i = 0; i < lie.length; i++) {
+            for (var i = 0; i < transactList.length; i++) {
 
-                str += " <option value='" + lie[i] + "'>" + lie[i] + "</option> ";
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
             }
-            $("#erji").html(str);
+         $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').html(str);
 
         }
 
     });
 }
 
-
-//三级
+//三级 模板脚本
 function sanji() {
 
-    var val = $("#erji").val();
-    if (val !== "") //有些特别行政区没有下一区县，例如香港
-    {
-        $.ajax({
-            url: "sanji.php",
-            dataType: "TEXT",
-            data: { e: val },
-            type: "POST",
-            success: function(r) {
+    var val = $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').val();
 
-                var lie = r.split("|");
-                var str = "";
-                for (var i = 0; i < lie.length; i++) {
+    $.ajax({
+        url: "http://10.108.226.152:8080/ATFCloud/scripttemplateController/showallscripttemplate",
+        data: { "transactid": val },
+        type: "POST",
+        success: function(data) {
 
-                    str += " <option value='" + lie[i] + "'>" + lie[i] + "</option> ";
-                }
-                $("#sanji").html(str);
+            var lie = data.o;
+            var str = "";
+            for (var i = 0; i < lie.length; i++) {
 
+                str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
+            }
+            $('select[name="autid"]').parent().parent().next().find('select[name="scriptmodeflag"]').html(str);
+
+        }
+
+    });
+
+}
+
+//3级联动 设置功能点及模板脚本
+$(document).ready(function(e) {
+
+    first(); //第一级函数
+    second(); //第二级函数
+    third(); //第三极函数
+    $("#1ji").change(function() {
+        second();
+        third();
+    })
+    $("#2ji").change(function() {
+        third();
+    })
+});
+
+//一级 测试系统
+function first() {
+    $.ajax({
+        async: false,
+        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        type: "POST",
+        success: function(data) {
+            var autList = data.obj;
+            var str = "";
+            for (var i = 0; i < autList.length; i++) {
+
+                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
             }
 
-        });
-    } else {
-        $("#sanji").empty();
-    }
+            $("#1ji").html(str);
+
+        }
+    });
+}
+
+//二级 功能点
+function second() {
+    var val = $("#1ji").val();
+    $.ajax({
+        async: false,
+        url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+        data: { 'autlistselect': val },
+        type: "POST",
+        success: function(data) {
+            var transactList = data.o;
+            var str = "";
+            for (var i = 0; i < transactList.length; i++) {
+
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+            }
+            $("#2ji").html(str);
+
+        }
+
+    });
+}
+
+//三级 模板脚本
+function third() {
+
+    var val = $("#2ji").val();
+
+    $.ajax({
+        url: "http://10.108.226.152:8080/ATFCloud/scripttemplateController/showallscripttemplate",
+        data: { "transactid": val },
+        type: "POST",
+        success: function(data) {
+
+            var lie = data.o;
+            var str = "";
+            for (var i = 0; i < lie.length; i++) {
+
+                str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
+            }
+            $("#3ji").html(str);
+
+        }
+
+    });
+
+}
+
+//子流程节点部分
+//一级 测试系统
+function diyi() {
+    $.ajax({
+        async: false,
+        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        type: "POST",
+        success: function(data) {
+            var autList = data.obj;
+            var str = "";
+            for (var i = 0; i < autList.length; i++) {
+
+                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+            }
+
+            $('select[name="subautid"]').html(str);
+
+        }
+    });
+}
+
+//二级 功能点
+function dier() {
+    var val = $('select[name="subautid"]').val();
+    $.ajax({
+        async: false,
+        url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+        data: { 'autlistselect': val },
+        type: "POST",
+        success: function(data) {
+            var transactList = data.o;
+            var str = "";
+            for (var i = 0; i < transactList.length; i++) {
+
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+            }
+            $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').html(str);
+
+        }
+
+    });
+}
+
+//三级 模板脚本
+function disan() {
+
+    var val = $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').val();
+
+    $.ajax({
+        url: "http://10.108.226.152:8080/ATFCloud/scripttemplateController/showallscripttemplate",
+        data: { "transactid": val },
+        type: "POST",
+        success: function(data) {
+
+            var lie = data.o;
+            var str = "";
+            for (var i = 0; i < lie.length; i++) {
+
+                str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
+            }
+            $('select[name="subautid"]').parent().parent().next().find('select[name="subscriptmodeflag"]').html(str);
+
+        }
+
+    });
+
+}
+
+//设置功能点及模板脚本
+function transid() {
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/trans_id',
+        type: 'post',
+        data: $("#transidForm").serializeArray(),
+        success: function(data) {
+            console.info(data);
+            if (data.success) {
+                $('#successModal').modal();
+            } else {
+                $('#failModal').modal();
+            }
+        },
+        error: function() {
+            $('#failModal').modal();
+        }
+    });
+}
+//分配执行者
+function executor() {
+    var id_array = new Array();
+    $('input[name="chk_list"]:checked').each(function() {
+        id_array.push($(this).attr('id'));
+    });
+    $('input[name="ids"]').val(id_array.join(','));
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/excutor',
+        type: 'post',
+        data: $("#executorForm").serializeArray(),
+        success: function(data) {
+            console.info(data.msg);
+            if (data.msg == "完成") {
+                $('#successModal').modal();
+            } else {
+                $('#failModal').modal();
+            }
+        },
+        error: function() {
+            $('#failModal').modal();
+        }
+    });
 }
