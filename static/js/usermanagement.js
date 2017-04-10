@@ -1,32 +1,71 @@
+var showRows = null;
 var dataSet = null;
+var totalRows = null;
+var currentPage = 1;
+var maxPage = 7;//可以显示的最多页码
+var minShowPage = 1;  //  当前显示的最小的页码
+var maxShowPage = 7;   //显示的最大的页码
+var totalPage = 0;
+var lis = new Array();
 
+var sendData = {
+    order:"id",
+    sort:"asc",
+    username: "",
+    reallyname:"",
+    role: "",
+    dept:"",
+    tel: ""
+};
 $(document).ready(function() {
-    // 立即执行函数，用于获取全部数据
-    (function() {
-        var xmlHttpRequest;
-        if (window.XMLHttpRequest) {
-            xmlHttpRequest = new XMLHttpRequest();
-        } else {
-            xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+      // 获取服务器数据
+    (function(){
+        $("#showRows").val("3");
+        showRows = $("#showRows").val();
+        var i = 0;
+        for(i = 0;i < maxPage; i++){
+            lis[i] = document.createElement("li");
+            var a = document.createElement("a");
+            a.setAttribute("onclick","sendQuery(this.innerHTML,updatePagination);");
+            var aText = document.createTextNode(i+1);
+            a.appendChild(aText);
+            lis[i].appendChild(a);
+            var pagination = document.getElementById("pagination");
+            var nextPage = document.getElementById("nextPage").parentNode;
+            pagination.insertBefore(lis[i],nextPage);
         }
-        var url = address + "userController/selectAllByPage";
-        xmlHttpRequest.open("post", url, true);
-        xmlHttpRequest.setRequestHeader("CONTENT-TYPE", "application/x-www-form-urlencoded");
-        xmlHttpRequest.onreadystatechange = function() {
-            if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
-                var str = xmlHttpRequest.responseText;
-                var obj = eval("(" + str + ")");
-                dataSet = obj.rows;
-                initialTable();
-            }
-        };
-        var page = 1;
-        var rows = 10000;
-        var order = "id";
-        var data = "page=" + page + "&rows=" + rows + "&order=" + order + "&sort=asc&username=&reallyname=&role=&tel=&dept=";
-        xmlHttpRequest.send(data);
-
+        sendQuery(1,updatePagination);
     })();
+        // 页面跳转相关按钮事件点击初始化
+    (function(){
+        document.getElementById("firstPage").onclick = function(){
+            sendQuery(1,updatePagination); 
+        };
+         document.getElementById("lastPage").onclick = function(){
+            sendQuery(totalPage,updatePagination); 
+        };
+        document.getElementById("previousPage").onclick = function(){
+            if(currentPage <= 1){return;}
+            sendQuery(currentPage - 1,updatePagination); 
+        };
+        document.getElementById("nextPage").onclick = function(){
+            if(currentPage >= totalPage){return;}
+            sendQuery(currentPage + 1,updatePagination); 
+        };
+        document.getElementById("btn-gotoPage").onclick = function(){
+            var page = document.getElementById("gotoPage").value;
+            if(parseInt(page) > totalPage){return;}
+            sendQuery(page,updatePagination); 
+        };
+        document.getElementById("btn-freshTable").onclick = function(){
+            sendQuery(1,updatePagination); 
+        };
+        document.getElementById("showRows").onchange = function(event){
+            showRows = event.target.value;
+            sendQuery(1,updatePagination); 
+        }
+    })();
+    // 页面跳转相关按钮事件点击初始化 结束
 
     $("#alterModal").on("hidden.bs.modal", (e) => {
         $(".glyphicon").removeClass("show").addClass("hidden");
@@ -82,148 +121,9 @@ $(document).ready(function() {
         detectInput();
     };
     document.querySelector("#alter-state").onchange = function() {
-        $("#alter-feedback-state").addClass("glyphicon-ok show").removeClass("hidden").attr("style", "color:#468847;");
-        detectInput();
+    $("#alter-feedback-state").addClass("glyphicon-ok show").removeClass("hidden").attr("style", "color:#468847;");
+    detectInput();
     };
-    var row;
-    $("#btn-alter").click(() => {
-        let id = $("#alter-id").val();
-        let username = $("#alter-username").val();
-        let name = $("#alter-name").val();
-        let password = $("#alter-password").val();
-        let state = $("#alter-state").val();
-        let role = $("#alter-role").val();
-        let phonenumber = $("#alter-phonenumber").val();
-        let telephone = $("#alter-telephone").val();
-        let email = $("#alter-email").val();
-        let department = $("#alter-department").val();
-        let data = {
-            id: id,
-            username: username,
-            password: password,
-            reallyname: name,
-            email: email,
-            role: role,
-            dept: department,
-            tel: phonenumber,
-            phone: telephone,
-            status: state
-        };
-        let newData = {
-            id: id,
-            username: username,
-            reallyname: name,
-            role: role,
-            dept: department,
-            phone: phonenumber,
-            status: state
-        }
-        $.ajax({
-            url: address + "userController/updateByPrimaryKey",
-            data: data,
-            type: "post",
-            dataType: "json",
-            success: function(data, textStatus){
-                if (data.success === true) {
-                    $("#alterModal").modal("hide");
-                    alert("修改成功");
-                    row.data(newData);
-                } else {
-                    alert("修改shibai");
-                }
-            }
-        });
-    });
-
-    function initialTable() {
-        table = $('#example').DataTable({
-            "data": dataSet,
-            "columns": [
-                { data: "id" },
-                { data: "username" },
-                { data: "reallyname" },
-                { data: "role" },
-                { data: "dept" },
-                { data: "phone" },
-                { data: "status" },
-                {
-                    targets: -1,
-                    data: null,
-
-                    defaultContent: "<button type='button' class='btn-tr btn-viewRow' id='' data-toggle='modal'>查看</button><button type='button' class='btn-tr btn-alterRow' id=''  data-toggle='modal'>修改</button>"
-                }
-            ],
-            "pagingType":"full_numbers",
-            "language": {
-                "info": "显示 _START_ 到 _END_ 项，总共 _TOTAL_ 项",
-                "lengthMenu": "显示 _MENU_ 条",
-                "paginate": {
-                    "first": "首页",
-                    "last": "尾页",
-                    "next": "下一页",
-                    "previous": "上一页"
-                },
-                "search": "",
-            },
-            "aLengthMenu": [[2, 10, 25, -1], ["2", "10", "25", "All"]],
-            'fnDrawCallback': function(table) {    
-            $("#example_paginate").append(`  到第 <input type='text' id='changePage' class='input-text' style='width:50px;height:27px'> 页 <a class='btn btn-default shiny' href='javascript:void(0);' id='dataTable-btn' style='text-align:center'>确认</a>`);    
-            var oTable = $("#example").dataTable();    
-            $('#dataTable-btn').click(function(e) {    
-                if($("#changePage").val() && $("#changePage").val() > 0) {    
-                    var redirectpage = $("#changePage").val() - 1;    
-                } else {    
-                    var redirectpage = 0;    
-                }    
-                oTable.fnPageChange(redirectpage);    
-            });    
-        }  
-        });
-        table.column(0).visible(false);
-        $(".dataTables_filter input").attr("placeholder", "请输入关键字");
-        $('#example tbody').on('click', '.btn-viewRow', function() {
-            $('#viewModal').modal('show');
-            let id = table.row($(this).parents('tr')).data().id;
-            $.ajax({
-                url: address + "userController/selectByPrimaryKey",
-                type: "post",
-                data: "id=" + id,
-                dataType: "json",
-                success: (data, textStatus) => {
-                    $("#view-username").val(data.obj.username);
-                    $("#view-name").val(data.obj.reallyname);
-                    $("#view-role").val(data.obj.role);
-                    $("#view-department").val(data.obj.dept);
-                    $("#view-state").val(data.obj.status);
-                    $("#view-phonenumber").val(data.obj.phone);
-                    $("#view-telephone").val(data.obj.tel);
-                    $("#view-email").val(data.obj.email);
-                }
-            });
-        });
-        $('#example tbody').on('click', '.btn-alterRow', function() {
-            $('#alterModal').modal('show');
-            row = table.row($(this).parents('tr'));
-            let id = row.data().id;
-            $.ajax({
-                url: address + "userController/selectByPrimaryKey",
-                type: "post",
-                data: "id=" + id,
-                dataType: "json",
-                success: (data, textStatus) => {
-                    $("#alter-id").val(data.obj.id);
-                    $("#alter-username").val(data.obj.username);
-                    $("#alter-name").val(data.obj.reallyname);
-                    $("#alter-role").val(data.obj.role);
-                    $("#alter-department").val(data.obj.dept);
-                    $("#alter-state").val(data.obj.status);
-                    $("#alter-phonenumber").val(data.obj.phone);
-                    $("#alter-telephone").val(data.obj.tel);
-                    $("#alter-email").val(data.obj.email);
-                }
-            });
-        });
-    }
 
     // 随时检测输入的内容，并设置相关的提示
     function detectInput() {
@@ -367,3 +267,174 @@ $(document).ready(function() {
         // $("#add-input-detecting").text("输入信息不完整");
     });
 });
+function updatePagination(totalRows, page){
+    totalPage = Math.ceil(totalRows / showRows);
+    currentPage = totalPage == 0 ? 0 : page;
+    var currentMaxPage = totalPage <= maxPage ? totalPage : maxPage;
+    var i = 0;
+    for(i = 0; i < maxPage; i++){
+        if(i < currentMaxPage){
+            lis[i].style.display = "inline";
+        }else{
+            lis[i].style.display = "none";
+        }
+        // lis[i].getElementsByTagName("a")[0].innerHTML = currentPage - currentMaxPage + 1 + i;
+        if(currentPage < minShowPage){
+            lis[i].getElementsByTagName("a")[0].innerHTML = currentPage + i;
+        }else if(currentPage > maxShowPage){
+            lis[i].getElementsByTagName("a")[0].innerHTML = currentPage - currentMaxPage + 1 + i;
+        }else{
+        }
+        
+        if(lis[i].getElementsByTagName("a")[0].innerHTML == currentPage){
+            lis[i].setAttribute("class","active");
+        }else{
+            lis[i].setAttribute("class","");
+        }
+    }
+    if(currentPage < minShowPage){
+        minShowPage = currentPage;
+        maxShowPage = currentPage + currentMaxPage - 1;
+    }else if(currentPage > maxShowPage){
+        maxShowPage = currentPage;
+        minShowPage = currentPage - currentMaxPage + 1;
+    }else{
+    }
+    paginationControl(totalPage,currentPage);
+}
+//发送查询的ajax
+function sendQuery(sendPage,func){
+    var page = parseInt(sendPage);
+    var rows = showRows;
+    var data = getSendData(page, rows);
+    $.ajax({
+        url: address + "userController/selectAllByPage",
+        type: "post",
+        data: data,
+        dataType: "json",
+        success: function(data, statusText){
+            dataSet = data.rows;
+            var totalRows = data.total;
+            createTable(dataSet);
+            func(totalRows, page);
+        }
+    });
+}
+//获取发送数据
+function getSendData(page, rows){
+    // &username=&reallyname=&role=&tel=&dept=
+    return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&username="+sendData.username+"&reallyname="+sendData.reallyname+"&dept="+sendData.dept+"&role="+sendData.role+"&tel="+sendData.tel;
+}
+//控制首页尾页等的可用性
+function paginationControl(totalPage, currentPage){
+    document.getElementById("currentPageId").innerHTML = currentPage;
+    document.getElementById("totalPages").innerHTML = totalPage;
+    document.getElementById("gotoPage").setAttribute("max",totalPage);
+    if(currentPage >= totalPage){
+        $("#nextPage").parent("li").addClass("disabled");
+        $("#lastPage").parent("li").addClass("disabled");
+    }else{
+        $("#nextPage").parent("li").removeClass("disabled");
+        $("#lastPage").parent("li").removeClass("disabled");
+    }
+    if(currentPage <= 1){
+        $("#previousPage").parent("li").addClass("disabled");
+        $("#firstPage").parent("li").addClass("disabled");
+    }else{
+        $("#previousPage").parent("li").removeClass("disabled");
+        $("#firstPage").parent("li").removeClass("disabled");
+    }
+}
+//生成表格
+function createTable(dataArray){
+    var tbody = $("#example tbody");
+    tbody.empty();
+    dataArray.forEach(function(value){
+        var tr = $('<tr></tr>');
+        var tdId =  $(`<td class="td-id"></td>`).text(value.id);
+        var tdUsername = $(`<td class="td-username"></td>`).text(value.username);
+        var tdReallyname = $(`<td class="td-reallyname"></td>`).text(value.reallyname);
+        var tdrole = $(`<td class="td-role"></td>`).text(value.role);
+        var tdDept = $(`<td class="td-dept"></td>`).text(value.dept);
+        var tdTel = $(`<td class="td-tel"></td>`).text(value.tel);
+        var tdState = $(`<td class="td-state"></td>`).text(value.role);
+        var tdOperation = $(`<td class="td-operation"><a class="btn btn-view btn-white" onclick="showViewModal(this);" data-toggle="modal" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
+        tr.append(tdId, tdUsername, tdReallyname, tdrole, tdDept, tdTel, tdState,tdOperation);
+        tbody.append(tr);
+    });
+}
+function showAlterModal(target){
+    loginDetect().then(
+        function(response){
+            if(response.success === true){
+                initialForm(target);
+            }else{
+                $("#vac-nologin-alert").modal('show');
+                return;
+            }
+        },
+        function(){
+            $("#vac-nologin-alert").modal('show');
+            return;
+        });
+    function initialForm(target){
+        $("#alterModal").modal("show");
+        var id = target.parentNode.parentNode.getElementsByClassName("td-id")[0].innerHTML;
+        $.ajax({
+            url: address + "userController/selectByPrimaryKey",
+            type: "post",
+            data: "id=" + id,
+            dataType: "json",
+            success: (data, textStatus) => {
+                $("#alter-id").val(data.obj.id);
+                $("#alter-username").val(data.obj.username);
+                $("#alter-name").val(data.obj.reallyname);
+                $("#alter-role").val(data.obj.role);
+                $("#alter-department").val(data.obj.dept);
+                $("#alter-state").val(data.obj.status);
+                $("#alter-phonenumber").val(data.obj.phone);
+                $("#alter-telephone").val(data.obj.tel);
+                $("#alter-email").val(data.obj.email);
+            }
+        });
+    }
+}
+function showAddModal(){
+    loginDetect().then(
+        function(response){
+            if(response.success === true){
+                initialForm(target);
+            }else{
+                $("#vac-nologin-alert").modal('show');
+                return;
+            }
+        },
+        function(){
+            $("#vac-nologin-alert").modal('show');
+            return;
+        });
+    function initialForm(target){
+        $("#addModal").modal("show");
+        
+    }
+}
+function showViewModal(target){
+     $("#viewModal").modal("show");
+    var id = target.parentNode.parentNode.getElementsByClassName("td-id")[0].innerHTML;
+    $.ajax({
+        url: address + "userController/selectByPrimaryKey",
+        type: "post",
+        data: "id=" + id,
+        dataType: "json",
+        success: (data, textStatus) => {
+            $("#view-username").val(data.obj.username);
+            $("#view-name").val(data.obj.reallyname);
+            $("#view-role").val(data.obj.role);
+            $("#view-department").val(data.obj.dept);
+            $("#view-state").val(data.obj.status);
+            $("#view-phonenumber").val(data.obj.phone);
+            $("#view-telephone").val(data.obj.tel);
+            $("#view-email").val(data.obj.email);
+        }
+    });
+}
