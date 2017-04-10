@@ -1,15 +1,15 @@
 var app = new Vue({
-    el: '#v-demo',
+    el: '#caseManagement',
     data: {
         isShow: false,
         caseNodeNum: 0,
-        caseNode: '</h3><div class="form-group"><label class="col-lg-2 control-label hidden">用例组成类型</label><div class="col-lg-4 hidden"><input type="text" class="form-control" name="caseCompositeType" value="3"></div><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid" id=""></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><input class="form-control" name="subversioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option>模板</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option v-for="user in users" value="{{user.id}}">{{user.username}}</option></select></div><label class="col-lg-2 control-label">测试顺序</label><div class="col-lg-4"><input class="form-control" name="steporder"></div></div><div class="form-group"><label class="col-lg-2 control-label">用例使用状态</label><div class="col-lg-4"><select class="form-control" size="1" name="subusestatus"><option value="1">新增</option><option value="2">评审通过</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
-        productList: [], //案例
+        caseNode: '</h3><div class="form-group"><label class="col-lg-2 control-label hidden">案例组成类型</label><div class="col-lg-4 hidden"><input type="text" class="form-control" name="caseCompositeType" value="3"></div><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid" id=""></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><input class="form-control" name="subversioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option>模板</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option></select></div><label class="col-lg-2 control-label">测试顺序</label><div class="col-lg-4"><input class="form-control" name="steporder"></div></div><div class="form-group"><label class="col-lg-2 control-label">案例使用状态</label><div class="col-lg-4"><select class="form-control" size="1" name="subusestatus"><option value="1">新增</option><option value="2">评审通过</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
+        caseList: [], //案例
         users: [], //所有用户
         priority: [], // 优先级
         executeMethod: [], // 执行方式
-        caseCompositeType: '', // 用例组成类型
-        useStatus: [], // 用例状态
+        caseCompositeType: [], // 案例组成类型
+        useStatus: [], // 案例状态
         testpoint: '', // 测试点
         author: '', //编写者
         executor: '', //执行者
@@ -25,19 +25,22 @@ var app = new Vue({
         totalPage: 10, //总页数
         listnum: 10, //页面大小
         order: 'id',
-        sort: 'asc',
+        sort: 'desc',
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
+
+        subCaseList: [] //流程节点
+
     },
     ready: function() {
-        getCase(1, 10, 'id', 'asc');
+        getCase(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
         getUsers();
     },
     methods: {
 
-        //添加单用例
+        //添加单案例
         insert: function() {
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/import111',
@@ -56,26 +59,71 @@ var app = new Vue({
                 }
             });
         },
-
-        //导入excel
-        importExcel: function() {
-            $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/importexcel',
-                type: 'post',
-                data: $("#importExcel").serializeArray(),
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                    } else {
-                        $('#failModal').modal();
+        //获取流程节点
+        getSubCase: function(e) {
+            var flowId = $(e.target).parent().parent().attr('id'),
+                flowTr = $(e.target).parent().parent();
+            console.log(flowId);
+            if ($(e.target).attr("class") === "icon-angle-right") {
+                $.ajax({
+                    url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/testcaseactionquery',
+                    type: 'post',
+                    data: { 'testcaseid': flowId },
+                    success: function(data) {
+                        this.subCaseList = data.obj;
+                        console.log(this.subCaseList);
+                        for (var i = 0; i < this.subCaseList.length; i++) {
+                            var subTr = $("<tr class='subShow'></tr>"),
+                                checkTd=$("<td><input type='checkbox' name='chk_list'/></td>"),
+                                iconTd=$("<td>子流程</td>"),
+                                codeTd=$("<td></td>"),
+                                autTd=$("<td></td>"),
+                                transTd=$("<td></td>"),
+                                compositeTd=$("<td></td>"),
+                                useTd=$("<td></td>"),
+                                authorTd=$("<td></td>"),
+                                executorTd=$("<td></td>"),
+                                executeMethodTd=$("<td></td>");
+                            codeTd.html(this.subCaseList[i].subcasecode);
+                            autTd.html(this.subCaseList[i].autId);
+                            compositeTd.html(this.subCaseList[i].caseCompositeType);
+                            useTd.html(this.subCaseList[i].useStatus);
+                            authorTd.html(this.subCaseList[i].author);
+                            executorTd.html(this.subCaseList[i].executor);
+                            executeMethodTd.html(this.subCaseList[i].executeMethod);
+                            subTr.append(checkTd,iconTd,codeTd,autTd,transTd,compositeTd,useTd,authorTd,executorTd,executeMethodTd);
+                            flowTr.after(subTr);
+                        }
+                        
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+                });
+                $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
+            }else{
+                $(".subShow").css("display","none"); 
+                $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');        
+            }
+
+
         },
+        //导入excel
+        // importExcel: function() {
+        //     $.ajax({
+        //         url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/importexcel',
+        //         type: 'post',
+        //         //data: $("#importExcel").serializeArray(),
+        //         success: function(data) {
+        //             console.info(data);
+        //             if (data.success) {
+        //                 $('#successModal').modal();
+        //             } else {
+        //                 $('#failModal').modal();
+        //             }
+        //         },
+        //         error: function() {
+        //             $('#failModal').modal();
+        //         }
+        //     });
+        // },
 
         //获取选中的id
         getIds: function() {
@@ -184,10 +232,10 @@ var app = new Vue({
             //页数变化时的回调
             getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-        // 流程用例添加节点用例
+        // 流程案例添加节点案例
         addCaseNode: function() {
             this.caseNodeNum++;
-            var cNode = $('<h3>流程节点用例' + this.caseNodeNum + this.caseNode);
+            var cNode = $('<h3>流程节点案例' + this.caseNodeNum + this.caseNode);
             var element = $("#addCaseNode").append(cNode);
             this.$compile(element.get(0));
             getUsers();
@@ -209,7 +257,7 @@ var app = new Vue({
                 type: 'GET',
                 data: { 'id': id },
                 success: function() {
-                    this.$data.productList = data.o;
+                    this.$data.caseList = data.o;
                 }
             });
         }
@@ -230,7 +278,7 @@ function getCase(currentPage, listnum, order, sort) {
         success: function(data) {
             // console.info(data);
             // console.info(data.o.rows);
-            app.productList = data.o.rows;
+            app.caseList = data.o.rows;
             app.tt = data.o.total;
             app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
@@ -249,7 +297,7 @@ function getUsers() {
         }
     });
 }
-//筛选查询用例
+//筛选查询案例
 function queryCase() {
     $.ajax({
         url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/testcasequeryByPage',
@@ -275,7 +323,7 @@ function queryCase() {
 
         },
         success: function(data) {
-            app.productList = data.o.rows;
+            app.caseList = data.o.rows;
             app.tt = data.o.total;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             app.pageSize = app.listnum;
@@ -308,6 +356,7 @@ $(document).ready(function(e) {
     erji(); //第二级函数
     sanji(); //第三极函数
     $('select[name="autid"]').change(function() {
+        //var target = $(this);
         erji();
         sanji();
     })
@@ -581,3 +630,25 @@ function executor() {
         }
     });
 }
+
+//重新排序
+function resort(target) {
+    var spans = target.parentNode.getElementsByTagName("span");
+    for (var span in spans) {
+        if (spans[span].nodeName === "SPAN") {
+            spans[span].setAttribute("class", "");
+        }
+    }
+    if (target.getAttribute("data-sort") === "desc") {
+        app.sort = "asc";
+        target.getElementsByTagName("span")[0].setAttribute("class", "icon-sort-up")
+        target.setAttribute("data-sort", "asc");
+    } else {
+        app.sort = "desc";
+        target.getElementsByTagName("span")[0].setAttribute("class", "icon-sort-down")
+        target.setAttribute("data-sort", "desc");
+    }
+    app.order = target.getAttribute("data-order");
+    getCase(1, 10, app.order, app.sort);
+}
+//重新排序 结束

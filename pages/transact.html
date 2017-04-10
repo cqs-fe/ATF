@@ -5,10 +5,10 @@
     <link rel="import" href="./common/header.html?__inline">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
-    <title>aut</title>
+    <title>transact</title>
 </head>
 
-<body id="v-aut" v-cloak>
+<body id="v-transact" v-cloak>
     <div class="content">
         <!--header start-->
         <link rel="import" href="./common/header-guide.html?__inline">
@@ -19,44 +19,47 @@
         <!--main content start-->
         <section id="main-content">
             <section class="wrapper">
+                <!-- breadcrumb start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="breadcrumb">
+                            <li><a href="#"><i class="icon-home"></i> 测试系统</a></li>
+                            <li><a href="#" class="active">功能点</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- breadcrumb end -->
                 <!--top-button start-->
                 <div class="row">
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
                         <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
                         <a class="btn btn-white" data-toggle="modal" href="#updateModal"><i class="icon-edit"></i> 修改</a>
-                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 管理功能点</a>
-                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 配置系统数据</a>
-                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 自动化构件维护</a>
-                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 执行代码管理</a>
+                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 元素库</a>
+                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 对象库</a>
+                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 基础脚本</a>
                         <!-- insertModal start -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">添加测试系统</h4>
+                                        <h4 class="modal-title">添加功能点</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
                                         <section class="panel">
                                             <form id="insertForm" class="form-horizontal" role="form">
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label">测试系统编号</label>
+                                                    <label class="col-lg-3 control-label">编码</label>
                                                     <div class="col-lg-5">
                                                         <input type="text" class="form-control" name="autCode">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label">测试系统名称</label>
+                                                    <label class="col-lg-3 control-label">名称</label>
                                                     <div class="col-lg-5">
                                                         <input type="text" class="form-control" name="autName">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label">开发框架</label>
-                                                    <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -83,11 +86,11 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">删除测试系统</h4>
+                                        <h4 class="modal-title">删除功能点</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
-                                        <h4>确认删除测试系统？</h4>
+                                        <h4>确认删除功能点？</h4>
                                         <!-- modal-body end -->
                                     </div>
                                     <div class="modal-footer">
@@ -104,28 +107,22 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">修改测试系统</h4>
+                                        <h4 class="modal-title">修改功能点</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
                                         <section class="panel">
                                             <form id="insertForm" class="form-horizontal" role="form">
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label">测试系统编号</label>
+                                                    <label class="col-lg-3 control-label">编码</label>
                                                     <div class="col-lg-5">
                                                         <input type="text" class="form-control" name="autCode">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label">测试系统名称</label>
+                                                    <label class="col-lg-3 control-label">名称</label>
                                                     <div class="col-lg-5">
                                                         <input type="text" class="form-control" name="autName">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label">开发框架</label>
-                                                    <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -190,18 +187,15 @@
                     <div class="col-lg-12">
                         <section class="panel">
                             <header class="panel-heading">
-                                测试系统
+                                功能点
                             </header>
                             <div class="filter">
                                 <div class="row">
                                     <form class="form-horizontal col-lg-12">
                                         <div class="form-group">
-                                            <label class="col-lg-1 control-label">搜索</label>
+                                            <label class="col-lg-2 control-label">所属被测系统</label>
                                             <div class="col-lg-2">
-                                                <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入系统编号" name="" v-model="">
-                                            </div>
-                                            <div class="col-lg-1">
-                                                <a class="btn btn-white" onclick="queryAut()">搜索</a>
+                                                <select class="form-control" size="1" id="autSelect"></select>
                                             </div>
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
@@ -211,7 +205,7 @@
                                                     <option value="5">5</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getAut(1, 10, 'id', 'asc')">刷新</a></div>
+                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getTransact(1, 10, 'id', 'asc')">刷新</a></div>
                                         </div>
                                     </form>
                                 </div>
@@ -223,21 +217,21 @@
                                         <th style="width:8px;">
                                             <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                         </th>
-                                        <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)">名称（编码） <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                        <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)">编码 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center">名称</th>
-                                        <th class="hidden-phone text-center">开发架构</th>
+                                        <th class="hidden-phone text-center">类型</th>
                                         <th class="hidden-phone text-center">描述</th>
                                     </tr>
                                 </thead>
                                 <tbody id="caseTable">
-                                    <tr class="odd gradeX" v-for="aut in autList" id="{{aut.id}}">
+                                    <tr class="odd gradeX" v-for="item in transactList" id="{{transact.id}}">
                                         <td>
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{aut.id}}" />
+                                            <input type="checkbox" v-model="" name="chk_list" id="{{transact.id}}" />
                                         </td>
-                                        <td class="center hidden-phone">{{ aut.autCode }}</td>
-                                        <td>{{ aut.autName }}</td>
+                                        <td class="center hidden-phone">{{ transact.transactcode }}</td>
+                                        <td>{{ transact.transactname }}</td>
                                         <td class="hidden-phone">{{ }}</td>
-                                        <td class="hidden-phone">{{ }}</td>
+                                        <td class="hidden-phone">{{ transact.descript}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -292,4 +286,4 @@
 </html>
 <link rel="import" href="./common/footer.html?__inline">
 <script src="../lib/vue-resource.min.js"></script>
-<script type="text/javascript" src="../static/js/aut.js"></script>
+<script type="text/javascript" src="../static/js/transact.js"></script>

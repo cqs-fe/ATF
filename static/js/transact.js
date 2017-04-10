@@ -1,22 +1,23 @@
 var app = new Vue({
-    el: '#v-aut',
+    el: '#v-transact',
     data: {
-        autList: [],
-        apiUrl: 'http://10.108.226.152:8080/ATFCloud/autController/selectAll',
+        transactList: [],
+        apiUrl: 'http://10.108.226.152:8080/ATFCloud/transactController/selectAll',
         tt: "", //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
         totalPage: 10, //总页数
         listnum: 10, //页面大小
         order: 'id',
-        sort: 'asc',
+        sort: 'desc',
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
     },
     ready: function() {
-        getAut(this.currentPage, this.pageSize, this.order, this.sort);
+        getTransact(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
+        autSelect();
     },
     methods: {
         //获取选中的id
@@ -35,7 +36,7 @@ var app = new Vue({
                 _this.checkboxModel = [];
             } else { //全选
                 _this.checkboxModel = [];
-                _this.autList.forEach(function(item) {
+                _this.transactList.forEach(function(item) {
                     _this.checkboxModel.push(item.id);
                 });
             }
@@ -59,14 +60,14 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-            getAut(ts.currentPage, ts.pageSize, 'id', 'asc');
+            getTransact(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
 
 
          //添加单案例
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/autController/insert',
+                url: 'http://10.108.226.152:8080/ATFCloud/transactController/inserttransact',
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
@@ -85,13 +86,13 @@ var app = new Vue({
 
     },
     //搜索系统
-    searchAut: function(id) {
+    searchTransact: function(id) {
         $.ajax({
             url: '',
             type: 'GET',
             data: { 'id': id },
             success: function() {
-                this.$data.autList = data.o;
+                this.$data.transactList = data.o;
             }
         });
     }
@@ -99,11 +100,11 @@ var app = new Vue({
 });
 
 
-function getAut(page, listnum, order, sort) {
+function getTransact(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/autController/selectAllByPage',
+        url: 'http://10.108.226.152:8080/ATFCloud/transactController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -115,7 +116,7 @@ function getAut(page, listnum, order, sort) {
             console.info(data);
             console.info(data.rows);
             // var data = JSON.parse(data);
-            app.autList = data.rows;
+            app.TransactList = data.rows;
             app.tt = data.total;
             app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
@@ -129,7 +130,7 @@ function changeListNum() {
     $('#mySelect').change(function() {
         listnum = $(this).children('option:selected').val();
         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-        getAut(1, listnum, 'id', 'asc');
+        getTransact(1, listnum, 'id', 'asc');
     })
 }
 
@@ -156,6 +157,26 @@ function resort(target) {
         target.setAttribute("data-sort", "desc");
     }
     app.order = target.getAttribute("data-order");
-    getAut(1, 10, app.order, app.sort);
+    getTransact(1, 10, app.order, app.sort);
 }
 //重新排序 结束
+
+//获取测试系统
+function autSelect() {
+    $.ajax({
+        async: false,
+        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        type: "POST",
+        success: function(data) {
+            var autList = data.obj;
+            var str = "";
+            for (var i = 0; i < autList.length; i++) {
+
+                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+            }
+
+            $('#autSelect').html(str);
+
+        }
+    });
+}
