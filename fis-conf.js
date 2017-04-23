@@ -63,3 +63,13 @@ fis.media('push').match('{/static/**,/lib/**}', {
   })
 });
 
+fis.set('project.fileType.text', 'es');
+fis.match('*.es.js', {
+    parser: fis.plugin('babel-6.x', {
+        // presets: [
+        // 注意一旦这里在这里添加了 presets 配置，则会覆盖默认加载的 preset-2015 等插件，因此需要自行添加所有需要使用的 presets
+        // ]
+    }),
+    rExt: 'js'
+});
+

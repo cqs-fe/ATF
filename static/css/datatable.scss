@@ -1,0 +1,258 @@
+html, body{
+	height: 100%;
+	position: relative;
+}
+.searchBox{
+	position: absolute;
+	display: block;
+	width: 400px;
+	height: 202px;
+	box-sizing: border-box;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1100;
+	border: 1px solid #ddd;
+	background-color: #eee;
+	.searchBox-header{
+		height: 30px;
+		line-height: 30px;
+		padding: 5px;
+		background-color:#fff;
+		.searchBox-title{
+			line-height: 20px;
+			font-size: 13px;
+			float: left;
+			vertical-align: middle;
+		}
+		.icon-remove{
+			line-height: 20px;
+			font-size: 13px;
+			height: 20px;
+			float: right;
+			margin-right: 10px;
+			vertical-align: middle;
+		}
+	}
+	.searchBox-body{
+		height: 130px;
+		padding: 5px 0;
+		ul{
+			height: 30px;
+			margin: 0 5px;
+			padding: 0px 0;
+			// vertical-align: middle;
+			.tab{
+				height: 30px;
+				display: inline-block;
+				line-height: 30px;
+				vertical-align: middle;
+				font-size: 13px;
+				padding: 0px 15px;
+				cursor: pointer;
+				&.active{
+					background-color:#fff;
+				}
+			}
+		}
+		.tab-wrapper{
+			position:relative;
+			background-color: #fff;
+			margin: 0 5px;
+			padding: 10px 15px;
+			height: 90px;
+			.tab-content{
+				margin: 0;
+				height: 100%;
+				div{
+					margin: 5px 0;
+					label {
+						font-size: 14px;
+						font-weight: 200;
+						width: 70px;
+					}
+					input{
+						display: inline-block;
+						border: 1px solid #ddd;
+						width: 230px;
+						color: #797979;
+						font-size: 12px;
+					}
+					button{
+						color: #797979;
+						background-color:#fff;
+						border: 1px solid #ddd;
+					}
+				}
+				
+			}
+		}
+	}
+	.searchBox-footer{
+		height: 40px;
+		margin: 0 0px;
+		padding: 0px 15px;
+		text-align: right;
+		.btn{
+			// line-height: 28px;
+			// height: 28px;
+			padding: 2px 5px;
+			margin: 0 15px;
+			font-size: 13px;
+			color: #797979;
+		}
+	}
+}
+.content{
+	overflow: auto;
+}
+#main-content{
+	display:flex;
+	padding-top:60px;
+	.content-wrapper{
+		position: relative;
+		flex: 1 1 auto;
+		display: flex;
+		overflow: hidden;
+		.treeMenu{
+			position: relative;
+			min-width: 200px;
+			flex: 0 0 auto;
+			margin-left: -190px;
+			font-size: 0;
+			z-index: 1;
+			.tree-wrapper{
+				display: inline-block;
+				height: 100%;
+				width: 190px;
+				overflow: auto;
+			}
+			.btn-toggle{
+				position: relative;
+				display: inline-block;
+				width: 10px;
+				height: 100%;
+				right: 0;
+				top: 0;
+				vertical-align: top;
+				// float: right;
+				border: none;
+				padding:0;
+				overflow: visible;
+				font-size: 16px;
+				i{
+					height: 100%;
+					line-height: 100%;
+					color: #ff6c60;
+				}
+			}
+		}
+		@keyframes close{
+			0%{
+				margin-left: 0;
+			}
+			100%{
+				margin-left: -190px;
+			}
+		} 
+		@keyframes open{
+			0%{
+				margin-left: -190px;
+			}
+			100%{
+				margin-left: 0px;
+			}
+		} 
+		.close1{
+			animation: 0.5s 0s close linear 1 forwards normal;
+		}
+		.open2{
+			animation: 0.5s 0s open linear 1 forwards normal;
+		}
+		.main{
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			overflow: auto;
+			.top-bar{
+				flex: 0 0 53px;
+				width: 100%;
+				height: 53px;
+				padding: 10px 20px;
+			}
+			.dataTable-wrapper{
+				position: relative;
+				flex: 1 1 auto;
+				background-color: #fff;
+				padding: 10px 20px;
+				overflow: hidden;
+				box-sizing: content-box;
+				.handsontable{
+					// height: 100%;
+					margin: 0;
+					tr{
+						td{
+							background-color: inherit;
+						}
+						td.area.highlight{
+							background-color: #1ABDE6;
+							background-image: none;
+						}
+						td.result{
+							background-color: #f00;
+						}
+						td.result.current-result{
+							background-color: #0f0;
+						}
+					}
+					tr:nth-of-type(2n+1){
+						background-color: #eeee11;
+					}
+					tr:nth-of-type(2n){
+						background-color: #eeffff;
+					}
+					tr.selected{
+						background-color: #1ABDE6;
+					}
+					
+				}
+			}
+			.panel{
+				position:relative;
+				flex: 0 0 auto;
+				height: 200px;
+				border-radius: 5px;
+				margin-left: 5px;
+				margin-right: 5px;
+				margin-bottom: 0;
+				overflow: hidden;
+				transition: 0.5s height;
+				.panel-heading{
+					height: 43px;
+					border-top-left-radius: 5px;
+					border-top-right-radius: 5px;
+					background-color: #f5f5f5;
+					margin: 0 0px;
+				}
+				.close{
+
+				}
+				.panel-body{
+					height: 157px;
+					overflow: scroll;
+				}
+			}
+			.panel.height43px {
+				height: 43px;
+			}
+			.panel.height200px{
+				height: 200px;
+			}
+		}
+	}
+	.copy-right{
+		flex: 0 0 100px;
+	}
+}
+

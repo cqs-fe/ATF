@@ -207,10 +207,10 @@ $(document).ready(function(){
                 data: data,
                 success: function(data, textStatus){
                     if(data.success === true){
-                        alert("添加成功");
+                        $("#successModal").modal("show");
                         $("#addModal").modal("hide");
                     }else{
-                        alert("添加失败"+data.msg);
+                        $("#failModal").modal("show");
                     }
                 }
 
@@ -230,10 +230,10 @@ $(document).ready(function(){
                 data: data,
                 success: function(data, textStatus){
                     if(data.success === true){
-                        alert("修改成功");
+                        $("#successModal").modal("show");
                         $("#alterModal").modal("hide");
                     }else{
-                        alert(data.msg);
+                        $("#failModal").modal("show");
                     }
                 }
 
@@ -797,7 +797,7 @@ function createTable(dataSet){
     let tdLineName = $(`<td class="td-lineName"></td>`).text(value.productLineName);
     let tdAutName = $(`<td class="td-autName"></td>`).text(value.autid);
     let tdDescription = $(`<td class="td-description"></td>`).text(value.taskDescription);
-    let tdOperation = $(`<td class="td-operation"><a data-toggle="modal" class="btn btn-view" onclick="showViewModal(this);" href=''>查看</a><a class="btn btn-alter" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
+    let tdOperation = $(`<td class="td-operation"><a data-toggle="modal" class="btn btn-view btn-white" onclick="showViewModal(this);" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
     tr.append(tdId, tdName, tdType, tdLineName, tdAutName, tdDescription,tdOperation);
     tbody.append(tr);
     });
@@ -904,11 +904,6 @@ function resort(target){
     updateTableAndPagination(currentPage); 
 }
 //重新排序 结束
-//得到发送的data
-function getSendData(page, rows){
-    return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&testProjectName="+sendData.testProjectName+"&type="+sendData.type+"&userId="+sendData.userId+"&autId="+sendData.autId+"&productLineId="+sendData.productLineId;
-}
-//得到发送的data
 //检测用户登录状态，添加 更改操作需要有登陆权限
 function loginDetect(){
     return new Promise(function(resolve, reject){
@@ -945,24 +940,9 @@ function loginDetect(){
     });
 }
 //检测用户登录状态，添加 更改操作需要有登陆权限 结束
-//功能函数
-var vacFunciton = {
-    // 获取当前日期时间“yyyy-MM-dd HH:MM:SS”
-    getNowFormatDate: function(){
-        var date = new Date();
-        var seperator1 = "-";
-        var seperator2 = ":";
-        var month = date.getMonth() + 1;
-        var strDate = date.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-        }
-        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-        + " " + date.getHours() + seperator2 + date.getMinutes()
-        + seperator2 + date.getSeconds();
-        return currentdate;
-    },
-};
+//得到发送的data
+function getSendData(page, rows){
+    return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&testProjectName="+sendData.testProjectName+"&type="+sendData.type+"&userId="+sendData.userId+"&autId="+sendData.autId+"&productLineId="+sendData.productLineId;
+}
+//得到发送的data
+
