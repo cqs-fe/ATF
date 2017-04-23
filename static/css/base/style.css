@@ -183,11 +183,11 @@ ul.sidebar-menu {
     margin-top: 75px;
 }
 
-#sidebar > ul > li > ul.sub {
+#sidebar > ul  li  ul.sub {
     display: none;
 }
 
-#sidebar > ul > li.active > ul.sub, #sidebar > ul > li > ul.sub > li > a {
+#sidebar > ul  li.active  ul.sub, #sidebar > ul  li  ul.sub  li  a {
     display: block;
 }
 
@@ -284,7 +284,7 @@ ul.sidebar-menu li.active a i {
 }
 
 
-#sidebar ul > li > a .arrow {
+#sidebar ul  li  a .arrow {
     border-bottom: 4px solid transparent;
     border-left: 4px solid #A0A0A0;
     border-top: 4px solid transparent;
@@ -295,7 +295,7 @@ ul.sidebar-menu li.active a i {
     width: 0;
 }
 
-#sidebar > ul > li > a .arrow.open {
+#sidebar > ul  li  a .arrow.open {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 5px solid #A0A0A0;
@@ -306,7 +306,7 @@ ul.sidebar-menu li.active a i {
     width: 0;
 }
 
-#sidebar ul > li.active > a .arrow, #sidebar ul > li > a:hover .arrow, #sidebar ul > li > a:focus .arrow {
+#sidebar ul  li.active  a .arrow, #sidebar ul  li  a:hover .arrow, #sidebar ul  li  a:focus .arrow {
     float: right;
     margin-top: 6px;
     margin-right: 10px;
@@ -317,7 +317,7 @@ ul.sidebar-menu li.active a i {
     border-bottom: 4px solid transparent;
 }
 
-#sidebar > ul > li.active > a .arrow.open, #sidebar > ul > li > a:hover .arrow.open, #sidebar > ul > li > a:focus .arrow.open {
+#sidebar > ul  li.active  a .arrow.open, #sidebar  ul  li  a:hover .arrow.open, #sidebar  ul  li  a:focus .arrow.open {
     float: right;
     margin-top: 8px;
     margin-right: 10px;

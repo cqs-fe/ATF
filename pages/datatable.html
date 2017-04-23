@@ -2,44 +2,161 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
     <link rel="import" href="./common/header.html?__inline">
     <link rel="import" href="./noLoginAlert.html?__inline">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    <!-- <link rel="stylesheet" type="text/css" href="../static/css/usermanagement.scss"> -->
+    <link rel="stylesheet" type="text/css" href="../static/css/handsontable.full.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/testitems.scss">
+    <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/datatable.css">
     <script src="../lib/jquery.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="../lib/vue.js"></script>
+<!--     <script type="text/javascript" src="../lib/ZeroClipboard.min.js"></script> -->
+    <script type="text/javascript" src="../lib/handsontable.full.js"></script>
     <title>Case Manager</title>
     <style>
-
     </style>
 </head>
 
-<body id="v-demo" v-cloak>
-    <div class="content">
+<body id="v-body">
+<div id="searchBox" v-show="isShow" class="searchBox">
+        <header class="searchBox-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event);" ondrag="dragController.searchBoxDrag(event)">
+            <span class="searchBox-title">查找与替换</span>
+            <span class="icon-remove" @click="hide();"></span>
+        </header>
+        <main class="searchBox-body">
+            <ul>
+                <li class="tab" :class="{'active':!searOrRep}" @click="showSearch">查找</li>
+                <li class="tab" :class="{'active':searOrRep}" @click="showReplace">替换</li>
+            </ul>
+            <div class="tab-wrapper">
+                <div class="tab-content">
+                    <div class="">
+                       <label>查找内容：</label>
+                       <input type="text" placeholder="请输入关键字" v-model="keyword" id="input-search">
+                       <button id="btn-search" type="button" @click="search">查找</button>
+                   </div>
+                   <div class="" id="replaceDiv" v-show="searOrRep">
+                    <label>替换为：</label>
+                    <input type="text" v-model="newword">
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="searchBox-footer">
+        <button class="btn btn-white" v-show="searOrRep" @click="replaceAll()">全部替换</button>
+        <button class="btn btn-white" v-show="searOrRep" @click="replace()">替换</button>
+        <button class="btn btn-white" @click="findNext()">查找下一个</button>
+        <button class="btn btn-white" @click="hide();">关闭</button>
+    </footer>
+</div>
         <!--header start-->
         <link rel="import" href="./common/header-guide.html?__inline">
         <!--header end-->
         <!--sidebar start-->
         <link rel="import" href="./common/aside-guide.html?__inline">
         <!--sidebar end-->
-
+    <div class="content">
         <!--main content start-->
         <section id="main-content">
+            <section class="content-wrapper">
+                <div class="treeMenu" v-bind:class="{'close1': !flag, 'open2': flag}" id="submenu">
+                    <div class="tree-wrapper ztree" id="tree-wrapper">
+                        
+                    </div>
+                    <button type="button" id="btn-menu" class="btn-toggle" @click="toggle">
+                    <i :class="{'icon-chevron-left': flag, 'icon-chevron-right': !flag}">
+                    </i>
+                    </button>
+                </div> 
+                <main class="main">
+                    <div class="top-bar">
+                        <button class="btn btn-white"><i class="icon-cog"></i>
+                        构建</button>
+                        <button class="btn btn-white"><i class="icon-list-alt"></i>
+                        代码查看</button>
+                        <button class="btn btn-white"><i class="icon-wrench"></i>
+                        调试</button>
+                    </div>
+                    <div class="dataTable-wrapper">
+                        
+                      <div id="handsontable">
+                        
+                      </div>
+                    </div>
+                    <div class="panel panel-default" id="tooltipwindow" 
+                    :class="{'height43px':flag,'height200px':!flag}">
+                      <div class="panel-heading">调试结果
+                      <button type="button" class="close" id="btn-closetooltip" @click="toggle">
+                      <i :class="{'icon-resize-full':flag,'icon-resize-small':!flag}"></i></button></div>
+                      <div class="panel-body">
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                      </div>
+                    </div>
+                </main>
+            </section>
+            
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>
-        <aside>
-            
-        </aside>
         <!--main content end-->
     </div>
     <!--content end -->
     <script src="../static/js/config.js"></script>
-    <script src="../static/js/vac-functions.js"></script>
-    <script src="../static/js/datatable.js"></script>
+    <script src="../static/js/vac-functions.es.js"></script>
+    <script src="../static/js/datatable.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
+    <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript">
+    (function(){
+        var sub = new Vue({
+            el: '#submenu',
+            data: {
+                flag: true
+            },
+            methods: {
+                toggle: function(){
+                    this.flag = !this.flag;
+                }
+            }
+        });
+        var tooltipwindow = new Vue({
+          el: '#tooltipwindow',
+          data: {
+            flag: true
+          },
+          methods: {
+            toggle: function(){
+              this.flag = !this.flag;
+            }
+          }
+        });
+    })();
+    </script>
 </body>
 
 </html>
