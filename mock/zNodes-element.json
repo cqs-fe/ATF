@@ -1,0 +1,40 @@
+[{
+    id: 0,
+    name: "元素库"
+}, {
+    id: 1,
+    pId: 0,
+    name: "UI1",
+}, {
+    id: 11,
+    pId: 1,
+    name: "元素1"
+}, {
+    id: 12,
+    pId: 1,
+    name: "元素2"
+}, {
+    id: 13,
+    pId: 1,
+    name: "元素3",
+}, {
+    id: 2,
+    pId: 0,
+    name: "UI2"
+}, {
+    id: 21,
+    pId: 2,
+    name: "元素5",
+}, {
+    id: 22,
+    pId: 2,
+    name: "元素6"
+}, {
+    id: 23,
+    pId: 2,
+    name: "元素7"
+}, {
+    id: 3,
+    pId: 0,
+    name: "UI3",
+}]

@@ -2,6 +2,9 @@
 	padding-top: 10px;
 	padding-bottom: 1px;
 }
+#menuContent{
+	min-height: 280px;
+}
 .treeMenu {
     width: 100%;
     border: 1px solid rgb(170, 170, 170);
@@ -14,9 +17,12 @@
     height: auto;
 }
 .elementContent{
+	min-height: 280px;
 	border: 1px solid rgb(170,170,170);
 	z-index: 10;
-	/* height: 300px; */
+}
+.elementContent>a{
+	margin: 0 0 10px 80%;
 }
 .saveBtn{
 	margin: 5px 5px 5px 550px;
@@ -42,4 +48,8 @@
 }
 .linked-left a{
 	display: block
+}
+.property a{
+	margin-right: 5px;
+	margin-bottom: 10px;
 }

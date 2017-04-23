@@ -9,15 +9,17 @@ var app = new Vue({
         totalPage: 10, //总页数
         listnum: 10, //页面大小
         order: 'id',
-        sort: 'desc',
+        sort: 'asc',
         isPageNumberError: false,
-        checkboxModel: [],
-        checked: "",
+        ids: []
     },
     ready: function() {
-        getTransact(this.currentPage, this.pageSize, this.order, this.sort);
-        changeListNum();
         autSelect();
+        setval();
+         changeListNum();
+        $('#autSelect').change(function() {
+            queryTransact();
+        });
     },
     methods: {
         //获取选中的id
@@ -26,21 +28,10 @@ var app = new Vue({
             $('input[name="chk_list"]:checked').each(function() {
                 id_array.push($(this).attr('id'));
             });
-            //app.ids = id_array.join(',');
-            $('input[name="ids"]').val(id_array.join(','));
+            app.ids = id_array.join(',');
+            // $('input[name="ids"]').val(id_array.join(','));
         },
-        checkedAll: function() {
-            var _this = this;
-            console.log(_this.checkboxModel);
-            if (this.checked) { //反选
-                _this.checkboxModel = [];
-            } else { //全选
-                _this.checkboxModel = [];
-                _this.transactList.forEach(function(item) {
-                    _this.checkboxModel.push(item.id);
-                });
-            }
-        },
+
         //turnToPage为跳转到某页
         //传入参数pageNum为要跳转的页数
         turnToPage(pageNum) {
@@ -62,14 +53,36 @@ var app = new Vue({
             //页数变化时的回调
             getTransact(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-
-
-         //添加单案例
+        //添加功能点
         insert: function() {
+            $('#insertForm input[name="autid"]').val($('#autSelect').val()),
+                $.ajax({
+                    url: 'http://10.108.226.152:8080/ATFCloud/transactController/inserttransact',
+                    type: 'post',
+                    data: $("#insertForm").serializeArray(),
+                    success: function(data) {
+                        console.info(data);
+                        if (data.success) {
+                            $('#successModal').modal();
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
+                        $('#failModal').modal();
+                    }
+                });
+        },
+        //删除功能点
+        del: function() {
+            this.getIds();
+            console.log(app.ids)
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/inserttransact',
+                url: 'http://10.108.226.152:8080/ATFCloud/transactController/deletetransact',
                 type: 'post',
-                data: $("#insertForm").serializeArray(),
+                data: {
+                    'transactid': app.ids
+                },
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
@@ -83,19 +96,43 @@ var app = new Vue({
                 }
             });
         },
+        //修改功能点
+        update: function() {
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/transactController/updatetransact',
+                type: 'post',
+                data: $("#updateForm").serializeArray(),
+                success: function(data) {
+                    console.info(data);
+                    if (data.success) {
+                        $('#successModal').modal();
+                    } else {
+                        $('#failModal').modal();
+                    }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        },
+        //获取当前选中行内容
+        getSelected: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            var selectedId = selectedInput.attr('id');
+            $('#updateForm input[name="transactid"]').val(selectedId);
+            $('#updateForm input[name="transactcode"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="transactname"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().next().html());
+        },
+        //传递当前页选中的测试系统id和功能点id到元素库页面
+        to: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            var transactId = selectedInput.attr('id');
+            var autId=$('#autSelect').val();
+            location.href="elementLibrary.html?autId="+autId+"&"+"transactId="+transactId;
+        },
 
     },
-    //搜索系统
-    searchTransact: function(id) {
-        $.ajax({
-            url: '',
-            type: 'GET',
-            data: { 'id': id },
-            success: function() {
-                this.$data.transactList = data.o;
-            }
-        });
-    }
 
 });
 
@@ -116,8 +153,8 @@ function getTransact(page, listnum, order, sort) {
             console.info(data);
             console.info(data.rows);
             // var data = JSON.parse(data);
-            app.TransactList = data.rows;
-            app.tt = data.total;
+            app.transactList = data.o.rows;
+            app.tt = data.o.total;
             app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
         }
@@ -128,10 +165,10 @@ function getTransact(page, listnum, order, sort) {
 //改变页面大小
 function changeListNum() {
     $('#mySelect').change(function() {
-        listnum = $(this).children('option:selected').val();
-        $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-        getTransact(1, listnum, 'id', 'asc');
-    })
+        app.listnum = $(this).children('option:selected').val();
+        $("#mySelect").find("option[text='" + app.listnum + "']").attr("selected", true);
+        queryTransact();
+    });
 }
 
 //全选反选
@@ -180,3 +217,71 @@ function autSelect() {
         }
     });
 }
+
+//设置所属被测系统select为aut页面选中的aut
+function setval() {
+    var thisURL = document.URL;
+    var getVal = thisURL.split('?')[1];
+    var oneVal = getVal.split('=')[1];
+    $("#autSelect").val(oneVal);
+        $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/transactController/transactqueryByPage',
+        type: 'POST',
+        data: {
+            'page': 1,
+            'rows': 10,
+            'order': 'id',
+            'sort': 'asc',
+            'id': '',
+            'transcode': '',
+            'transname': '',
+            'autctgId': '',
+            'descript': '',
+            'maintainer': '',
+            'autId': $('#autSelect').val(),
+            'useStatus': '',
+
+        },
+        success: function(data) {
+            app.transactList = data.o.rows;
+            app.tt = data.o.total;
+            app.totalPage = Math.ceil(app.tt / app.listnum);
+            app.pageSize = app.listnum;
+        },
+        error: function() {
+            $('#failModal').modal();
+        }
+    });
+}
+//通过选择被测系统筛选查询功能点 
+function queryTransact() {
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/transactController/transactqueryByPage',
+        type: 'POST',
+        data: {
+            'page': app.currentPage,
+            'rows': app.listnum,
+            'order': app.order,
+            'sort': app.sort,
+            'id': '',
+            'transcode': '',
+            'transname': '',
+            'autctgId': '',
+            'descript': '',
+            'maintainer': '',
+            'autId': $('#autSelect').val(),
+            'useStatus': '',
+
+        },
+        success: function(data) {
+            app.transactList = data.o.rows;
+            app.tt = data.o.total;
+            app.totalPage = Math.ceil(app.tt / app.listnum);
+            app.pageSize = app.listnum;
+        },
+        error: function() {
+            $('#failModal').modal();
+        }
+    });
+}
+

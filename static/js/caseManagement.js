@@ -79,8 +79,8 @@ var app = new Vue({
                         console.log(this.subCaseList);
                         for (var i = 0; i < this.subCaseList.length; i++) {
                             var subTr = $("<tr class='subShow'></tr>"),
+                                iconTd=$("<td></td>"),
                                 checkTd=$("<td><input type='checkbox' name='chk_list'/></td>"),
-                                iconTd=$("<td>子流程</td>"),
                                 codeTd=$("<td></td>"),
                                 autTd=$("<td></td>"),
                                 transTd=$("<td></td>"),
@@ -96,7 +96,7 @@ var app = new Vue({
                             authorTd.html(this.subCaseList[i].author);
                             executorTd.html(this.subCaseList[i].executor);
                             executeMethodTd.html(this.subCaseList[i].executeMethod);
-                            subTr.append(checkTd,iconTd,codeTd,autTd,transTd,compositeTd,useTd,authorTd,executorTd,executeMethodTd);
+                            subTr.append(iconTd,checkTd,codeTd,autTd,transTd,compositeTd,useTd,authorTd,executorTd,executeMethodTd);
                             flowTr.after(subTr);
                         }
                         
@@ -110,25 +110,6 @@ var app = new Vue({
 
 
         },
-        //导入excel
-        // importExcel: function() {
-        //     $.ajax({
-        //         url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/importexcel',
-        //         type: 'post',
-        //         //data: $("#importExcel").serializeArray(),
-        //         success: function(data) {
-        //             console.info(data);
-        //             if (data.success) {
-        //                 $('#successModal').modal();
-        //             } else {
-        //                 $('#failModal').modal();
-        //             }
-        //         },
-        //         error: function() {
-        //             $('#failModal').modal();
-        //         }
-        //     });
-        // },
 
         //获取选中的id
         getIds: function() {

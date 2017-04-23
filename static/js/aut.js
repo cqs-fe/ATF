@@ -13,6 +13,13 @@ var app = new Vue({
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
+        queryAutCode: '',
+        //当前选中行
+        selectedId: '',
+        selectedAutCode: '',
+        selectedAutName: '',
+        selectedAbstractarchitecture_name: '',
+        selectedAut_desc: ''
     },
     ready: function() {
         getAut(this.currentPage, this.pageSize, this.order, this.sort);
@@ -26,7 +33,7 @@ var app = new Vue({
                 id_array.push($(this).attr('id'));
             });
             //app.ids = id_array.join(',');
-            $('input[name="ids"]').val(id_array.join(','));
+            $('input[name="id"]').val(id_array.join(','));
         },
         checkedAll: function() {
             var _this = this;
@@ -63,7 +70,7 @@ var app = new Vue({
         },
 
 
-         //添加单案例
+        //添加单案例
         insert: function() {
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/autController/insert',
@@ -82,23 +89,72 @@ var app = new Vue({
                 }
             });
         },
+        //删除测试系统
+        del: function() {
+            this.getIds();
+            console.log(app.ids)
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/autController/delete',
+                type: 'post',
+                data: {
+                    'ids': app.ids
+                },
+                success: function(data) {
+                    console.info(data);
+                    if (data.success) {
+                        $('#successModal').modal();
+                    } else {
+                        $('#failModal').modal();
+                    }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        },
+        //修改测试系统
+        update: function() {
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/autController/update',
+                type: 'post',
+                data: $("#updateForm").serializeArray(),
+                success: function(data) {
+                    console.info(data);
+                    if (data.success) {
+                        $('#successModal').modal();
+                    } else {
+                        $('#failModal').modal();
+                    }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        },
+        //获取当前选中行内容
+        getSelected: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            var selectedId = selectedInput.attr('id');
+            $('input[name="id"]').val(selectedId);
+            $('#updateForm input[name="autCode"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="autName"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm input[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
+        },
+        
+        //传递当前页选中测试系统id到功能点页面
+        to: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            var selectedId = selectedInput.attr('id');
+            location.href = "transact.html?selectedId=" + selectedId;
+        }
 
     },
-    //搜索系统
-    searchAut: function(id) {
-        $.ajax({
-            url: '',
-            type: 'GET',
-            data: { 'id': id },
-            success: function() {
-                this.$data.autList = data.o;
-            }
-        });
-    }
+
 
 });
 
-
+//获取系统
 function getAut(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
@@ -159,3 +215,25 @@ function resort(target) {
     getAut(1, 10, app.order, app.sort);
 }
 //重新排序 结束
+
+//搜索系统
+function queryAut() {
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/autController/selectByPageAndCode',
+        type: 'POST',
+        data: {
+            'page': app.currentPage,
+            'rows': app.listnum,
+            'order': app.order,
+            'sort': app.sort,
+            'code': app.queryAutCode
+        },
+        success: function(data) {
+            app.autList = data.rows;
+            console.log(app.autList)
+            app.tt = data.total;
+            app.totalPage = Math.ceil(app.tt / app.listnum);
+            app.pageSize = app.listnum;
+        }
+    });
+}

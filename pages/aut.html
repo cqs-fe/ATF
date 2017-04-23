@@ -24,8 +24,8 @@
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
                         <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#updateModal"><i class="icon-edit"></i> 修改</a>
-                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 管理功能点</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
+                        <a class="btn btn-white" data-toggle="modal" href="" @click="to"><i class="icon-cog"></i> 管理功能点</a>
                         <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 配置系统数据</a>
                         <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 自动化构件维护</a>
                         <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 执行代码管理</a>
@@ -54,15 +54,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label">开发框架</label>
+                                                    <label class="col-lg-3 control-label">开发架构</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="text" class="form-control" name="abstractarchitecture_name">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name=""></textarea>
+                                                        <textarea class="form-control" rows="3" name="aut_desc"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -72,7 +72,7 @@
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
                                         <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
-                                    </div>
+                                    </div> 
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button">删除</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="del">删除</button>
                                     </div>
                                 </div>
                             </div>
@@ -109,29 +109,35 @@
                                     <div class="modal-body">
                                         <!-- modal-body start -->
                                         <section class="panel">
-                                            <form id="insertForm" class="form-horizontal" role="form">
+                                            <form id="updateForm" class="form-horizontal" role="form">
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label">测试系统id</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="id" value="{{ selectedId}}">
+                                                    </div>
+                                                </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试系统编号</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autCode">
+                                                        <input type="text" class="form-control" name="autCode" value="selectedAutCode">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试系统名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autName">
+                                                        <input type="text" class="form-control" name="autName" value="{{selectedAutName}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label">开发框架</label>
+                                                    <label class="col-lg-3 control-label">开发架构</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="">
+                                                        <input type="text" class="form-control" name="abstractarchitecture_name" value="{{selectedAbstractarchitecture_name}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name=""></textarea>
+                                                        <textarea class="form-control" rows="3" name="aut_desc" value="{{selectedAut_desc}}"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -140,7 +146,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="">修改</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="update">修改</button>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +204,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-1 control-label">搜索</label>
                                             <div class="col-lg-2">
-                                                <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入系统编号" name="" v-model="">
+                                                <input type="text"  class="form-control" placeholder="请输入系统编号" name="" v-model="queryAutCode">
                                             </div>
                                             <div class="col-lg-1">
                                                 <a class="btn btn-white" onclick="queryAut()">搜索</a>
@@ -223,21 +229,21 @@
                                         <th style="width:8px;">
                                             <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                         </th>
-                                        <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)">名称（编码） <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                        <th class="hidden-phone text-center" data-order="id" data-sort="asc" onclick="resort(this)">编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center">名称</th>
                                         <th class="hidden-phone text-center">开发架构</th>
                                         <th class="hidden-phone text-center">描述</th>
                                     </tr>
                                 </thead>
-                                <tbody id="caseTable">
+                                <tbody id="autTable">
                                     <tr class="odd gradeX" v-for="aut in autList" id="{{aut.id}}">
                                         <td>
                                             <input type="checkbox" v-model="" name="chk_list" id="{{aut.id}}" />
                                         </td>
-                                        <td class="center hidden-phone">{{ aut.autCode }}</td>
-                                        <td>{{ aut.autName }}</td>
-                                        <td class="hidden-phone">{{ }}</td>
-                                        <td class="hidden-phone">{{ }}</td>
+                                        <td class="center hidden-phone" width="20%">{{ aut.autCode }}</td>
+                                        <td width="20%">{{ aut.autName }}</td>
+                                        <td class="hidden-phone" width="20%">{{ aut.abstractarchitecture_name }}</td>
+                                        <td class="hidden-phone" width="40%">{{ aut.aut_desc }}</td>
                                     </tr>
                                 </tbody>
                             </table>
