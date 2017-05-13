@@ -1,5 +1,100 @@
 $(document).ready(function(){
 	(function(){
+		var editDataVue = new Vue({
+			el: '#editData',
+			data: {
+				dataType:4,
+				isShow: true,
+				insertTitle:null,
+				insertType: null,
+				isInsertDivShow:true,
+				selection: null
+			},
+			created: function(){},
+			methods: {
+				hide: function(){this.isShow = false;insertDivVue.isShow = false;},
+				show: function(selection){
+					this.selection = selection;
+					this.isShow = true;
+				},
+				insert: function(type, title){
+					insertDivVue.show(type,title);
+				},
+				saveEditData: function(){
+					var inputValue = document.getElementById("input"+this.dataType).value;
+					console.log(inputValue);
+					handsontable.setDataAtCell(this.selection.start.row,this.selection.start.col,inputValue);
+					handsontable.render();
+				}
+			},
+		});
+		var insertDivVue = new Vue({
+			el: '#insertDiv',
+			data: {
+				isShow: true,
+				type: null,
+				insertTitle:null,
+				trData: [],
+				finalString: "",
+			},
+			created: function(){
+
+			},
+			methods: {
+				show: function(type,title){
+					this.isShow = true;
+					this.insertTitle = title;
+					this.type = type;
+				},
+				hide: function(){
+					this.isShow = false;
+					this.trData = [];
+				},
+				addRow: function(){
+					console.log("add");
+					this.trData.push({});
+				},
+				removeRow: function(index){
+					console.log(index);
+					this.trData.splice(index,1);
+				},
+				saveData: function(){
+					this.finalString = '';
+					this.finalString += document.querySelector("#select-name").value+":";
+					if(this.type === 2){
+						var names = document.querySelectorAll(".td-param-name");
+						var values = document.querySelectorAll(".td-param-value");
+						this.trData.forEach((rowData,index) => {
+							rowData.name = names[index].innerHTML.trim();
+							rowData.value = values[index].innerHTML.trim();
+							this.finalString += rowData.name +"=" + rowData.value+"&";
+						});
+						this.finalString = this.finalString.slice(0,this.finalString.length-1);
+					}else{
+						this.finalString = this.finalString + document.getElementById("dataName").value;
+					}
+					
+					console.log(this.finalString);
+					var input = document.getElementById("input4");
+					var pos = this.getCursortPosition(input);
+					var s = input.value;
+					input.value = s.substring(0, pos)+this.finalString+s.substring(pos);
+				},
+				getCursortPosition: function(ctrl){
+					var CaretPos = 0;	// IE Support
+					if (document.selection) {
+					ctrl.focus ();
+						var Sel = document.selection.createRange ();
+						Sel.moveStart ('character', -ctrl.value.length);
+						CaretPos = Sel.text.length;
+					}
+					// Firefox support
+					else if (ctrl.selectionStart || ctrl.selectionStart == '0')
+						CaretPos = ctrl.selectionStart;
+					return (CaretPos);
+				}
+			}
+		});
 		var setting = {
 			callback: {
 				onDblClick: zTreeOnDblClick
@@ -11,42 +106,102 @@ $(document).ready(function(){
 			executor: 6,
 			caseLib_id: 6
 		};
-		$.ajax({
-			url: address + 'autController/selectTestCaseByCondition',
-			data: data,
-			dataType: 'json',
-			Type: 'POST',
-			success:function(data, textStatus){
-				if(data.success === true){
-					var treeData = [];
-					data.o.forEach((value) => {
-						var item = {};
-						item.open = true;
-						item.children = [];
-						value.children.forEach((value) => {
-							var subData = {};
-							subData.open = true;
-							({
-								id: subData.id,
-								transname: subData.name,
-								children: subData.children
-							} = value);
-							item.children.push(subData);
-						});
-						({
-							id: item.id,
-							autName: item.name,
-						} = value);
-						treeData.push(item);
-					});
-					zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
-				}
-			}
-		});
+		var sub = new Vue({
+            el: '#submenu',
+            data: {
+                flag: true,
+                selectItems: [],
+                // checkedItems: [{value: 1,name: '登陆'},{value: 2,name: '注册'}],
+                checkedItems: [],
+                checkedArray:[]
+            },
+            created: function(){
+                var _this = this;
+                $.ajax({
+                    url: "/api/selectTypes",
+                    data: null,
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(data, textStatus){
+                        _this.selectItems = data.data;
+                        console.log(_this.selectItems);
+                    }
+                });
+            },
+            methods: {
+                toggle: function(){
+                    this.flag = !this.flag;
+                },
+                changeSelect: function(event){
+                    var _this = this;
+                    // console.log('hello');
+                    if(event.target.value == 1){
+                        $.ajax({
+                            url: address + "TestcaseController/selectTestPointByCondition",
+                            data: "executor=6&caseLib_id=6",
+                            type: 'post',
+                            dataType: "json",
+                            success: function(data,textStatus){
+                                // checkedItems = 
+                                data.o.forEach(function(value,index){
+                                    var arrayItem = {};
+                                    ({testpoint:arrayItem.value} = value);
+                                    arrayItem.name = arrayItem.value;
+                                    _this.checkedItems.push(arrayItem);
+                                });
+                            }
+                        });
+                    }
+                },
+                changeChecked: function(event){
+                    var _this = this;
+                    $.ajax({
+                        url: address + "autController/selectTestCaseByCondition",
+                        type: "post",
+                        dataType: "json",
+                        data: "testpoints=["+_this.checkedArray+"]&executor=6&caseLib_id=6",
+                        success: function(data, textStatus){
+                            var treeData = [];
+                            data.o.forEach((value) => {
+                                var item = {};  //解构第一层
+                               item.open = true;
+                               item.children = [];
+                               value.children.forEach((value) => {
+                                   var subData = {};  //解构第二层
+                                   subData.children = [];
+                                   subData.open = true;
+                                   ({
+                                       transactid: subData.id,
+                                       name: subData.name,
+                                   } = value);
+                                   value.children.forEach((value => {
+                                        var ssubData = {};
+                                        ({
+                                            scriptid: ssubData.id,
+                                            name: ssubData.name
+                                        } = value);
+                                        subData.children.push(ssubData);
+                                   }));
+                                   item.children.push(subData);
+                               });
+                               ({
+                                   autid: item.id,
+                                   name: item.name,
+                               } = value);
+                               treeData.push(item);
+                            });
+                            zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+                        }
+                    });
+                }
+            }
+        });
+
 		// handsontable init
 		var tableContainer = document.getElementById("handsontable");
 		var handsontable = null;
 		var dataSource = null;
+		var changedData = [];
 		var selectAllFlag = false;
 		var rowSelectFlags = [];
 		var string = "";
@@ -100,7 +255,20 @@ $(document).ready(function(){
 		        	callback: replaceCallback,
 		        	disabled: function(){return false;},
 		        	hidden: function(){return false;}
-		        } 
+		        },
+		        "make_read_only":{
+		        	name: '编辑数据',
+		        	callback: editCellData,
+		        	disabled: function(){},
+		        	hidden: function(){
+		        		// [startRow, startCol, endRow, endCol]
+		        		var selection = handsontable.getSelected();
+		        		if(selection[1] >= 8 && selection[0] == selection[2] && selection[1] == selection[3]){
+		        			return false;
+		        		}
+		        		return true;
+		        	}
+		        }
       		}
 		};
 		const columnsHeaders = [
@@ -121,22 +289,36 @@ $(document).ready(function(){
 					td.innerHTML = row;
 		 			return td;
 				},
-				readOnly: false
+				readOnly: true
 			},
 			{	data: "casecode",readOnly: false},
 			{	data: "testpoint",readOnly: false},
 			{	data: "testdesign",readOnly: false},
 			{	data: 'teststep',readOnly: false},
 			{	data: 'expectresult',readOnly: false},
-			{	data: 'testpoint',readOnly: false}
+			{	data: 'checkpoint',readOnly: false}
 		];
 		var totalColumnsHeaders = [];
 		var getColumnsOptions = function(tableHead){
+			//tableHead = [ ["[待删除]","商品"], ["[待删除]","t1"] ]
 			var totalColumnsOptions = [];
 			var dataKey = getDataKey(tableHead);
+			console.log("getColumnsOptions中dataKey:" + dataKey);
+			// dataKey = ["商品","t1"]
 			dataKey.forEach((key) => {
 				if(key){
-					var option = {data: key,readOnly: false};
+					var option = {
+						data: key,
+						// renderer: function(instance, td, row, col, prop, value, cellProperties){
+						// 	if(col >= 8)
+						// 	{ 
+						// 		// td.style.backgroundColor = '#fff';
+						// 		//Vac.addClass(td,'dbclick');
+						// 	}
+						// 	return td;
+						// },
+						readOnly: false
+					};
 					totalColumnsOptions.push(option);
 				}
 			});
@@ -158,14 +340,17 @@ $(document).ready(function(){
 			}
 			totalColumnsHeaders = columnsHeaders.concat(totalColumnsHeaders);
 		};
+		// 得到数据的表头
 		var getDataKey = function(data){
+			console.log("getDataKey中的head:"+data);
+			//data = [ ["[待删除]","商品"], ["[待删除]","t1"] ]
 			var dataKey = [];
 			if(data){
 				data.forEach((value) => {
 					dataKey.push(value[1]);
 				});
 			}
-			
+
 			return dataKey;
 		};
 		function zTreeOnDblClick(event, treeId, treeNode){
@@ -188,84 +373,114 @@ $(document).ready(function(){
 					type:"post",
 					dataType: "json",
 					success: function(data){
-						// if(data.success === true){
-							var dataKey = [];
-							if(data.o.tableHead){
-								dataKey = getDataKey(data.o.tableHead);
-							}
-							var destrutData = [];
-							if(data.o.tableDatas){
-								data.o.tableDatas.forEach((value) => {
-								var data = {};
-								({
-									expectresult:data.expectresult,
-									testpoint: data.testpoint,
-									teststep: data.teststep,
-									checkpoint: data.checkpoint,
-									testdesign: data.testdesign,
-									casecode: data.casecode
-								} = value);
-								dataKey.forEach((key) => {
-									data[key] = value[key].v;
-								});
-								destrutData.push(data);
+						var dataKey = [];
+						if(data.o.tableHead){
+							// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
+							dataKey = getDataKey(data.o.tableHead);
+							console.log("dataKey:"+dataKey);
+						}
+						var destrutData = [];
+						if(data.o.tableDatas){
+							data.o.tableDatas.forEach((value) => {
+							var data = {};
+							({
+								id: data.testcaseId,
+								expectresult:data.expectresult,
+								testpoint: data.testpoint,
+								teststep: data.teststep,
+								checkpoint: data.checkpoint,
+								testdesign: data.testdesign,
+								casecode: data.casecode
+							} = value);
+							dataKey.forEach((key) => {
+								data[key] = value[key];
 							});
-							}
-							// console.log(destrutData);
-							dataSource = destrutData;
-							rowSelectFlags.length = dataSource.length;
-							getTotalColHeaders(data.o.tableHead);
-							console.log(totalColumnsHeaders);
-							var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
-							if(handsontable === null){
-								handsontable = new Handsontable(tableContainer,{
-									data: dataSource,
-									columns: totalColumnsOptions,
-								  	colHeaders: colHeadersRenderer,
-								  	cells: function (row, col, prop) {
-									    var cellProperties = {};
-									    return cellProperties;
-									},
-									multiSelect: true,
-									outsideClickDeselects: true,
-									contextMenu: contextMenuObj,
-									undo: true,
-									copyPaste: true,
-									allowInsertRow: false,
-									allowInsertColumn: false,
-									search: {
-										searchResultClass: ''
-									},
-									afterRender: function(){
-										if(searchResults && searchResults.length){
-											var trs = document.querySelectorAll('#handsontable tbody tr');
-											searchResults.forEach((value,index) => {
-												var tds = trs[value.row].getElementsByTagName('td');
-												if(index === currentResult){
-													tds[value.col].style.backgroundColor="#f00";
-												}else{
-													tds[value.col].style.backgroundColor="#0f0";
-												}
-												
-											})
-										}
-									}
-								});
-								// handsontable.updateSettings(contextMenuObj);
-							}
-							else{
-								handsontable.updateSettings({
-								   data: dataSource,
-								   columns: totalColumnsOptions,
-								   colHeaders: colHeadersRenderer
-								});
-								handsontable.render();
-							}
-						// }else{
+							console.log(data)
+							destrutData.push(data);
+						});
+						}
+						// console.log(destrutData);
+						dataSource = destrutData;
+						console.log(dataSource)
+						rowSelectFlags.length = dataSource.length;
+						getTotalColHeaders(data.o.tableHead);
+						console.log(totalColumnsHeaders);
+						var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
+						if(handsontable === null){
+							handsontable = new Handsontable(tableContainer,{
+								data: dataSource,
+								hiddenColumns: {
+							      columns: [2,3],
+							      indicators: false
+							    },
+								columns: totalColumnsOptions,
+							  	colHeaders: colHeadersRenderer,
+							  	cells: function (row, col, prop) {
+								    var cellProperties = {};
+								    return cellProperties;
+								},
+								multiSelect: true,
+								outsideClickDeselects: true,
+								contextMenu: contextMenuObj,
+								undo: true,
+								copyPaste: true,
+								allowInsertRow: false,
+								allowInsertColumn: false,
+								search: {
+									searchResultClass: ''
+								},
+								afterRender: function(){
+									if(searchResults && searchResults.length){
+										var trs = document.querySelectorAll('#handsontable tbody tr');
+										searchResults.forEach((value,index) => {
+											var tds = trs[value.row].getElementsByTagName('td');
+											if(index === currentResult){
+												tds[value.col].style.backgroundColor="#f00";
+											}else{
+												tds[value.col].style.backgroundColor="#0f0";
+											}
 
-						// }
+										})
+									}
+									document.querySelectorAll("table th")[0].style.display = "none";
+								},
+								afterChange: function(changes,source){
+									if(changes){
+										changes.forEach((value) => {
+											var data = {};
+											// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
+											data.testcaseId = dataSource[value[0]].testcaseId;
+											data.tbHead = value[1];
+											data.value = value[3];
+											var changedIndex;
+											changedData.forEach((value,index) => {
+												if(value.testcaseId == data.testcaseId && value.tbHead == data.tbHead){
+													changedIndex = index;
+												}
+											});
+											if(changedIndex !== undefined){
+												changedData.splice(changedIndex,1,data);
+											}else{
+												changedData.push(data);
+											}
+										});
+										console.log(changedData.toString());
+									}
+								}
+
+							});
+							// handsontable.updateSettings(contextMenuObj);
+						}
+						else{
+							handsontable.updateSettings({
+							   data: dataSource,
+							   columns: totalColumnsOptions,
+							   colHeaders: colHeadersRenderer
+							});
+							handsontable.render();
+						}
 					}
-				}); //aj 
+				}); //aj
 			}
 
 		}
@@ -305,7 +520,7 @@ $(document).ready(function(){
 				}else{
 					trs[row].className = '';
 				}
-				// handsontable.render();
+
     		}else{
 
     		}
@@ -359,6 +574,7 @@ $(document).ready(function(){
 					this.renderResults();
 				},
 				replaceAll: function(){
+					this.search();
 					if(searchResults && searchResults.length){
 						var newData = [];
 						searchResults.forEach((value) => {
@@ -389,7 +605,7 @@ $(document).ready(function(){
 				}
 			},
 			computed: {
-				
+
 			}
 		});
 		//window resize
@@ -397,6 +613,26 @@ $(document).ready(function(){
 			if(handsontable !== null){
 				handsontable.render();
 			}
+		};
+		//保存按钮
+		document.getElementById('saveAll').onclick = function(){
+			var data = { data: changedData };
+			console.log(encodeURIComponent(JSON.stringify(data)));
+			$.ajax({
+				url: address + 'scripttemplateController/scripttemplateInf',
+				data: "jsonStr="+encodeURIComponent(JSON.stringify(data),'utf-8'),
+				dataType: 'json',
+				type: 'post',
+				success: function(data,textStatus){
+					if(data.success === true){
+						alert("hello");
+					}
+				}
+			});
+		};
+		//双击单元格，跳出编辑数据框
+		document.querySelectorAll('.dbclick').onDblClick = function(){
+			console.log('niah');
 		};
 		//渲染第0列的内容
 		function colHeadersRenderer(col){
@@ -576,111 +812,22 @@ $(document).ready(function(){
 			searchBoxVue.show(true);
 		}
 		// //搜索功能函数 end
-		//beforeKeyDown
-		function beforeKeyDown(event){
-			// console.log(event);
-			// // ctrl-c
-			// if((event.ctrlKey | event.metaKey) && event.keyCode === 67){
-			// 	var trueIndexArray = [];
-			// 	rowSelectFlags.forEach((flag, index) => {
-			// 		if(flag){
-			// 			trueIndexArray.push(index);
-			// 		}
-			// 	});
-			// 	// 先清空剪切板
-			// 	while(clipBoard.length > 0){
-			// 		clipBoard.pop();
-			// 	}
-			// 	if(trueIndexArray.length > 0){
-			// 		// 如果有选中行，则进行复制选中行的操作
-			// 		//将所有选中行复制到剪切板
-			// 		trueIndexArray.forEach((row,index) => {
-			// 			let i = 0;
-			// 			for(i = editableColStartIndex; i <= editableColEndIndex; i++){
-			// 				let data = [index, i - editableColStartIndex,handsontable.getDataAtCell(row,i)];
-			// 				clipBoard.push(data);
-			// 			}
-			// 		});
-			// 	}else{
-			// 		// 如果没有行被选中
-			// 		//选择所有被选中的单元格
-			// 		var i = 0;
-			// 		var selection = handsontable.getSelected();
-			// 		for(i = selection[0];i <= selection[2];i++){
-			// 			let j = 0;
-			// 			for(j = selection[1]; j <= selection[3];j++){
-			// 				let data = [i - selection[0], j - selection[1],handsontable.getDataAtCell(i,j)];
-			// 				clipBoard.push(data);
-			// 			}
-			// 		}
-			// 	}
-			// 	event.stopImmediatePropagation();
-			// }
-			// // ctrl-v 
-			// if((event.ctrlKey | event.metaKey) && event.keyCode === 86){
-			// 	if(clipBoard.length > 0){
-			// 		var selection = handsontable.getSelected();
-			// 		var clipBoardData = clipBoard.map((array) => {
-			// 			let arrayData = [];
-			// 			arrayData[0] = parseInt(array[0]) + parseInt(selection[0]);
-			// 			arrayData[1] = parseInt(array[1]) + parseInt(selection[1]);
-			// 			arrayData[2] = array[2];
-			// 			return arrayData;
-			// 		});
-			// 		// console.log(clipBoardData);
-			// 		handsontable.setDataAtCell(clipBoardData);
-			// 	}
-			// 	event.stopImmediatePropagation();
-			// }
-			// // ctrl-x
-			// if((event.ctrlKey | event.metaKey) && event.keyCode === 88){
-			// 	var trueIndexArray = [];
-			// 	rowSelectFlags.forEach((flag, index) => {
-			// 		if(flag){
-			// 			trueIndexArray.push(index);
-			// 		}
-			// 	});
-			// 	// 先清空剪切板
-			// 	while(clipBoard.length > 0){
-			// 		clipBoard.pop();
-			// 	}
-			// 	if(trueIndexArray.length > 0){
-			// 		// 如果有选中行，则进行复制选中行的操作
-			// 		//将所有选中行复制到剪切板,同时清空选中单元格的内容
-			// 		var clipBoardData = [];
-			// 		trueIndexArray.forEach((row,index) => {
-			// 			let i = 0;
-			// 			for(i = editableColStartIndex; i <= editableColEndIndex; i++){
-			// 				let data = [index, i - editableColStartIndex,handsontable.getDataAtCell(row,i)];
-			// 				let nullData = [row, i,""];
-			// 				clipBoard.push(data);
-			// 				clipBoardData.push(data)
-			// 				handsontable.setDataAtCell(clipBoardData);
-			// 			}
-			// 		});
-			// 		handsontable.setDataAtCell(clipBoardData);
-			// 	}else{
-			// 		// 如果没有行被选中
-			// 		//选择所有被选中的单元格
-			// 		//将所有选中单元格复制到剪切板,同时清空选中单元格的内容
-			// 		var selection = handsontable.getSelected();
-			// 		var clipBoardData = [];
-			// 		var i = 0;
-			// 		for(i = selection[0];i <= selection[2];i++){
-			// 			let j = 0;
-			// 			for(j = selection[1]; j <= selection[3];j++){
-			// 				let data = [i - selection[0], j - selection[1],handsontable.getDataAtCell(i,j)];
-			// 				let nullData = [i, j,""];
-			// 				clipBoard.push(data);
-			// 				clipBoardData.push(nullData)
-			// 			}
-			// 		}
-			// 		handsontable.setDataAtCell(clipBoardData);
-			// 	}
-			// 	event.stopImmediatePropagation();
-			// }
+		//编辑单元格数据
+		function editCellData(key,selection){
+			var header = handsontable.getColHeader(selection.start.col);
+			var testcaseId = dataSource[selection.start.row].testcaseId;
+			$.ajax({
+				url: address + '',
+				type: 'post',
+				data: null,
+				dataType: 'json',
+				success: function(data,textStatus){
+					
+				}
+			});
+			editDataVue.show(selection);
 		}
-		//beforeKeyDown function end
+		// 编辑单元格数据
 		// 设置单元格数据，保证设置的数据不超过最大行，最大列
 		// parameter: [[row,col,value],[row,col,value]]
 		function setCellsData(arrayData){
@@ -696,8 +843,8 @@ $(document).ready(function(){
 			handsontable.setDataAtCell(arrayData);
 		}
 	})();
-	
-	
+
+
 });
 
 var dragController = {
@@ -706,17 +853,17 @@ var dragController = {
 	searchBoxDragStart: function(event){
 
 	},
-	searchBoxDragEnd: function(event){
+	searchBoxDragEnd: function(event,id){
 		// console.log(event.clientX);
 		this.pointerEnd.X = event.clientX;
 		this.pointerEnd.Y = event.clientY;
-		document.getElementById("searchBox").style.left = this.pointerEnd.X+'px';
-		document.getElementById("searchBox").style.top = this.pointerEnd.Y+'px';
+		document.getElementById(id).style.left = this.pointerEnd.X+'px';
+		document.getElementById(id).style.top = this.pointerEnd.Y + document.getElementById(id).offsetHeight/2 + 'px';
 	},
-	searchBoxDrag: function(event){
+	searchBoxDrag: function(event,id){
 		this.pointerEnd.X = event.clientX;
 		this.pointerEnd.Y = event.clientY;
-		document.getElementById("searchBox").style.left = this.pointerEnd.X+'px';
-		document.getElementById("searchBox").style.top = this.pointerEnd.Y+'px';
+		document.getElementById(id).style.left = this.pointerEnd.X+'px';
+		document.getElementById(id).style.top = this.pointerEnd.Y+ document.getElementById(id).offsetHeight/2+'px';
 	}
 };

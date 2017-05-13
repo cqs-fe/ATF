@@ -288,10 +288,10 @@ function initialTable() {
         }
         $('#nextPage').parent('li').before(li);
     }
-} 
+}
 //初始化table 结束
 
-// Show alter modal 
+// Show alter modal
 function showAlterModal(button){
     loginDetect().then(
         function(response){
@@ -403,7 +403,7 @@ function showAlterModal(button){
     };// initial Form end
 }
 // Show alter modal end
-// Show view modal 
+// Show view modal
 function showViewModal(button){
     $("#viewModal").modal("show");
     var tr = button.parentNode.parentNode;
@@ -501,7 +501,7 @@ function nextPage(){
                     if(lis[i].firstChild.innerHTML == page)
                     {lis[i].setAttribute("class","active");}
                 }
-                
+
                 totalPage = Math.ceil(data.total / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
@@ -556,7 +556,7 @@ function previousPage(){
                     if(lis[i].firstChild.innerHTML == page)
                     {lis[i].setAttribute("class","active");}
                 }
-                
+
                 totalPage = Math.ceil(data.total / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
@@ -595,7 +595,7 @@ function firstPage(){
                     if(lis[i].firstChild.innerHTML == currentPage)
                     {lis[i].setAttribute("class","active");}
                 }
-                
+
                 maxShowPage = 7;
                 minShowPage = 1;
                 totalPage = Math.ceil(data.total / showRows);
@@ -636,7 +636,7 @@ function lastPage(){
                     if(lis[i].firstChild.innerHTML == currentPage)
                     {lis[i].setAttribute("class","active");}
                 }
-            
+
                 maxShowPage = totalPage;
                 minShowPage = totalPage - maxPage + 1;
                 totalPage = Math.ceil(data.total / showRows);
@@ -782,7 +782,7 @@ function changeShowRows(event){
             }
         }
     });
-    
+
 }
 // 改变每一页显示的行数 结束
 
@@ -794,11 +794,11 @@ function createTable(dataSet){
     let tdId = $(`<td class="td-itemId"></td>`).text(value.id);
     let tdName = $(`<td class="td-name"></td>`).text(value.testProjectName);
     let tdType = $(`<td class="td-type"></td>`).text(value.type);
-    let tdLineName = $(`<td class="td-lineName"></td>`).text(value.productLineName);
-    let tdAutName = $(`<td class="td-autName"></td>`).text(value.autid);
+    let tdUser = $(`<td class="td-user"></td>`).text(value.user);
+    let tdCreateDate = $(`<td class="td-createDate"></td>`).text(value.createDate);
     let tdDescription = $(`<td class="td-description"></td>`).text(value.taskDescription);
     let tdOperation = $(`<td class="td-operation"><a data-toggle="modal" class="btn btn-view btn-white" onclick="showViewModal(this);" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
-    tr.append(tdId, tdName, tdType, tdLineName, tdAutName, tdDescription,tdOperation);
+    tr.append(tdId, tdName, tdType, tdUser, tdCreateDate, tdDescription,tdOperation);
     tbody.append(tr);
     });
 }
@@ -809,16 +809,12 @@ function destructe(data){
         var newValue = {};
         ({
             id: newValue.id,
+            testProjectCode:  newValue.testProjectCode,
             testProjectName: newValue.testProjectName,
             type: newValue.type,
             createDate: newValue.createDate,
             taskDescription: newValue.taskDescription,
-            user: { id: newValue.userid, username: newValue.username, reallyname: newValue.reallyname },
-            aut: { id: newValue.autid, autCode: newValue.autCode, autName: newValue.autName },
-            productLine: {
-                id: newValue.productLineId,
-                productLineName: newValue.productLineName
-            }
+            user:newValue.creatorId,
         } = value);
         return newValue;
     });
@@ -901,7 +897,7 @@ function resort(target){
         target.setAttribute("data-sort", "desc");
     }
     sendData.order = target.getAttribute("data-order");
-    updateTableAndPagination(currentPage); 
+    updateTableAndPagination(currentPage);
 }
 //重新排序 结束
 //检测用户登录状态，添加 更改操作需要有登陆权限
@@ -933,7 +929,7 @@ function loginDetect(){
             // console.log(sessionId);
             var data = "sessionId=" + sessionId;
             client.send(data);
-            
+
         }else{
             reject();
         }
@@ -945,4 +941,3 @@ function getSendData(page, rows){
     return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&testProjectName="+sendData.testProjectName+"&type="+sendData.type+"&userId="+sendData.userId+"&autId="+sendData.autId+"&productLineId="+sendData.productLineId;
 }
 //得到发送的data
-

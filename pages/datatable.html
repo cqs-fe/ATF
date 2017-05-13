@@ -22,37 +22,144 @@
 </head>
 
 <body id="v-body">
-<div id="searchBox" v-show="isShow" class="searchBox">
-        <header class="searchBox-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event);" ondrag="dragController.searchBoxDrag(event)">
-            <span class="searchBox-title">查找与替换</span>
+    <div id="searchBox" v-show="isShow" class="searchBox" style="display: none;">
+            <header class="searchBox-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'searchBox');" ondrag="dragController.searchBoxDrag(event,'searchBox')">
+                <span class="searchBox-title">查找与替换</span>
+                <span class="icon-remove" @click="hide();"></span>
+            </header>
+            <main class="searchBox-body">
+                <ul>
+                    <li class="tab" :class="{'active':!searOrRep}" @click="showSearch">查找</li>
+                    <li class="tab" :class="{'active':searOrRep}" @click="showReplace">替换</li>
+                </ul>
+                <div class="tab-wrapper">
+                    <div class="tab-content">
+                       <div class="">
+                           <label>查找内容：</label>
+                           <input type="text" placeholder="请输入关键字" v-model="keyword" id="input-search">
+                           <button id="btn-search" type="button" @click="search">查找</button>
+                       </div>
+                       <div class="" id="replaceDiv" v-show="searOrRep">
+                            <label>替换为：</label>
+                            <input type="text" v-model="newword">
+                       </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="searchBox-footer">
+                <button class="btn btn-white" v-show="searOrRep" @click="replaceAll()">全部替换</button>
+                <button class="btn btn-white" v-show="searOrRep" @click="replace()">替换</button>
+                <button class="btn btn-white" @click="findNext()">查找下一个</button>
+                <button class="btn btn-white" @click="hide();">关闭</button>
+            </footer>
+    </div>
+    <div id="editData" v-show="isShow" class="editData searchBox" style="display: block;">
+        <header class="editData-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'editData');" ondrag="dragController.searchBoxDrag(event,'editData')">
+            <span class="editData-title">编辑数据项</span>
             <span class="icon-remove" @click="hide();"></span>
         </header>
-        <main class="searchBox-body">
-            <ul>
-                <li class="tab" :class="{'active':!searOrRep}" @click="showSearch">查找</li>
-                <li class="tab" :class="{'active':searOrRep}" @click="showReplace">替换</li>
-            </ul>
-            <div class="tab-wrapper">
-                <div class="tab-content">
-                    <div class="">
-                       <label>查找内容：</label>
-                       <input type="text" placeholder="请输入关键字" v-model="keyword" id="input-search">
-                       <button id="btn-search" type="button" @click="search">查找</button>
-                   </div>
-                   <div class="" id="replaceDiv" v-show="searOrRep">
-                    <label>替换为：</label>
-                    <input type="text" v-model="newword">
+        <main class="editData-body container">
+            <div class="type-wrapper" >
+                <label class="">数据类型</label>
+                <div><input type="radio" name="type" value="1" v-model="dataType">文本</div>
+                <div><input type="radio" name="type" value="2" v-model="dataType">空文本</div>
+                <div><input type="radio" name="type" value="3" v-model="dataType">去除语句</div>
+                <div><input type="radio" name="type" value="4" v-model="dataType">表达式</div>
+            </div>
+            <form class="data-content form-inline">
+                <div class="form-group" v-show="dataType==4">
+                    <div class="input-group">
+                        <div class="input-group-addon">{expr=</div>
+                        <input type="text" id="input4" class="form-control" name="">
+                        <div class="input-group-addon">}</div>
+                    </div>
+                </div>
+                <div class="form-group " v-show="dataType==2">
+                    <input type="text" id="input2" class="form-control" name="">
+                </div>
+                <div class="form-group" v-show="dataType==3">
+                    <input type="text" id="input3" class="form-control" name="">
+                </div>
+                <div class="form-group" v-show="dataType==1">
+                    <input type="text" id="input1" class="form-control" name="">
+                </div>
+                <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
+                <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
+            </form>
+            <div class="before-operation operation">
+                <label>前置操作</label>
+                <div></div>
+            </div>
+            <div class="after-operation operation">
+                <label>后置操作</label>
+                <div></div>
+            </div>
+        </main>
+        <footer class="editData-footer">
+            <button class="btn btn-white btn-cancel" @click="hide();">取消</button>
+            <button class="btn btn-white editData-save" @click="saveEditData();">保存</button>
+        </footer>
+    </div>
+    <div class="insertDiv" v-show="isShow" id="insertDiv">
+        <header class="insertDivHeader" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'insertDiv');" ondrag="dragController.searchBoxDrag(event,'insertDiv')">
+            <span>{{insertTitle}}</span>
+        </header>
+        <main>
+            <div class="selectDiv">
+                <div class="label">
+                    <label v-if="type==1">数据池名称</label>
+                    <label v-else>函数名称</label>
+                </div>
+                <select class="right-div"  id="select-name">
+                    <!-- <option v-for="item in selectItems" v-bind:value="item.value">{{item.name}}</option> -->
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+            </div>
+            <div class="contentDiv">
+                <div class="label">
+                    <label v-if="type==1">数据名</label>
+                    <label v-else>参数列表</label>
+                </div>
+                <div class="right-div">
+                    <input type="text" id="dataName" name="" v-if="type==1">
+                    <div v-else class="tableDiv">
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th scope="col">参数名称</th>
+                                    <th scope="col">参数值</th>
+                                    <th scope="col">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="insert-div-tbody">
+                                <tr v-for="(row,index) in trData">
+                                    <td contenteditable="true" class="td-param-name"> 
+                                    </td>
+                                    <td contenteditable="true" class="td-param-value">
+                                    </td>
+                                    <td>
+                                        <button class="btn-add-row"  @click="removeRow(index);">
+                                            <span class="icon-minus"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr><td colspan="3">
+                                <button class="btn-add-row" id="btnadd-row" @click="addRow();"><span class="icon-plus"></span></button></td></tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
-    <footer class="searchBox-footer">
-        <button class="btn btn-white" v-show="searOrRep" @click="replaceAll()">全部替换</button>
-        <button class="btn btn-white" v-show="searOrRep" @click="replace()">替换</button>
-        <button class="btn btn-white" @click="findNext()">查找下一个</button>
-        <button class="btn btn-white" @click="hide();">关闭</button>
-    </footer>
-</div>
+        </main>
+        <footer>
+            <button class="btn btn-white btn-cancel" @click="hide();">取消</button>
+            <button class="btn btn-white editData-save" @click="saveData();">保存</button>
+        </footer>
+    </div>
         <!--header start-->
         <link rel="import" href="./common/header-guide.html?__inline">
         <!--header end-->
@@ -64,14 +171,24 @@
         <section id="main-content">
             <section class="content-wrapper">
                 <div class="treeMenu" v-bind:class="{'close1': !flag, 'open2': flag}" id="submenu">
+                    <div class="selectDiv">
+                        <div>
+                            <label>筛选类型</label>
+                            <select @change="changeSelect($event)" v-model="">
+                                <option v-for="item in selectItems" v-bind:value="item.value">{{item.name}}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label v-for="item in checkedItems" class="checkedItem" track-by="$index"><input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" @change="changeChecked($event)">{{item.name}}</label>
+                        </div>
+                    </div>
                     <div class="tree-wrapper ztree" id="tree-wrapper">
-                        
                     </div>
                     <button type="button" id="btn-menu" class="btn-toggle" @click="toggle">
                     <i :class="{'icon-chevron-left': flag, 'icon-chevron-right': !flag}">
                     </i>
                     </button>
-                </div> 
+                </div>
                 <main class="main">
                     <div class="top-bar">
                         <button class="btn btn-white"><i class="icon-cog"></i>
@@ -80,14 +197,16 @@
                         代码查看</button>
                         <button class="btn btn-white"><i class="icon-wrench"></i>
                         调试</button>
+                        <button class="btn btn-white" id="saveAll"><i class="icon-wrench"></i>
+                        保存</button>
                     </div>
                     <div class="dataTable-wrapper">
-                        
+
                       <div id="handsontable">
-                        
+
                       </div>
                     </div>
-                    <div class="panel panel-default" id="tooltipwindow" 
+                    <div class="panel panel-default" id="tooltipwindow"
                     :class="{'height43px':flag,'height200px':!flag}">
                       <div class="panel-heading">调试结果
                       <button type="button" class="close" id="btn-closetooltip" @click="toggle">
@@ -120,7 +239,7 @@
                     </div>
                 </main>
             </section>
-            
+
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>
         <!--main content end-->
@@ -128,22 +247,13 @@
     <!--content end -->
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
+    <script src="../static/js/Vac.js"></script>
     <script src="../static/js/datatable.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
     <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
     <script type="text/javascript">
     (function(){
-        var sub = new Vue({
-            el: '#submenu',
-            data: {
-                flag: true
-            },
-            methods: {
-                toggle: function(){
-                    this.flag = !this.flag;
-                }
-            }
-        });
+        
         var tooltipwindow = new Vue({
           el: '#tooltipwindow',
           data: {
