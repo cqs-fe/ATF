@@ -72,7 +72,7 @@
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
                                         <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -188,6 +188,24 @@
                             </div>
                         </div>
                         <!-- failModal end -->
+                        <!-- selectAlertModal start -->
+                        <div class="modal fade" id="selectAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>请先选中一条数据！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- selectAlertModal end -->
                     </div>
                 </div>
                 <!--topbutton end-->
@@ -204,7 +222,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-1 control-label">搜索</label>
                                             <div class="col-lg-2">
-                                                <input type="text"  class="form-control" placeholder="请输入系统编号" name="" v-model="queryAutCode">
+                                                <input type="text" class="form-control" placeholder="请输入系统编号" name="" v-model="queryAutCode">
                                             </div>
                                             <div class="col-lg-1">
                                                 <a class="btn btn-white" onclick="queryAut()">搜索</a>

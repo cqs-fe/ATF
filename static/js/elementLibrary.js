@@ -3,13 +3,14 @@ var app = new Vue({
     data: {
         autId: '',
         transactId: '',
-        UIName: 'UI1',
-        eleName: '元素1',
+        UIName: 'UI',
+        eleName: '元素',
         propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         UILinked: '',
         eleParent: '',
         eleLinked: '',
         linkedTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td></tr>',
+        linkedPropTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
     },
     ready: function() {
         this.autSelect();
@@ -17,7 +18,11 @@ var app = new Vue({
         $('#autSelect').change(function() {
             app.transactSelect();
         });
+        this.classtypeSelect();
         getElementTree();
+        getUILinkedObjectTree();
+        getEleParentObjectTree();
+        getEleLinkedObjectTree();
     },
     methods: {
         //获取测试系统
@@ -54,6 +59,25 @@ var app = new Vue({
                         str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                     }
                     $('#transactSelect').html(str);
+
+                }
+
+            });
+        },
+        //获取classtype
+        classtypeSelect: function() {
+            var val = $('#autSelect').val();
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/autController/selectClass',
+                data: { 'id': val },
+                type: "POST",
+                success: function(data) {
+                    var classtypeList = data;
+                    var str = "";
+                    for (var i = 0; i < classtypeList.length; i++) {
+                        str += " <option>" + classtypeList[i].className + "</option> ";
+                    }
+                    $('#classtypeSelect').html(str);
 
                 }
 
@@ -116,14 +140,11 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         window.location.reload();
-                        $('#successModal').modal();
                     } else {
-                        window.location.reload();
                         $('#failModal').modal();
                     }
                 },
                 error: function() {
-                    window.location.reload();
                     $('#failModal').modal();
                 }
             });
@@ -143,14 +164,44 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         window.location.reload();
-                        $('#successModal').modal();
                     } else {
-                        window.location.reload();
                         $('#failModal').modal();
                     }
                 },
                 error: function() {
-                    window.location.reload();
+                    $('#failModal').modal();
+                }
+            });
+        },
+        updateUI: function() {
+            var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
+                nodes = treeObj.getCheckedNodes(true),
+                UIName = nodes[0].name,
+                RUIName = $('#RUIName').val(),
+                LtreeObj = $.fn.zTree.getZTreeObj("UILinkedTree"),
+                Lnodes = LtreeObj.getCheckedNodes(true),
+                relateIdentifyObjectId = Lnodes[0].id,
+                relateParentIdentifyObjectId = Lnodes[0].parentid;
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/updateUI',
+                type: 'post',
+                data: {
+                    "UIName": UIName,
+                    "transid": this.transactId,
+                    "RUIName": RUIName,
+                    "relateIdentifyObjectId": relateIdentifyObjectId,
+                    "relateParentIdentifyObjectId": relateParentIdentifyObjectId
+                },
+                success: function(data) {
+                    console.info(data);
+                    if (data.success) {
+                        $('#successModal').modal();
+                        // window.location.reload();
+                    } else {
+                        $('#failModal').modal();
+                    }
+                },
+                error: function() {
                     $('#failModal').modal();
                 }
             });
@@ -178,14 +229,11 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         window.location.reload();
-                        $('#successModal').modal();
                     } else {
-                        window.location.reload();
                         $('#failModal').modal();
                     }
                 },
                 error: function() {
-                    window.location.reload();
                     $('#failModal').modal();
                 }
             });
@@ -199,7 +247,7 @@ var app = new Vue({
             }
             var delUIName = nodes[0].name;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/deleteUI',
+                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/deleteElement',
                 type: 'post',
                 data: {
                     "deleteElements": delElementName,
@@ -210,14 +258,113 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         window.location.reload();
-                        $('#successModal').modal();
                     } else {
-                        window.location.reload();
                         $('#failModal').modal();
                     }
                 },
                 error: function() {
-                    window.location.reload();
+                    $('#failModal').modal();
+                }
+            });
+        },
+        updateElement: function() {
+            var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
+                nodes = treeObj.getCheckedNodes(true),
+                UIName = nodes[0].name,
+                eleName = nodes[1].name,
+                rEleName = $('#rEleName').val(),
+                LtreeObj = $.fn.zTree.getZTreeObj("eleLinkedTree"),
+                Lnodes = LtreeObj.getCheckedNodes(true),
+                relateIdentifyObjectId = Lnodes[0].id,
+                PtreeObj = $.fn.zTree.getZTreeObj("eleParentTree"),
+                Pnodes = PtreeObj.getCheckedNodes(true),
+                relateParentIdentifyObjectId = Pnodes[0].id;
+            //主属性
+            var mainTd,
+                mainName = '',
+                mainVal = '';
+            $('#mainTbody').find('tr').each(function() {
+                mainTd = $(this).children();
+                mainName = mainTd.eq(1).html(); //主属性名称
+                mainVal = mainTd.eq(2).html(); //主属性值
+            });
+            //附加属性
+            var addiTd,
+                addiName = '',
+                addiVal = '';
+            $('#addiTbody').find('tr').each(function() {
+                addiTd = $(this).children();
+                addiName = addiTd.eq(1).html(); //附加属性名称
+                addiVal = addiTd.eq(2).html(); //附加属性值
+            });
+            //辅助属性
+            var assisTd,
+                assisName = '',
+                assisVal = '';
+            $('#assiTbody').find('tr').each(function() {
+                assisTd = $(this).children();
+                assisName = assisTd.eq(1).html(); //辅助属性名称
+                assisVal = assisTd.eq(2).html(); //辅助属性值
+            });
+            //关联元素
+            var relateNameTd,
+                relateName = '';
+            $('relateNameTbody').find('tr').each(function() {
+                relateNameTd = $(this).children();
+                relateName = relateNameTd.eq(1).html();
+            });
+            //关联元素属性
+            var relatePropNameTd,
+                relatePropName = '',
+                relatePropVal = '';
+            $('relatePropTbody').find('tr').each(function() {
+                relatePropNameTd = $(this).children();
+                relatePropName = relatePropNameTd.eq(1).html();
+                relatePropVal = relatePropNameTd.eq(2).html();
+            });
+            $.ajax({
+                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/updateElement',
+                type: 'post',
+                data: {
+                    "UIName": UIName,
+                    "transid": this.transactId,
+                    "ElementNmae": eleName,
+                    "RElementName": rEleName,
+                    "relateIdentifyObjectId": relateIdentifyObjectId,
+                    "relateParentIdentifyObjectId": relateParentIdentifyObjectId,
+                    //主属性
+                    "mainpropertiesname": mainName,
+                    "mainpropertiesvalue": mainVal,
+                    "mainpropertiesmatchMethod": '',
+                    "mainpropertiesisRelative": '',
+                    "mainpropertiestoolName": '',
+                    //附加属性
+                    "addtionalpropertiesname": addiName,
+                    "addtionalpropertiesvalue": addiVal,
+                    "addtionalpropertiesmatchMethod": '',
+                    "addtionalpropertiesisRelative": '',
+                    "addtionalpropertiestoolName": '',
+                    //辅助属性
+                    "assistantpropertiesname": assisName,
+                    "assistantpropertiesvalue": assisVal,
+                    "assistantpropertiesmatchMethod": '',
+                    "assistantpropertiesisRelative": '',
+                    "assistantpropertiestoolName": '',
+                    //关联元素
+                    "relateElementname": relateName,
+                    //关联元素属性
+                    "relemainpropertiesname": relatePropName,
+                    "relemainpropertiesvalue": relatePropVal,
+                },
+                success: function(data) {
+                    console.log(data);
+                    if (data.success) {
+                        $('#successModal').modal();
+                    } else {
+                        $('#failModal').modal();
+                    }
+                },
+                error: function() {
                     $('#failModal').modal();
                 }
             });
@@ -237,6 +384,11 @@ var app = new Vue({
         delLinked: function(e) {
             var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
             selectedTr.remove();
+        },
+        //获取关联元素属性
+        showProp: function(e) {
+            var selectedName = $(e.target).parent().next().text();
+            console.log(selectedName)
         }
 
     },
@@ -278,28 +430,261 @@ var setting1 = {
     // },
     //回调函数
     callback: {
+        // 禁止拖拽
+        beforeDrag: zTreeBeforeDrag,
+        //选中时的回调函数
+        // onCheck: function(event, treeId, treeNode) {
+        //     if (treeNode.parentid == '0') { //选择的是UI
+        //         $(':input', '#UIForm').val('');
+        //         app.UIName = treeNode.name;
+        //         $('#UIForm input[name="UIName"]').val(treeNode.name);
+        //         $('#UI').css('display', 'block');
+        //         $('#ele').css('display', 'none');
+        //         $.ajax({
+        //             url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/queryUI',
+        //             type: 'post',
+        //             data: {
+        //                 "transid": app.transactId,
+        //                 "UIName": app.UIName
+        //             },
+        //             success: function(data) {
+        //                 var relateObjectId = data.obj.relateIdentifyObjectId;
+        //                 var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
+        //                 treeObj.checkNode(treeObj.getNodeByParam("id", relateObjectId, null));
+        //                 var nodes = treeObj.getCheckedNodes(true),
+        //                     obj = nodes[0].name;
+        //                 $('#UILinkedInput').val(obj);
+        //             }
+        //         });
+        //     } else { //选择的是元素
+        //         $('#classtypeSelect').val('');
+        //         $('#eleParentInput').val('');
+        //         $('#eleLinkedInput').val('');
+        //         $('#mainTbody').children().remove();
+        //         $('#addiTbody').children().remove();
+        //         $('#assiTbody').children().remove();
+        //         $('#relateNameTbody').children().remove();
+        //         $('#relatePropTbody').children().remove();
+        //         var treeObj = $.fn.zTree.getZTreeObj("elementtree");
+        //         var nodes = treeObj.getCheckedNodes(true);
+        //         app.UIName = nodes[0].name;
+        //         app.eleName = treeNode.name;
+        //         $('#UI').css('display', 'none');
+        //         $('#ele').css('display', 'block');
+        //         $.ajax({
+        //             url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/queryElement',
+        //             type: 'post',
+        //             data: {
+        //                 "transid": app.transactId,
+        //                 "UIName": app.UIName,
+        //                 "ElementName": app.eleName
+        //             },
+        //             success: function(data) {
+        //                 var classtype = data.obj.classtype;
+        //                 $('#classtypeSelect').val(classtype);
+        //                 var relateParentObjectId = data.obj.relateParentIdentifyObjectId;
+        //                 var relateObjectId = data.obj.relateIdentifyObjectId;
+        //                 //父对象
+        //                 var elePtree = $.fn.zTree.getZTreeObj("eleParentTree");
+        //                 elePtree.checkNode(elePtree.getNodeByParam("id", relateParentObjectId, null));
+        //                 var pNodes = elePtree.getCheckedNodes(true),
+        //                     pObj = pNodes[0].name;
+        //                 $('#eleParentInput').val(pObj);
+        //                 //关联对象
+        //                 var eleLtree = $.fn.zTree.getZTreeObj("eleLinkedTree");
+        //                 eleLtree.checkNode(eleLtree.getNodeByParam("id", relateObjectId, null));
+        //                 var lNodes = eleLtree.getCheckedNodes(true),
+        //                     lObj = lNodes[0].name;
+        //                 $('#eleLinkedInput').val(lObj);
+        //                 //主属性
+        //                 var mainList = data.obj.identifyElement.locatePropertyCollection.main_properties;
+        //                 for (var i = 0; i < mainList.length; i++) {
+        //                     var mainTr = $('<tr></tr>'),
+        //                         mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+        //                         mainNameTd = $('<td contenteditable="true"></td>'),
+        //                         mainValTd = $('<td contenteditable="true"></td>');
+        //                     mainNameTd.html(mainList[i].name);
+        //                     mainValTd.html(mainList[i].value);
+        //                     mainTr.append(mainCheckTd, mainNameTd, mainValTd);
+        //                     $('#mainTbody').append(mainTr);
+        //                 }
+        //                 //附加属性
+        //                 var addiList = data.obj.identifyElement.locatePropertyCollection.addtional_properties;
+        //                 for (var j = 0; j < addiList.length; j++) {
+        //                     var addiTr = $('<tr></tr>'),
+        //                         addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+        //                         addiNameTd = $('<td contenteditable="true"></td>'),
+        //                         addiValTd = $('<td contenteditable="true"></td>');
+        //                     addiNameTd.html(addiList[j].name);
+        //                     addiValTd.html(addiList[j].value);
+        //                     addiTr.append(addiCheckTd, addiNameTd, addiValTd);
+        //                     $('#addiTbody').append(addiTr);
+        //                 }
+        //                 //辅助属性
+        //                 var assiList = data.obj.identifyElement.locatePropertyCollection.assistant_properties;
+        //                 for (var k = 0; k < assiList.length; k++) {
+        //                     var assiTr = $('<tr></tr>'),
+        //                         assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+        //                         assiNameTd = $('<td contenteditable="true"></td>'),
+        //                         assiValTd = $('<td contenteditable="true"></td>');
+        //                     assiNameTd.html(assiList[k].name);
+        //                     assiValTd.html(assiList[k].value);
+        //                     assiTr.append(assiCheckTd, assiNameTd, assiValTd);
+        //                     $('#assiTbody').append(assiTr);
+        //                 }
+        //                 //关联元素
+        //                 var relateNameList = data.obj.logicalElementNameList;
+        //                 for (var l = 0; l < relateNameList.length; l++) {
+        //                     var relateNameTr = $('<tr></tr>'),
+        //                         relateNameCheckTd = $("<td><input type='checkbox' name='chk_list' @click='showProp($event)'/></td>"),
+        //                         relateNameTd = $('<td contenteditable="true"></td>');
+        //                     relateNameTd.html(relateNameList[l]);
+        //                     relateNameTr.append(relateNameCheckTd, relateNameTd);
+        //                     $('#relateNameTbody').append(relateNameTr);
+        //                 }
+        //             }
+        //         });
+        //     }
+        // },
         onClick: function(event, treeId, treeNode, clickFlag) {
-            if (treeNode.parentid == '0') {
+            if (treeNode.parentid == '0') { //选择的是UI
                 $(':input', '#UIForm').val('');
                 app.UIName = treeNode.name;
+                $('#UIForm input[name="UIName"]').val(treeNode.name);
                 $('#UI').css('display', 'block');
                 $('#ele').css('display', 'none');
-            } else {
-                $(':input', '#eleFrom').val('');
+                $.ajax({
+                    url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/queryUI',
+                    type: 'post',
+                    data: {
+                        "transid": app.transactId,
+                        "UIName": app.UIName
+                    },
+                    success: function(data) {
+                        var relateObjectId = data.obj.relateIdentifyObjectId;
+                        var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
+                        treeObj.checkNode(treeObj.getNodeByParam("id", relateObjectId, null));
+                        var nodes = treeObj.getCheckedNodes(true),
+                            obj = nodes[0].name;
+                        $('#UILinkedInput').val(obj);
+                    }
+                });
+            } else { //选择的是元素
+                $('#classtypeSelect').val('');
+                $('#eleParentInput').val('');
+                $('#eleLinkedInput').val('');
+                var treeObj = $.fn.zTree.getZTreeObj("elementtree");
+                var nodes = treeObj.getCheckedNodes(true);
                 app.eleName = treeNode.name;
                 $('#UI').css('display', 'none');
                 $('#ele').css('display', 'block');
+                $.ajax({
+                    url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/queryElement',
+                    type: 'post',
+                    data: {
+                        "transid": app.transactId,
+                        "UIName": app.UIName,
+                        "ElementName": app.eleName
+                    },
+                    success: function(data) {
+                        var classtype = data.obj.classtype;
+                        $('#classtypeSelect').val(classtype);
+                        var relateParentObjectId = data.obj.relateParentIdentifyObjectId;
+                        var relateObjectId = data.obj.relateIdentifyObjectId;
+                        //父对象
+                        var elePtree = $.fn.zTree.getZTreeObj("eleParentTree");
+                        elePtree.checkNode(elePtree.getNodeByParam("id", relateParentObjectId, null));
+                        var pNodes = elePtree.getCheckedNodes(true),
+                            pObj = pNodes[0].name;
+                        $('#eleParentInput').val(pObj);
+                        //关联对象
+                        var eleLtree = $.fn.zTree.getZTreeObj("eleLinkedTree");
+                        eleLtree.checkNode(eleLtree.getNodeByParam("id", relateObjectId, null));
+                        var lNodes = eleLtree.getCheckedNodes(true),
+                            lObj = lNodes[0].name;
+                        $('#eleLinkedInput').val(lObj);
+                        //主属性
+                        var mainList = data.obj.identifyElement.locatePropertyCollection.main_properties;
+                        if (mainList.length !== 0) {
+                            $('#mainTbody').children().remove();
+                            for (var i = 0; i < mainList.length; i++) {
+                                var mainTr = $('<tr></tr>'),
+                                    mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                    mainNameTd = $('<td contenteditable="true"></td>'),
+                                    mainValTd = $('<td contenteditable="true"></td>');
+                                mainNameTd.html(mainList[i].name);
+                                mainValTd.html(mainList[i].value);
+                                mainTr.append(mainCheckTd, mainNameTd, mainValTd);
+                                $('#mainTbody').append(mainTr);
+                            }
+                        } else {
+                            $('#mainTbody').children().remove();
+                            $('#mainTbody').append(app.propTr);
+                        }
+
+                        //附加属性
+                        var addiList = data.obj.identifyElement.locatePropertyCollection.addtional_properties;
+                        if (addiList.length !== 0) {
+                            $('#addiTbody').children().remove();
+                            for (var j = 0; j < addiList.length; j++) {
+                                var addiTr = $('<tr></tr>'),
+                                    addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                    addiNameTd = $('<td contenteditable="true"></td>'),
+                                    addiValTd = $('<td contenteditable="true"></td>');
+                                addiNameTd.html(addiList[j].name);
+                                addiValTd.html(addiList[j].value);
+                                addiTr.append(addiCheckTd, addiNameTd, addiValTd);
+                                $('#addiTbody').append(addiTr);
+                            }
+                        } else {
+                            $('#addiTbody').children().remove();
+                            $('#addiTbody').append(app.propTr);
+                        }
+
+                        //辅助属性
+                        var assiList = data.obj.identifyElement.locatePropertyCollection.assistant_properties;
+                        if (assiList.length !== 0) {
+                            $('#assiTbody').children().remove();
+                            for (var k = 0; k < assiList.length; k++) {
+                                var assiTr = $('<tr></tr>'),
+                                    assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                    assiNameTd = $('<td contenteditable="true"></td>'),
+                                    assiValTd = $('<td contenteditable="true"></td>');
+                                assiNameTd.html(assiList[k].name);
+                                assiValTd.html(assiList[k].value);
+                                assiTr.append(assiCheckTd, assiNameTd, assiValTd);
+                                $('#assiTbody').append(assiTr);
+                            }
+                        } else {
+                            $('#assiTbody').children().remove();
+                            $('#assiTbody').append(app.propTr);
+                        }
+                        //关联元素
+                        var relateElementList = data.obj.relateElementList;
+                        if (relateElementList.length !== 0) {
+                            $('#relateNameTbody').children().remove();
+                            for (var l = 0; l < relateElementList.length; l++) {
+                                var relateNameTr = $('<tr></tr>'),
+                                    relateNameCheckTd = $("<td><input type='checkbox' name='chk_list' onclick='relateNameClick(event)'/></td>"),
+                                    relateNameTd = $('<td contenteditable="true"></td>');
+                                relateNameTd.html(relateNameList[l].name);
+                                relateNameTr.append(relateNameCheckTd, relateNameTd);
+                                $('#relateNameTbody').append(relateNameTr);
+                            }
+                        }else{
+                            $('#relateNameTbody').children().remove();
+                            $('#relateNameTbody').append(linkedTr);
+                        }
+                        //关联元素属性
+
+                    }
+                });
             }
         },
-        //捕获异步加载出现错误的回调函数和成功的回调函数
-        onAsyncSuccess: function(event, treeId, treeNode, msg) {
 
-        },
-        beforeRemove: beforeRemove,
-        beforeRename: beforeRename
     }
 };
-// 页面初始化获取
+// 页面初始化获取元素库
 function getElementTree() {
     var transid = $("#transactSelect").val();
     $.ajax({
@@ -314,231 +699,209 @@ function getElementTree() {
     });
 }
 
-function filter(treeId, parentNode, childNodes) {
-    if (!childNodes) return null;
-    for (var i = 0, l = childNodes.length; i < l; i++) {
-        childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
-    }
-    return childNodes;
+//禁止拖动
+function zTreeBeforeDrag(treeId, treeNodes) {
+    return false;
 }
-
-$(document).ready(function() {
-    // getElementTree();
-    // $.fn.zTree.init($("#elementtree"), setting1);
-    $.fn.zTree.init($("#UILinkedTree"), setting2);
-    $.fn.zTree.init($("#eleParentTree"), setting3);
-    $.fn.zTree.init($("#eleLinkedTree"), setting4);
-
-});
-
-var newCount = 1;
-
-function addHoverDom(treeId, treeNode) {
-    var sObj = $("#" + treeNode.tId + "_span");
-    if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
-    var addStr = "<span class='button add' id='addBtn_" + treeNode.tId + "' title='add node' onfocus='this.blur();'></span>";
-    sObj.after(addStr);
-    var btn = $("#addBtn_" + treeNode.tId);
-    if (btn) btn.bind("click", function() {
-        var zTree = $.fn.zTree.getZTreeObj("elementtree");
-        if (confirm("确认为 " + treeNode.name + " 添加子节点吗？")) {
-            // zTree.addNodes(treeNode, { id: (100 + newCount), pId: treeNode.id, name: "new node" + (newCount++) });
-            var treeInfo = treeNode.id;
-            $.ajax({
-                url: "Ajax.aspx?_Pid=" + treeInfo + "&action=Insert",
-                type: "POST",
-                async: false,
-                success: function(res) {
-                    if (res = "success") {
-                        $('#successModal').modal();
-                        window.location.reload();
-                    } else {
-                        $('#failModal').modal();
-                        window.location.reload();
-                    }
-                }
-            });
-        }
-    });
-}
-
-function removeHoverDom(treeId, treeNode) {
-    $("#addBtn_" + treeNode.tId).unbind().remove();
-}
-//删除节点回调函数
-function beforeRemove(treeId, treeNode) {
-    var zTree = $.fn.zTree.getZTreeObj("elementtree");
-    zTree.selectNode(treeNode);
-    if (confirm("确认删除 节点 -- " + treeNode.name + " 吗？")) {
-        var treeInfo = treeNode.id;
-        $.ajax({
-            url: "Ajax.aspx?_tid=" + treeInfo + "&action=Remove",
-            type: "POST",
-            async: false,
-            success: function(res) {
-                if (res = "success") {
-                    $('#successModal').modal();
-                    window.location.reload();
-                } else {
-                    $('#failModal').modal();
-                    window.location.reload();
-                }
-            }
-        });
-    } else {
-        window.location.reload();
-    }
-}
-
-//修改节点名称回调函数
-function beforeRename(treeId, treeNode, newName, isCancel) {
-    if (newName.length == 0) {
-        setTimeout(function() {
-            var zTree = $.fn.zTree.getZTreeObj("elementtree");
-            zTree.cancelEditName();
-            alert("节点名称不能为空.");
-        }, 0);
-        return false;
-    }
-    var treeInfo = treeNode.id;
-    $.ajax({
-        url: "Ajax.aspx?_tid=" + treeInfo + "&_newname=" + newName + "&action=ReName",
-        type: "POST",
-        async: false,
-        success: function(res) {
-            if (res = "success") {
-                $('#successModal').modal();
-                window.location.reload();
-            } else {
-                $('#failModal').modal();
-                window.location.reload();
-            }
-        }
-    });
-}
-
 
 /*elementtree end*/
 
 /*UILinked objecttree start*/
 var setting2 = {
     view: {
+        addHoverDom: false,
+        removeHoverDom: false,
         selectedMulti: false
     },
     check: {
-        enable: false
+        enable: true,
+        chkStyle: "checkbox",
+        chkboxType: { "Y": "s", "N": "ps" }
     },
     data: {
         simpleData: {
             enable: true,
             idKey: 'id', //id编号命名
-            pIdKey: 'pId', //父id编号命名
+            pIdKey: 'parentid', //父id编号命名
             rootPId: 0
         }
     },
     edit: {
-        enable: false,
-    },
-    // 获取json数据
-    async: {
         enable: true,
-        url: '../mock/zNodes-object.json',
-        autoParam: ['id'], // 异步加载时自动提交的父节点属性的参数
-        otherParam: { "otherParam": "zTreeAsyncTest" }, //ajax请求时提交的参数
-        dataFilter: filter,
-        type: 'post'
+        showRemoveBtn: false,
+        showRenameBtn: false
     },
+
     //回调函数
     callback: {
+        // 禁止拖拽
+        beforeDrag: zTreeBeforeDrag,
         onClick: function(event, treeId, treeNode, clickFlag) {
             app.UILinked = treeNode.name;
         },
-        //捕获异步加载出现错误的回调函数和成功的回调函数
-        onAsyncSuccess: function(event, treeId, treeNode, msg) {
 
-        },
     }
 };
+// 页面初始化获取对象库
+function getUILinkedObjectTree() {
+    var transid = $("#transactSelect").val();
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repoAll',
+        type: 'post',
+        data: { "transid": transid },
+        success: function(data) {
+            if (data !== null) {
+                $.fn.zTree.init($("#UILinkedTree"), setting2, data.obj);
+            }
+        }
+    });
+}
+//禁止拖动
+function zTreeBeforeDrag(treeId, treeNodes) {
+    return false;
+}
+//UI关联对象库中对象
+function setUILinked() {
+    var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree"),
+        nodes = treeObj.getCheckedNodes(true),
+        obj = nodes[0].name;
+    $('#UILinkedInput').val(obj);
+
+}
+//解除关联
+function removeUILinked() {
+    $('#UILinkedInput').val('');
+}
 /*UILinked objecttree end*/
 
 /*eleParent objecttree start*/
 var setting3 = {
     view: {
+        addHoverDom: false,
+        removeHoverDom: false,
         selectedMulti: false
     },
     check: {
-        enable: false
+        enable: true,
+        chkStyle: "checkbox",
+        chkboxType: { "Y": "s", "N": "ps" }
     },
     data: {
         simpleData: {
             enable: true,
             idKey: 'id', //id编号命名
-            pIdKey: 'pId', //父id编号命名
+            pIdKey: 'parentid', //父id编号命名
             rootPId: 0
         }
     },
     edit: {
-        enable: false,
-    },
-    // 获取json数据
-    async: {
         enable: true,
-        url: '../mock/zNodes-object.json',
-        autoParam: ['id'], // 异步加载时自动提交的父节点属性的参数
-        otherParam: { "otherParam": "zTreeAsyncTest" }, //ajax请求时提交的参数
-        dataFilter: filter,
-        type: 'post'
+        showRemoveBtn: false,
+        showRenameBtn: false
     },
     //回调函数
     callback: {
+        // 禁止拖拽
+        beforeDrag: zTreeBeforeDrag,
         onClick: function(event, treeId, treeNode, clickFlag) {
             app.eleParent = treeNode.name;
         },
-        //捕获异步加载出现错误的回调函数和成功的回调函数
-        onAsyncSuccess: function(event, treeId, treeNode, msg) {
-
-        },
     }
 };
+// 页面初始化获取对象库
+function getEleParentObjectTree() {
+    var transid = $("#transactSelect").val();
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repoAll',
+        type: 'post',
+        data: { "transid": transid },
+        success: function(data) {
+            if (data !== null) {
+                $.fn.zTree.init($("#eleParentTree"), setting2, data.obj);
+            }
+        }
+    });
+}
+//禁止拖动
+function zTreeBeforeDrag(treeId, treeNodes) {
+    return false;
+}
+//设置对象库中父对象
+function setEleParent() {
+    var treeObj = $.fn.zTree.getZTreeObj("eleParentTree"),
+        nodes = treeObj.getCheckedNodes(true),
+        obj = nodes[0].name;
+    $('#eleParentInput').val(obj);
+
+}
 /*eleParent objecttree end*/
 
 /*eleLinked objecttree start*/
 var setting4 = {
     view: {
+        addHoverDom: false,
+        removeHoverDom: false,
         selectedMulti: false
     },
     check: {
-        enable: false
+        enable: true,
+        chkStyle: "checkbox",
+        chkboxType: { "Y": "s", "N": "ps" }
     },
     data: {
         simpleData: {
             enable: true,
             idKey: 'id', //id编号命名
-            pIdKey: 'pId', //父id编号命名
+            pIdKey: 'parentid', //父id编号命名
             rootPId: 0
         }
     },
     edit: {
-        enable: false,
-    },
-    // 获取json数据
-    async: {
         enable: true,
-        url: '../mock/zNodes-object.json',
-        autoParam: ['id'], // 异步加载时自动提交的父节点属性的参数
-        otherParam: { "otherParam": "zTreeAsyncTest" }, //ajax请求时提交的参数
-        dataFilter: filter,
-        type: 'post'
+        showRemoveBtn: false,
+        showRenameBtn: false
     },
     //回调函数
     callback: {
+        // 禁止拖拽
+        beforeDrag: zTreeBeforeDrag,
         onClick: function(event, treeId, treeNode, clickFlag) {
             app.eleLinked = treeNode.name;
         },
-        //捕获异步加载出现错误的回调函数和成功的回调函数
-        onAsyncSuccess: function(event, treeId, treeNode, msg) {
 
-        },
     }
 };
+// 页面初始化获取对象库
+function getEleLinkedObjectTree() {
+    var transid = $("#transactSelect").val();
+    $.ajax({
+        url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repoAll',
+        type: 'post',
+        data: { "transid": transid },
+        success: function(data) {
+            if (data !== null) {
+                $.fn.zTree.init($("#eleLinkedTree"), setting2, data.obj);
+            }
+        }
+    });
+}
+//禁止拖动
+function zTreeBeforeDrag(treeId, treeNodes) {
+    return false;
+}
+//设置对象库中关联对象
+function setEleLinked() {
+    var treeObj = $.fn.zTree.getZTreeObj("eleLinkedTree"),
+        nodes = treeObj.getCheckedNodes(true),
+        obj = nodes[0].name;
+    $('#eleLinkedInput').val(obj);
+
+}
 /*eleLinked objecttree end*/
+
+//勾选关联元素名称
+function relateNameClick(event){
+    if($(event.target).attr('checked')){
+
+    }
+}

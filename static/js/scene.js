@@ -1,8 +1,7 @@
 var app = new Vue({
-    el: '#v-testProject',
+    el: '#scene',
     data: {
-        testProjectList: [],
-        apiUrl: '',
+        sceneList: [],
         tt: "", //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
@@ -13,16 +12,16 @@ var app = new Vue({
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
-        queryTestProject: '',
-        ids:'',
+        querySceneId: '',
         //当前选中行
         selectedId: '',
-        selectedTestProjectCode: '',
-        selectedTestProjectName: '',
-        selectedTaskDescription: ''
+        selectedSceneCode: '',
+        selectedSceneName: '',
+        selectedAbstractarchitecture_name: '',
+        selectedScene_desc: ''
     },
     ready: function() {
-        getTestProject(this.currentPage, this.pageSize, this.order, this.sort);
+        getScene(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
     },
     methods: {
@@ -32,8 +31,8 @@ var app = new Vue({
             $('input[name="chk_list"]:checked').each(function() {
                 id_array.push($(this).attr('id'));
             });
-            app.ids = id_array.join(',');
-            // $('input[name="id"]').val(id_array.join(','));
+            //app.ids = id_array.join(',');
+            $('input[name="id"]').val(id_array.join(','));
         },
         checkedAll: function() {
             var _this = this;
@@ -42,7 +41,7 @@ var app = new Vue({
                 _this.checkboxModel = [];
             } else { //全选
                 _this.checkboxModel = [];
-                _this.autList.forEach(function(item) {
+                _this.sceneList.forEach(function(item) {
                     _this.checkboxModel.push(item.id);
                 });
             }
@@ -66,16 +65,16 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-             getTestProject(ts.currentPage, ts.pageSize, 'id', 'asc');
+            getScene(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
 
 
-        //添加测试项目
+        //添加场景
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/insert',
+                url: 'http://10.108.226.152:8080/ATFCloud/sceneController/insertSelective',
                 type: 'post',
-                data: $("#insertForm").serializeArray(),
+                data: {},
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
@@ -89,15 +88,15 @@ var app = new Vue({
                 }
             });
         },
-        //删除测试项目
+        //删除场景
         del: function() {
             this.getIds();
-            console.log(app.ids)
+            console.log(app.ids);
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/delete',
+                url: 'http://10.108.226.152:8080/ATFCloud/sceneController/delete',
                 type: 'post',
                 data: {
-                    'ids': app.ids
+                    'id': app.ids
                 },
                 success: function(data) {
                     console.info(data);
@@ -112,12 +111,12 @@ var app = new Vue({
                 }
             });
         },
-        //修改测试项目
+        //修改场景
         update: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/update',
+                url: 'http://10.108.226.152:8080/ATFCloud/sceneController/update',
                 type: 'post',
-                data: $("#updateForm").serializeArray(),
+                data: {},
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
@@ -136,31 +135,22 @@ var app = new Vue({
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             $('input[name="id"]').val(selectedId);
-            $('#updateForm input[name="testProjectCode"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="testProjectName"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm input[name="taskDescription"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm input[name="autCode"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="autName"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm input[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
         },
-        
-        //传递当前页选中测试项目id到功能点页面
-        to: function() {
-            var selectedInput = $('input[name="chk_list"]:checked');
-            var selectedId = selectedInput.attr('id');
-            //存储测试项目id到sessionstorage
-            sessionStorage.setItem("selectedId",selectedId);
-            location.href = "transact.html?selectedId=" + selectedId;
-        }
 
     },
 
 
 });
 
-//获取系统
-function getTestProject(page, listnum, order, sort) {
-
+//获取场景
+function getScene(page, listnum, order, sort) {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/selectAllByPage',
+        url: 'http://10.108.226.152:8080/ATFCloud/sceneController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -169,9 +159,7 @@ function getTestProject(page, listnum, order, sort) {
             'sort': sort
         },
         success: function(data) {
-            console.info(data);
-            console.info(data.rows);
-            app.testProjectList = data.rows;
+            app.sceneList = data.rows;
             app.tt = data.total;
             app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
@@ -185,8 +173,8 @@ function changeListNum() {
     $('#mySelect').change(function() {
         listnum = $(this).children('option:selected').val();
         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-        getTestProject('1', listnum, 'id', 'asc');
-    })
+        getScene(1, listnum, 'id', 'asc');
+    });
 }
 
 //全选反选
@@ -212,25 +200,25 @@ function resort(target) {
         target.setAttribute("data-sort", "desc");
     }
     app.order = target.getAttribute("data-order");
-    getAut(1, 10, app.order, app.sort);
+    getScene(1, 10, app.order, app.sort);
 }
 //重新排序 结束
 
-//搜索系统
-function queryTestProject() {
+//搜索场景
+function queryScene() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/selectAllByPage',
+        url: 'http://10.108.226.152:8080/ATFCloud/sceneController/selectByPrimaryKey',
         type: 'POST',
         data: {
             'page': app.currentPage,
             'rows': app.listnum,
             'order': app.order,
             'sort': app.sort,
-            'testProjectCode': app.queryTestProject
+            'id': app.querySceneId
         },
         success: function(data) {
-            app.testProjectList = data.rows;
-            console.log(app.testProjectList)
+            app.sceneList = data.rows;
+            console.log(app.sceneList);
             app.tt = data.total;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             app.pageSize = app.listnum;
