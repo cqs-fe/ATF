@@ -59,6 +59,10 @@
             <span class="icon-remove" @click="hide();"></span>
         </header>
         <main class="editData-body container">
+            <div class="before-operation operation">
+                <label>前置操作</label>
+                <div></div>
+            </div>
             <div class="type-wrapper" >
                 <label class="">数据类型</label>
                 <div><input type="radio" name="type" value="1" v-model="dataType">文本</div>
@@ -75,10 +79,10 @@
                     </div>
                 </div>
                 <div class="form-group " v-show="dataType==2">
-                    <input type="text" id="input2" class="form-control" name="">
+                    <input type="text" id="input2" class="form-control" name="" readonly="true" value="nil">
                 </div>
                 <div class="form-group" v-show="dataType==3">
-                    <input type="text" id="input3" class="form-control" name="">
+                    <input type="text" id="input3" class="form-control" name="" readonly="true" value="">
                 </div>
                 <div class="form-group" v-show="dataType==1">
                     <input type="text" id="input1" class="form-control" name="">
@@ -86,10 +90,7 @@
                 <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
                 <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
             </form>
-            <div class="before-operation operation">
-                <label>前置操作</label>
-                <div></div>
-            </div>
+            
             <div class="after-operation operation">
                 <label>后置操作</label>
                 <div></div>
@@ -110,12 +111,27 @@
                     <label v-if="type==1">数据池名称</label>
                     <label v-else>函数名称</label>
                 </div>
-                <select class="right-div"  id="select-name">
-                    <!-- <option v-for="item in selectItems" v-bind:value="item.value">{{item.name}}</option> -->
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
+                <select v-show="type==1" class="right-div" id="select-data-name" v-model="dataPoolType">
+                    <option v-bind:value="1">用例内部变量</option>
+                    <option v-bind:value="2">流程用例数据池</option>
+                    <option v-bind:value="3">组合用例数据</option>
+                    <option v-bind:value="4">场景数据</option>
+                    <option v-bind:value="5">全局数据</option>
+                    <option v-bind:value="6">环境数据</option>
                 </select>
+                <select v-show="type==2" class="right-div"  id="select-function-name" v-model="functionName">
+                    <option>functionA</option>
+                    <option>functionB</option>
+                    <option>functionC</option>
+                </select>
+            </div>
+            <div class="selectDiv" v-show="dataPoolType==4 || dataPoolType==5">
+                <div class="label"></div>
+                <div class="right-div">
+                    <label><input type="radio" v-model="dataWritable" value="writable" checked>可读可写</label>
+                    <label><input type="radio" v-model="dataWritable" value="readable">只读</label>
+                    
+                </div>
             </div>
             <div class="contentDiv">
                 <div class="label">
@@ -130,26 +146,17 @@
                                 <tr>
                                     <th scope="col">参数名称</th>
                                     <th scope="col">参数值</th>
-                                    <th scope="col">操作</th>
                                 </tr>
                             </thead>
                             <tbody id="insert-div-tbody">
                                 <tr v-for="(row,index) in trData">
-                                    <td contenteditable="true" class="td-param-name"> 
+                                    <td class="td-param-name">
+                                    {{row}}
                                     </td>
                                     <td contenteditable="true" class="td-param-value">
                                     </td>
-                                    <td>
-                                        <button class="btn-add-row"  @click="removeRow(index);">
-                                            <span class="icon-minus"></span>
-                                        </button>
-                                    </td>
                                 </tr>
                             </tbody>
-                            <tfoot>
-                                <tr><td colspan="3">
-                                <button class="btn-add-row" id="btnadd-row" @click="addRow();"><span class="icon-plus"></span></button></td></tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
