@@ -34,8 +34,11 @@ $(document).ready(function(){
 				isShow: true,
 				type: null,
 				insertTitle:null,
-				trData: [],
-				finalString: "",
+				trData: ['参数1','参数2','参数3','参数4'],
+				dataPoolType: null,
+				dataWritable: "",
+				functionName: ""
+
 			},
 			created: function(){
 
@@ -50,35 +53,31 @@ $(document).ready(function(){
 					this.isShow = false;
 					this.trData = [];
 				},
-				addRow: function(){
-					console.log("add");
-					this.trData.push({});
-				},
-				removeRow: function(index){
-					console.log(index);
-					this.trData.splice(index,1);
-				},
 				saveData: function(){
-					this.finalString = '';
-					this.finalString += document.querySelector("#select-name").value+":";
-					if(this.type === 2){
-						var names = document.querySelectorAll(".td-param-name");
-						var values = document.querySelectorAll(".td-param-value");
-						this.trData.forEach((rowData,index) => {
-							rowData.name = names[index].innerHTML.trim();
-							rowData.value = values[index].innerHTML.trim();
-							this.finalString += rowData.name +"=" + rowData.value+"&";
-						});
-						this.finalString = this.finalString.slice(0,this.finalString.length-1);
-					}else{
-						this.finalString = this.finalString + document.getElementById("dataName").value;
+					var finalString = '';
+					if(this.type === 1){
+						var dataName = document.getElementById("dataName").value;
+						switch(this.dataPoolType){
+							case 1: finalString = "var(\"" + dataName + "\")";break;
+							case 2: finalString = "Data.Flow(\"" + dataName + "\")";break;
+							case 3: finalString = "Data.Com(\"" + dataName + "\")";break;
+							case 4: finalString = this.dataWritable === "readable" ? "Data.Scene(\"" : "Data.SceneShare(\"" + dataName + "\")";break;
+							case 5: finalString = this.dataWritable === "readable" ? "Data.Scene(\"" : "Data.SceneShare(\"" + dataName + "\")";break;
+							case 6: finalString = "Data.Env(\"" + dataName + "\")";break;
+						}
+					}else {
+						var paramValuesTd = document.getElementsByClassName("td-param-value");
+						var paramValues = [];
+						finalString = this.functionName+ "(";
+						for(var td of paramValuesTd) {
+							finalString += td.innerHTML.trim() + ",";
+						}
+						finalString = finalString.substring(0,finalString.length - 1) + ")";
 					}
-					
-					console.log(this.finalString);
 					var input = document.getElementById("input4");
 					var pos = this.getCursortPosition(input);
 					var s = input.value;
-					input.value = s.substring(0, pos)+this.finalString+s.substring(pos);
+					input.value = s.substring(0, pos)+finalString+s.substring(pos);
 				},
 				getCursortPosition: function(ctrl){
 					var CaretPos = 0;	// IE Support
@@ -92,7 +91,7 @@ $(document).ready(function(){
 					else if (ctrl.selectionStart || ctrl.selectionStart == '0')
 						CaretPos = ctrl.selectionStart;
 					return (CaretPos);
-				}
+				},
 			}
 		});
 		var setting = {
@@ -286,7 +285,7 @@ $(document).ready(function(){
 			},
 			{	data:"",
 				renderer: function(instance, td, row, col, prop, value, cellProperties){
-					td.innerHTML = row;
+					td.innerHTML = parseInt(row) + 1;
 		 			return td;
 				},
 				readOnly: true
@@ -309,14 +308,6 @@ $(document).ready(function(){
 				if(key){
 					var option = {
 						data: key,
-						// renderer: function(instance, td, row, col, prop, value, cellProperties){
-						// 	if(col >= 8)
-						// 	{ 
-						// 		// td.style.backgroundColor = '#fff';
-						// 		//Vac.addClass(td,'dbclick');
-						// 	}
-						// 	return td;
-						// },
 						readOnly: false
 					};
 					totalColumnsOptions.push(option);
