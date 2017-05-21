@@ -141,12 +141,16 @@ var app = new Vue({
             $('#updateForm input[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().html());
             $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
         },
-        
+
         //传递当前页选中测试系统id到功能点页面
         to: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
-            var selectedId = selectedInput.attr('id');
-            location.href = "transact.html?selectedId=" + selectedId;
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var selectedId = selectedInput.attr('id');
+                location.href = "transact.html?selectedId=" + selectedId;
+            }
         }
 
     },

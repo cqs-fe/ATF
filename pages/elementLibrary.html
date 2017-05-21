@@ -89,22 +89,22 @@
                                     <div class="form-group">
                                         <label class="col-lg-2 control-label">UI名称：</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="" class="form-control" value="{{UIName}}" >
+                                            <input type="text" name="UIName" class="form-control" value="{{UIName}}" id="RUIName">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">关联对象库中对象：</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="" class="form-control" value="{{UILinked}}" disabled>
+                                            <input type="text" id="UILinkedInput" class="form-control" value="{{UILinked}}" disabled>
                                         </div>
                                         <div class="col-lg-2">
                                             <a class="btn btn-info" data-toggle="modal" href="#UILinkedModal">关联对象</a>
                                         </div>
                                         <div class="col-lg-2">
-                                            <a class="btn btn-info">解除关联</a>
+                                            <a class="btn btn-info" onclick="removeUILinked()">解除关联</a>
                                         </div>
                                         <div class="col-lg-2">
-                                            <a class="btn btn-info">保存</a>
+                                            <a class="btn btn-info" @click="updateUI">保存</a>
                                         </div>
                                     </div>
                                 </form>
@@ -119,19 +119,18 @@
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">元素名称</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="" class="form-control" value="{{eleName}}">
+                                            <input type="text" name="" class="form-control" value="{{eleName}}" id="rEleName">
                                         </div>
                                         <label for="" class="col-lg-2 control-label">类型</label>
                                         <div class="col-lg-3">
-                                            <select class="form-control">
-                                                <option></option>
+                                            <select class="form-control" id="classtypeSelect">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">对象库中父对象</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="" class="form-control" value="{{eleParent}}" disabled>
+                                            <input type="text" name="" id="eleParentInput" class="form-control" value="{{eleParent}}" disabled>
                                         </div>
                                         <div class="col-lg-2">
                                             <a class="btn btn-info" data-toggle="modal" href="#eleParentModal">设置父对象</a>
@@ -140,7 +139,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">对象库中关联对象</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="" class="form-control" value="{{eleLinked}}" disabled>
+                                            <input type="text" name="" id="eleLinkedInput" class="form-control" value="{{eleLinked}}" disabled>
                                         </div>
                                         <div class="col-lg-2">
                                             <a class="btn btn-info" data-toggle="modal" href="#eleLinkedModal">设置关联对象</a>
@@ -163,7 +162,14 @@
                                                     <th>属性值</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="mainTbody">
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -181,7 +187,14 @@
                                                     <th>属性值</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="addiTbody">
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -199,37 +212,43 @@
                                                     <th>属性值</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="assiTbody">
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </section>
-                                <section class="panel small-panel">
+                                <section class="panel elelink-panel">
                                     <header class="panel-heading">关联元素</header>
                                     <div class="linked">
                                         <div class="linked-left">
-                                            <section class="panel">
-                                                <header class="panel-heading">已关联元素
-                                                    <a class="btn btn-white btn-sm pull-right" @click="addLinked($event)"><i class="icon-plus"></i></a>
-                                                    <a class="btn btn-white btn-sm pull-right" @click="delLinked($event)"><i class="icon-minus"></i></a>
-                                                </header>
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:5%"></th>
-                                                            <th>已关联元素</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <input type="checkbox" name="chk_list" />
-                                                            </td>
-                                                            <td>元素1</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </section>
+                                            <div class="property">
+                                                关联元素
+                                                <a class="btn btn-white btn-sm pull-right" @click="addLinked($event)"><i class="icon-plus"></i></a>
+                                                <a class="btn btn-white btn-sm pull-right" @click="delLinked($event)"><i class="icon-minus"></i></a>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:5%"></th>
+                                                        <th>关联元素</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="relateNameTbody">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox" name="chk_list" />
+                                                        </td>
+                                                        <td contenteditable="true"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                         <div class="linked-right">
                                             <div class="property">
@@ -245,16 +264,22 @@
                                                         <th>属性值</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody id="relatePropTbody">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox" name="chk_list" />
+                                                        </td>
+                                                        <td contenteditable="true"></td>
+                                                        <td contenteditable="true"></td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </section>
-                                <a href="" class="btn btn-info">保存</a>
+                                <a class="btn btn-info" @click="updateElement">保存</a>
                             </div>
                         </section>
-
                         <!-- successModal start -->
                         <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -364,7 +389,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group hidden">
-                                                    <label class="col-lg-3 control-label">  relateParentIdentifyObjectId</label>
+                                                    <label class="col-lg-3 control-label"> relateParentIdentifyObjectId</label>
                                                     <div class="col-lg-5">
                                                         <input type="text" class="form-control" name="  relateParentIdentifyObjectId" id="addEleRelateParentIdentifyObjectId">
                                                     </div>
@@ -405,8 +430,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                    <button data-dismiss="modal" class="btn btn-success" type="submit">确认</button>
+                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                    <button data-dismiss="modal" class="btn btn-success" onclick="setUILinked()">确认</button>
                 </div>
             </div>
         </div>
@@ -426,8 +451,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                    <button data-dismiss="modal" class="btn btn-success" type="submit">确认</button>
+                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                    <button data-dismiss="modal" class="btn btn-success" onclick="setEleParent()">确认</button>
                 </div>
             </div>
         </div>
@@ -447,8 +472,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                    <button data-dismiss="modal" class="btn btn-success" type="submit">确认</button>
+                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                    <button data-dismiss="modal" class="btn btn-success" onclick="setEleLinked()">确认</button>
                 </div>
             </div>
         </div>

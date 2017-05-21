@@ -36,29 +36,19 @@
 }
 .small-panel{
 	padding: 0 25px 0 25px;
-	width: 60%;
-}
-.elelink-panel{
-	padding: 0 25px 0 25px;
-	/* width: 60%; */
-}
-.linked{
-	display: flex;
-	border: 1px solid rgb(170,170,170);
-}
-.linked-left{
-	flex: 1;
-	border-right: 1px solid rgb(170,170,170);
-	padding: 20px;
-}
-.linked-right{
-	flex: 2;
-	padding: 20px;
-}
-.linked-left a{
-	display: block
 }
 .property a{
 	margin-right: 5px;
 	margin-bottom: 10px;
+}
+.archi{
+	padding-left: 0;
+	padding-right: 0
+}
+.archi-btn{
+	display: inline-block;
+	float: right;
+}
+.archi-title{
+	margin-left: 15px;
 }

@@ -10,7 +10,7 @@
     <title>objectRepo</title>
 </head>
 
-<body id="v-demo" v-cloak>
+<body id="objectRepo" v-cloak>
     <div class="content">
         <!--header start-->
         <link rel="import" href="./common/header-guide.html?__inline">
@@ -25,9 +25,9 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="breadcrumb">
-                            <li><a href="#"><i class="icon-home"></i> 测试系统</a></li>
-                            <li><a href="#">功能点</a></li>
-                            <li class="active">对象库</li>
+                            <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
+                            <li><a href="transact.html"> 功能点</a></li>
+                            <li class="active"> 对象库</li>
                         </ul>
                     </div>
                 </div>
@@ -40,18 +40,13 @@
                                 <div class="form-group">
                                     <label class="col-lg-2 control-label">所属被测系统</label>
                                     <div class="col-lg-2">
-                                        <select class="form-control">
-                                            <option></option>
+                                        <select class="form-control" id="autSelect">
                                         </select>
                                     </div>
                                     <label class="col-lg-2 control-label">所属功能点</label>
                                     <div class="col-lg-2">
-                                        <select class="form-control">
-                                            <option></option>
+                                        <select class="form-control" id="transactSelect" v-model="transid">
                                         </select>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <a class="btn btn-info">保存</a>
                                     </div>
                                 </div>
                             </form>
@@ -61,106 +56,194 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-4">
-                        <section class="panel">
+                        <section class="panel tree-panel">
                             <header class="panel-heading">
                                 对象库
                             </header>
                             <div id="menuContent" class="menuContent treeMenu">
-                                <ul id="elementtree" class="ztree tree"></ul>
+                                <div class="form-group panel-pad form-horizontal">
+                                    <div class="col-lg-6">
+                                        <input type="text" name="" placeholder="请输入对象id" value="" class="form-control empty input-sm" v-model="objId">
+                                    </div>
+                                    <a class="btn btn-info btn-sm" @click="queryObj">搜索</a>
+                                </div>
+                                <div class="form-group form-horizontal">
+                                    <div class="col-lg-12">
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" href="#addObjModal">添加对象</a>
+                                        <a class="btn btn-info btn-sm" @click="delObj">删除对象</a>
+                                    </div>
+                                </div>
+                                <ul id="objectTree" class="ztree tree"></ul>
                             </div>
                         </section>
                     </div>
                     <div class="col-lg-8">
-                        <section class="panel">
+                        <section class="panel" id="">
                             <header class="panel-heading">
-                                元素1
+                                {{objName}}
                             </header>
                             <div class="elementContent">
-                                <form class="form-horizontal panel-pad">
+                                <form class="form-horizontal panel-pad" id="objForm">
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label">元素名称</label>
+                                        <label class="col-lg-2 control-label">名称</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="" class="form-control" value="元素1" disabled>
+                                            <input type="text" name="name" class="form-control" value="{{objName}}">
                                         </div>
                                         <label for="" class="col-lg-2 control-label">类型</label>
                                         <div class="col-lg-3">
-                                            <select class="form-control">
-                                                <option></option>
+                                            <select class="form-control" id="classtypeSelect">
                                             </select>
                                         </div>
                                     </div>
-                                   
                                 </form>
                                 <section class="panel small-panel">
                                     <header class="panel-heading">属性</header>
-                                    <div class="property">主属性</div>
+                                    <div class="property">
+                                        主属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    </div>
                                     <div class="property">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>text</th>
-                                                    <th>值</th>
+                                                    <th style="width:5%"></th>
+                                                    <th>属性名</th>
+                                                    <th>属性值</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="mainProp">
                                                 <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="property">附加属性</div>
+                                    <div class="property">
+                                        附加属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    </div>
                                     <div class="property">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>text</th>
-                                                    <th>值</th>
+                                                    <th style="width:5%"></th>
+                                                    <th>属性名</th>
+                                                    <th>属性值</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="addiProp">
                                                 <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="property">辅助属性</div>
+                                    <div class="property">
+                                        辅助属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    </div>
                                     <div class="property">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>text</th>
-                                                    <th>值</th>
+                                                    <th style="width:5%"></th>
+                                                    <th>属性名</th>
+                                                    <th>属性值</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="assisProp">
                                                 <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </section>
+                                <a class="btn btn-info" @click="updateObj">保存</a>
                             </div>
                         </section>
+                        <!-- successModal start -->
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作成功</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作成功！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- successModal end -->
+                        <!-- failModal start -->
+                        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作失败！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- failModal end -->
+                        <!-- addObjModal start -->
+                        <div class="modal fade" id="addObjModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加对象</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="addUIForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="objName" id="addObjName">
+                                                    </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button data-dismiss="modal" class="btn btn-default">取消</button>
+                                            <button data-dismiss="modal" class="btn btn-success" @click="addObj">添加</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- addUIModal end -->
+                        </div>
                     </div>
-                </div>
             </section>
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>
@@ -168,201 +251,12 @@
         <!-- <div class="footer">
             <link rel="import" href="./common/copy-right.html?__inline">
         </div> -->
-    </div>
-    <!-- objectmodal start -->
-    <div class="modal fade" id="objectModal" tabindex="-1" role="dialog" aria-labelledby="objectModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">对象库</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="menuContent" class="menuContent treeMenu">
-                        <ul id="objecttree" class="ztree tree"></ul>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                    <button class="btn btn-success" type="submit">确认</button>
-                </div>
-            </div>
         </div>
-    </div>
-    <!-- objectmodal end -->
 </body>
 
 </html>
 <link rel="import" href="./common/footer.html?__inline">
 <!--script for this page only-->
+<script type="text/javascript" src="../static/js/objectRepo.js"></script>
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
-<script type="text/javascript">
-var setting = {
-    view: {
-        addHoverDom: addHoverDom,
-        removeHoverDom: removeHoverDom,
-        selectedMulti: false
-    },
-    check: {
-        enable: true
-    },
-    data: {
-        simpleData: {
-            enable: true
-        }
-    },
-    edit: {
-        enable: true
-    }
-};
-
-var zNodes = [{
-    id: 1,
-    pId: 0,
-    name: "父节点1",
-    open: true
-}, {
-    id: 11,
-    pId: 1,
-    name: "父节点11"
-}, {
-    id: 111,
-    pId: 11,
-    name: "叶子节点111"
-}, {
-    id: 112,
-    pId: 11,
-    name: "叶子节点112"
-}, {
-    id: 113,
-    pId: 11,
-    name: "叶子节点113"
-}, {
-    id: 114,
-    pId: 11,
-    name: "叶子节点114"
-}, {
-    id: 12,
-    pId: 1,
-    name: "父节点12"
-}, {
-    id: 121,
-    pId: 12,
-    name: "叶子节点121"
-}, {
-    id: 122,
-    pId: 12,
-    name: "叶子节点122"
-}, {
-    id: 123,
-    pId: 12,
-    name: "叶子节点123"
-}, {
-    id: 124,
-    pId: 12,
-    name: "叶子节点124"
-}, {
-    id: 13,
-    pId: 1,
-    name: "父节点13",
-    isParent: true
-}, {
-    id: 2,
-    pId: 0,
-    name: "父节点2"
-}, {
-    id: 21,
-    pId: 2,
-    name: "父节点21",
-    open: true
-}, {
-    id: 211,
-    pId: 21,
-    name: "叶子节点211"
-}, {
-    id: 212,
-    pId: 21,
-    name: "叶子节点212"
-}, {
-    id: 213,
-    pId: 21,
-    name: "叶子节点213"
-}, {
-    id: 214,
-    pId: 21,
-    name: "叶子节点214"
-}, {
-    id: 22,
-    pId: 2,
-    name: "父节点22"
-}, {
-    id: 221,
-    pId: 22,
-    name: "叶子节点221"
-}, {
-    id: 222,
-    pId: 22,
-    name: "叶子节点222"
-}, {
-    id: 223,
-    pId: 22,
-    name: "叶子节点223"
-}, {
-    id: 224,
-    pId: 22,
-    name: "叶子节点224"
-}, {
-    id: 23,
-    pId: 2,
-    name: "父节点23"
-}, {
-    id: 231,
-    pId: 23,
-    name: "叶子节点231"
-}, {
-    id: 232,
-    pId: 23,
-    name: "叶子节点232"
-}, {
-    id: 233,
-    pId: 23,
-    name: "叶子节点233"
-}, {
-    id: 234,
-    pId: 23,
-    name: "叶子节点234"
-}, {
-    id: 3,
-    pId: 0,
-    name: "父节点3",
-    isParent: true
-}];
-
-$(document).ready(function() {
-    $.fn.zTree.init($("#elementtree"), setting, zNodes);
-});
-
-var newCount = 1;
-
-function addHoverDom(treeId, treeNode) {
-    var sObj = $("#" + treeNode.tId + "_span");
-    if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
-    var addStr = "<span class='button add' id='addBtn_" + treeNode.tId + "' title='add node' onfocus='this.blur();'></span>";
-    sObj.after(addStr);
-    var btn = $("#addBtn_" + treeNode.tId);
-    if (btn) btn.bind("click", function() {
-        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-        zTree.addNodes(treeNode, {
-            id: (100 + newCount),
-            pId: treeNode.id,
-            name: "new node" + (newCount++)
-        });
-        return false;
-    });
-};
-
-function removeHoverDom(treeId, treeNode) {
-    $("#addBtn_" + treeNode.tId).unbind().remove();
-};
-</script>
