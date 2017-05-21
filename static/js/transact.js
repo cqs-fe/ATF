@@ -16,7 +16,7 @@ var app = new Vue({
     ready: function() {
         autSelect();
         setval();
-         changeListNum();
+        changeListNum();
         $('#autSelect').change(function() {
             queryTransact();
         });
@@ -125,11 +125,26 @@ var app = new Vue({
             $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().next().html());
         },
         //传递当前页选中的测试系统id和功能点id到元素库页面
-        to: function() {
+        toElementLib: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
-            var transactId = selectedInput.attr('id');
-            var autId=$('#autSelect').val();
-            location.href="elementLibrary.html?autId="+autId+"&"+"transactId="+transactId;
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var transactId = selectedInput.attr('id');
+                var autId = $('#autSelect').val();
+                location.href = "elementLibrary.html?autId=" + autId + "&" + "transactId=" + transactId;
+            }
+        },
+        //传递当前页选中的测试系统id和功能点id到对象库页面
+        toObjectRepo: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var transactId = selectedInput.attr('id');
+                var autId = $('#autSelect').val();
+                location.href = "objectRepo.html?autId=" + autId + "&" + "transactId=" + transactId;
+            }
         },
 
     },
@@ -224,7 +239,7 @@ function setval() {
     var getVal = thisURL.split('?')[1];
     var oneVal = getVal.split('=')[1];
     $("#autSelect").val(oneVal);
-        $.ajax({
+    $.ajax({
         url: 'http://10.108.226.152:8080/ATFCloud/transactController/transactqueryByPage',
         type: 'POST',
         data: {
@@ -284,4 +299,3 @@ function queryTransact() {
         }
     });
 }
-
