@@ -58,3 +58,18 @@ function resort(target){
     sendQuery(currentPage,updatePagination); 
 }
 //重新排序 结束
+
+// *******************************************
+//  * FunctionName: selectElements(nodeList, className)
+//  * FunctinoDescription: 用于选取元素
+//  * @param: isSelect: Boolean ---> 用于改变
+//            nodeList: NodeList  ---> 需要被选取的元素集合
+//            className:String ---> 被选中后元素应用的样式的类名
+//  * return: null
+//  *******************************************
+//  function selectElements(isSelect, nodeList, className){
+//     document.addEventListener('mousedown', function(event){
+//         var seleList = [];
+
+//     });
+//  }

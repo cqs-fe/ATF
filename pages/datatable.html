@@ -125,7 +125,7 @@
                     <option>functionC</option>
                 </select>
             </div>
-            <div class="selectDiv" v-show="dataPoolType==4 || dataPoolType==5">
+            <div class="selectDiv" v-show="(dataPoolType==4 || dataPoolType==5 ) && type==1">
                 <div class="label"></div>
                 <div class="right-div">
                     <label><input type="radio" v-model="dataWritable" value="writable" checked>可读可写</label>
