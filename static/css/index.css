@@ -81,3 +81,8 @@
 .icon-angle-right, .icon-angle-left{
     display: block;
 }
+@media screen and (min-width: 768px){
+    .modal-lg{
+        width: 900px;
+    }
+}
