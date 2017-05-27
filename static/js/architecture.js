@@ -274,6 +274,7 @@ var app = new Vue({
                 isparameter = $('#methodForm select[name="isparameter"]').val(),
                 waittime = $('#methodForm input[name="waittime"]').val(),
                 timeout = $('#methodForm input[name="timeout"]').val();
+                tableToJson();
             $.ajax({
                 url: 'http://10.108.226.152:8080/ATFCloud/methodController/update',
                 type: 'post',
@@ -281,7 +282,7 @@ var app = new Vue({
                     "id": app.methodId,
                     "methodname": methodname,
                     "methoddescription": methoddescription,
-                    "parameterlist": '',
+                    "parameterlist": paraList,
                     "objectcode": objectcode,
                     "arcclassid": app.classId,
                     "isparameter": isparameter,
@@ -301,6 +302,26 @@ var app = new Vue({
             });
         }
     },
+    //获取参数列表
+    tableToJson(){
+        var paraList='[',
+            pTable=$('#pTable'),
+            pRow=pTable.find('tr'),
+            pCol=pRow[0].find('th');
+        for(var j=1;j<pRow.length;j++){
+            var r='{';
+            for(var i=1;i<pCol.length;i++){
+                var tds=pRow[j].find('td');
+                r+="\""+pCol[i].innerHTML+"\"\:\""+tds[i].innerHTML+"\",";
+            }
+            r=r.substring(0,r.length-1);
+            r+="},";
+            paraList+=r;
+        }
+        paraList=paraList.substring(0,paraList.length-1);
+        paraList+="]";
+        return paraList;
+    }
 });
 
 /*architree start*/
