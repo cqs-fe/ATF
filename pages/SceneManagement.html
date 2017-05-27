@@ -6,7 +6,6 @@
     <link rel="import" href="./common/header.html?__inline">
     <link rel="import" href="./noLoginAlert.html?__inline">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/handsontable.full.css">
     <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
@@ -29,82 +28,462 @@
     <div class="content">
         <!--main content start-->
         <section id="main-content">
-            <section class="content-wrapper">
+            <section class="content-wrapper" :class={'bigMarginBottom':!tooltipFlag,'smallMarginBottom':tooltipFlag}>
                 <main class="main">
-                    <!-- breadcrumb start -->
-                    <ul class="breadcrumb">
-                        <li><a href="scene.html"><i class="icon-home"></i> 场景管理</a></li>
-                        <li><a href="#" class="active">银行交易</a></li>
-                    </ul>
-                    <!-- breadcrumb end -->
-                    <div class="top-btn">
-                        <button class="btn btn-white"><i class="icon-trash"></i> 移除用例
-                        </button>
-                        <button class="btn btn-white"><i class="icon-calendar"></i> 执行时间规划
-                        </button>
-                        <button class="btn btn-white"><i class="icon-retweet"></i> 执行过程控制
-                        </button>
-                        <button class="btn btn-white" id="saveAll"><i class=" icon-cog"></i> 触发器设置
-                        </button>
-                        <button class="btn btn-white" id="saveAll"><i class=" icon-forward"></i> 调试
-                        </button>
+
+                    <div class="route-position">
+                        <a href="">场景管理</a>
+                        <span> > </span>
+                        <a href="">银行交易1</a>
                     </div>
-                    <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':flag,'height200px':!flag}">
-                        <div class="panel-heading">调试结果
-                            <button type="button" class="close" id="btn-closetooltip" @click="toggle">
-                                <i :class="{'icon-resize-full':flag,'icon-resize-small':!flag}"></i></button>
-                        </div>
-                        <div class="panel-body">
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                            窗前明月光，疑是地上霜</br>
-                            举头望明月，低头思故乡</br>
-                        </div>
+                    <div class="top-bar">
+                        <button class="btn btn-white"><i class="icon-remove"></i>
+                        移除用例</button>
+                        <button class="btn btn-white"><i class="icon-calendar"></i>
+                        执行时间规划</button>
+                        <button class="btn btn-white"><i class="icon-cog"></i>
+                        触发器设置</button>
+                        <button class="btn btn-white"><i class="icon-retweet"></i>
+                        执行过程控制</button>
+                        <button class="btn btn-white"><i class="icon-cogs"></i>
+                        数据资源配置</button>
+                        <button class="btn btn-white"><i class="icon-wrench"></i>
+                        调试</button>
+                        <button class="btn btn-white"><i class="icon-file"></i>
+                        生成报告</button>
                     </div>
+                    <div class="main-content">
+                        <div class="case-lib">
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                        </div>
+                        <div class="case-lib">
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="" >
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="" >
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="" >
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="" >
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                        </div>
+                        <div class="case-lib">
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                            <div class="case">
+                                <div class="case-header">
+                                    <input type="checkbox" name="" class="">
+                                    <p>用例名称</p>
+                                </div>
+                                <div class="case-main">
+                                    <p>用例描述</p>
+                                </div>
+                                <footer class="case-footer">
+                                    <i class="icon-remove success-flag"></i>
+                                </footer>
+                            </div>
+                        </div>
+
+                    </div>
+                    
                 </main>
             </section>
+
+            <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':tooltipFlag, 'height200px': !tooltipFlag}">
+              <div class="panel-heading">
+              <span v-show="tooltipType===1">执行时间规划</span>
+              <span v-show="tooltipType===2">触发器设置</span>
+              <span v-show="tooltipType===3">执行过程控制</span>
+              <span v-show="tooltipType===4">数据资源池配置</span>
+              <span v-show="tooltipType===5">调试</span>
+
+              <button type="button" class="close" id="btn-closetooltip" @click="toggleTooltip">
+              <i :class="{'icon-resize-full':tooltipFlag,'icon-resize-small':!tooltipFlag}"></i>
+              
+              </button></div>
+              <div class="panel-body">
+                <!-- 执行时间规划 -->
+                <div v-show="tooltipType===1" class="timeArrange">
+                    <div>
+                        <label>执行时间</label>
+                        <input type="date" name="">
+                        <input type="time" name="">
+                    </div>
+                    <div>
+                        <label>执行时间标识</label>
+                        <span>T + </span>
+                        <input type="text" name="">
+                    </div>
+                </div>
+                <!-- 触发器设置 -->
+                <div v-show="tooltipType===2" class="triggerSetting">
+                    <div>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-plus"></i>
+                            新增
+                        </button>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-remove"></i>
+                            删除
+                        </button>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-edit"></i>
+                            编辑
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th scope="col">选择</th>
+                                    <th scope="col">触发器名称</th>
+                                    <th scope="col">描述</th>
+                                    <th scope="col">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="">
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td>
+                                        <select>
+                                            <option>启用</option>
+                                            <option>禁用</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <button class="btn btn-info triggerSave">
+                            保存
+                        </button>
+                    </div>
+                </div>
+                <!-- 执行过程控制 -->
+                <div class="processControl" v-show="tooltipType===3">
+                    <p>执行策略选择
+                        <i class="">:</i></p>
+                        <div class="strategy-wrapper wrapper-div">
+                            <div class="strategy-group">
+                                <span class="group-name">用例级</span>
+                                <div class="select-wrapper">
+                                    <div class="select-group">
+                                        <label>执行状态策略</label>
+                                        <select>
+                                            <option>跳过成功执行的案例</option>
+                                            <option>不跳过成功执行的案例</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="strategy-group">
+                                <span class="group-name">流程节点级</span>
+                                <div class="select-wrapper">
+                                    <div class="select-group">
+                                        <label>起始节点策略</label>
+                                        <select>
+                                            <option>从第一个未成功动作</option>
+                                            <option>从第一个成功动作</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-group">
+                                        <label>执行顺序策略</label>
+                                        <select>
+                                            <option>顺序无关执行</option>
+                                            <option>顺序相关执行</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-group">
+                                        <label>执行顺序策略</label>
+                                        <select>
+                                            <option>顺序无关执行</option>
+                                            <option>顺序相关执行</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-group">
+                                        <label>执行状态策略</label>
+                                        <select>
+                                            <option>跳过成功执行的案例</option>
+                                            <option>不跳过成功执行的案例</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="strategy-group">
+                                <span class="group-name">组合用例级</span>
+                                <div class="select-wrapper">
+                                    <div class="select-group">
+                                        <label>起始用例策略</label>
+                                        <select>
+                                            <option>从第一个未成功动作</option>
+                                            <option>从第一个成功动作</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-group">
+                                        <label>执行顺序策略</label>
+                                        <select>
+                                            <option>顺序无关执行</option>
+                                            <option>顺序相关执行</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-group">
+                                        <label>执行顺序策略</label>
+                                        <select>
+                                            <option>顺序无关执行</option>
+                                            <option>顺序相关执行</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-group">
+                                        <label>执行状态策略</label>
+                                        <select>
+                                            <option>跳过成功执行的案例</option>
+                                            <option>不跳过成功执行的案例</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <p>错误处理模式：</p>
+                    <div class="option-wrapper wrapper-div">
+                        <div class="select-wrapper">
+                             <div class="select-group">
+                                <label>出错操作</label>
+                                <select>
+                                    <option>继续执行下一个用例</option>
+                                    <option>不执行下一个用例</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="processControl-footer">
+                        <button class="btn btn-info processControlSave">保存</button>
+                    </div>
+                </div>
+                <!-- 数据资源池设置 -->
+                <div v-show="tooltipType===4" class="dataPool">
+                    <div>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-plus"></i>
+                            新增
+                        </button>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-remove"></i>
+                            删除
+                        </button>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-edit"></i>
+                            编辑
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th scope="col">选择</th>
+                                    <th scope="col">数据名称</th>
+                                    <th scope="col">数据值</th>
+                                    <th scope="col">数据描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="">
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td>
+                                        <select>
+                                            <option>启用</option>
+                                            <option>禁用</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <button class="btn btn-info triggerSave">
+                            保存
+                        </button>
+                    </div>
+                </div>
+              </div>
+            </div>
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>
         <!--main content end-->
     </div>
     <!--content end -->
+
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
     <script src="../static/js/Vac.js"></script>
+    <script src="../static/js/scene-management.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
     <script type="text/javascript">
-    (function() {
-
-        var tooltipwindow = new Vue({
-            el: '#tooltipwindow',
-            data: {
-                flag: true
-            },
-            methods: {
-                toggle: function() {
-                    this.flag = !this.flag;
-                }
+        document.querySelector('.sidebar-toggle-box').addEventListener('click',function(){
+            if(document.body.offsetWidth <= 768){
+                return;
             }
-        });
-    })();
+            document.querySelector('.panel').style.width = document.querySelector('#sidebar').style.marginLeft === "-180px" ? "100%" : "calc(100% - 180px)";
+            document.querySelector('.copy-right').style.width = document.querySelector('#sidebar').style.marginLeft === "-180px" ? "100%" : "calc(100% - 180px)";
+        }, false);
+        window.addEventListener('resize', function(){
+            document.querySelector('.panel').style.width = 
+                (document.body.offsetWidth <= 768 ||
+                 document.querySelector('#sidebar').style.marginLeft === "-180px") ? "100%" : "calc(100% - 180px)";
+            document.querySelector('.copy-right').style.width = 
+            (document.body.offsetWidth <= 768 ||
+             document.querySelector('#sidebar').style.marginLeft === "-180px") ? "100%" : "calc(100% - 180px)";
+        },false);
     </script>
 </body>
 

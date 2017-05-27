@@ -51,7 +51,7 @@ $(document).ready(function(){
 				},
 				hide: function(){
 					this.isShow = false;
-					this.trData = [];
+					// this.trData = [];
 				},
 				saveData: function(){
 					var finalString = '';
@@ -82,8 +82,8 @@ $(document).ready(function(){
 				getCursortPosition: function(ctrl){
 					var CaretPos = 0;	// IE Support
 					if (document.selection) {
-					ctrl.focus ();
-						var Sel = document.selection.createRange ();
+						ctrl.focus();
+						var Sel = document.selection.createRange();
 						Sel.moveStart ('character', -ctrl.value.length);
 						CaretPos = Sel.text.length;
 					}
