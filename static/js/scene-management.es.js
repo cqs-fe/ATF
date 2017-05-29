@@ -4,12 +4,12 @@ var vBody = new Vue({
 		isSelect: false,
 		tooltipFlag: false,
 		tooltipType: 4,
+		conditionTr: '<tr><td><select class="form-control"></select></td><td><select class="form-control"></select></td><td contenteditable="true"></td><td class="text-center"><a class="btn btn-success btn-sm" @click="addCondition($event)">增加</a>  <a class="btn btn-danger btn-sm" @click="delCondition($event)">删除</a></td></tr>',
+		action:'<div class="action"><div class="form-group"><label class="col-lg-2 control-label">选择操作</label><div class="col-lg-3"><select class="form-control"></select></div><label class="col-lg-2 control-label">脚本类型</label><div class="col-lg-3"><select class="form-control"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">脚本内容</label><div class="col-lg-8"><textarea class="form-control" rows="5"></textarea></div></div><div class="form-group"><div class="col-lg-2 col-lg-offset-10"><a class="btn btn-danger" @click="delAction($event)">删除</a></div></div></div>',
 	},
 	created: function(){
 		// 用于初始化 滑动鼠标选取元素
 		this.setSelectListener();
-		
-
 	},
 	methods: {
 		setSelect: function(event){
@@ -101,6 +101,25 @@ var vBody = new Vue({
 		toggleTooltip: function(event){
 			console.log('he')
 			this.tooltipFlag = !this.tooltipFlag;
+		},
+		//增加执行条件 
+		addCondition(e){
+			var curTbody=$(e.target).parent().parent().parent();
+			curTbody.append(this.conditionTr);
+		},
+		//删除执行条件
+		delCondition(e){
+			console.log('del')
+			var curCondition=$(e.target).parent().parent();
+			curCondition.remove();
+		},
+		//添加动作
+		addAction(){
+			$('#addAction').prepend(this.action);
+		},
+		//删除动作
+		delAction(e){
+			$(e.target).parent().parent().parent().remove();
 		}
 	}
 });

@@ -150,5 +150,8 @@ html, body {
     bottom: 0;
     height: 50px;
     bottom: 0; }
-
+.action{
+  border: 1px solid #ccc;
+  padding-top: 10px;
+}
 /*# sourceMappingURL=scene-management.css.map */
