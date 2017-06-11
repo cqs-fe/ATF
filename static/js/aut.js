@@ -143,7 +143,7 @@ var app = new Vue({
         },
 
         //传递当前页选中测试系统id到功能点页面
-        to: function() {
+        toTransact: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
@@ -151,7 +151,17 @@ var app = new Vue({
                 var selectedId = selectedInput.attr('id');
                 location.href = "transact.html?selectedId=" + selectedId;
             }
-        }
+        },
+        //传递当前页选中测试系统id到自动化构件维护页面
+        toComponent: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var selectedId = selectedInput.attr('id');
+                location.href = "component.html?selectedId=" + selectedId;
+            }
+        },
 
     },
 
