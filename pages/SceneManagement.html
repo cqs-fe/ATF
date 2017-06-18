@@ -19,6 +19,116 @@
 </head>
 
 <body id="v-body">
+    <div class="editTrigger" v-show="triggerShow" style="z-index: 1000;display: none;">
+       <header class="editTrigger-header">
+            <span class="editTrigger-title">{{triggerInfo.editTriggerType}}触发器</span>
+            <span class="icon-remove" @click="closeTrigger();"></span>
+        </header>
+        <main class="editTrigger-main">
+            <div class="trigger-name-wrapper trigger-item-wrapper">
+                <label class="trigger-label">触发器名称:</label>
+                <input type="text" name="" v-model="editTriggerData.name">
+            </div>
+            <div class="trigger-desc-wrapper trigger-item-wrapper">
+                <label class="trigger-label">描述:</label>
+                <textarea rows="4" v-model="editTriggerData.desc"></textarea>
+            </div>
+            <div class="trigger-item-wrapper trigger-time-wrapper">
+                <label class="trigger-label">执行时机:</label>
+                <div class="checkbox-wrapper">
+                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">场景执行前</label>
+                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">场景执行后</label>
+                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">用例执行前</label>
+                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">用例执行后</label>
+                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">元素对象方法执行前</label>
+                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">元素对象方法执行后</label>
+                </div>
+            </div>
+            <div class="trigger-condition-wrapper trigger-item-wrapper">
+                <label class="trigger-label">执行条件</label>
+                <div class="radio-button-wrapper">
+                    <label class="radio-item"><input type="radio" name="" value="1" v-model="editTriggerData.Conditionrelate">满足以下所有条件</label>
+                    <label class="radio-item"><input type="radio" name="" value="1" v-model="editTriggerData.Conditionrelate">满足一下任一条件</label>
+                    <label class="radio-item"><input type="radio" name="" value="1" v-model="editTriggerData.Conditionrelate">无条件限制</label>
+                </div>
+            </div>
+            <div class="trigger-item-wrapper trigger-table-wrapper">
+                <table>
+                    <thead>
+                        <tr> 
+                            <th scope="col">条件名称</th>
+                            <th scope="col">匹配方式</th>
+                            <th scope="col">匹配值</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select>
+                                    <option>用例编号</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>等于</option>
+                                </select>
+                            </td>
+                            <td></td>
+                            <td>
+                                <button class="btn btn-default" @click="addTriggerCondition();">增加</button>
+                                <button class="btn btn-default">删除</button>
+                            </td>
+                        </tr>
+                         <tr v-for="(item, index) in editTriggerData.conditions">
+                            <td>
+                                <select>
+                                    <option>用例编号</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select>
+                                    <option>等于</option>
+                                </select>
+                            </td>
+                            <td></td>
+                            <td>
+                                <button class="btn btn-default">增加</button>
+                                <button class="btn btn-default" @click="removeTriggerCondition(index)">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="trigger-item-wrapper trigger-action-wrapper">
+                <label class="trigger-label">执行动作: </label>
+                <button class="btn-item-add" @click="addTriggerAction();"><span class="icon-plus"></span></button>
+                <div class="action-item-wrapper" v-for="(item, index) in editTriggerData.actions">
+                    <button class="" @click="removeTriggerAction(index);"><span class="icon-remove"></span></button>
+                    <div class="item-row">
+                        <label>选择操作</label>
+                        <select>
+                            <option>发送邮件</option>
+                        </select>
+                    </div>
+                    <div class="item-row">
+                        <label>脚本类型</label>
+                        <select>
+                            <option>groovy</option>
+                        </select>
+                    </div>
+                    <div class="item-row">
+                        <label>脚本内容</label>
+                        <textarea rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <button class="btn btn-info">取消</button>
+            <button class="btn btn-info">确定</button>
+        </footer>
+    </div>
         <!--header start-->
         <link rel="import" href="./common/header-guide.html?__inline">
         <!--header end-->
@@ -38,183 +148,58 @@
                     <div class="top-bar">
                         <button class="btn btn-white"><i class="icon-remove"></i>
                         移除用例</button>
-                        <button class="btn btn-white"><i class="icon-calendar"></i>
+                        <button class="btn btn-white" @click="operationType(1);"><i class="icon-calendar"></i>
                         执行时间规划</button>
-                        <button class="btn btn-white"><i class="icon-cog"></i>
+                        <button class="btn btn-white" @click="operationType(2);"><i class="icon-cog"></i>
                         触发器设置</button>
-                        <button class="btn btn-white"><i class="icon-retweet"></i>
+                        <button class="btn btn-white" @click="operationType(3);"><i class="icon-retweet"></i>
                         执行过程控制</button>
-                        <button class="btn btn-white"><i class="icon-cogs"></i>
-                        数据资源配置</button>
-                        <button class="btn btn-white"><i class="icon-wrench"></i>
+                        <button class="btn btn-white" @click="operationType(4);"><i class="icon-cogs"></i>
+                        数据资源池配置</button>
+                        <button class="btn btn-white" @click="operationType(5);"><i class="icon-wrench"></i>
                         调试</button>
                         <button class="btn btn-white"><i class="icon-file"></i>
                         生成报告</button>
                     </div>
                     <div class="main-content">
-                        <div class="case-lib">
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
+                        <div class="check-all-case"><input type="checkbox"  @change="checkall($event)"></div>
+                        <div class="case-lib" v-for="case_wrapper in sceneInfo.caseDtos">
+                            <div class="checkbox-wrapper">
+                                <!-- <label>全选</label> -->
+                                <input type="checkbox" class="checkall" @change="checkallToggle($event);">
                             </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                        </div>
-                        <div class="case-lib">
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="" >
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="" >
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="" >
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="" >
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
+                            <div class="case-wrapper">
+                                <template v-if="case_wrapper.caseCompositeType == '1'">
+                                    <div class="case" >
+                                        <div class="case-header">
+                                            <input type="checkbox" name="" class="check-case">
+                                            <p>{{case_wrapper.id}}</p>
+                                        </div>
+                                        <div class="case-main">
+                                            <p>{{case_wrapper.casecode}}</p>
+                                        </div>
+                                        <footer class="case-footer">
+                                            <i class="icon-remove success-flag"></i>
+                                        </footer>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="case" v-for="item in case_wrapper.flowNodeDtos">
+                                        <div class="case-header">
+                                            <input type="checkbox" name="" class="check-case">
+                                            <p>{{item.id}}</p>
+                                        </div>
+                                        <div class="case-main">
+                                            <p>{{item.casecode}}</p>
+                                        </div>
+                                        <footer class="case-footer">
+                                            <i class="icon-remove success-flag"></i>
+                                        </footer>
+                                    </div>
+                                </template>
+                                
                             </div>
                         </div>
-                        <div class="case-lib">
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                            <div class="case">
-                                <div class="case-header">
-                                    <input type="checkbox" name="" class="">
-                                    <p>用例名称</p>
-                                </div>
-                                <div class="case-main">
-                                    <p>用例描述</p>
-                                </div>
-                                <footer class="case-footer">
-                                    <i class="icon-remove success-flag"></i>
-                                </footer>
-                            </div>
-                        </div>
-                        
                     </div>
                     
                 </main>
@@ -245,11 +230,16 @@
                         <span>T + </span>
                         <input type="text" name="">
                     </div>
+                     <div>
+                        <button class="btn btn-info exeTimeSave">
+                            保存
+                        </button>
+                    </div>
                 </div>
                 <!-- 触发器设置 -->
                 <div v-show="tooltipType===2" class="triggerSetting">
                     <div>
-                        <button type="button" class="btn btn-white">
+                        <button type="button" class="btn btn-white" @click="openTrigger(1);">
                             <i class="icon-plus"></i>
                             新增
                         </button>
@@ -257,13 +247,13 @@
                             <i class="icon-remove"></i>
                             删除
                         </button>
-                        <button type="button" class="btn btn-white">
+                        <button type="button" class="btn btn-white" @click="openTrigger(2);">
                             <i class="icon-edit"></i>
                             编辑
                         </button>
                     </div>
                     <div class="table-wrapper">
-                        <table border="1">
+                        <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th scope="col">选择</th>
@@ -273,16 +263,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="radio" name="">
-                                    </td>
-                                    <td>
-                                        
-                                    </td>
-                                    <td>
-                                        
-                                    </td>
+                                <tr v-for="item in triggers">
+                                    <td><input type="checkbox" :value="item.id" v-model="triggerInfo.selectedTrigger" @change="test();"></td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.desc}}</td>
                                     <td>
                                         <select>
                                             <option>启用</option>
@@ -309,9 +293,10 @@
                                 <div class="select-wrapper">
                                     <div class="select-group">
                                         <label>执行状态策略</label>
-                                        <select>
-                                            <option>跳过成功执行的案例</option>
-                                            <option>不跳过成功执行的案例</option>
+                                        <select v-model="exe_strategy.exe_strategy1_status">
+                                            <option value="0">保持原样不做处理</option>
+                                            <option value="1">全部重新执行</option>
+                                            <option value="2">跳过执行成功的案例</option>
                                         </select>
                                     </div>
                                 </div>
@@ -322,30 +307,26 @@
                                 <div class="select-wrapper">
                                     <div class="select-group">
                                         <label>起始节点策略</label>
-                                        <select>
-                                            <option>从第一个未成功动作</option>
-                                            <option>从第一个成功动作</option>
+                                        <select v-model="exe_strategy.exe_strategy2_start">
+                                             <option value="0">保持原样不做处理</option>
+                                            <option value="1">从第一个节点开始</option>
+                                            <option value="2">从第一个执行失败的节点开始</option>
                                         </select>
                                     </div>
                                     <div class="select-group">
                                         <label>执行顺序策略</label>
-                                        <select>
-                                            <option>顺序无关执行</option>
-                                            <option>顺序相关执行</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <label>执行顺序策略</label>
-                                        <select>
-                                            <option>顺序无关执行</option>
-                                            <option>顺序相关执行</option>
+                                        <select v-model="exe_strategy.exe_strategy2_order">
+                                            <option value="0">保持原样不做处理</option>
+                                            <option value="1">顺序无关执行</option>
+                                            <option value="2">强制顺序执行</option>
                                         </select>
                                     </div>
                                     <div class="select-group">
                                         <label>执行状态策略</label>
-                                        <select>
-                                            <option>跳过成功执行的案例</option>
-                                            <option>不跳过成功执行的案例</option>
+                                        <select v-model="exe_strategy.exe_strategy2_status">
+                                            <option value="0">保持原样不做处理</option>
+                                            <option value="1">全部重新执行</option>
+                                            <option value="2">跳过执行成功的案例</option>
                                         </select>
                                     </div>
                                 </div>
@@ -356,30 +337,26 @@
                                 <div class="select-wrapper">
                                     <div class="select-group">
                                         <label>起始用例策略</label>
-                                        <select>
-                                            <option>从第一个未成功动作</option>
-                                            <option>从第一个成功动作</option>
+                                        <select v-model="exe_strategy.exe_strategy3_start">
+                                             <option value="0">保持原样不做处理</option>
+                                            <option value="1">从第一个节点开始</option>
+                                            <option value="2">从第一个执行失败的节点开始</option>
                                         </select>
                                     </div>
                                     <div class="select-group">
                                         <label>执行顺序策略</label>
-                                        <select>
-                                            <option>顺序无关执行</option>
-                                            <option>顺序相关执行</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-group">
-                                        <label>执行顺序策略</label>
-                                        <select>
-                                            <option>顺序无关执行</option>
-                                            <option>顺序相关执行</option>
+                                       <select v-model="exe_strategy.exe_strategy3_order">
+                                            <option value="0">保持原样不做处理</option>
+                                            <option value="1">顺序无关执行</option>
+                                            <option value="2">强制顺序执行</option>
                                         </select>
                                     </div>
                                     <div class="select-group">
                                         <label>执行状态策略</label>
-                                        <select>
-                                            <option>跳过成功执行的案例</option>
-                                            <option>不跳过成功执行的案例</option>
+                                        <select v-model="exe_strategy.exe_strategy3_status">
+                                            <option value="0">保持原样不做处理</option>
+                                            <option value="1">全部重新执行</option>
+                                            <option value="2">跳过执行成功的案例</option>
                                         </select>
                                     </div>
                                 </div>
@@ -390,15 +367,17 @@
                         <div class="select-wrapper">
                              <div class="select-group">
                                 <label>出错操作</label>
-                                <select>
-                                    <option>继续执行下一个用例</option>
-                                    <option>不执行下一个用例</option>
+                                <select v-model="exe_strategy.exe_strategy_err">
+                                    <option value="0">保持原样不做处理</option>
+                                    <option value="1">出错后终止</option>
+                                    <option value="2">出错后继续执行</option>
+                                    <option value="3">出错后由用户选择</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="processControl-footer">
-                        <button class="btn btn-info processControlSave">保存</button>
+                        <button class="btn btn-info processControlSave" @click="saveStrategy();">保存</button>
                     </div>
                 </div>
                 <!-- 数据资源池设置 -->
@@ -461,7 +440,19 @@
         <!--main content end-->
     </div>
     <!--content end -->
-
+        <!-- 提示框 -->
+    <div class="alert" :class="{ show:alertShow, hide:!alertShow }" id="alert" >
+        <header class="alert-header bg-info">
+            <span>提示信息</span>
+            <button type="button" class="close" ><i class="icon-remove" @click="hideAlert()"></i></button>
+        </header>
+        <main class="alert-main">
+            <p class="">{{ tooltipMessage }}</p>
+        </main>
+        <footer class="alert-footer">
+            <button type="button" class="btn btn-primary" @click="hideAlert()">确定</button>
+        </footer>
+    </div>
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
     <script src="../static/js/Vac.js"></script>
