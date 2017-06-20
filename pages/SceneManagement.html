@@ -135,6 +135,7 @@
         <!--sidebar start-->
         <link rel="import" href="./common/aside-guide.html?__inline">
         <!--sidebar end-->
+
     <div class="content">
         <!--main content start-->
         <section id="main-content">
@@ -146,6 +147,7 @@
                         <a href="">银行交易1</a>
                     </div>
                     <div class="top-bar">
+
                         <button class="btn btn-white"><i class="icon-remove"></i>
                         移除用例</button>
                         <button class="btn btn-white" @click="operationType(1);"><i class="icon-calendar"></i>
@@ -198,12 +200,14 @@
                                     </div>
                                 </template>
                                 
+
                             </div>
                         </div>
                     </div>
                 </main>
             </section>
             <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':tooltipFlag, 'height200px': !tooltipFlag}">
+
               <div class="panel-heading">
               <span v-show="tooltipType===1">执行时间规划</span>
               <span v-show="tooltipType===2">触发器设置</span>
@@ -274,10 +278,12 @@
                                 </tr>
                             </tbody>
                         </table>
+
                     </div>
                     <!-- 触发器设置 -->
                     <div v-show="tooltipType===2" class="triggerSetting">
                         <div>
+
                             <button type="button" class="btn btn-white" data-toggle="modal" href="#insertTrigger">
                                 <i class="icon-plus"></i> 新增
                             </button>
@@ -287,6 +293,7 @@
                             <button type="button" class="btn btn-white" data-toggle="modal" href="#updateTrigger">
                                 <i class="icon-edit"></i> 编辑
                             </button>
+
                         </div>
                         <div class="table-wrapper">
                             <table border="1">
@@ -400,6 +407,7 @@
                                 </div>
                             </div>
                         </div>
+
                     <p>错误处理模式：</p>
                     <div class="option-wrapper wrapper-div">
                         <div class="select-wrapper">
@@ -411,12 +419,14 @@
                                     <option value="2">出错后继续执行</option>
                                     <option value="3">出错后由用户选择</option>
                                 </select>
+
                             </div>
                         </div>
                         <div class="processControl-footer">
                             <button class="btn btn-info processControlSave">保存</button>
                         </div>
                     </div>
+
                     <div class="processControl-footer">
                         <button class="btn btn-info processControlSave" @click="saveStrategy();">保存</button>
                     </div>
@@ -551,16 +561,20 @@
                         <div class="modal-footer">
                             <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
                             <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="">确定</button>
+
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- insertTriggerModal end -->
+
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>
         <!--main content end-->
     </div>
     <!--content end -->
+
         <!-- 提示框 -->
     <div class="alert" :class="{ show:alertShow, hide:!alertShow }" id="alert" >
         <header class="alert-header bg-info">
@@ -574,6 +588,7 @@
             <button type="button" class="btn btn-primary" @click="hideAlert()">确定</button>
         </footer>
     </div>
+
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
     <script src="../static/js/Vac.js"></script>
