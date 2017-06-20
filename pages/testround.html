@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <link rel="import" href="./common/header.html?__inline">
+    <link rel="import" href="./noLoginAlert.html?__inline">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../static/css/base.scss"> -->
+    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/scene-management.css">
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/vue.js"></script>
+    <title>Testphase Manager</title>
+    <style>
+    </style>
+</head>
+
+<body id="v-body">
+    <!--header start-->
+    <link rel="import" href="./common/header-guide.html?__inline">
+    <!--header end-->
+    <!--sidebar start-->
+    <link rel="import" href="./common/aside-guide.html?__inline">
+    <!--sidebar end-->
+    <div class="content">
+        <!--main content start-->
+        <section id="main-content" >
+            <section class="content-wrapper" style="margin-bottom: 50px;">
+                <main class="main">
+                    <div class="route-position">
+                        <a href="">测试计划</a>
+                        <span> > </span>
+                        <a href="">测试轮次</a>
+                    </div>
+                    <div class="main-content" id="testround-main">
+                       <form id="test-options" class=" form-horizontal form-inline">
+                           <div class="form-group col-sm-6">
+                               <label class="option-name control-label col-sm-3">测试阶段</label>
+                                <div class="col-sm-9">
+                                    <select class="testphase form-control" v-model="testphaseValue">
+                                        <option v-for="item in testphases" v-bind:value="item.id">{{item.phasename}}</option>
+                                    </select>
+                                </div>
+                           </div>
+                           <div class="form-group col-sm-6">
+                               <label class="option-name control-label col-sm-3">
+                                   测试轮次
+                               </label>
+                               <div class="col-sm-9">
+                                   <select class="testround form-control" v-model="testroundValue">
+                                   <option v-for="item in testrounds" v-bind:value="item.id">{{item.roundname}}
+                                   </option>
+                               </select>
+                               </div>
+                           </div>
+                           <div class="form-group col-sm-6">
+                               <label class="option-name col-sm-3 control-label">
+                                   执行轮次
+                               </label>
+                               <div class="col-sm-9">
+                                   <input type="text" class="form-control" name="" v-model="executeRound">
+                               </select>
+                               </div>
+                               
+                           </div>
+                            <div class="form-group col-sm-6">
+                               <label class="option-name col-sm-3 control-label">
+                                   执行范围
+                               </label>
+                               <div class="col-sm-9">
+                                   <select class="execute-range form-control" v-model="executeRange">
+                                   <option value="1">所有</option>
+                                   <option value="2">已选择</option>
+                               </select>
+                               </div>
+                               
+                           </div>
+                       </form>
+                       <div class="test-control container">
+                           <button class="btn btn-info" @click="executeAll()">批量执行</button>
+                            <button class="btn btn-info" @click="addScene();">添加场景</button>
+                       </div>
+                       <div class="case-list-wrapper list-wrapper">
+                           <span class="case-list-title list-title">用例列表</span>
+                           <div class="case-list">
+                               <div v-for="item in testcases">
+                                   {{item.caseId}}
+                               </div>
+                           </div>
+                       </div>
+                        <div class="scene-list-wrapper list-wrapper" v-for="scene in testscenes">
+                           <span class="scene-list-title list-title">{{scene.sceneName}}</span>
+                           <div class="scene-list">
+                                <div v-for="case in scene.testCaseList" class="case-item">  {{case.caseId}}</div>
+                             
+                           </div>
+                        </div>
+                    </div>
+                </main>
+            </section>
+
+            <link rel="import" href="./common/copy-right.html?__inline">
+        </section>
+        <!--main content end-->
+    </div>
+    <!--content end -->
+
+    <div class="modal fade" id="add-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">新增场景</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="th">
+                                    <input type="checkbox" @change="selectAll($event);">全选
+                                </th>
+                                <th scope="col">场景名称</th>
+                                <th scope="col">场景描述</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="scene in allscenes">
+                                <td><input type="checkbox" v-model="selectedScene" v-bind:value="scene.sceneId"></td>
+                                <td>{{scene.sceneName}}</td>
+                                <td>{{scene.sceneDesc}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" @click="sendSceneData()">确认</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- 提示框 -->
+    <div class="alert" :class="{ show:alertShow, hide:!alertShow }" id="alert" >
+        <header class="alert-header bg-info">
+            <span>提示信息</span>
+            <button type="button" class="close" ><i class="icon-remove" @click="hideAlert()"></i></button>
+        </header>
+        <main class="alert-main">
+            <p class="">{{ tooltipMessage }}</p>
+        </main>
+        <footer class="alert-footer">
+            <button type="button" class="btn btn-primary" @click="hideAlert()">确定</button>
+        </footer>
+    </div>
+    <script src="../static/js/config.js"></script>
+    <script src="../static/js/vac-functions.es.js"></script>
+    <script src="../static/js/Vac.js"></script>
+    <script src="../static/js/testround.es.js"></script>
+    <script src="../../lib/common-scripts.js"></script>
+</body>
+
+</html>

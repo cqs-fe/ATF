@@ -1,17 +1,82 @@
 var vBody = new Vue({
 	el: '#v-body',
 	data: {
+		sceneId: 5,
 		isSelect: false,
 		tooltipFlag: false,
 		tooltipType: 4,
-		conditionTr: '<tr><td><select class="form-control"></select></td><td><select class="form-control"></select></td><td contenteditable="true"></td><td class="text-center"><a class="btn btn-success btn-sm" @click="addCondition($event)">增加</a>  <a class="btn btn-danger btn-sm" @click="delCondition($event)">删除</a></td></tr>',
-		action:'<div class="action"><div class="form-group"><label class="col-lg-2 control-label">选择操作</label><div class="col-lg-3"><select class="form-control"></select></div><label class="col-lg-2 control-label">脚本类型</label><div class="col-lg-3"><select class="form-control"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">脚本内容</label><div class="col-lg-8"><textarea class="form-control" rows="5"></textarea></div></div><div class="form-group"><div class="col-lg-2 col-lg-offset-10"><a class="btn btn-danger" @click="delAction($event)">删除</a></div></div></div>',
+		triggerShow: false,
+
+		alertShow: false,
+		tooltipMessage: '',
+
+		sceneInfo: null,
+		triggers: null,
+		triggerInfo: {
+			selectedTrigger: [],
+			editTriggerType: '编辑'
+		},
+		// 保存触发器编辑的字段数据
+		editTriggerData:{
+			sceneid: 2,
+			name: "",
+			desc:'',
+			occasions: [],
+			Conditionrelate: null,
+			conditions: [1,2],
+			actions: []
+		},
+		// 保存执行策略的数据
+		exe_strategy: {
+			sceneId: '3',
+			exe_strategy1_status: '',
+			exe_strategy2_start: '',
+			exe_strategy2_order: '',
+			exe_strategy2_status: '',
+			exe_strategy3_start: '',
+			exe_strategy3_order: '',
+			exe_strategy3_status: '',
+			exe_strategy_err: ''
+		}
 	},
 	created: function(){
 		// 用于初始化 滑动鼠标选取元素
 		this.setSelectListener();
+		// 用于页面加载时获取所有的用例
+		this.getCases();
 	},
 	methods: {
+		test: function(){
+			console.log(this.triggerInfo.selectedTrigger);
+		},
+		getCases: function(){
+			var _this = this;
+			$.ajax({
+				url: address + 'sceneController/selectByPrimaryKey',
+				data: 'id=5',
+				type: 'post',
+				dataType: 'json',
+				success: function(data, statusText){
+					if(data.success == true){
+						_this.sceneInfo = data.obj;
+					}
+				}
+			});
+		},
+		getTriggers: function(){
+			var _this = this;
+			$.ajax({
+				url: address + 'trigerController/trigerqueryinScene',
+				data: 'sceneId=2',
+				type: 'post',
+				dataType: 'json',
+				success: function(data){
+					if(data.success == true){
+						_this.triggers = data.obj;
+					}
+				}
+			});
+		},
 		setSelect: function(event){
 			var target  = event.target;
 			var fileNodes = document.querySelectorAll(".case input[type='checkbox']");
@@ -36,6 +101,7 @@ var vBody = new Vue({
 			var moveAfterY = null;
 			event.stopPropagation();
 			event.preventDefault();
+			var selectedRange = [];
 			target.addEventListener('mousemove', mouseMoveFunction, false);
 			target.addEventListener('mouseup', (event) => {
 				this.isSelect = true;
@@ -44,18 +110,31 @@ var vBody = new Vue({
 				}
 				target.removeEventListener('mousemove', mouseMoveFunction, false);
 				selDiv = null;
+				var caseLib = document.querySelectorAll('.case-lib');
+				for(var i=0; i<caseLib.length; i++){
+					var inputs = Array.from(caseLib[i].getElementsByClassName('check-case'));
+					if(inputs.every(function(value){
+						if(value.checked===true)
+							{return true;} 
+						return false;
+					})){
+						caseLib[i].getElementsByClassName('checkall')[0].checked = true;
+					} else {
+						caseLib[i].getElementsByClassName('checkall')[0].checked = false;
+					}
+				}
 			}, false);
 
 
 			function mouseMoveFunction(event){
 				// 如果已经选取过，则
-				if (this.isSelect) {
-					var inputs = document.querySelectorAll(".case input[checked]");
-					for(var i = 0; i < inputs.length; i++){
-						inputs[i].removeAttribute("checked");
-					}
-					this.isSelect = false;
-				}
+				// if (this.isSelect) {
+				// 	var inputs = document.querySelectorAll(".case input[checked]");
+				// 	for(var i = 0; i < inputs.length; i++){
+				// 		inputs[i].removeAttribute("checked");
+				// 	}
+				// 	this.isSelect = false;
+				// }
 				if(selDiv.style.display == 'none'){
 					selDiv.style.display = "block";
 				}
@@ -73,15 +152,23 @@ var vBody = new Vue({
 
 				var _l = selDiv.offsetLeft, _t = selDiv.offsetTop;
 				var _w = selDiv.offsetWidth, _h = selDiv.offsetHeight;
-
-				for (var i = 0 ; i < fileNodes.length; i++) {
+				
+				for(var i=0; i < fileNodes.length; i++){
 					var inputRight = fileNodes[i].offsetLeft + fileNodes[i].offsetWidth;
 					var inputBottom = fileNodes[i].offsetTop + fileNodes[i].offsetHeight;
-
 					if( inputRight > _l && inputBottom > _t && fileNodes[i].offsetLeft < _l + _w && fileNodes[i].offsetTop < _t + _h) {
-						fileNodes[i].setAttribute("checked","true");
-					}else{
-						fileNodes[i].removeAttribute("checked");
+						if(!selectedRange.includes(fileNodes[i])){
+							selectedRange.push(fileNodes[i]);
+						}
+					}
+				}
+				for(var i=0; i<selectedRange.length; i++){
+					var inputRight = selectedRange[i].offsetLeft + selectedRange[i].offsetWidth;
+					var inputBottom = selectedRange[i].offsetTop + selectedRange[i].offsetHeight;
+					if( inputRight > _l && inputBottom > _t && selectedRange[i].offsetLeft < _l + _w && selectedRange[i].offsetTop < _t + _h) {
+						selectedRange[i].checked = true;
+					} else {
+						selectedRange[i].checked = false;
 					}
 				}
 				event.stopPropagation();
@@ -97,29 +184,76 @@ var vBody = new Vue({
 					event.stopPropagation();
 				}, false);
 			}
+			// var checkall = document.querySelectorAll('.checkall');
 		},
 		toggleTooltip: function(event){
 			console.log('he')
 			this.tooltipFlag = !this.tooltipFlag;
 		},
-		//增加执行条件 
-		addCondition(e){
-			var curTbody=$(e.target).parent().parent().parent();
-			curTbody.append(this.conditionTr);
+		//打开tooltipWindow，并根据传入的参数显示相应的操作内容
+		operationType: function(type){
+			this.tooltipType = type;
+			this.tooltipFlag = false;
+			// 触发器设置
+			if(type === 2){
+				this.getTriggers();
+			}
 		},
-		//删除执行条件
-		delCondition(e){
-			console.log('del')
-			var curCondition=$(e.target).parent().parent();
-			curCondition.remove();
+		// 打开关闭触发器设置的弹出框
+		closeTrigger: function(){
+			this.triggerShow = false;
 		},
-		//添加动作
-		addAction(){
-			$('#addAction').prepend(this.action);
+		openTrigger: function(type){
+			this.triggerShow = true;
+			if(type === 1){
+				this.triggerInfo.editTriggerType = "新增";
+			}else{
+				this.triggerInfo.editTriggerType = "编辑";
+			}
 		},
-		//删除动作
-		delAction(e){
-			$(e.target).parent().parent().parent().remove();
+		// 全选case-lib中的case
+		checkallToggle: function(event){
+			var flag = event.target.checked;
+			var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
+			for(var i=0; i<inputs.length; i++){
+				inputs[i].checked = flag;
+			}
+		},
+		checkall: function(event){
+			var checkboxs = document.querySelectorAll('.case-lib input');
+			for(var i=0,m=checkboxs.length; i<m; i++){
+				checkboxs[i].checked = event.target.checked;
+			}
+		},
+		addTriggerCondition: function(){
+			this.editTriggerData.conditions.push({});
+		},
+		removeTriggerCondition: function(index){
+			this.editTriggerData.conditions.splice(index,1);
+		},
+		addTriggerAction: function(){
+			this.editTriggerData.actions.push({});
+		},
+		removeTriggerAction: function(index){
+			this.editTriggerData.actions.splice(index,1);
+		},
+		saveStrategy: function(){
+			console.log('he');
+			var _this = this;
+			$.ajax({
+				url: address + 'sceneController/set',
+				data: _this.exe_strategy,
+				dataType: 'json',
+				type: 'post',
+				success: function(data){
+					console.log(data)
+					_this.alertShow = true;
+					_this.tooltipMessage = data.msg;
+				}
+			});
+		},
+		hideAlert: function(){
+			this.alertShow = false;
 		}
 	}
 });

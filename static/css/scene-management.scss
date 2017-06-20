@@ -4,6 +4,147 @@ html, body{
 }
 $globleRed: #FF6C60;
 $okGreen: #66F60C;
+.editTrigger {
+	position: absolute;
+	display: block;
+	width: 750px;
+	height: 600px;
+	left: 50%;
+	top: 50%;
+	margin-left: -375px;
+	margin-top: -300px;
+	background-color: #fff;
+	border: 1px solid #888;
+	overflow: auto;
+	textarea {
+		width: calc(100% - 100px);
+		resize: none;
+	}
+	header {
+		box-sizing: border-box;
+		height: 30px;
+		padding: 4px 10px;
+		margin: 0;
+		background-color: #f1f2f7;
+		border-bottom: 1px solid #ccc;
+		font-size: 15px;
+		.icon-remove {
+			float: right;
+			font-size: 22px;
+			color: $globleRed;
+
+		}
+
+	}
+	main {
+		height: 523px;
+		overflow: auto;
+		margin: 0;
+		padding: 10px 10px;
+		.trigger-item-wrapper {
+			margin-bottom: 10px;
+			.trigger-label {
+				display: inline-block;
+				width: 85px;
+				margin-right: 5px;
+				text-align: right;
+				vertical-align: top;
+			}
+			& > div {
+				display: inline-block;
+				width: calc(100% - 95px);
+			}
+			
+		}
+		.trigger-time-wrapper {
+			.checkbox-wrapper {
+				.checkbox-item {
+					margin-right: 10px;
+					font-weight: 100;
+					color: #000;
+				}
+			}
+
+		}
+		.trigger-condition-wrapper {
+			.radio-item {
+				margin-right: 10px;
+				color: #000;
+				font-weight: 100;
+			}
+		}
+		.trigger-table-wrapper {
+			table {
+				margin-left: 30px;
+				width: calc(100% - 30px);
+				font-size: 14px;
+				font-weight: 100;
+				border-collapse: collapse;
+				border: 1px solid #333;
+				text-align: center;
+				select {
+					padding: 3px;
+				}
+				th,td {
+					text-align: center;
+					border: 1px solid #333;
+					padding: 5px 0;
+				}
+				td {
+					button {margin-right:30px;}
+					button:last-child {margin-right: 0;}
+					.btn {
+						padding: 0 3px;
+					}
+				}
+			}
+		}
+		.trigger-action-wrapper {
+			.btn-item-add{
+				padding: 2px;
+				border: none;
+				background-color:#fff;
+			}
+			.icon-plus {
+				color: $globleRed;
+			}
+			.action-item-wrapper {
+				position: relative;
+				width: calc(100% - 30px);
+				margin-left: 30px;
+				padding: 10px 15px;
+				border: 1px dashed #888;
+				&>button {
+					position:absolute;
+					top: 5px;
+					right: 10px;
+					padding: 2px;
+					color: $globleRed;
+					border: none;
+					background-color:#fff;
+				}
+				.item-row {
+					margin-bottom: 5px;
+				}
+				label {
+					margin-right: 10px;
+				}
+				textarea {
+					width: calc(100% - 70px);
+				}
+			}
+		}
+	}
+	footer {
+		height: 30px;
+		margin-bottom: 15px;
+		text-align: center;
+		&:first-child {
+			margin-right: 20px;
+		}
+	}
+}
+
 #main-content{
 	position: relative;
 	display:flex;
@@ -52,6 +193,23 @@ $okGreen: #66F60C;
 				padding: 10px 20px;
 				.case-lib {
 					margin-bottom: 20px;
+					border: 1px dashed #ddd;
+					padding: 5px;
+
+					.checkbox-wrapper {
+						display: inline-block;
+						height: 100%;
+						width: 30px;
+						vertical-align: top;
+						padding: 5px 8px;
+						input {
+							float: left;
+						}
+					}
+					.case-wrapper {
+						display: inline-block;
+						width: calc(100% - 40px);
+					}
 				}
 				.case-lib:last-child {
 					margin-bottom: 0;
@@ -59,7 +217,9 @@ $okGreen: #66F60C;
 				.case {
 					flex: 1 0 auto;
 					display: inline-block;
-					border: 1px solid red;
+					margin-bottom: 5px;
+					margin-left: 5px;
+					border: 1px solid #ccc;
 					border-radius: 5px;
 					$caseHeaderheight: 30px;
 					.case-header {
@@ -89,6 +249,19 @@ $okGreen: #66F60C;
 						i.icon-ok {
 							color: $okGreen;
 						}
+					}
+				}
+
+				// testphase css
+				table#testphase-table {
+					td,th {
+						text-align: center;
+					}
+					tr :first-child {
+						width: 50px;
+					}
+					tr :nth-of-type(2){
+						width: 30%;
 					}
 				}
 			}
@@ -135,17 +308,37 @@ $okGreen: #66F60C;
 					color: $globleRed;
 				}
 			}
+			.timeArrange {
+				div {
+					margin-top: 10px;
+					button {
+						float: right;
+						margin-right: 50px;
+					}
+				}
+			}
 			.triggerSetting {
 				.table-wrapper {
 					margin: 20px 0;
 				}
 				table {
 					width: 100%;
-					th {
+					th,td{
 						text-align: center;
 					}
-					td {
-						text-align: center;
+					
+				}
+				.table {
+					tr {
+						th:first-child, td:first-child{
+							width: 50px;
+						}
+						th:nth-child(2){
+							width: 200px;
+						}
+						th:nth-child(4){
+							width: 100px;
+						}
 					}
 				}
 				.triggerSave{
@@ -172,6 +365,9 @@ $okGreen: #66F60C;
 						.select-group {
 							display: inline-block;
 							margin: 0 5px;
+							select {
+								padding: 3px 5px;
+							}
 						}
 					}
 				}
@@ -223,4 +419,98 @@ $okGreen: #66F60C;
 		// width: 100%;
 		bottom: 0;
 	}
+
+	#test-options{
+		overflow: hidden;
+		.form-group{
+			margin-bottom: 10px;
+		}
+	}
+	#testround-main{
+		.test-control{
+			margin: 10px;
+		}
+		.list-wrapper{
+			display: flex;
+			margin-top: 10px;
+			.list-title{
+				flex: 0 0 auto;
+				vertical-align: top;
+				margin-right: 10px;
+			}
+			.case-list, .scene-list {
+				display: flex;
+				flex: 1 1 auto;
+				border: 1px dashed #ddd;
+				.case-item {
+					display: inline-block;
+					flex: 1 1 auto;
+					margin: 10px;
+				}
+			}
+		}
+	}
+}
+.modal {
+	.modal-header {
+		// margin: 5px 10px;
+		padding: 8px 10px;
+		h4 {
+			font-size: 16px;
+		}
+	}
+	.modal-footer {
+		padding: 8px 10px;
+		button {
+			padding: 3px 8px;
+		}
+	}
+}
+.alert{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	width: 300px;
+	z-index: 1041;
+	padding: 0;
+	header {
+		height: 35px;
+		padding: 0px 10px;
+		background-color: #00A8B3;
+		span {
+			font-size: 16px;
+			color: #fff;
+			line-height: 35px;
+		}
+		button{
+			height: 35px;
+			i {
+				line-height: 35px;
+			}
+		}
+		
+	}
+	main {
+		min-height: 100px;
+		padding: 10px 5px;
+		p {
+			font-size: 16px;
+			color: #b94a48;
+		}
+	}
+	footer {
+		button {
+			display: block;
+			padding: 5px;
+			margin: 0 auto;
+		}
+	}
+	background-color: #fff;
+}
+.show {
+	display: none;
+}
+.hide {
+	display: block;
 }
