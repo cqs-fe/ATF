@@ -2,6 +2,110 @@ html, body {
   height: 100%;
   position: relative; }
 
+.editTrigger {
+  position: absolute;
+  display: block;
+  width: 750px;
+  height: 600px;
+  left: 50%;
+  top: 50%;
+  margin-left: -375px;
+  margin-top: -300px;
+  background-color: #fff;
+  border: 1px solid #888;
+  overflow: auto; }
+  .editTrigger textarea {
+    width: calc(100% - 100px);
+    resize: none; }
+  .editTrigger header {
+    box-sizing: border-box;
+    height: 30px;
+    padding: 4px 10px;
+    margin: 0;
+    background-color: #f1f2f7;
+    border-bottom: 1px solid #ccc;
+    font-size: 15px; }
+    .editTrigger header .icon-remove {
+      float: right;
+      font-size: 22px;
+      color: #FF6C60; }
+  .editTrigger main {
+    height: 523px;
+    overflow: auto;
+    margin: 0;
+    padding: 10px 10px; }
+    .editTrigger main .trigger-item-wrapper {
+      margin-bottom: 10px; }
+      .editTrigger main .trigger-item-wrapper .trigger-label {
+        display: inline-block;
+        width: 85px;
+        margin-right: 5px;
+        text-align: right;
+        vertical-align: top; }
+      .editTrigger main .trigger-item-wrapper > div {
+        display: inline-block;
+        width: calc(100% - 95px); }
+    .editTrigger main .trigger-time-wrapper .checkbox-wrapper .checkbox-item {
+      margin-right: 10px;
+      font-weight: 100;
+      color: #000; }
+    .editTrigger main .trigger-condition-wrapper .radio-item {
+      margin-right: 10px;
+      color: #000;
+      font-weight: 100; }
+    .editTrigger main .trigger-table-wrapper table {
+      margin-left: 30px;
+      width: calc(100% - 30px);
+      font-size: 14px;
+      font-weight: 100;
+      border-collapse: collapse;
+      border: 1px solid #333;
+      text-align: center; }
+      .editTrigger main .trigger-table-wrapper table select {
+        padding: 3px; }
+      .editTrigger main .trigger-table-wrapper table th, .editTrigger main .trigger-table-wrapper table td {
+        text-align: center;
+        border: 1px solid #333;
+        padding: 5px 0; }
+      .editTrigger main .trigger-table-wrapper table td button {
+        margin-right: 30px; }
+      .editTrigger main .trigger-table-wrapper table td button:last-child {
+        margin-right: 0; }
+      .editTrigger main .trigger-table-wrapper table td .btn {
+        padding: 0 3px; }
+    .editTrigger main .trigger-action-wrapper .btn-item-add {
+      padding: 2px;
+      border: none;
+      background-color: #fff; }
+    .editTrigger main .trigger-action-wrapper .icon-plus {
+      color: #FF6C60; }
+    .editTrigger main .trigger-action-wrapper .action-item-wrapper {
+      position: relative;
+      width: calc(100% - 30px);
+      margin-left: 30px;
+      padding: 10px 15px;
+      border: 1px dashed #888; }
+      .editTrigger main .trigger-action-wrapper .action-item-wrapper > button {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        padding: 2px;
+        color: #FF6C60;
+        border: none;
+        background-color: #fff; }
+      .editTrigger main .trigger-action-wrapper .action-item-wrapper .item-row {
+        margin-bottom: 5px; }
+      .editTrigger main .trigger-action-wrapper .action-item-wrapper label {
+        margin-right: 10px; }
+      .editTrigger main .trigger-action-wrapper .action-item-wrapper textarea {
+        width: calc(100% - 70px); }
+  .editTrigger footer {
+    height: 30px;
+    margin-bottom: 15px;
+    text-align: center; }
+    .editTrigger footer:first-child {
+      margin-right: 20px; }
+
 #main-content {
   position: relative;
   display: flex;
@@ -44,13 +148,28 @@ html, body {
         background-color: #fff;
         padding: 10px 20px; }
         #main-content .content-wrapper .main .main-content .case-lib {
-          margin-bottom: 20px; }
+          margin-bottom: 20px;
+          border: 1px dashed #ddd;
+          padding: 5px; }
+          #main-content .content-wrapper .main .main-content .case-lib .checkbox-wrapper {
+            display: inline-block;
+            height: 100%;
+            width: 30px;
+            vertical-align: top;
+            padding: 5px 8px; }
+            #main-content .content-wrapper .main .main-content .case-lib .checkbox-wrapper input {
+              float: left; }
+          #main-content .content-wrapper .main .main-content .case-lib .case-wrapper {
+            display: inline-block;
+            width: calc(100% - 40px); }
         #main-content .content-wrapper .main .main-content .case-lib:last-child {
           margin-bottom: 0; }
         #main-content .content-wrapper .main .main-content .case {
           flex: 1 0 auto;
           display: inline-block;
-          border: 1px solid red;
+          margin-bottom: 5px;
+          margin-left: 5px;
+          border: 1px solid #ccc;
           border-radius: 5px; }
           #main-content .content-wrapper .main .main-content .case .case-header {
             height: 30px;
@@ -71,6 +190,12 @@ html, body {
               color: red !important; }
             #main-content .content-wrapper .main .main-content .case .case-footer i.icon-ok {
               color: #66F60C; }
+        #main-content .content-wrapper .main .main-content table#testphase-table td, #main-content .content-wrapper .main .main-content table#testphase-table th {
+          text-align: center; }
+        #main-content .content-wrapper .main .main-content table#testphase-table tr :first-child {
+          width: 50px; }
+        #main-content .content-wrapper .main .main-content table#testphase-table tr :nth-of-type(2) {
+          width: 30%; }
   #main-content .bigMarginBottom {
     margin-bottom: 250px; }
   #main-content .smallMarginBottom {
@@ -102,14 +227,23 @@ html, body {
         color: #444; }
         #main-content .panel .panel-body button i {
           color: #FF6C60; }
+      #main-content .panel .panel-body .timeArrange div {
+        margin-top: 10px; }
+        #main-content .panel .panel-body .timeArrange div button {
+          float: right;
+          margin-right: 50px; }
       #main-content .panel .panel-body .triggerSetting .table-wrapper {
         margin: 20px 0; }
       #main-content .panel .panel-body .triggerSetting table {
         width: 100%; }
-        #main-content .panel .panel-body .triggerSetting table th {
+        #main-content .panel .panel-body .triggerSetting table th, #main-content .panel .panel-body .triggerSetting table td {
           text-align: center; }
-        #main-content .panel .panel-body .triggerSetting table td {
-          text-align: center; }
+      #main-content .panel .panel-body .triggerSetting .table tr th:first-child, #main-content .panel .panel-body .triggerSetting .table tr td:first-child {
+        width: 50px; }
+      #main-content .panel .panel-body .triggerSetting .table tr th:nth-child(2) {
+        width: 200px; }
+      #main-content .panel .panel-body .triggerSetting .table tr th:nth-child(4) {
+        width: 100px; }
       #main-content .panel .panel-body .triggerSetting .triggerSave {
         float: right;
         margin-right: 20px; }
@@ -125,6 +259,8 @@ html, body {
           #main-content .panel .panel-body .processControl .wrapper-div .strategy-group .select-group {
             display: inline-block;
             margin: 0 5px; }
+            #main-content .panel .panel-body .processControl .wrapper-div .strategy-group .select-group select {
+              padding: 3px 5px; }
       #main-content .panel .panel-body .processControl .processControl-footer .processControlSave {
         float: right; }
       #main-content .panel .panel-body .dataPool .table-wrapper {
@@ -150,5 +286,73 @@ html, body {
     bottom: 0;
     height: 50px;
     bottom: 0; }
+  #main-content #test-options {
+    overflow: hidden; }
+    #main-content #test-options .form-group {
+      margin-bottom: 10px; }
+  #main-content #testround-main .test-control {
+    margin: 10px; }
+  #main-content #testround-main .list-wrapper {
+    display: flex;
+    margin-top: 10px; }
+    #main-content #testround-main .list-wrapper .list-title {
+      flex: 0 0 auto;
+      vertical-align: top;
+      margin-right: 10px; }
+    #main-content #testround-main .list-wrapper .case-list, #main-content #testround-main .list-wrapper .scene-list {
+      display: flex;
+      flex: 1 1 auto;
+      border: 1px dashed #ddd; }
+      #main-content #testround-main .list-wrapper .case-list .case-item, #main-content #testround-main .list-wrapper .scene-list .case-item {
+        display: inline-block;
+        flex: 1 1 auto;
+        margin: 10px; }
+
+.modal .modal-header {
+  padding: 8px 10px; }
+  .modal .modal-header h4 {
+    font-size: 16px; }
+.modal .modal-footer {
+  padding: 8px 10px; }
+  .modal .modal-footer button {
+    padding: 3px 8px; }
+
+.alert {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  z-index: 1041;
+  padding: 0;
+  background-color: #fff; }
+  .alert header {
+    height: 35px;
+    padding: 0px 10px;
+    background-color: #00A8B3; }
+    .alert header span {
+      font-size: 16px;
+      color: #fff;
+      line-height: 35px; }
+    .alert header button {
+      height: 35px; }
+      .alert header button i {
+        line-height: 35px; }
+  .alert main {
+    min-height: 100px;
+    padding: 10px 5px; }
+    .alert main p {
+      font-size: 16px;
+      color: #b94a48; }
+  .alert footer button {
+    display: block;
+    padding: 5px;
+    margin: 0 auto; }
+
+.show {
+  display: none; }
+
+.hide {
+  display: block; }
 
 /*# sourceMappingURL=scene-management.css.map */
