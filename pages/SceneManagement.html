@@ -9,19 +9,14 @@
     <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/datatable.css">
     <link rel="stylesheet" type="text/css" href="../static/css/scene-management.css">
     <script src="../lib/jquery.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="../lib/vue.js"></script>
     <title>Scene Manager</title>
-    <style>
-
-    </style>
 </head>
 
 <body id="v-body">
-
     <div class="editTrigger" v-show="triggerShow" style="z-index: 1000;display: none;">
        <header class="editTrigger-header">
             <span class="editTrigger-title">{{triggerInfo.editTriggerType}}触发器</span>
@@ -281,60 +276,18 @@
                                 </tr>
                             </tbody>
                         </table>
-
                     </div>
-                    <!-- 触发器设置 -->
-                    <div v-show="tooltipType===2" class="triggerSetting">
-                        <div>
-                            <a class="btn btn-white" data-toggle="modal" href="#insertTrigger">
-                                <i class="icon-plus"></i> 新增
-                            </a>
-                            <a class="btn btn-white">
-                                <i class="icon-remove"></i> 删除
-                            </a>
-                            <a class="btn btn-white" data-toggle="modal" href="#updateTrigger">
-                                <i class="icon-edit"></i> 编辑
-                            </a>
-                        </div>
-                        <div class="table-wrapper">
-                            <table border="1">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">选择</th>
-                                        <th scope="col">触发器名称</th>
-                                        <th scope="col">描述</th>
-                                        <th scope="col">状态</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type="radio" name="">
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td>
-                                            <select>
-                                                <option>启用</option>
-                                                <option>禁用</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div>
-                            <button class="btn btn-info triggerSave">
-                                保存
-                            </button>
-                        </div>
+                    <div>
+                        <button class="btn btn-info triggerSave">
+                            保存
+                        </button>
                     </div>
+                </div>
                     <!-- 执行过程控制 -->
-                    <div class="processControl" v-show="tooltipType===3">
+                <div class="processControl" v-show="tooltipType===3">
                         <p>执行策略选择
-                            <i class="">:</i></p>
+                            <i class="">:</i>
+                        </p>
                         <div class="strategy-wrapper wrapper-div">
                             <div class="strategy-group">
                                 <span class="group-name">用例级</span>
@@ -432,122 +385,42 @@
                         <button class="btn btn-info processControlSave" @click="saveStrategy();">保存</button>
                     </div>
                 </div>
-            </div>
-            <!-- insertTriggerModal start -->
-            <div class="modal fade" id="insertTrigger" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">添加触发器</h4>
-                        </div>
-                        <div class="modal-body">
-                            <!-- modal-body start -->
-                            <form id="insertForm" class="form-horizontal" role="form">
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">名称</label>
-                                    <div class="col-lg-3">
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                    <label class="col-lg-2 control-label">描述</label>
-                                    <div class="col-lg-4">
-                                        <textarea class="form-control" rows="4" name="aut_desc"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label"> 执行时机：</label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" v-model="" value="">场景执行前
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" v-model="" value="">场景执行后
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" v-model="" value="">用例执行前
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" v-model="" value="">用例执行后
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" v-model="" value="">元素对象方法执行前
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" v-model="" value="">元素对象方法执行后
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label"> 执行条件：</label>
-                                    <label class="radio-inline">
-                                        <input type="radio" v-model="" value="" name="condition">满足以下所有条件
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" v-model="" value="" name="condition">满足以下任一条件
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" v-model="" value="" name="condition">无条件限制
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-lg-12">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th  class="text-center">条件名称</th>
-                                                    <th  class="text-center">匹配方式</th>
-                                                    <th  class="text-center">匹配值</th>
-                                                    <th  class="text-center">操作</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option>用例编号</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option>等于</option>
-                                                        </select>
-                                                    </td>
-                                                    <td contenteditable="true"></td>
-                                                    <td class="text-center">
-                                                        <a class="btn btn-success btn-sm" @click="addCondition($event)">增加</a>
-                                                        <a class="btn btn-danger btn-sm" @click="delCondition($event)">删除</a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label"> 执行动作：</label>
-                                    <!-- <div class="col-lg-2">
-                                        <a href="" class="btn btn-success" @click="addAction()">增加动作</a>
-                                    </div> -->
-                                </div>
-                                <div class="action">
-                                    <div class="form-group">
-                                        <label class="col-lg-2 control-label">选择操作</label>
-                                        <div class="col-lg-3">
-                                            <select class="form-control">
-                                                <option></option>
-                                            </select>
-                                        </div>
-                                        <label class="col-lg-2 control-label">脚本类型</label>
-                                        <div class="col-lg-3">
-                                            <select class="form-control">
-                                                <option></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-2 control-label">脚本内容</label>
-                                        <div class="col-lg-8">
-                                            <textarea class="form-control" rows="5"></textarea>
-                                        </div>
+                <!-- 数据资源池设置 -->
+                <div v-show="tooltipType===4" class="dataPool">
+                    <div>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-plus"></i>
+                            新增
+                        </button>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-remove"></i>
+                            删除
+                        </button>
+                        <button type="button" class="btn btn-white">
+                            <i class="icon-edit"></i>
+                            编辑
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th scope="col">选择</th>
+                                    <th scope="col">数据名称</th>
+                                    <th scope="col">数据值</th>
+                                    <th scope="col">数据描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="">
+                                    </td>
+                                    <td>
                                         
-
+                                    </td>
+                                    <td>
+                                        
                                     </td>
                                     <td>
                                         <select>
@@ -568,7 +441,6 @@
                 </div>
             </div>
 
->>>>>>> c1f7e653a72f55ba06db673d69f1fc8e494f2909
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>
         <!--main content end-->
