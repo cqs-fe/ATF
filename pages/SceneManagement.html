@@ -19,6 +19,7 @@
 </head>
 
 <body id="v-body">
+
     <div class="editTrigger" v-show="triggerShow" style="z-index: 1000;display: none;">
        <header class="editTrigger-header">
             <span class="editTrigger-title">{{triggerInfo.editTriggerType}}触发器</span>
@@ -169,6 +170,7 @@
                             <div class="checkbox-wrapper">
                                 <!-- <label>全选</label> -->
                                 <input type="checkbox" class="checkall" @change="checkallToggle($event);">
+
                             </div>
                             <div class="case-wrapper">
                                 <template v-if="case_wrapper.caseCompositeType == '1'">
@@ -546,6 +548,7 @@
                                             <textarea class="form-control" rows="5"></textarea>
                                         </div>
                                         
+
                                     </div>
                                     <div class="form-group">
                                         <div class="col-lg-2 col-lg-offset-10">
@@ -563,6 +566,7 @@
                             <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="">确定</button>
 
                         </div>
+
                     </div>
                 </div>
             </div>
