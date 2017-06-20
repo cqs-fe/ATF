@@ -25,7 +25,9 @@
                     <div class="col-lg-12">
                         <ul class="breadcrumb">
                             <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
-                            <li><a href="#" class="active"> <span>“阿里巴巴”</span>自动化构件维护</a></li>
+                            <li>
+                                <a href="#" class="active"> <span class="autName">"被测系统名称"</span>自动化构件维护</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -34,7 +36,7 @@
                     <div class="col-lg-4 archi">
                         <section class="panel" id="">
                             <header class="panel-heading">
-                                阿里巴巴
+                                <span class="autName">被测系统名称</span>
                             </header>
                             <div class="elementContent">
                                 <section class="panel">
@@ -63,6 +65,10 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </section>
+                            </div>
+                            <div class="elementContent method-content">
+                                <section class="panel">
                                     <div class="property">
                                         方法
                                         <a class="btn btn-white btn-sm pull-right" data-toggle="modal" href="#addMethodModal"><i class="icon-plus"></i></a>
@@ -73,8 +79,8 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
-                                                    <th style="">名称</th>
-                                                    <th style="width:80%">描述</th>
+                                                    <th style="width:15%">名称</th>
+                                                    <th>描述</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="methodProp">
@@ -98,7 +104,7 @@
                             <header class="panel-heading">
                                 {{className}}
                             </header>
-                            <div class="elementContent">
+                            <div class="rightContent">
                                 <form class="form-horizontal panel-pad" id="classForm">
                                     <div class="form-group">
                                         <label class="col-lg-2 control-label">名称</label>
@@ -111,18 +117,18 @@
                                         </div>
                                     </div>
                                 </form>
-                                <a class="btn btn-info" @click="updateClass">保存</a>
+                                <a class="btn btn-info rightBtn" @click="updateClass">保存</a>
                             </div>
                         </section>
                     </div>
                     <!-- class end -->
                     <!-- method start -->
                     <div class="col-lg-8">
-                        <section class="panel" id="methodSection" style="display: none;">
+                        <section class="panel" id="methodSection" style="display:none;">
                             <header class="panel-heading">
                                 {{methodName}}
                             </header>
-                            <div class="elementContent">
+                            <div class="rightContent">
                                 <form class="form-horizontal panel-pad" id="methodForm">
                                     <div class="form-group">
                                         <label class="col-lg-2 control-label">名称</label>
@@ -134,7 +140,27 @@
                                             <input type="text" name="description" class="form-control" value="">
                                         </div>
                                     </div>
-                                 <!--    <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">mtype</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="mtype" class="form-control" value="">
+                                        </div>
+                                        <label class="col-lg-2 control-label">author</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="author" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">outputvaluedesc</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="outputvaluedesc" class="form-control" value="">
+                                        </div>
+                                        <label class="col-lg-2 control-label">inputargdesc</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="inputargdesc" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <!--    <div class="form-group">
                                         <label class="col-lg-2 control-label">有无参数</label>
                                         <div class="col-lg-3">
                                             <select class="form-control" name="isPara">
@@ -168,29 +194,28 @@
                                                     <td contenteditable="true"></td>
                                                     <td contenteditable="true"></td>
                                                     <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label class="col-lg-2 control-label">等待时间</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="waittime" class="form-control" value="">
                                         </div>
-   <!--                                      <label class="col-lg-2 control-label">超时时间</label>
+                                        <label class="col-lg-2 control-label">超时时间</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="timeout" class="form-control" value="">
-                                        </div> -->
-                                    </div>
-                                    <div class="form-group">
+                                        </div>
+                                    </div> -->
+                                   <!--  <div class="form-group">
                                         <label class="col-lg-2 control-label">目标代码</label>
                                         <div class="col-lg-9">
                                             <textarea class="form-control" rows="10" name="objectcode"></textarea>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </form>
-                                <a class="btn btn-info" @click="updateMethod">保存</a>
+                                <a class="btn btn-info rightBtn" @click="updateMethod">保存</a>
                             </div>
                         </section>
                     </div>
@@ -255,7 +280,6 @@
                                                     <input type="text" class="form-control" name="descname" id="">
                                                 </div>
                                             </div>
-
                                         </form>
                                     </section>
                                     <!-- modal-body end -->
@@ -293,6 +317,36 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="col-lg-3 control-label">mtype</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="mtype" id="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">author</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="author" id="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">maintainTime</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="maintainTime" id="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">outputvaluedesc</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="outputvaluedesc" id="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">inputargdesc</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="inputargdesc" id="">
+                                                </div>
+                                            </div>
+                                            <!--                      <div class="form-group">
                                                 <label class="col-lg-3 control-label">有无参数</label>
                                                 <div class="col-lg-3">
                                                     <select class="form-control" name="isparameter">
@@ -316,7 +370,7 @@
                                                 <div class="col-lg-9">
                                                     <textarea class="form-control" rows="10" name="objectcode"></textarea>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </form>
                                     </section>
                                     <!-- modal-body end -->

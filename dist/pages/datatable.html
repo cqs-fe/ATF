@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta content="telephone=no" name="format-detection"/>
+<meta content="email=no" name="format-detection"/>
+
+
+    <div class="modal fade" id="vac-nologin-alert" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				用户尚未登录，请点击<a href="Login.html" style="color:#b94a48;">这里</a>进行登录！
+			</div>
+			<div class="modal-footer" style="text-align: center;">
+				<button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- successModal start -->
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">操作成功</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>操作成功！</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- successModal end -->
+        <!-- failModal start -->
+        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">操作失败</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>操作失败！</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- failModal end -->
+<!--     <script type="text/javascript" src="../lib/ZeroClipboard.min.js"></script> -->
+    <title>Case Manager</title>
+    <style>
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="/public/static/css/base_47dea65.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/index_e779e19.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/handsontable.full_9a522af.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/pagination_64872d5.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/metroStyle_5a9c382.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/datatable_a27cce1.css" />
+</head>
+
+<body id="v-body">
+    <div id="searchBox" v-show="isShow" class="searchBox" style="display: none;">
+            <header class="searchBox-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'searchBox');" ondrag="dragController.searchBoxDrag(event,'searchBox')">
+                <span class="searchBox-title">查找与替换</span>
+                <span class="icon-remove" @click="hide();"></span>
+            </header>
+            <main class="searchBox-body">
+                <ul>
+                    <li class="tab" :class="{'active':!searOrRep}" @click="showSearch">查找</li>
+                    <li class="tab" :class="{'active':searOrRep}" @click="showReplace">替换</li>
+                </ul>
+                <div class="tab-wrapper">
+                    <div class="tab-content">
+                       <div class="">
+                           <label>查找内容：</label>
+                           <input type="text" placeholder="请输入关键字" v-model="keyword" id="input-search">
+                           <button id="btn-search" type="button" @click="search">查找</button>
+                       </div>
+                       <div class="" id="replaceDiv" v-show="searOrRep">
+                            <label>替换为：</label>
+                            <input type="text" v-model="newword">
+                       </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="searchBox-footer">
+                <button class="btn btn-white" v-show="searOrRep" @click="replaceAll()">全部替换</button>
+                <button class="btn btn-white" v-show="searOrRep" @click="replace()">替换</button>
+                <button class="btn btn-white" @click="findNext()">查找下一个</button>
+                <button class="btn btn-white" @click="hide();">关闭</button>
+            </footer>
+    </div>
+    <div id="editData" v-show="isShow" class="editData searchBox" style="display: block;">
+        <header class="editData-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'editData');" ondrag="dragController.searchBoxDrag(event,'editData')">
+            <span class="editData-title">编辑数据项</span>
+            <span class="icon-remove" @click="hide();"></span>
+        </header>
+        <main class="editData-body container">
+            <div class="before-operation operation">
+                <label>前置操作</label>
+                <div></div>
+            </div>
+            <div class="type-wrapper" >
+                <label class="">数据类型</label>
+                <div><input type="radio" name="type" value="1" v-model="dataType">文本</div>
+                <div><input type="radio" name="type" value="2" v-model="dataType">空文本</div>
+                <div><input type="radio" name="type" value="3" v-model="dataType">去除语句</div>
+                <div><input type="radio" name="type" value="4" v-model="dataType">表达式</div>
+            </div>
+            <form class="data-content form-inline">
+                <div class="form-group" v-show="dataType==4">
+                    <div class="input-group">
+                        <div class="input-group-addon">{expr=</div>
+                        <input type="text" id="input4" class="form-control" name="">
+                        <div class="input-group-addon">}</div>
+                    </div>
+                </div>
+                <div class="form-group " v-show="dataType==2">
+                    <input type="text" id="input2" class="form-control" name="" readonly="true" value="nil">
+                </div>
+                <div class="form-group" v-show="dataType==3">
+                    <input type="text" id="input3" class="form-control" name="" readonly="true" value="">
+                </div>
+                <div class="form-group" v-show="dataType==1">
+                    <input type="text" id="input1" class="form-control" name="">
+                </div>
+                <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
+                <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
+            </form>
+            
+            <div class="after-operation operation">
+                <label>后置操作</label>
+                <div></div>
+            </div>
+        </main>
+        <footer class="editData-footer">
+            <button class="btn btn-white btn-cancel" @click="hide();">取消</button>
+            <button class="btn btn-white editData-save" @click="saveEditData();">保存</button>
+        </footer>
+    </div>
+    <div class="insertDiv" v-show="isShow" id="insertDiv">
+        <header class="insertDivHeader" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'insertDiv');" ondrag="dragController.searchBoxDrag(event,'insertDiv')">
+            <span>{{insertTitle}}</span>
+        </header>
+        <main>
+            <div class="selectDiv">
+                <div class="label">
+                    <label v-if="type==1">数据池名称</label>
+                    <label v-else>函数名称</label>
+                </div>
+                <select v-show="type==1" class="right-div" id="select-data-name" v-model="dataPoolType">
+                    <option v-bind:value="1">用例内部变量</option>
+                    <option v-bind:value="2">流程用例数据池</option>
+                    <option v-bind:value="3">组合用例数据</option>
+                    <option v-bind:value="4">场景数据</option>
+                    <option v-bind:value="5">全局数据</option>
+                    <option v-bind:value="6">环境数据</option>
+                </select>
+                <select v-show="type==2" class="right-div"  id="select-function-name" v-model="functionName">
+                    <option>functionA</option>
+                    <option>functionB</option>
+                    <option>functionC</option>
+                </select>
+            </div>
+            <div class="selectDiv" v-show="(dataPoolType==4 || dataPoolType==5 ) && type==1">
+                <div class="label"></div>
+                <div class="right-div">
+                    <label><input type="radio" v-model="dataWritable" value="writable" checked>可读可写</label>
+                    <label><input type="radio" v-model="dataWritable" value="readable">只读</label>
+                    
+                </div>
+            </div>
+            <div class="contentDiv">
+                <div class="label">
+                    <label v-if="type==1">数据名</label>
+                    <label v-else>参数列表</label>
+                </div>
+                <div class="right-div">
+                    <input type="text" id="dataName" name="" v-if="type==1">
+                    <div v-else class="tableDiv">
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th scope="col">参数名称</th>
+                                    <th scope="col">参数值</th>
+                                </tr>
+                            </thead>
+                            <tbody id="insert-div-tbody">
+                                <tr v-for="(row,index) in trData">
+                                    <td class="td-param-name">
+                                    {{row}}
+                                    </td>
+                                    <td contenteditable="true" class="td-param-value">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <button class="btn btn-white btn-cancel" @click="hide();">取消</button>
+            <button class="btn btn-white editData-save" @click="saveData();">保存</button>
+        </footer>
+    </div>
+        <!--header start-->
+        <header class="header white-bg">
+    <div class="sidebar-toggle-box">
+        <div data-original-title="点击折叠" data-placement="right" class="icon-reorder tooltips"></div>
+    </div>
+    <!--logo start-->
+    <a href="#" class="logo"><span>ATF</span></a>
+    <!--logo end-->
+
+    <div class="top-nav ">
+        <!--user info start-->
+        <ul class="nav pull-right top-menu">
+            <!-- user login dropdown start-->
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <img alt="" src="/public/static/images/avatar1_small_64c14fd.jpg">
+                    <span class="username">李唤</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <div class="log-arrow-up"></div>
+                    <li><a href="#"><i class=" icon-suitcase"></i>个人中心</a></li>
+                    <li><a href="#"><i class="icon-cog"></i> 设置</a></li>
+                    <li><a href="#"><i class="icon-bell-alt"></i> 通知</a></li>
+                    <li><a href="login.html"><i class="icon-key"></i> 注销</a></li>
+                </ul>
+            </li>
+            <!-- user login dropdown end -->
+        </ul>
+        <!--search & user info end-->
+    </div>
+</header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+    <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu">
+            <li class="sub-menu">
+                <a href="caseManagement.html" class="">
+                    <i class="icon-book"></i>
+                    <span>案例管理</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-th"></i>
+                    <span>系统管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li class="sub-menu">
+                        <a class="" href="testitems.html">测试任务</a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="newusermanagement.html">系统用户</a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="javascript:;">
+                            <span>测试系统</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub">
+                            <li class="sub-menu">
+                                <a href="" class=""><span>功能点</span>
+                                </a>
+                                <ul class="sub">
+                                    <li><a href="">元素库</a></li>
+                                    <li><a href="">对象库</a></li>
+                                    <li><a href="">模板脚本</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>
+
+        <!--sidebar end-->
+    <div class="content">
+        <!--main content start-->
+        <section id="main-content">
+            <section class="content-wrapper">
+                <div class="treeMenu" v-bind:class="{'close1': !flag, 'open2': flag}" id="submenu">
+                    <div class="selectDiv">
+                        <div>
+                            <label>筛选类型</label>
+                            <select @change="changeSelect($event)" v-model="">
+                                <option v-for="item in selectItems" v-bind:value="item.value">{{item.name}}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label v-for="item in checkedItems" class="checkedItem" track-by="$index"><input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" @change="changeChecked($event)">{{item.name}}</label>
+                        </div>
+                    </div>
+                    <div class="tree-wrapper ztree" id="tree-wrapper">
+                    </div>
+                    <button type="button" id="btn-menu" class="btn-toggle" @click="toggle">
+                    <i :class="{'icon-chevron-left': flag, 'icon-chevron-right': !flag}">
+                    </i>
+                    </button>
+                </div>
+                <main class="main">
+                    <div class="top-bar">
+                        <button class="btn btn-white"><i class="icon-cog"></i>
+                        构建</button>
+                        <button class="btn btn-white"><i class="icon-list-alt"></i>
+                        代码查看</button>
+                        <button class="btn btn-white"><i class="icon-wrench"></i>
+                        调试</button>
+                        <button class="btn btn-white" id="saveAll"><i class="icon-wrench"></i>
+                        保存</button>
+                    </div>
+                    <div class="dataTable-wrapper">
+
+                      <div id="handsontable">
+
+                      </div>
+                    </div>
+                    <div class="panel panel-default" id="tooltipwindow"
+                    :class="{'height43px':flag,'height200px':!flag}">
+                      <div class="panel-heading">调试结果
+                      <button type="button" class="close" id="btn-closetooltip" @click="toggle">
+                      <i :class="{'icon-resize-full':flag,'icon-resize-small':!flag}"></i></button></div>
+                      <div class="panel-body">
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜</br>
+                        举头望明月，低头思故乡</br>
+                      </div>
+                    </div>
+                </main>
+            </section>
+
+            <div class="copy-right text-center">
+    <span class="color-96">Copyright &copy; 1998－2017 BUPT All Rights Reserved <br>北京邮电大学物流工程实验室 版权所有</span> 
+</div>
+        </section>
+        <!--main content end-->
+    </div>
+    <!--content end -->
+
+<script src="/public/lib/jquery_9d91e40.js"></script>
+<script src="/public/lib/bootstrap.min_6d91d60.js"></script>
+<script type="text/javascript" src="/public/lib/vue_1a55fd3.js"></script>
+<script type="text/javascript" src="/public/lib/handsontable.full_d5a5391.js"></script>
+<script src="/public/static/js/config_c802f56.js"></script>
+<script src="/public/static/js/vac-functions.es_e00efd3.js"></script>
+<script src="/public/static/js/Vac_7bcdbb0.js"></script>
+<script src="/public/static/js/datatable.es_e0b6ab6.js"></script>
+<script src="/public/lib/common-scripts_de7c4e5.js"></script>
+<script type="text/javascript" src="/public/lib/jquery.ztree.all.min_64d5036.js"></script>
+<script type="text/javascript">
+    (function(){
+        
+        var tooltipwindow = new Vue({
+          el: '#tooltipwindow',
+          data: {
+            flag: true
+          },
+          methods: {
+            toggle: function(){
+              this.flag = !this.flag;
+            }
+          }
+        });
+    })();
+    </script>
+</body>
+
+</html>
