@@ -293,14 +293,12 @@ html, body {
   #main-content #testround-main .test-control {
     margin: 10px; }
   #main-content #testround-main .list-wrapper {
-    display: flex;
     margin-top: 10px; }
     #main-content #testround-main .list-wrapper .list-title {
       flex: 0 0 auto;
       vertical-align: top;
       margin-right: 10px; }
     #main-content #testround-main .list-wrapper .case-list, #main-content #testround-main .list-wrapper .scene-list {
-      display: flex;
       flex: 1 1 auto;
       border: 1px dashed #ddd; }
       #main-content #testround-main .list-wrapper .case-list .case-item, #main-content #testround-main .list-wrapper .scene-list .case-item {
@@ -325,6 +323,7 @@ html, body {
   width: 300px;
   z-index: 1041;
   padding: 0;
+  border: 1px solid #ddd;
   background-color: #fff; }
   .alert header {
     height: 35px;
@@ -340,14 +339,21 @@ html, body {
         line-height: 35px; }
   .alert main {
     min-height: 100px;
-    padding: 10px 5px; }
+    padding: 10px 5px;
+    border-bottom: 1px solid #ddd; }
     .alert main p {
       font-size: 16px;
       color: #b94a48; }
-  .alert footer button {
-    display: block;
-    padding: 5px;
-    margin: 0 auto; }
+  .alert footer {
+    text-align: center; }
+    .alert footer button {
+      display: block;
+      padding: 5px;
+      margin: 0 auto; }
+    .alert footer button.cancelConfirm, .alert footer button.okConfirm {
+      display: inline-block;
+      padding: 5px 10px;
+      margin: 10px; }
 
 .show {
   display: none; }

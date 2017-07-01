@@ -1,3 +1,4 @@
+var Vac = Vac || {};
 //检测用户登录状态，添加 更改操作需要有登陆权限
 function loginDetect(){
     return new Promise(function(resolve, reject){
@@ -58,18 +59,41 @@ function resort(target){
     sendQuery(currentPage,updatePagination); 
 }
 //重新排序 结束
+Vac.getNowFormatDate = function() {
+    var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+        + " " + date.getHours() + seperator2 + date.getMinutes()
+        + seperator2 + date.getSeconds();
+        return currentdate;
+};
 
-// *******************************************
-//  * FunctionName: selectElements(nodeList, className)
-//  * FunctinoDescription: 用于选取元素
-//  * @param: isSelect: Boolean ---> 用于改变
-//            nodeList: NodeList  ---> 需要被选取的元素集合
-//            className:String ---> 被选中后元素应用的样式的类名
-//  * return: null
-//  *******************************************
-//  function selectElements(isSelect, nodeList, className){
-//     document.addEventListener('mousedown', function(event){
-//         var seleList = [];
+/********************用于操作类名************************/
+Vac.isHasClass = function(element,className){
+ var elementClassName = element.className;
+ var pattern = new RegExp('\\b'+className+'\\b','g');
+ // String.search() 方法返回的是第一个匹配项的index，没有匹配项时返回-1
+ return pattern.test(elementClassName);
+};
 
-//     });
-//  }
+Vac.addClass = function(element,className){
+ if(!this.isHasClass(element,className)){
+     element.className = element.className.trim() + " " + className;
+ }
+};
+
+Vac.removeClass = function(element,className){
+ if(this.isHasClass(element,className)){
+     var pattern = new RegExp('\\b'+className+'\\b','g');
+     element.className = element.className.replace(pattern,"");
+ }
+};
