@@ -431,7 +431,7 @@ $okGreen: #66F60C;
 			margin: 10px;
 		}
 		.list-wrapper{
-			display: flex;
+			// display: flex;
 			margin-top: 10px;
 			.list-title{
 				flex: 0 0 auto;
@@ -439,7 +439,7 @@ $okGreen: #66F60C;
 				margin-right: 10px;
 			}
 			.case-list, .scene-list {
-				display: flex;
+				// display: flex;
 				flex: 1 1 auto;
 				border: 1px dashed #ddd;
 				.case-item {
@@ -474,6 +474,7 @@ $okGreen: #66F60C;
 	width: 300px;
 	z-index: 1041;
 	padding: 0;
+	border: 1px solid #ddd;
 	header {
 		height: 35px;
 		padding: 0px 10px;
@@ -494,16 +495,23 @@ $okGreen: #66F60C;
 	main {
 		min-height: 100px;
 		padding: 10px 5px;
+		border-bottom: 1px solid #ddd;
 		p {
 			font-size: 16px;
 			color: #b94a48;
 		}
 	}
 	footer {
+		text-align: center;
 		button {
 			display: block;
 			padding: 5px;
 			margin: 0 auto;
+		}
+		button.cancelConfirm, button.okConfirm {
+			display: inline-block;
+			padding: 5px 10px;
+			margin: 10px;
 		}
 	}
 	background-color: #fff;

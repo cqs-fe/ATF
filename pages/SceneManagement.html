@@ -34,20 +34,20 @@
             <div class="trigger-item-wrapper trigger-time-wrapper">
                 <label class="trigger-label">执行时机:</label>
                 <div class="checkbox-wrapper">
-                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">场景执行前</label>
-                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">场景执行后</label>
-                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">用例执行前</label>
-                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">用例执行后</label>
-                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">元素对象方法执行前</label>
-                    <label class="checkbox-item"><input type="checkbox" name="" v-model="editTriggerData.occasions">元素对象方法执行后</label>
+                    <label class="checkbox-item"><input type="checkbox" value="1" v-model="editTriggerData.occasions">场景执行前</label>
+                    <label class="checkbox-item"><input type="checkbox" value="2"  v-model="editTriggerData.occasions">场景执行后</label>
+                    <label class="checkbox-item"><input type="checkbox" value="3"  v-model="editTriggerData.occasions">用例执行前</label>
+                    <label class="checkbox-item"><input type="checkbox" value="4"  v-model="editTriggerData.occasions">用例执行后</label>
+                    <label class="checkbox-item"><input type="checkbox" value="5"  v-model="editTriggerData.occasions">元素对象方法执行前</label>
+                    <label class="checkbox-item"><input type="checkbox" value="6"  v-model="editTriggerData.occasions">元素对象方法执行后</label>
                 </div>
             </div>
             <div class="trigger-condition-wrapper trigger-item-wrapper">
                 <label class="trigger-label">执行条件</label>
                 <div class="radio-button-wrapper">
-                    <label class="radio-item"><input type="radio" name="" value="1" v-model="editTriggerData.Conditionrelate">满足以下所有条件</label>
-                    <label class="radio-item"><input type="radio" name="" value="1" v-model="editTriggerData.Conditionrelate">满足一下任一条件</label>
-                    <label class="radio-item"><input type="radio" name="" value="1" v-model="editTriggerData.Conditionrelate">无条件限制</label>
+                    <label class="radio-item"><input type="radio"  value="1" v-model="editTriggerData.Conditionrelate">满足以下所有条件</label>
+                    <label class="radio-item"><input type="radio"  value="2" v-model="editTriggerData.Conditionrelate">满足一下任一条件</label>
+                    <label class="radio-item"><input type="radio"  value="3" v-model="editTriggerData.Conditionrelate">无条件限制</label>
                 </div>
             </div>
             <div class="trigger-item-wrapper trigger-table-wrapper">
@@ -57,75 +57,117 @@
                             <th scope="col">条件名称</th>
                             <th scope="col">匹配方式</th>
                             <th scope="col">匹配值</th>
-                            <th scope="col">操作</th>
+                            <th scope="col"><button class="btn btn-default" @click="addTriggerCondition();">增加</button></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody id="conditionsBody">
+<!--                          <tr>
                             <td>
-                                <select>
-                                    <option>用例编号</option>
+                                <select class="objectname"> 
+                                    <option value="1" selected>用例编号</option>
+                                    <option value="2">优先级</option>
+                                    <option value="3">用例类型</option>
+                                    <option value="4">执行结果</option>
                                 </select>
                             </td>
                             <td>
-                                <select>
-                                    <option>等于</option>
-                                </select>
-                            </td>
-                            <td></td>
-                            <td>
-                                <button class="btn btn-default" @click="addTriggerCondition();">增加</button>
-                                <button class="btn btn-default">删除</button>
-                            </td>
-                        </tr>
-                         <tr v-for="(item, index) in editTriggerData.conditions">
-                            <td>
-                                <select>
-                                    <option>用例编号</option>
+                                <select class="matchtype">
+                                    <option value="1">等于</option>
+                                    <option value="2">大于</option>
                                 </select>
                             </td>
                             <td>
-                                <select>
-                                    <option>等于</option>
-                                </select>
+                                <input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
                             </td>
-                            <td></td>
                             <td>
-                                <button class="btn btn-default">增加</button>
                                 <button class="btn btn-default" @click="removeTriggerCondition(index)">删除</button>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
             <div class="trigger-item-wrapper trigger-action-wrapper">
                 <label class="trigger-label">执行动作: </label>
                 <button class="btn-item-add" @click="addTriggerAction();"><span class="icon-plus"></span></button>
-                <div class="action-item-wrapper" v-for="(item, index) in editTriggerData.actions">
-                    <button class="" @click="removeTriggerAction(index);"><span class="icon-remove"></span></button>
+                <!-- <div class="action-item-wrapper">
+                    <button class="" @click=""><span class="icon-remove"></span></button>
+                    <span class="id">{{item.id}}</span>
+                
                     <div class="item-row">
                         <label>选择操作</label>
-                        <select>
-                            <option>发送邮件</option>
+                        <select class="actionname">
+                            <option value="hello">发送邮件</option>
                         </select>
                     </div>
                     <div class="item-row">
                         <label>脚本类型</label>
-                        <select>
-                            <option>groovy</option>
+                        <select class="actiontype">
+                            <option value="2">groovy</option>
                         </select>
                     </div>
                     <div class="item-row">
                         <label>脚本内容</label>
-                        <textarea rows="5"></textarea>
+                        <textarea rows="5" class="scriptcontent">alkdjlaksdj</textarea>
                     </div>
-                </div>
+                </div> -->
             </div>
         </main>
         <footer>
-            <button class="btn btn-info">取消</button>
-            <button class="btn btn-info">确定</button>
+            <button class="btn btn-info" @click="closeTrigger()">取消</button>
+            <button class="btn btn-info" @click="saveTrigger()">确定</button>
         </footer>
+    </div>
+
+    <div class="modal fade" id="editDataPool" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{dataPoolTitle}}数据池</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label">数据池名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " name="" v-model="poolData.poolname">
+                            </div>
+                            
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label">数据池对象Id</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " name="" v-model="poolData.poolobjid">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label">数据名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " name="" v-model="poolData.dataname">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label">数据值</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " name="" v-model="poolData.datavalue">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-4 control-label">数据描述</label>
+                             <div class="col-sm-8">
+                                <input type="text" class="form-control " name="" v-model="poolData.datadesc">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" @click="saveDataPool">确定</button>
+                </div>
+            </div>
+        </div>
     </div>
         <!--header start-->
         <link rel="import" href="./common/header-guide.html?__inline">
@@ -137,7 +179,8 @@
     <div class="content">
         <!--main content start-->
         <section id="main-content">
-            <section class="content-wrapper" :class={ 'bigMarginBottom':!tooltipFlag, 'smallMarginBottom':tooltipFlag}>
+            <section class="content-wrapper"
+             :class="{'bigMarginBottom':!tooltipFlag, 'smallMarginBottom':tooltipFlag}">
                 <main class="main">
                     <div class="route-position">
                         <a href="">场景管理</a>
@@ -146,7 +189,7 @@
                     </div>
                     <div class="top-bar">
 
-                        <button class="btn btn-white"><i class="icon-remove"></i>
+                        <button class="btn btn-white" @click="removeCases()"><i class="icon-remove"></i>
                         移除用例</button>
                         <button class="btn btn-white" @click="operationType(1);"><i class="icon-calendar"></i>
                         执行时间规划</button>
@@ -173,7 +216,7 @@
                                 <template v-if="case_wrapper.caseCompositeType == '1'">
                                     <div class="case" >
                                         <div class="case-header">
-                                            <input type="checkbox" name="" class="check-case">
+                                            <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case" v-model="selectedCases" @change="test()">
                                             <p>{{case_wrapper.id}}</p>
                                         </div>
                                         <div class="case-main">
@@ -187,7 +230,7 @@
                                 <template v-else>
                                     <div class="case" v-for="item in case_wrapper.flowNodeDtos">
                                         <div class="case-header">
-                                            <input type="checkbox" name="" class="check-case">
+                                            <input type="checkbox" v-bind:value="item.id" class="check-case" v-model="selectedCases" @change="test()">
                                             <p>{{item.id}}</p>
                                         </div>
                                         <div class="case-main">
@@ -222,16 +265,15 @@
                 <div v-show="tooltipType===1" class="timeArrange">
                     <div>
                         <label>执行时间</label>
-                        <input type="date" name="">
-                        <input type="time" name="">
+                        <input type="date" v-model="executeTime">
                     </div>
                     <div>
                         <label>执行时间标识</label>
                         <span>T + </span>
-                        <input type="text" name="">
+                        <input type="text" v-model="executeDateFlag">
                     </div>
                      <div>
-                        <button class="btn btn-info exeTimeSave">
+                        <button class="btn btn-info exeTimeSave" @click="saveExecuteTime()">
                             保存
                         </button>
                     </div>
@@ -243,7 +285,7 @@
                             <i class="icon-plus"></i>
                             新增
                         </button>
-                        <button type="button" class="btn btn-white">
+                        <button type="button" class="btn btn-white" @click="deleteTrigger();">
                             <i class="icon-remove"></i>
                             删除
                         </button>
@@ -384,15 +426,15 @@
                 <!-- 数据资源池设置 -->
                 <div v-show="tooltipType===4" class="dataPool">
                     <div>
-                        <button type="button" class="btn btn-white">
+                        <button type="button" class="btn btn-white" @click="openPool(1)">
                             <i class="icon-plus"></i>
                             新增
                         </button>
-                        <button type="button" class="btn btn-white">
+                        <button type="button" class="btn btn-white" @click="removeDatapool();">
                             <i class="icon-remove"></i>
                             删除
                         </button>
-                        <button type="button" class="btn btn-white">
+                        <button type="button" class="btn btn-white" @click="openPool(2)">
                             <i class="icon-edit"></i>
                             编辑
                         </button>
@@ -408,32 +450,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr v-for="item in poolDatas">
                                     <td>
-                                        <input type="radio" name="">
+                                        <input type="checkbox" :value="item.dataname" v-model="selectedPool">
                                     </td>
                                     <td>
-                                        
+                                        {{item.dataname}}
                                     </td>
                                     <td>
-                                        
+                                        {{item.datavalue}}
                                     </td>
                                     <td>
-                                        <select>
-                                            <option>启用</option>
-                                            <option>禁用</option>
-                                        </select>
+                                        {{item.datadesc}}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div>
+<!--                     <div>
                         <button class="btn btn-info triggerSave">
                             保存
                         </button>
 
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -443,23 +482,10 @@
     </div>
     <!--content end -->
 
-        <!-- 提示框 -->
-    <div class="alert" :class="{ show:alertShow, hide:!alertShow }" id="alert" >
-        <header class="alert-header bg-info">
-            <span>提示信息</span>
-            <button type="button" class="close" ><i class="icon-remove" @click="hideAlert()"></i></button>
-        </header>
-        <main class="alert-main">
-            <p class="">{{ tooltipMessage }}</p>
-        </main>
-        <footer class="alert-footer">
-            <button type="button" class="btn btn-primary" @click="hideAlert()">确定</button>
-        </footer>
-    </div>
-
+    <link rel="import" href="./common-vac/alert.html?__inline">
+    <link rel="import" href="./common-vac/confirm.html?__inline">
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
-    <script src="../static/js/Vac.js"></script>
     <script src="../static/js/scene-management.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
     <script type="text/javascript">

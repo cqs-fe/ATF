@@ -7,6 +7,8 @@ var minShowPage = 1;  //  当前显示的最小的页码
 var maxShowPage = 7;   //显示的最大的页码
 var totalPage = 0;
 
+var itemId;
+
 var sendData = {
     order:"id",
     sort:"asc",
@@ -68,87 +70,7 @@ $(document).ready(function(){
             // initial Form
             function initialForm(userid, username){
                 $('#addModal').modal('show');
-                var getLine = new Promise(function(resolve, reject){
-                    var client = null;
-                    if (window.XMLHttpRequest) {
-                        client = new XMLHttpRequest();
-                    } else {
-                        client = new ActiveXObject("Microsoft.XMLHTTP");
-                    }
-                    var url = address + "productLineController/selectAll";
-                    client.open("POST", url, true);
-                    client.onreadystatechange = handler;
-                    client.responseType = "json";
-                    client.setRequestHeader("Accept", "application/json");
-                    client.send();
-
-                    function handler() {
-                        if(this.readyState !== 4){
-                            return;
-                        }
-                        if(this.status === 200){
-                            resolve(this.response);
-                        }else{
-                            reject(new Error(this.statusText));
-                        }
-                    };
-                });  // getLine end
-
-                var getAut = new Promise(function(resolve, reject){
-                    var client = null;
-                    if(window.XMLHttpRequest){
-                        client = new XMLHttpRequest();
-                    }else{
-                        client = new ActiveXObject("Microsoft.XMLHTTP");
-                    }
-                    var url = address + "autController/selectAll";
-                    client.open("POST", url, true);
-                    client.onreadystatechange = handler;
-                    client.responseType = "json";
-                    client.setRequestHeader("Accept", "application/json");
-                    client.send();
-
-                    function handler(){
-                        if(this.readyState !== 4){
-                            return;
-                        }
-                        if(this.status === 200){
-                            resolve(this.response);
-                        }else{
-                            reject(new Error(this.statusText));
-                        }
-                    };
-                });  // getAut end
-
-                var promise = Promise.all([getLine, getAut]);
-                promise.then(function([lineResponse, autResponse]){
-                    var itemLine = $("#itemLine");
-                    var productLines = lineResponse.obj;
-                    productLines.forEach(function(value){
-                        var option = $("<option></option>").text(value.productLineName).attr("value",value.id);
-                        itemLine.append(option);
-                    });
-
-                    var itemAut = $("#itemAut");
-                    var auts = autResponse.obj;
-                    auts.forEach(function(value){
-                        var option = $("<option></option>").text(value.autName).attr("value", value.id);
-                        itemAut.append(option);
-                    });
-
-                    var createUser = document.getElementById("createUser");
-                    var option = document.createElement("option");
-                    option.setAttribute('value', userid);
-                    option.innerHTML = username;
-                    createUser.appendChild(option);
-
-                    // var datetime = document.getElementById("datetime");
-                    // datetime.setAttribute("value", getNowFormatDate());
-                })
-                .catch(function(reason){
-                    console.log(reason);
-                });
-
+                $('#createUser').val(userid);
             };// initial Form end
 
         });
@@ -199,7 +121,7 @@ $(document).ready(function(){
     //添加按钮，发送ajax
     (function(){
         $("#btn-add").click(function(){
-            var data = $("#addForm").serialize()+"&createDate="+vacFunciton.getNowFormatDate();
+            var data = $("#addForm").serialize()+"&createDate="+Vac.getNowFormatDate();
             $.ajax({
                 url: address + "testProjectController/insert",
                 type: "post",
@@ -308,97 +230,30 @@ function showAlterModal(button){
         });
     //console.log(this);
     var tr = button.parentNode.parentNode;
-    var itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
+    itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
     var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
     var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
-    var lineName = tr.getElementsByClassName("td-lineName")[0].innerHTML;
-    var autName = tr.getElementsByClassName("td-autName")[0].innerHTML;
+    // var autName = tr.getElementsByClassName("td-autName")[0].innerHTML;
     var description = tr.getElementsByClassName("td-description")[0].innerHTML;
         // initial Form
     function initialForm(userid, username){
         $('#alterModal').modal('show');
-        var getLine = new Promise(function(resolve, reject){
-            var client = null;
-            if (window.XMLHttpRequest) {
-                client = new XMLHttpRequest();
-            } else {
-                client = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            var url = address + "productLineController/selectAll";
-            client.open("POST", url, true);
-            client.onreadystatechange = handler;
-            client.responseType = "json";
-            client.setRequestHeader("Accept", "application/json");
-            client.send();
+         var tr = button.parentNode.parentNode;
+        var itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
+        var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
+        var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
+        var user = tr.getElementsByClassName('td-user')[0].innerHTML;
+        var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
+        var date = tr.getElementsByClassName('td-createDate')[0].innerHTML;
+        var description = tr.getElementsByClassName("td-description")[0].innerHTML;
 
-            function handler() {
-                if(this.readyState !== 4){
-                    return;
-                }
-                if(this.status === 200){
-                    resolve(this.response);
-                }else{
-                    reject(new Error(this.statusText));
-                }
-            };
-        });  // getLine end
-
-        var getAut = new Promise(function(resolve, reject){
-            var client = null;
-            if(window.XMLHttpRequest){
-                client = new XMLHttpRequest();
-            }else{
-                client = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            var url = address + "autController/selectAll";
-            client.open("POST", url, true);
-            client.onreadystatechange = handler;
-            client.responseType = "json";
-            client.setRequestHeader("Accept", "application/json");
-            client.send();
-
-            function handler(){
-                if(this.readyState !== 4){
-                    return;
-                }
-                if(this.status === 200){
-                    resolve(this.response);
-                }else{
-                    reject(new Error(this.statusText));
-                }
-            };
-        });  // getAut end
-
-        var promise = Promise.all([getLine, getAut]);
-        promise.then(function([lineResponse, autResponse]){
-            var itemLine = $("#alter-itemline");
-            var productLines = lineResponse.obj;
-            productLines.forEach(function(value){
-                var option = $("<option></option>").text(value.productLineName).attr("value",value.id);
-                itemLine.append(option);
-            });
-
-            var itemAut = $("#alter-itembelong");
-            var auts = autResponse.obj;
-            auts.forEach(function(value){
-                var option = $("<option></option>").text(value.autName).attr("value", value.id);
-                itemAut.append(option);
-            });
-
-            var createUser = document.getElementById("alter-createUser");
-            var option = document.createElement("option");
-            option.setAttribute('value', userid);
-            option.innerHTML = username;
-            createUser.appendChild(option);
-
-            $("#alter-itemname").val(itemName);
-            $("#alter-itemtype").val(itemType);
-            // var datetime = document.getElementById("datetime");
-            // datetime.setAttribute("value", getNowFormatDate());
-        })
-        .catch(function(reason){
-            console.log(reason);
-        });
+        $('#alter-itemcode').val(itemId);
+        $('#alter-itemname').val(itemName);
+        $('#alter-itemtype').val(itemType);
+        $('#alter-createDate').val(date);
+        $('#alter-createUser').val(user);
+        $('#alter-projectCode').val(projectCode);
+        $('#alter-itemdesc').text(description);
 
     };// initial Form end
 }
@@ -410,14 +265,17 @@ function showViewModal(button){
     var itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
     var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
     var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
-    var lineName = tr.getElementsByClassName("td-lineName")[0].innerHTML;
-    var autName = tr.getElementsByClassName("td-autName")[0].innerHTML;
+    var user = tr.getElementsByClassName('td-user')[0].innerHTML;
+    var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
+    var date = tr.getElementsByClassName('td-createDate')[0].innerHTML;
     var description = tr.getElementsByClassName("td-description")[0].innerHTML;
+
     $('#view-itemcode').val(itemId);
     $('#view-itemname').val(itemName);
     $('#view-itemtype').val(itemType);
-    $('#view-itemline').val(lineName);
-    $('#view-itembelong').val(autName);
+    $('#view-createDate').val(date);
+    $('#view-createUser').val(user);
+    $('#view-projectCode').val(projectCode);
     $('#view-itemdesc').text(description);
 }
 // Show view modal end
@@ -797,8 +655,9 @@ function createTable(dataSet){
     let tdUser = $(`<td class="td-user"></td>`).text(value.user);
     let tdCreateDate = $(`<td class="td-createDate"></td>`).text(value.createDate);
     let tdDescription = $(`<td class="td-description"></td>`).text(value.taskDescription);
+    let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.testProjectCode);
     let tdOperation = $(`<td class="td-operation"><a data-toggle="modal" class="btn btn-view btn-white" onclick="showViewModal(this);" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
-    tr.append(tdId, tdName, tdType, tdUser, tdCreateDate, tdDescription,tdOperation);
+    tr.append(tdId, tdName, tdType, tdUser, tdProjectCode, tdCreateDate, tdDescription,tdOperation);
     tbody.append(tr);
     });
 }
@@ -814,10 +673,11 @@ function destructe(data){
             type: newValue.type,
             createDate: newValue.createDate,
             taskDescription: newValue.taskDescription,
-            user:newValue.creatorId,
+            creatorId:newValue.user,
         } = value);
         return newValue;
     });
+    console.log(newData)
     return newData;
 }
 //控制首页尾页等的可用性 结束
@@ -844,6 +704,7 @@ function search(){
         success: function(data, statusText){
             if(data.total >= 0){
                 dataSet = destructe(data.rows);
+                console.log(dataSet);
                 createTable(dataSet);
 
                 var pagination = document.getElementById("pagination");
