@@ -32,7 +32,7 @@ fis.match('::package', {
 
 fis.match('/static/modules/*.js', {
     isMod: true, // 设置 comp 下都是一些组件，组件建议都是匿名方式 define
-    release: '/public/$0'
+    release: '../public/$0'
 });
 
 fis.media('debug').match('*.{js,scss,png}', {

@@ -296,7 +296,7 @@
                                         </ul>
                                         <div class="go">
                                             <div :class="isPageNumberError?'input-group error':'input-group'">
-                                                <input class="form-control" type="number" v-model="goToPage"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+                                                <input class="form-control" type="number" v-model="goToPage" min="1"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
                                             </div>
                                         </div>
                                         <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>

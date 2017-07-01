@@ -21,7 +21,7 @@ var app = new Vue({
         autSelect: function() {
             $.ajax({
                 async: false,
-                url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+                url: address+"autController/selectAll",
                 type: "POST",
                 success: function(data) {
                     var autList = data.obj;
@@ -38,7 +38,7 @@ var app = new Vue({
         transactSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+                url: address+'transactController/showalltransact',
                 data: { 'autlistselect': val },
                 type: "POST",
                 success: function(data) {
@@ -57,7 +57,7 @@ var app = new Vue({
         classtypeSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/autController/selectClass',
+                url: address+'autController/selectClass',
                 data: { 'id': val },
                 type: "POST",
                 success: function(data) {
@@ -82,7 +82,7 @@ var app = new Vue({
             $("#autSelect").val(this.autId);
             $("#transactSelect").val(this.transactId);
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/transactqueryByPage',
+                url: address+'transactController/transactqueryByPage',
                 type: 'GET',
                 async: false,
                 data: {
@@ -123,7 +123,7 @@ var app = new Vue({
                 parentid = nodes[0].id;
             }
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/insertObject_repo',
+                url: address+'object_repoController/insertObject_repo',
                 type: 'post',
                 data: {
                     "name": objName,
@@ -154,7 +154,7 @@ var app = new Vue({
             }
 
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/deleteObejct_repo',
+                url: address+'object_repoController/deleteObejct_repo',
                 type: 'post',
                 data: {
                     "id": ids,
@@ -179,7 +179,7 @@ var app = new Vue({
             // $('#addiProp').children().remove();
             // $('#assisProp').children().remove();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repo',
+                url: address+'object_repoController/queryObject_repo',
                 type: 'post',
                 data: {
                     "id": app.objId,
@@ -267,7 +267,7 @@ var app = new Vue({
                 assisVal = assisTd.eq(2).html(); //辅助属性值
             });
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/updateObejct_repo',
+                url: address+'object_repoController/updateObejct_repo',
                 type: 'post',
                 data: {
                     "id": id,
@@ -352,7 +352,7 @@ var setting1 = {
             $('#objForm input[name="name"]').val(treeNode.name);
             app.objId = treeNode.id;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repo',
+                url: address+'object_repoController/queryObject_repo',
                 type: 'post',
                 data: {
                     "id": app.objId,
@@ -491,7 +491,7 @@ var setting1 = {
 function getObjTree() {
     var transid = $("#transactSelect").val();
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repoAll',
+        url: address+'object_repoController/queryObject_repoAll',
         type: 'post',
         data: { "transid": transid },
         success: function(data) {

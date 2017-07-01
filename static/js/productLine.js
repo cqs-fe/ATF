@@ -2,7 +2,6 @@ var app = new Vue({
     el: '#v-productLine',
     data: {
         productLineList: [],
-        apiUrl: 'http://10.108.226.152:8080/ATFCloud/productLineController/selectAll',
         pageData: {
             pageSize: 10,
             page: 1,
@@ -26,7 +25,7 @@ var app = new Vue({
 
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/productLineController/selectAll',
+                url: address+'productLineController/selectAll',
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
@@ -46,7 +45,7 @@ var app = new Vue({
 
                 //获取list通用方法，只需要传入多个所需参数
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/productLineController/selectAll',
+                    url: address+'productLineController/selectAll',
                     type: 'GET',
                     data: {
                         'page': page,

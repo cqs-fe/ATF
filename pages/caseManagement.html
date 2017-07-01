@@ -224,9 +224,6 @@
                                                                     <select class="form-control" size="1" name="usestatus">
                                                                         <option value="1">新增</option>
                                                                         <option value="2">评审通过</option>
-                                                                    <select class="form-control" size="1" name="usestatus">
-                                                                        <option value="1">新增</option>
-                                                                        <option value="2">评审通过</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -636,6 +633,24 @@
                             </div>
                         </div>
                         <!-- failModal end -->
+                        <!-- selectAlertModal start -->
+                        <div class="modal fade" id="selectAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>请先选中一条数据！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- selectAlertModal end -->
                     </div>
                 </div>
                 <!--topbutton end-->
@@ -651,9 +666,10 @@
                                     <div class="col-lg-2">
                                         <div class="filter-show">
                                             <h4 class="panel-title">
-                                                  <a class="btn btn-white" v-on:click="toggle()">
-                                                      <span>显示筛选</span>
-                                                      <i class="icon-angle-down"></i>
+                                                  <a class="btn btn-white" v-on:click="isShow=!isShow, iconflag=!iconflag">
+                                                      <span v-if="iconflag">显示筛选</span>
+                                                      <span v-else>收起筛选</span>
+                                                      <i :class="{'icon-angle-down':iconflag, 'icon-angle-up':!iconflag}"></i>
                                                   </a>
                                             </h4>
                                         </div>
@@ -675,7 +691,7 @@
                                                     <option value="5">5</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, 10, 'id', 'asc')">刷新</a></div>
+                                            <!-- <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, 10, 'id', 'asc')">刷新</a></div> -->
                                         </div>
                                         <div class="form-group">
                                         </div>
@@ -827,7 +843,7 @@
                                         </ul>
                                         <div class="go">
                                             <div :class="isPageNumberError?'input-group error':'input-group'">
-                                                <input class="form-control" type="number" v-model="goToPage"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+                                                <input class="form-control" type="number" v-model="goToPage" min="1"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
                                             </div>
                                         </div>
                                         <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>

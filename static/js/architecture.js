@@ -20,7 +20,7 @@ var app = new Vue({
                 inherit = $('#addArchForm select[name="inherit"]').val(),
                 description = $('#addArchForm textarea[name="description"]').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/abstractarchitectureController/insert',
+                url: address+'abstractarchitectureController/insert',
                 type: 'post',
                 data: {
                     "architecturecode": architecturecode,
@@ -52,7 +52,7 @@ var app = new Vue({
                     ids = nodes[i].id;
                 }
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/abstractarchitectureController/delete',
+                    url: address+'abstractarchitectureController/delete',
                     type: 'post',
                     data: {
                         "id": ids,
@@ -81,7 +81,7 @@ var app = new Vue({
                 nodes = treeObj.getCheckedNodes(true),
                 id = nodes[0].id;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/abstractarchitectureController/update',
+                url: address+'abstractarchitectureController/update',
                 type: 'post',
                 data: {
                     "id": id,
@@ -112,7 +112,7 @@ var app = new Vue({
                 nodes = treeObj.getSelectedNodes(true),
                 arcid = nodes[0].id;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/classController/insert',
+                url: address+'classController/insert',
                 type: 'post',
                 data: {
                     "eclassname": eclassname,
@@ -144,7 +144,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/classController/delete',
+                    url: address+'classController/delete',
                     type: 'post',
                     data: {
                         "id": id,
@@ -173,7 +173,7 @@ var app = new Vue({
                 waittime = $('#methodForm input[name="waittime"]').val(),
                 timeout = $('#methodForm input[name="timeout"]').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/methodController/insert',
+                url: address+'methodController/insert',
                 type: 'post',
                 data: {
                     "methodname": methodname,
@@ -206,7 +206,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/methodController/delete',
+                    url: address+'methodController/delete',
                     type: 'post',
                     data: {
                         "id": id,
@@ -245,7 +245,7 @@ var app = new Vue({
                 nodes = treeObj.getSelectedNodes(true),
                 arcid = nodes[0].id;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/classController/update',
+                url: address+'classController/update',
                 type: 'post',
                 data: {
                     "id": app.classId,
@@ -293,7 +293,7 @@ var app = new Vue({
             paraList += "]";
             console.log(paraList)
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/methodController/update',
+                url: address+'methodController/update',
                 type: 'post',
                 data: {
                     "id": app.methodId,
@@ -377,7 +377,7 @@ var setting1 = {
         onCheck: function(event, treeId, treeNode) {
             //查询抽象架构
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/abstractarchitectureController/abstractarchitecturequery',
+                url: address+'abstractarchitectureController/abstractarchitecturequery',
                 type: 'post',
                 data: {
                     "id": treeNode.id,
@@ -410,7 +410,7 @@ var setting1 = {
             app.archiName = treeNode.architecturename;
             //查询class
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/classController/classquery',
+                url: address+'classController/classquery',
                 type: 'post',
                 data: {
                     "arcid": treeNode.id,
@@ -446,7 +446,7 @@ var setting1 = {
             });
             //查询抽象架构
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/abstractarchitectureController/abstractarchitecturequery',
+                url: address+'abstractarchitectureController/abstractarchitecturequery',
                 type: 'post',
                 data: {
                     "id": treeNode.id,
@@ -480,7 +480,7 @@ var setting1 = {
 // 页面初始化获取抽象架构
 function getArchiTree() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/abstractarchitectureController/selectAll',
+        url: address+'abstractarchitectureController/selectAll',
         type: 'post',
         success: function(data) {
             if (data !== null) {
@@ -492,7 +492,7 @@ function getArchiTree() {
 //页面初始化获取默认方法名称列表
 function getDefMethod() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/methodController/selectAll',
+        url: address+'methodController/selectAll',
         type: 'post',
         success: function(data) {
             var methodList = data.obj;
@@ -581,7 +581,7 @@ function classClick(event) {
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: 'http://10.108.226.152:8080/ATFCloud/methodController/methodquery',
+            url: address+'methodController/methodquery',
             type: 'post',
             data: {
                 arcclassid: app.classId,
@@ -605,7 +605,7 @@ function classClick(event) {
             }
         });
         $.ajax({
-            url: 'http://10.108.226.152:8080/ATFCloud/classController/classquery',
+            url: address+'classController/classquery',
             type: 'post',
             data: {
                 id: app.classId,
@@ -639,7 +639,7 @@ function methodClick(event) {
         $('#methodForm textarea[name="objectcode"]').val('');
         app.methodId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: 'http://10.108.226.152:8080/ATFCloud/methodController/methodquery',
+            url: address+'methodController/methodquery',
             type: 'post',
             data: {
                 id: app.methodId,

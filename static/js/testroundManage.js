@@ -73,7 +73,7 @@ var app = new Vue({
         //添加测试轮次
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/testroundController/insert',
+                url: address+'testroundController/insert',
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
@@ -97,7 +97,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/testroundController/delete',
+                    url: address+'testroundController/delete',
                     type: 'post',
                     data: {
                         'id': app.ids
@@ -124,7 +124,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/testroundController/update',
+                    url: address+'testroundController/update',
                     type: 'post',
                     data: $('#updateForm').serializeArray(),
                     success: function(data) {
@@ -182,7 +182,7 @@ var app = new Vue({
 //获取测试轮次
 function getTestRound() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/testroundController/selectAll',
+        url: address+'testroundController/selectAll',
         type: 'post',
         success: function(data) {
             app.testroundList = data.obj;

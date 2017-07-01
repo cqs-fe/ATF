@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#caseManagement',
     data: {
         isShow: false,
+        iconflag: true,
         caseNodeNum: 0,
         caseNode: '</h3><div class="form-group"><label class="col-lg-2 control-label hidden">案例组成类型</label><div class="col-lg-4 hidden"><input type="text" class="form-control" name="caseCompositeType" value="3"></div><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid" id=""></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><input class="form-control" name="subversioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option>模板</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option></select></div><label class="col-lg-2 control-label">测试顺序</label><div class="col-lg-4"><input class="form-control" name="steporder"></div></div><div class="form-group"><label class="col-lg-2 control-label">案例使用状态</label><div class="col-lg-4"><select class="form-control" size="1" name="subusestatus"><option value="1">新增</option><option value="2">评审通过</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
         caseList: [], //案例
@@ -43,7 +44,7 @@ var app = new Vue({
         //添加单案例
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/import111',
+                url: address + 'TestcaseController/import111',
                 type: 'post',
                 data: $("#insertSingleForm").serializeArray(),
                 success: function(data) {
@@ -66,7 +67,7 @@ var app = new Vue({
             console.log(flowId);
             if ($(e.target).attr("class") === "icon-angle-right") {
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/testcaseactionquery',
+                    url: address + 'TestcaseController/testcaseactionquery',
                     type: 'post',
                     data: { 'testcaseid': flowId },
                     success: function(data) {
@@ -74,16 +75,16 @@ var app = new Vue({
                         console.log(this.subCaseList);
                         for (var i = 0; i < this.subCaseList.length; i++) {
                             var subTr = $("<tr class='subShow'></tr>"),
-                                iconTd=$("<td></td>"),
-                                checkTd=$("<td><input type='checkbox' name='chk_list'/></td>"),
-                                codeTd=$("<td></td>"),
-                                autTd=$("<td></td>"),
-                                transTd=$("<td></td>"),
-                                compositeTd=$("<td></td>"),
-                                useTd=$("<td></td>"),
-                                authorTd=$("<td></td>"),
-                                executorTd=$("<td></td>"),
-                                executeMethodTd=$("<td></td>");
+                                iconTd = $("<td></td>"),
+                                checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                codeTd = $("<td></td>"),
+                                autTd = $("<td></td>"),
+                                transTd = $("<td></td>"),
+                                compositeTd = $("<td></td>"),
+                                useTd = $("<td></td>"),
+                                authorTd = $("<td></td>"),
+                                executorTd = $("<td></td>"),
+                                executeMethodTd = $("<td></td>");
                             codeTd.html(this.subCaseList[i].subcasecode);
                             autTd.html(this.subCaseList[i].autId);
                             compositeTd.html(this.subCaseList[i].caseCompositeType);
@@ -91,16 +92,16 @@ var app = new Vue({
                             authorTd.html(this.subCaseList[i].author);
                             executorTd.html(this.subCaseList[i].executor);
                             executeMethodTd.html(this.subCaseList[i].executeMethod);
-                            subTr.append(iconTd,checkTd,codeTd,autTd,transTd,compositeTd,useTd,authorTd,executorTd,executeMethodTd);
+                            subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, authorTd, executorTd, executeMethodTd);
                             flowTr.after(subTr);
                         }
-                        
+
                     }
                 });
                 $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
-            }else{
-                $(".subShow").css("display","none"); 
-                $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');        
+            } else {
+                $(".subShow").css("display", "none");
+                $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
             }
 
 
@@ -118,56 +119,67 @@ var app = new Vue({
 
         //分配执行者
         executor: function() {
-            var id_array = new Array();
-            $('input[name="chk_list"]:checked').each(function() {
-                id_array.push($(this).attr('id'));
-            });
-            $('input[name="ids"]').val(id_array.join(','));
-            $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/excutor',
-                type: 'post',
-                data: $("#executorForm").serializeArray(),
-                success: function(data) {
-                    console.info(data.msg);
-                    if (data.msg == "完成") {
-                        $('#successModal').modal();
-                    } else {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var id_array = new Array();
+                $('input[name="chk_list"]:checked').each(function() {
+                    id_array.push($(this).attr('id'));
+                });
+                $('input[name="ids"]').val(id_array.join(','));
+                $.ajax({
+                    url: address + 'TestcaseController/excutor',
+                    type: 'post',
+                    data: $("#executorForm").serializeArray(),
+                    success: function(data) {
+                        console.info(data.msg);
+                        if (data.msg == "完成") {
+                            $('#successModal').modal();
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+                });
+            }
         },
         //更改执行方式
         execute_method: function() {
-            var id_array = new Array();
-            $('input[name="chk_list"]:checked').each(function() {
-                id_array.push($(this).attr('id'));
-            });
-            $('input[name="ids"]').val(id_array.join(','));
-            $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/execute_mothord',
-                type: 'post',
-                data: $("#executeMethodForm").serializeArray(),
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                    } else {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var id_array = new Array();
+                $('input[name="chk_list"]:checked').each(function() {
+                    id_array.push($(this).attr('id'));
+                });
+                $('input[name="ids"]').val(id_array.join(','));
+                $.ajax({
+                    url: address + 'TestcaseController/execute_mothord',
+                    type: 'post',
+                    data: $("#executeMethodForm").serializeArray(),
+                    success: function(data) {
+                        console.info(data);
+                        if (data.success) {
+                            $('#successModal').modal();
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+                });
+            }
+
         },
         //设置功能点及模板脚本
         transid: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/trans_id',
+                url: address + 'TestcaseController/trans_id',
                 type: 'post',
                 data: $("#transidForm").serializeArray(),
                 success: function(data) {
@@ -182,10 +194,6 @@ var app = new Vue({
                     $('#failModal').modal();
                 }
             });
-        },
-        // 筛选按钮显示隐藏
-        toggle: function() {
-            this.isShow = !this.isShow;
         },
 
         // 排序
@@ -234,7 +242,7 @@ var app = new Vue({
         //搜索案例
         searchCase: function(id) {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/viewtestcase',
+                url: address + 'TestcaseController/viewtestcase',
                 type: 'GET',
                 data: { 'id': id },
                 success: function() {
@@ -248,7 +256,7 @@ var app = new Vue({
 //获取案例
 function getCase(currentPage, listnum, order, sort) {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/selectAllByPage',
+        url: address + 'TestcaseController/selectAllByPage',
         type: 'GET',
         data: {
             'page': currentPage,
@@ -269,7 +277,7 @@ function getCase(currentPage, listnum, order, sort) {
 //获取用户
 function getUsers() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/userController/selectAll',
+        url: address + 'userController/selectAll',
         type: 'GET',
         success: function(data) {
             // console.info(data);
@@ -281,7 +289,7 @@ function getUsers() {
 //筛选查询案例
 function queryCase() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/testcasequeryByPage',
+        url: address + 'TestcaseController/testcasequeryByPage',
         type: 'POST',
         data: {
             'page': app.currentPage,
@@ -351,7 +359,7 @@ $(document).ready(function(e) {
 function yiji() {
     $.ajax({
         async: false,
-        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        url: address + "autController/selectAll",
         type: "POST",
         success: function(data) {
             var autList = data.obj;
@@ -372,7 +380,7 @@ function erji() {
     var val = $('select[name="autid"]').val();
     $.ajax({
         async: false,
-        url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+        url: address + 'transactController/showalltransact',
         data: { 'autlistselect': val },
         type: "POST",
         success: function(data) {
@@ -395,7 +403,7 @@ function sanji() {
     var val = $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').val();
 
     $.ajax({
-        url: "http://10.108.226.152:8080/ATFCloud/scripttemplateController/showallscripttemplate",
+        url: address + "scripttemplateController/showallscripttemplate",
         data: { "transactid": val },
         type: "POST",
         success: function(data) {
@@ -433,7 +441,7 @@ $(document).ready(function(e) {
 function first() {
     $.ajax({
         async: false,
-        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        url: address + "autController/selectAll",
         type: "POST",
         success: function(data) {
             var autList = data.obj;
@@ -456,7 +464,7 @@ function second() {
     var val = $("#1ji").val();
     $.ajax({
         async: false,
-        url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+        url: address + 'transactController/showalltransact',
         data: { 'autlistselect': val },
         type: "POST",
         success: function(data) {
@@ -479,7 +487,7 @@ function third() {
     var val = $("#2ji").val();
 
     $.ajax({
-        url: "http://10.108.226.152:8080/ATFCloud/scripttemplateController/showallscripttemplate",
+        url: address + "scripttemplateController/showallscripttemplate",
         data: { "transactid": val },
         type: "POST",
         success: function(data) {
@@ -505,7 +513,7 @@ function third() {
 function diyi() {
     $.ajax({
         async: false,
-        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        url: address + "autController/selectAll",
         type: "POST",
         success: function(data) {
             var autList = data.obj;
@@ -526,7 +534,7 @@ function dier() {
     var val = $('select[name="subautid"]').val();
     $.ajax({
         async: false,
-        url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+        url: address + 'transactController/showalltransact',
         data: { 'autlistselect': val },
         type: "POST",
         success: function(data) {
@@ -549,7 +557,7 @@ function disan() {
     var val = $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').val();
 
     $.ajax({
-        url: "http://10.108.226.152:8080/ATFCloud/scripttemplateController/showallscripttemplate",
+        url: address + "scripttemplateController/showallscripttemplate",
         data: { "transactid": val },
         type: "POST",
         success: function(data) {
@@ -571,7 +579,7 @@ function disan() {
 //设置功能点及模板脚本
 function transid() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/trans_id',
+        url: address + 'TestcaseController/trans_id',
         type: 'post',
         data: $("#transidForm").serializeArray(),
         success: function(data) {
@@ -595,7 +603,7 @@ function executor() {
     });
     $('input[name="ids"]').val(id_array.join(','));
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/TestcaseController/excutor',
+        url: address + 'TestcaseController/excutor',
         type: 'post',
         data: $("#executorForm").serializeArray(),
         success: function(data) {

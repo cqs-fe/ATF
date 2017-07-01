@@ -73,7 +73,7 @@ var app = new Vue({
         //添加测试项目
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/insert',
+                url: address+'testProjectController/insert',
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
@@ -94,7 +94,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/delete',
+                url: address+'testProjectController/delete',
                 type: 'post',
                 data: {
                     'ids': app.ids
@@ -115,7 +115,7 @@ var app = new Vue({
         //修改测试项目
         update: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/update',
+                url: address+'testProjectController/update',
                 type: 'post',
                 data: $("#updateForm").serializeArray(),
                 success: function(data) {
@@ -160,7 +160,7 @@ function getTestProject(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/selectAllByPage',
+        url: address+'testProjectController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -219,7 +219,7 @@ function resort(target) {
 //搜索系统
 function queryTestProject() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/testProjectController/selectAllByPage',
+        url: address+'testProjectController/selectAllByPage',
         type: 'POST',
         data: {
             'page': app.currentPage,

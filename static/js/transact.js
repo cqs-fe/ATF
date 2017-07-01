@@ -2,7 +2,6 @@ var app = new Vue({
     el: '#v-transact',
     data: {
         transactList: [],
-        apiUrl: 'http://10.108.226.152:8080/ATFCloud/transactController/selectAll',
         tt: "", //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
@@ -57,7 +56,7 @@ var app = new Vue({
         insert: function() {
             $('#insertForm input[name="autid"]').val($('#autSelect').val()),
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/transactController/inserttransact',
+                    url: address+'transactController/inserttransact',
                     type: 'post',
                     data: $("#insertForm").serializeArray(),
                     success: function(data) {
@@ -78,7 +77,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/deletetransact',
+                url: address+'transactController/deletetransact',
                 type: 'post',
                 data: {
                     'transactid': app.ids
@@ -99,7 +98,7 @@ var app = new Vue({
         //修改功能点
         update: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/updatetransact',
+                url: address+'transactController/updatetransact',
                 type: 'post',
                 data: $("#updateForm").serializeArray(),
                 success: function(data) {
@@ -156,7 +155,7 @@ function getTransact(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/transactController/selectAllByPage',
+        url: address+'transactController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -217,7 +216,7 @@ function resort(target) {
 function autSelect() {
     $.ajax({
         async: false,
-        url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+        url: address+"autController/selectAll",
         type: "POST",
         success: function(data) {
             var autList = data.obj;
@@ -240,7 +239,7 @@ function setval() {
     var oneVal = getVal.split('=')[1];
     $("#autSelect").val(oneVal);
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/transactController/transactqueryByPage',
+        url: address+'transactController/transactqueryByPage',
         type: 'POST',
         data: {
             'page': 1,
@@ -271,7 +270,7 @@ function setval() {
 //通过选择被测系统筛选查询功能点 
 function queryTransact() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/transactController/transactqueryByPage',
+        url: address+'transactController/transactqueryByPage',
         type: 'POST',
         data: {
             'page': app.currentPage,

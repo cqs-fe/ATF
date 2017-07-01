@@ -2,7 +2,6 @@ var app = new Vue({
     el: '#v-aut',
     data: {
         autList: [],
-        apiUrl: 'http://10.108.226.152:8080/ATFCloud/autController/selectAll',
         tt: "", //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
@@ -73,7 +72,7 @@ var app = new Vue({
         //添加单案例
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/autController/insert',
+                url: address+'autController/insert',
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
@@ -94,7 +93,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/autController/delete',
+                url: address+'autController/delete',
                 type: 'post',
                 data: {
                     'ids': app.ids
@@ -115,7 +114,7 @@ var app = new Vue({
         //修改测试系统
         update: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/autController/update',
+                url: address+'autController/update',
                 type: 'post',
                 data: $("#updateForm").serializeArray(),
                 success: function(data) {
@@ -174,7 +173,7 @@ function getAut(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/autController/selectAllByPage',
+        url: address+'autController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -234,7 +233,7 @@ function resort(target) {
 //搜索系统
 function queryAut() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/autController/selectByPageAndCode',
+        url: address+'autController/selectByPageAndCode',
         type: 'POST',
         data: {
             'page': app.currentPage,

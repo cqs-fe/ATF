@@ -2,7 +2,11 @@ var app = new Vue({
     el: '#scene',
     data: {
         sceneList: [],
-        tt: "", //总条数
+        priority: [], // 优先级
+        executeMethod: [], // 执行方式
+        caseCompositeType: [], // 案例组成类型
+        useStatus: [], // 案例状态
+        tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
         totalPage: 10, //总页数
@@ -18,7 +22,14 @@ var app = new Vue({
         selectedSceneCode: '',
         selectedSceneName: '',
         selectedAbstractarchitecture_name: '',
-        selectedScene_desc: ''
+        selectedScene_desc: '',
+        addshow:false, //添加场景
+        isShow: false, //筛选
+        iconflag:true,
+        customFilterList:[
+            {title: '选择1'},
+            {title: '选择2'}
+        ]
     },
     ready: function() {
         getScene(this.currentPage, this.pageSize, this.order, this.sort);
@@ -72,7 +83,7 @@ var app = new Vue({
         //添加场景
         insert: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/sceneController/insertSelective',
+                url: address+'sceneController/insertSelective',
                 type: 'post',
                 data: {},
                 success: function(data) {
@@ -93,7 +104,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids);
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/sceneController/delete',
+                url: address+'sceneController/delete',
                 type: 'post',
                 data: {
                     'id': app.ids
@@ -114,7 +125,7 @@ var app = new Vue({
         //修改场景
         update: function() {
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/sceneController/update',
+                url: address+'sceneController/update',
                 type: 'post',
                 data: {},
                 success: function(data) {
@@ -140,6 +151,16 @@ var app = new Vue({
             $('#updateForm input[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().html());
             $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
         },
+        //自定义筛选条件添加选择项
+        addItem: function(){
+            var n=this.customFilterList?this.customFilterList.length+1:1;
+            this.customFilterList.push({title:'选择'+n});
+        },
+        //删除选择项
+        removeItem: function(item){
+            var index=this.customFilterList.indexOf(item);
+            this.customFilterList.splice(index,1);
+        }
 
     },
 
@@ -150,7 +171,7 @@ var app = new Vue({
 function getScene(page, listnum, order, sort) {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/sceneController/selectAllByPage',
+        url: address+'sceneController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -207,7 +228,7 @@ function resort(target) {
 //搜索场景
 function queryScene() {
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/sceneController/selectByPrimaryKey',
+        url: address+'sceneController/selectByPrimaryKey',
         type: 'POST',
         data: {
             'page': app.currentPage,

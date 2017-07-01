@@ -28,7 +28,7 @@ var app = new Vue({
             var classname = $('#addClassForm input[name="classname"]').val(),
                 descname = $('#addClassForm input[name="descname"]').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/omclassController/insertSelective',
+                url: address+'omclassController/insertSelective',
                 type: 'post',
                 data: {
                     "classname": classname,
@@ -58,7 +58,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/omclassController/delete',
+                    url: address+'omclassController/delete',
                     type: 'post',
                     data: {
                         "classid": classid,
@@ -89,7 +89,7 @@ var app = new Vue({
                 inputargdesc = $('#addMethodForm input[name="inputargdesc"]').val();
 
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/ommethodController/insertSelective',
+                url: address+'ommethodController/insertSelective',
                 type: 'post',
                 data: {
                     "forClassid": this.classId,
@@ -124,7 +124,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/ommethodController/delete',
+                    url: address+'ommethodController/delete',
                     type: 'post',
                     data: {
                         "methodid": methodid,
@@ -159,7 +159,7 @@ var app = new Vue({
             var classname = $('#classForm input[name="classname"]').val(),
                 descname = $('#classForm input[name="descname"]').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/omclassController/update',
+                url: address+'omclassController/update',
                 type: 'post',
                 data: {
                     "classid": app.classId,
@@ -186,7 +186,7 @@ var app = new Vue({
                 waittime = $('#methodForm input[name="waittime"]').val();
             tableToJson();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/ommethodController/update',
+                url: address+'ommethodController/update',
                 type: 'post',
                 data: {
                     "methodid": this.methodId,
@@ -242,7 +242,7 @@ function getClass() {
     var autName=decodeURI(para[1].split('=')[1]);
     $('.autName').html(autName);
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/omclassController/selectClassMethodByAutId',
+        url: address+'omclassController/selectClassMethodByAutId',
         type: 'post',
         data: { 'autId': autId },
         success: function(data) {
@@ -279,7 +279,7 @@ function classClick(event) {
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: 'http://10.108.226.152:8080/ATFCloud/ommethodController/selectByClassId',
+            url: address+'ommethodController/selectByClassId',
             type: 'post',
             data: {
                 forClassid: app.classId,
@@ -318,7 +318,7 @@ function methodClick(event) {
 
         app.methodId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: 'http://10.108.226.152:8080/ATFCloud/ommethodController/selectByPrimaryKey',
+            url: address+'ommethodController/selectByPrimaryKey',
             type: 'post',
             data: {
                 methodid: app.methodId,

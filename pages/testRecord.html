@@ -2,102 +2,20 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-<meta content="telephone=no" name="format-detection"/>
-<meta content="email=no" name="format-detection"/>
-    <title>测试轮次管理</title>
-
-    <link rel="stylesheet" type="text/css" href="/public/static/css/base_47dea65.css" />
-    <link rel="stylesheet" type="text/css" href="/public/static/css/index_e779e19.css" />
-    <link rel="stylesheet" type="text/css" href="/public/static/css/pagination_64872d5.css" />
-    <link rel="stylesheet" type="text/css" href="/public/static/css/scene_2ca5940.css" />
+    <link rel="import" href="./common/header.html?__inline">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/scene.css">
+    <title>测试记录</title>
 </head>
 
-<body id="testroundManage" v-cloak>
+<body id="testRecord" v-cloak>
     <div class="content">
         <!--header start-->
-        <header class="header white-bg">
-    <div class="sidebar-toggle-box">
-        <div data-original-title="点击折叠" data-placement="right" class="icon-reorder tooltips"></div>
-    </div>
-    <!--logo start-->
-    <a href="#" class="logo"><span>ATF</span></a>
-    <!--logo end-->
-
-    <div class="top-nav ">
-        <!--user info start-->
-        <ul class="nav pull-right top-menu">
-            <!-- user login dropdown start-->
-            <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <img alt="" src="/public/static/images/avatar1_small_64c14fd.jpg">
-                    <span class="username">李唤</span>
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu extended logout">
-                    <div class="log-arrow-up"></div>
-                    <li><a href="#"><i class=" icon-suitcase"></i>个人中心</a></li>
-                    <li><a href="#"><i class="icon-cog"></i> 设置</a></li>
-                    <li><a href="#"><i class="icon-bell-alt"></i> 通知</a></li>
-                    <li><a href="login.html"><i class="icon-key"></i> 注销</a></li>
-                </ul>
-            </li>
-            <!-- user login dropdown end -->
-        </ul>
-        <!--search & user info end-->
-    </div>
-</header>
+        <link rel="import" href="./common/header-guide.html?__inline">
         <!--header end-->
         <!--sidebar start-->
-        <aside>
-    <div id="sidebar" class="nav-collapse ">
-        <!-- sidebar menu start-->
-        <ul class="sidebar-menu">
-            <li class="sub-menu">
-                <a href="caseManagement.html" class="">
-                    <i class="icon-book"></i>
-                    <span>案例管理</span>
-                    <span class="arrow"></span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
-                    <span>系统管理</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li class="sub-menu">
-                        <a class="" href="testitems.html">测试任务</a>
-                    </li>
-                    <li class="sub-menu">
-                        <a class="" href="newusermanagement.html">系统用户</a>
-                    </li>
-                    <li class="sub-menu">
-                        <a class="" href="javascript:;">
-                            <span>测试系统</span>
-                            <span class="arrow"></span>
-                        </a>
-                        <ul class="sub">
-                            <li class="sub-menu">
-                                <a href="" class=""><span>功能点</span>
-                                </a>
-                                <ul class="sub">
-                                    <li><a href="">元素库</a></li>
-                                    <li><a href="">对象库</a></li>
-                                    <li><a href="">模板脚本</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <!-- sidebar menu end-->
-    </div>
-</aside>
-
+        <link rel="import" href="./common/aside-guide.html?__inline">
         <!--sidebar end-->
         <!--main content start-->
         <section id="main-content">
@@ -105,43 +23,31 @@
                 <!--top-button start-->
                 <div class="row">
                     <div class="col-lg-12 top-btn">
-                        <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
+                        <!-- <a class="btn btn-white"  @click=""><i class="icon-search"></i> 搜索</a> -->
+                        <a class="btn btn-white"><i class="icon-plus"></i> 合并</a>
                         <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
                         <!-- insertModal start -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">添加测试轮次</h4>
+                                        <h4 class="modal-title">添加场景</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
                                         <section class="panel">
                                             <form id="insertForm" class="form-horizontal" role="form">
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">名称</label>
+                                                    <label class="col-lg-3 control-label">场景名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" name="roundname" class="form-control">
+                                                        <input type="text" name="" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">描述</label>
+                                                    <label class="col-lg-3 control-label">场景说明</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="4" name='rounddesc'></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-4 control-label">记录单管理方式</label>
-                                                    <div class="col-lg-5">
-                                                        <input type="text" name="recordmanagementflag" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-4 control-label">定时执行设置</label>
-                                                    <div class="col-lg-5">
-                                                        <input type="text" name="timeexecutesetting" class="form-control">
+                                                        <textarea class="form-control" rows="4"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -162,11 +68,11 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">删除测试轮次</h4>
+                                        <h4 class="modal-title">删除测试系统</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
-                                        <h4>确认删除测试轮次？</h4>
+                                        <h4>确认删除测试系统？</h4>
                                         <!-- modal-body end -->
                                     </div>
                                     <div class="modal-footer">
@@ -183,40 +89,22 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">修改测试轮次</h4>
+                                        <h4 class="modal-title">修改场景</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
                                         <section class="panel">
-                                            <form id="updateForm" class="form-horizontal" role="form">
-                                                <div class="form-group hidden">
-                                                    <label class="col-lg-4 control-label">id</label>
+                                            <form id="insertForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">场景名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="id" value="{{ selectedId}}">
+                                                        <input type="text" name="" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">名称</label>
+                                                    <label class="col-lg-3 control-label">场景说明</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" name="roundname" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-4 control-label">描述</label>
-                                                    <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="4" name='rounddesc'></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-4 control-label">记录单管理方式</label>
-                                                    <div class="col-lg-5">
-                                                        <input type="text" name="recordmanagementflag" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-4 control-label">定时执行设置</label>
-                                                    <div class="col-lg-5">
-                                                        <input type="text" name="timeexecutesetting" class="form-control">
+                                                        <textarea class="form-control" rows="4"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -225,7 +113,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="update()">修改</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
                                     </div>
                                 </div>
                             </div>
@@ -267,24 +155,6 @@
                             </div>
                         </div>
                         <!-- failModal end -->
-                        <!-- selectAlertModal start -->
-                        <div class="modal fade" id="selectAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">操作失败</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h4>请先选中一条数据！</h4>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- selectAlertModal end -->
                     </div>
                 </div>
                 <!--topbutton end-->
@@ -293,20 +163,45 @@
                     <div class="col-lg-12">
                         <section class="panel">
                             <header class="panel-heading">
-                                测试轮次管理
+                                测试记录
                             </header>
-                            <!-- <div class="filter">
+                            <div class="filter">
                                 <div class="row">
                                     <form class="form-horizontal col-lg-12">
                                         <div class="form-group">
-                                            <label class="col-lg-1 control-label">搜索</label>
-                                            <div class="col-lg-2">
-                                                <input type="text"  class="form-control" placeholder="请输入场景名称" name="" v-model="querySceneId">
+                                            <label class="col-lg-1 control-label">搜索条件</label>
+                                            <label class="col-lg-1 control-label">测试阶段</label>
+                                            <div class="col-lg-1">
+                                                <input type="text" class="form-control" name="testphase">
+                                            </div>
+                                            <label class="col-lg-1 control-label">测试轮次</label>
+                                            <div class="col-lg-1">
+                                                <input type="text" class="form-control" name="executeround">
+                                            </div>
+                                            <label class="col-lg-1 control-label">用例编号</label>
+                                            <div class="col-lg-1">
+                                                <input type="text" class="form-control" name="testcaseid">
+                                            </div>
+                                            <label class="col-lg-1 control-label">记录单状态</label>
+                                            <div class="col-lg-1">
+                                                <select class="form-control">
+                                                    <option>激活</option>
+                                                    <option>未激活</option>
+                                                    <option>最新测试轮次的的激活记录单</option>
+                                                    <option>所有状态</option>
+                                                </select>
+                                            </div>
+                                            <label class="col-lg-1 control-label">执行结果</label>
+                                            <div class="col-lg-1">
+                                                <select class="form-control">
+                                                    <option>成功</option>
+                                                    <option>失败</option>
+                                                </select>
                                             </div>
                                             <div class="col-lg-1">
-                                                <a class="btn btn-white" onclick="queryScene()">搜索</a>
+                                                <a class="btn btn-primary" onclick="queryRecord()">搜索</a>
                                             </div>
-                                            <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
+                                            <!--  <label class="col-lg-2  control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
                                                     <option value="1" selected>1</option>
@@ -314,11 +209,11 @@
                                                     <option value="5">5</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getScene(1, 10, 'id', 'asc')">刷新</a></div>
+                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getScene(1, 10, 'id', 'asc')">刷新</a></div> -->
                                         </div>
                                     </form>
                                 </div>
-                            </div> -->
+                            </div>
                             <!-- 表格 -->
                             <table class="table table-striped table-bordered border-top text-center" id="sample_1">
                                 <thead>
@@ -326,21 +221,42 @@
                                         <th>
                                             <!-- <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" /> -->
                                         </th>
-                                        <th class="hidden-phone text-center" data-order="id" data-sort="asc" onclick="resort(this)">名称 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="text-center">描述</th>
-                                        <th class="text-center">记录单管理方式</th>
-                                        <th class="hidden-phone text-center">定时执行设置</th>
+                                        <th class="text-center">记录单id</th>
+                                        <th class="text-center">用例id</th>
+                                        <th class="text-center">节点id</th>
+                                        <th class="text-center">节点名称</th>
+                                        <th class="text-center">测试阶段</th>
+                                        <th class="text-center">测试轮次</th>
+                                        <th class="text-center">执行轮次</th>
+                                        <th class="text-center">记录单状态</th>
+                                        <th class="text-center">执行结果状态</th>
                                     </tr>
                                 </thead>
-                                <tbody id="testroundTable">
-                                    <tr class="odd gradeX" v-for="testround in testroundList" id="{{testround.id}}">
+                                <tbody id="sceneTable">
+                                    <tr class="odd gradeX" v-for="scene in sceneList" id="{{scene.id}}" v-if="sceneList.length>0">
                                         <td width="5%">
-                                            <input type="radio" v-model="" name="chk_list" id="{{testround.id}}" />
+                                            <input type="checkbox" v-model="" name="chk_list" id="{{scene.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="20%">{{ testround.roundname }}</td>
-                                        <td width="35%">{{ testround.rounddesc }}</td>
-                                        <td width="">{{ testround.recordmanagementflag }}</td>
-                                        <td width="">{{ testround.timeexecutesetting }}</td>
+                                        <td class="center" width="">{{ scene.scenename }}</td>
+                                        <td width="">{{ scene.description }}</td>
+                                        <td class="" width=""></td>
+                                        <td class="" width=""></td>
+                                        <td class="" width=""></td>
+                                        <td class="" width=""></td>
+                                        <td class="" width=""></td>
+                                        <td class="" width="">
+                                            <select class="form-control">
+                                                <option>激活</option>
+                                            </select>
+                                        </td>
+                                        <td class="" width="">
+                                            <select class="form-control">
+                                                <option>成功</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr v-else>
+                                        <td colspan="10">暂无数据</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -375,7 +291,7 @@
                                         </ul>
                                         <div class="go">
                                             <div :class="isPageNumberError?'input-group error':'input-group'">
-                                                <input class="form-control" type="number" v-model="goToPage"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+                                                <input class="form-control" type="number" v-model="goToPage" min="1"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
                                             </div>
                                         </div>
                                         <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>
@@ -387,32 +303,12 @@
                 </div>
                 <!-- table end -->
             </section>
-            <div class="copy-right text-center">
-    <span class="color-96">Copyright &copy; 1998－2017 BUPT All Rights Reserved <br>北京邮电大学物流工程实验室 版权所有</span> 
-</div>
+            <link rel="import" href="./common/copy-right.html?__inline">
         </section>
     </div>
-
-<script type="text/javascript" src="/public/lib/mod_d05ce2e.js"></script>
-<script>/*resourcemap*/
-</script>
-<script src="/public/lib/jquery_9d91e40.js"></script>
-<script src="/public/lib/jquery-1.8.3.min_76b718f.js"></script>
-<script src="/public/lib/bootstrap.min_6d91d60.js"></script>
-<script src="/public/lib/jquery.scrollTo.min_e300145.js"></script>
-<script type="text/javascript" src="/public/lib/jquery.nicescroll_b183fad.js"></script>
-<script type="text/javascript" src="/public/lib/jquery.sparkline_bdcbe87.js"></script>
-<script src="/public/lib/jquery.easy-pie-chart_c5c3733.js"></script>
-<script src="/public/lib/owl.carousel_9bc6f1e.js"></script>
-<script src="/public/lib/jquery.customSelect.min_4c50f61.js"></script>
-<script src="/public/lib/common-scripts_de7c4e5.js"></script>
-<script type="text/javascript" src="/public/lib/vue_1a55fd3.js"></script>
-<script type="text/javascript" src="/public/static/js/constant_ccf38ad.js"></script>
-<script type="text/javascript" src="/public/lib/form-component_23784f4.js"></script>
-<script src="/public/lib/vue-resource.min_c1d2a47.js"></script>
-<script type="text/javascript" src="/public/static/js/testroundManage_d4ea416.js"></script>
 </body>
 
 </html>
-
-<!--common script for all pages-->
+<link rel="import" href="./common/footer.html?__inline">
+<script src="../lib/vue-resource.min.js"></script>
+<script type="text/javascript" src="../static/js/testRecord.js"></script>

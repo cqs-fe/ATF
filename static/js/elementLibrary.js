@@ -29,7 +29,7 @@ var app = new Vue({
         autSelect: function() {
             $.ajax({
                 async: false,
-                url: "http://10.108.226.152:8080/ATFCloud/autController/selectAll",
+                url: address+"autController/selectAll",
                 type: "POST",
                 success: function(data) {
                     var autList = data.obj;
@@ -48,7 +48,7 @@ var app = new Vue({
         transactSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/showalltransact',
+                url: address+'transactController/showalltransact',
                 data: { 'autlistselect': val },
                 type: "POST",
                 success: function(data) {
@@ -68,7 +68,7 @@ var app = new Vue({
         classtypeSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/autController/selectClass',
+                url: address+'autController/selectClass',
                 data: { 'id': val },
                 type: "POST",
                 success: function(data) {
@@ -93,7 +93,7 @@ var app = new Vue({
             $("#autSelect").val(this.autId);
             $("#transactSelect").val(this.transactId);
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/transactController/transactqueryByPage',
+                url: address+'transactController/transactqueryByPage',
                 type: 'GET',
                 async: false,
                 data: {
@@ -128,7 +128,7 @@ var app = new Vue({
                 relateIdentifyObjectId = $("#addRelateIdentifyObjectId").val(),
                 relateParentIdentifyObjectId = $("#addRelateParentIdentifyObjectId").val();
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/insertUI',
+                url: address+'elementlibraryController/insertUI',
                 type: 'post',
                 data: {
                     "UIName": UIName,
@@ -154,7 +154,7 @@ var app = new Vue({
             var nodes = treeObj.getCheckedNodes(true);
             var delUIName = nodes[0].name;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/deleteUI',
+                url: address+'elementlibraryController/deleteUI',
                 type: 'post',
                 data: {
                     "deleteUI": delUIName,
@@ -183,7 +183,7 @@ var app = new Vue({
                 relateIdentifyObjectId = Lnodes[0].id,
                 relateParentIdentifyObjectId = Lnodes[0].parentid;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/updateUI',
+                url: address+'elementlibraryController/updateUI',
                 type: 'post',
                 data: {
                     "UIName": UIName,
@@ -215,7 +215,7 @@ var app = new Vue({
                 nodes = treeObj.getCheckedNodes(true),
                 selectedUIName = nodes[0].name;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/insertElement',
+                url: address+'elementlibraryController/insertElement',
                 type: 'post',
                 data: {
                     "transid": this.transactId,
@@ -247,7 +247,7 @@ var app = new Vue({
             }
             var delUIName = nodes[0].name;
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/deleteElement',
+                url: address+'elementlibraryController/deleteElement',
                 type: 'post',
                 data: {
                     "deleteElements": delElementName,
@@ -323,7 +323,7 @@ var app = new Vue({
                 relatePropVal = relatePropNameTd.eq(2).html();
             });
             $.ajax({
-                url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/updateElement',
+                url: address+'elementlibraryController/updateElement',
                 type: 'post',
                 data: {
                     "UIName": UIName,
@@ -554,7 +554,7 @@ var setting1 = {
                 $('#UI').css('display', 'block');
                 $('#ele').css('display', 'none');
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/queryUI',
+                    url: address+'elementlibraryController/queryUI',
                     type: 'post',
                     data: {
                         "transid": app.transactId,
@@ -579,7 +579,7 @@ var setting1 = {
                 $('#UI').css('display', 'none');
                 $('#ele').css('display', 'block');
                 $.ajax({
-                    url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/queryElement',
+                    url: address+'elementlibraryController/queryElement',
                     type: 'post',
                     data: {
                         "transid": app.transactId,
@@ -688,7 +688,7 @@ var setting1 = {
 function getElementTree() {
     var transid = $("#transactSelect").val();
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/elementlibraryController/showUIandElement',
+        url: address+'elementlibraryController/showUIandElement',
         type: 'post',
         data: { "transid": transid },
         success: function(data) {
@@ -746,7 +746,7 @@ var setting2 = {
 function getUILinkedObjectTree() {
     var transid = $("#transactSelect").val();
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repoAll',
+        url: address+'object_repoController/queryObject_repoAll',
         type: 'post',
         data: { "transid": transid },
         success: function(data) {
@@ -812,7 +812,7 @@ var setting3 = {
 function getEleParentObjectTree() {
     var transid = $("#transactSelect").val();
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repoAll',
+        url: address+'object_repoController/queryObject_repoAll',
         type: 'post',
         data: { "transid": transid },
         success: function(data) {
@@ -875,7 +875,7 @@ var setting4 = {
 function getEleLinkedObjectTree() {
     var transid = $("#transactSelect").val();
     $.ajax({
-        url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repoAll',
+        url: address+'object_repoController/queryObject_repoAll',
         type: 'post',
         data: { "transid": transid },
         success: function(data) {
