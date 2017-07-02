@@ -305,15 +305,15 @@
                                     <th scope="col">状态</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="triggers">
                                 <tr v-for="item in triggers">
                                     <td><input type="checkbox" :value="item.id" v-model="triggerInfo.selectedTrigger" @change="test();"></td>
                                     <td>{{item.name}}</td>
                                     <td>{{item.desc}}</td>
                                     <td>
                                         <select>
-                                            <option>启用</option>
-                                            <option>禁用</option>
+                                            <option value="1">启用</option>
+                                            <option value="0">禁用</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -321,7 +321,7 @@
                         </table>
                     </div>
                     <div>
-                        <button class="btn btn-info triggerSave">
+                        <button class="btn btn-info triggerSave" @click='saveTriggerState();'>
                             保存
                         </button>
                     </div>

@@ -455,6 +455,7 @@ var vBody = new Vue({
 			}
 			// 简单修改保存
 			function save3(){
+				
 			}
 
 			// 修改保存
@@ -521,6 +522,28 @@ var vBody = new Vue({
 					actions: '[' + actions + ']'
 				};
 			}
+		},
+		saveTriggerState: function() {
+			var trs = document.querySelectorAll('#triggers tr')
+			var dataArray = [];
+			for(var i=0;i<trs.length;i++){
+				var item = {};
+				item.id = trs[i].querySelector('input').value;
+				// console.log(item.id)
+				item.id = trs[i].querySelector('select').value;
+				dataArray.push(JSON.stringify(item))
+			}
+			$.ajax({
+				url: address + 'trigerController/updatestate',
+				data: 'states='+ '['+dataArray.toString()+']',
+				type: 'post',
+				dataType: 'json',
+				success: function(data, statusText) {
+					if(data.success === true) {
+						Vac.alert('保存成功！')
+					}
+				}
+			})
 		},
 		saveStrategy: function(){
 			console.log('he');
