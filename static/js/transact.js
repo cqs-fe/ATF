@@ -2,10 +2,10 @@ var app = new Vue({
     el: '#v-transact',
     data: {
         transactList: [],
-        tt: "", //总条数
+        tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
-        totalPage: 10, //总页数
+        totalPage: 1, //总页数
         listnum: 10, //页面大小
         order: 'id',
         sort: 'asc',

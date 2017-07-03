@@ -41,13 +41,13 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">场景名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" name="" class="form-control">
+                                                        <input type="text" name="scenename" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">场景说明</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="4"></textarea>
+                                                        <textarea class="form-control" rows="4" name="description"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -68,11 +68,11 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">删除测试系统</h4>
+                                        <h4 class="modal-title">删除测试记录</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
-                                        <h4>确认删除测试系统？</h4>
+                                        <h4>确认删除测试记录？</h4>
                                         <!-- modal-body end -->
                                     </div>
                                     <div class="modal-footer">
@@ -169,21 +169,17 @@
                                 <div class="row">
                                     <form class="form-horizontal col-lg-12">
                                         <div class="form-group">
-                                            <label class="col-lg-1 control-label">搜索条件</label>
+                                            <label class="col-lg-1 control-label">搜索</label>
                                             <label class="col-lg-1 control-label">测试阶段</label>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-2">
                                                 <input type="text" class="form-control" name="testphase">
                                             </div>
                                             <label class="col-lg-1 control-label">测试轮次</label>
-                                            <div class="col-lg-1">
+                                            <div class="col-lg-2">
                                                 <input type="text" class="form-control" name="executeround">
                                             </div>
-                                            <label class="col-lg-1 control-label">用例编号</label>
-                                            <div class="col-lg-1">
-                                                <input type="text" class="form-control" name="testcaseid">
-                                            </div>
-                                            <label class="col-lg-1 control-label">记录单状态</label>
-                                            <div class="col-lg-1">
+                                            <label class="col-lg-2 control-label">记录单状态</label>
+                                            <div class="col-lg-2">
                                                 <select class="form-control">
                                                     <option>激活</option>
                                                     <option>未激活</option>
@@ -191,17 +187,12 @@
                                                     <option>所有状态</option>
                                                 </select>
                                             </div>
-                                            <label class="col-lg-1 control-label">执行结果</label>
-                                            <div class="col-lg-1">
-                                                <select class="form-control">
-                                                    <option>成功</option>
-                                                    <option>失败</option>
-                                                </select>
-                                            </div>
                                             <div class="col-lg-1">
                                                 <a class="btn btn-primary" onclick="queryRecord()">搜索</a>
                                             </div>
-                                            <!--  <label class="col-lg-2  control-label">展示条目</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2  col-lg-offset-7 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
                                                     <option value="1" selected>1</option>
@@ -209,7 +200,7 @@
                                                     <option value="5">5</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getScene(1, 10, 'id', 'asc')">刷新</a></div> -->
+                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getScene(1, 10, 'id', 'asc')">刷新</a></div>
                                         </div>
                                     </form>
                                 </div>
@@ -221,13 +212,11 @@
                                         <th>
                                             <!-- <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" /> -->
                                         </th>
-                                        <th class="text-center">记录单id</th>
-                                        <th class="text-center">用例id</th>
-                                        <th class="text-center">节点id</th>
-                                        <th class="text-center">节点名称</th>
                                         <th class="text-center">测试阶段</th>
                                         <th class="text-center">测试轮次</th>
                                         <th class="text-center">执行轮次</th>
+                                        <th class="text-center">用例编号</th>
+                                        <th class="text-center">节点名称</th>
                                         <th class="text-center">记录单状态</th>
                                         <th class="text-center">执行结果状态</th>
                                     </tr>
@@ -239,8 +228,6 @@
                                         </td>
                                         <td class="center" width="">{{ scene.scenename }}</td>
                                         <td width="">{{ scene.description }}</td>
-                                        <td class="" width=""></td>
-                                        <td class="" width=""></td>
                                         <td class="" width=""></td>
                                         <td class="" width=""></td>
                                         <td class="" width=""></td>
@@ -261,7 +248,7 @@
                                 </tbody>
                             </table>
                             <!-- 分页 -->
-                            <!-- <div class="row">
+                            <div class="row">
                                 <div class="col-lg-12 text-center">
                                     <div class="pagination-wrap" v-if="totalPage!=0">
                                         <ul class="pagination">
@@ -297,7 +284,7 @@
                                         <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </section>
                     </div>
                 </div>

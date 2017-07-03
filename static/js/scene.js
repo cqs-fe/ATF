@@ -9,7 +9,7 @@ var app = new Vue({
         tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
-        totalPage: 10, //总页数
+        totalPage: 1, //总页数
         listnum: 10, //页面大小
         order: 'id',
         sort: 'asc',
@@ -23,17 +23,21 @@ var app = new Vue({
         selectedSceneName: '',
         selectedAbstractarchitecture_name: '',
         selectedScene_desc: '',
-        addshow:false, //添加场景
+        addshow: false, //添加场景
         isShow: false, //筛选
-        iconflag:true,
-        customFilterList:[
-            {title: '选择1'},
-            {title: '选择2'}
-        ]
+        iconflag: true,
+        customFilterList: [
+            { title: '选择1' },
+            { title: '选择2' }
+        ],
+        caseNodeNum: 0,
+        caseNode: '</h3><div class="form-group"><label class="col-lg-2 control-label hidden">案例组成类型</label><div class="col-lg-4 hidden"><input type="text" class="form-control" name="caseCompositeType" value="3"></div><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid" id=""></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><input class="form-control" name="subversioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option>模板</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option></select></div><label class="col-lg-2 control-label">测试顺序</label><div class="col-lg-4"><input class="form-control" name="steporder"></div></div><div class="form-group"><label class="col-lg-2 control-label">案例使用状态</label><div class="col-lg-4"><select class="form-control" size="1" name="subusestatus"><option value="1">新增</option><option value="2">评审通过</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
+        caseList: [], //案例
     },
     ready: function() {
         getScene(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
+        getCase(this.currentPage, this.pageSize, this.order, this.sort);
     },
     methods: {
         //获取选中的id
@@ -82,10 +86,18 @@ var app = new Vue({
 
         //添加场景
         insert: function() {
+            var scenename=$('#insertForm input[name="scenename"]');
+            var description=$('#insertForm textarea[name="description"]');
             $.ajax({
-                url: address+'sceneController/insertSelective',
+                url: address + 'sceneController/insertSelective',
                 type: 'post',
-                data: {},
+                data: {
+                    'scenename': scenename,
+                    'description':description,
+                    'exeStrategyTestcase':'',
+                    'exeStrategyTestcaseaction': '',
+                    'errStrategy':''
+                },
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
@@ -104,10 +116,10 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids);
             $.ajax({
-                url: address+'sceneController/delete',
+                url: address + 'sceneController/delete',
                 type: 'post',
                 data: {
-                    'id': app.ids
+                    'id': app.selectedId
                 },
                 success: function(data) {
                     console.info(data);
@@ -125,9 +137,9 @@ var app = new Vue({
         //修改场景
         update: function() {
             $.ajax({
-                url: address+'sceneController/update',
+                url: address + 'sceneController/update',
                 type: 'post',
-                data: {},
+                data: $("#updateForm").serializeArray(),
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
@@ -145,25 +157,86 @@ var app = new Vue({
         getSelected: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
-            $('input[name="id"]').val(selectedId);
-            $('#updateForm input[name="autCode"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="autName"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm input[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().html());
-            $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
+            $('#updateForm input[name="id"]').val(selectedId);
+            $('#updateForm input[name="scenename"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="description"]').val(selectedInput.parent().next().next().html());
         },
         //自定义筛选条件添加选择项
-        addItem: function(){
-            var n=this.customFilterList?this.customFilterList.length+1:1;
-            this.customFilterList.push({title:'选择'+n});
+        addItem: function() {
+            var n = this.customFilterList ? this.customFilterList.length + 1 : 1;
+            this.customFilterList.push({ title: '选择' + n });
         },
         //删除选择项
-        removeItem: function(item){
-            var index=this.customFilterList.indexOf(item);
-            this.customFilterList.splice(index,1);
+        removeItem: function(item) {
+            var index = this.customFilterList.indexOf(item);
+            this.customFilterList.splice(index, 1);
         }
 
     },
+           //获取流程节点
+        getSubCase: function(e) {
+            var flowId = $(e.target).parent().parent().attr('id'),
+                flowTr = $(e.target).parent().parent();
+            console.log(flowId);
+            if ($(e.target).attr("class") === "icon-angle-right") {
+                $.ajax({
+                    url: address + 'TestcaseController/testcaseactionquery',
+                    type: 'post',
+                    data: { 'testcaseid': flowId },
+                    success: function(data) {
+                        this.subCaseList = data.obj;
+                        console.log(this.subCaseList);
+                        for (var i = 0; i < this.subCaseList.length; i++) {
+                            var subTr = $("<tr class='subShow'></tr>"),
+                                iconTd = $("<td></td>"),
+                                checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                codeTd = $("<td></td>"),
+                                autTd = $("<td></td>"),
+                                transTd = $("<td></td>"),
+                                compositeTd = $("<td></td>"),
+                                useTd = $("<td></td>"),
+                                authorTd = $("<td></td>"),
+                                executorTd = $("<td></td>"),
+                                executeMethodTd = $("<td></td>");
+                            codeTd.html(this.subCaseList[i].subcasecode);
+                            autTd.html(this.subCaseList[i].autId);
+                            compositeTd.html(this.subCaseList[i].caseCompositeType);
+                            useTd.html(this.subCaseList[i].useStatus);
+                            authorTd.html(this.subCaseList[i].author);
+                            executorTd.html(this.subCaseList[i].executor);
+                            executeMethodTd.html(this.subCaseList[i].executeMethod);
+                            subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, authorTd, executorTd, executeMethodTd);
+                            flowTr.after(subTr);
+                        }
 
+                    }
+                });
+                $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
+            } else {
+                $(".subShow").css("display", "none");
+                $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
+            }
+
+
+        },
+                // 流程案例添加节点案例
+        addCaseNode: function() {
+            this.caseNodeNum++;
+            var cNode = $('<h3>流程节点案例' + this.caseNodeNum + this.caseNode);
+            var element = $("#addCaseNode").append(cNode);
+            this.$compile(element.get(0));
+            getUsers();
+            diyi(); //第一级函数
+            dier(); //第二级函数
+            disan(); //第三极函数
+            $('select[name="subautid"]').change(function() {
+                dier();
+                disan();
+            });
+            $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').change(function() {
+                disan();
+            });
+        },
 
 });
 
@@ -171,7 +244,7 @@ var app = new Vue({
 function getScene(page, listnum, order, sort) {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address+'sceneController/selectAllByPage',
+        url: address + 'sceneController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -187,6 +260,28 @@ function getScene(page, listnum, order, sort) {
         }
     });
 
+}
+
+//获取案例
+function getCase(currentPage, listnum, order, sort) {
+    $.ajax({
+        url: address + 'TestcaseController/selectAllByPage',
+        type: 'GET',
+        data: {
+            'page': currentPage,
+            'rows': listnum,
+            'order': order,
+            'sort': sort
+        },
+        success: function(data) {
+            // console.info(data);
+            // console.info(data.o.rows);
+            app.caseList = data.o.rows;
+            app.tt = data.o.total;
+            app.totalPage = Math.ceil(app.tt / listnum);
+            app.pageSize = listnum;
+        }
+    });
 }
 
 //改变页面大小
@@ -228,7 +323,7 @@ function resort(target) {
 //搜索场景
 function queryScene() {
     $.ajax({
-        url: address+'sceneController/selectByPrimaryKey',
+        url: address + 'sceneController/selectByPrimaryKey',
         type: 'POST',
         data: {
             'page': app.currentPage,

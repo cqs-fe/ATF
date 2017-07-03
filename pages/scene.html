@@ -23,7 +23,7 @@
                 <!--top-button start-->
                 <div class="row">
                     <div class="col-lg-12 top-btn">
-                        <a class="btn btn-white" @click="addshow=true"><i class="icon-plus"></i> 添加</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
                         <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
                         <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
                         <!-- insertModal start -->
@@ -41,13 +41,13 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">场景名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" name="" class="form-control">
+                                                        <input type="text" name="scenename" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">场景说明</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="4"></textarea>
+                                                        <textarea class="form-control" rows="4" name="description"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -94,17 +94,23 @@
                                     <div class="modal-body">
                                         <!-- modal-body start -->
                                         <section class="panel">
-                                            <form id="insertForm" class="form-horizontal" role="form">
+                                            <form id="updateForm" class="form-horizontal" role="form">
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label" >id</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" name="id" v-model="selectedId">
+                                                    </div>
+                                                </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">场景名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" name="" class="form-control">
+                                                        <input type="text" name="scenename" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">场景说明</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="4"></textarea>
+                                                        <textarea class="form-control" rows="4" name="description"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -151,7 +157,6 @@
                                                         <div class="col-lg-2">
                                                             <a class="btn btn-xs btn-danger" @click="removeItem(item)">删除</a>
                                                         </div>
-                                                        
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-lg-3 control-label">名称</label>
@@ -176,7 +181,6 @@
                                                         <a class="btn btn-primary" @click="addItem">添加选择项</a>
                                                     </div>
                                                 </div>
-                                                
                                             </form>
                                         </section>
                                         <!-- modal-body end -->
@@ -254,7 +258,7 @@
                                                     <option value="5">5</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getScene(1, 10, 'id', 'asc')">刷新</a></div>
+                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getScene(1, {{pageSize}}, 'id', 'asc')">刷新</a></div>
                                         </div>
                                     </form>
                                 </div>
@@ -364,6 +368,19 @@
                                             </h4>
                                         </div>
                                     </div>
+                                    <form class="form-horizontal col-lg-10">
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-lg-offset-7 control-label">展示条目</label>
+                                            <div class="col-lg-2">
+                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
+                                                    <option value="1" selected>1</option>
+                                                    <option value="3">3</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                            <!-- <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, 10, 'id', 'asc')">刷新</a></div> -->
+                                        </div>
+                                    </form>
                                 </div>
                                 <div class="row" v-show='isShow'>
                                     <div class="col-lg-12">
@@ -443,6 +460,79 @@
                                                     </tbody>
                                                 </table>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 表格 -->
+                                <table class="table table-striped table-bordered border-top text-center" id="sample_1">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:8px;">
+                                                <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
+                                            </th>
+                                            <th></th>
+                                            <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="caseCompositeType" data-sort="desc" onclick="resort(this)">案例组成类型 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="useStatus" data-sort="desc" onclick="resort(this)">状态 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="author" data-sort="desc" onclick="resort(this)">脚本编辑者 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="executor" data-sort="desc" onclick="resort(this)">执行者 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="executeMethod" data-sort="desc" onclick="resort(this)">执行方式 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="caseTable">
+                                        <tr class="odd gradeX" v-for="case in caseList" id="{{case.id}}">
+                                            <td>
+                                                <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
+                                            </td>
+                                            <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td>
+                                            <td class="center hidden-phone">{{ case.casecode }}</td>
+                                            <td>{{ case.autId }}</td>
+                                            <td class="hidden-phone">{{ case.transId }}</td>
+                                            <td class="hidden-phone">{{ case.caseCompositeType }}</td>
+                                            <td class="center hidden-phone">{{ case.useStatus }}</td>
+                                            <td class="center hidden-phone">{{ case.author }}</td>
+                                            <td class="center hidden-phone">{{ case.executor }}</td>
+                                            <td class="center hidden-phone">{{ case.executeMethod }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- 分页 -->
+                                <div class="row">
+                                    <div class="col-lg-12 text-center">
+                                        <div class="pagination-wrap" v-if="totalPage!=0">
+                                            <ul class="pagination">
+                                                <li :class="currentPage==1?'disabled':''"><a href="javascript:;" @click="turnToPage(1)">首页</a></li>
+                                                <li :class="currentPage==1?'disabled':''"><a @click="turnToPage(currentPage-1)" href="javascript:;">上一页</a></li>
+                                                <li>
+                                                    <a href="javascript:;" @click="turnToPage(currentPage-3)" v-text="currentPage-3" v-if="currentPage-3>0"></a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" @click="turnToPage(currentPage-2)" v-text="currentPage-2" v-if="currentPage-2>0"></a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" @click="turnToPage(currentPage-1)" v-text="currentPage-1" v-if="currentPage-1>0"></a>
+                                                </li>
+                                                <li class="active"><a href="javascript:;" @click="turnToPage(currentPage)" v-text="currentPage">3</a></li>
+                                                <li>
+                                                    <a href="javascript:;" @click="turnToPage(currentPage+1)" v-text="currentPage+1" v-if="currentPage+1<totalPage"></a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" @click="turnToPage(currentPage+2)" v-text="currentPage+2" v-if="currentPage+2<totalPage"></a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" @click="turnToPage(currentPage+3)" v-text="currentPage+3" v-if="currentPage+3<totalPage"></a>
+                                                </li>
+                                                <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(currentPage+1)">下一页</a></li>
+                                                <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(totalPage)">尾页</a></li>
+                                            </ul>
+                                            <div class="go">
+                                                <div :class="isPageNumberError?'input-group error':'input-group'">
+                                                    <input class="form-control" type="number" v-model="goToPage" min="1"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+                                                </div>
+                                            </div>
+                                            <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>
                                         </div>
                                     </div>
                                 </div>

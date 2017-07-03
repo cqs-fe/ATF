@@ -83,20 +83,31 @@ function xzmb(){
                 $('#fail').modal();
         },
         success: function (data) {
-            if(val2==""||val2==null){
-                $('#fail').modal();
-            }else if(val3==""||val3==null){
-                $('#fail').modal();
-            }else{
-                var str="";
-                //接收后台返回的结果
-                //alert("Connection success");
-                $('#success').modal();
-                str="<tr class='choose'>"+"<td>" +"<input class='index' type='radio' name='radio' onclick='templateTable();' id='checkAll'>"+"</td>"+"<td>"+val2+"</td>" +"<td>"+ val3+"</td>"+"</tr> ";
-                $('table[id="top_table"]>tbody').append(str);
+            $('table[id="top_table"] td').each(function fun() {
+                txt = $(this).text();
+                if (val2 == txt) {
+                    $('#fail').modal();
+                    return false;
+                }
+            });
+                if(txt != val2){
+                    var str = "";
+                    //接收后台返回的结果
+                    //alert("Connection success");
+                    $('#success').modal();
+                    str = "<tr class='choose'>" + "<td>" + "<input class='index' type='radio' name='radio' onclick='templateTable();' id='checkAll'>" + "</td>" + "<td>" + val2 + "</td>" + "<td>" + val3 + "</td>" + "</tr> ";
+                    $('table[id="top_table"]>tbody').append(str);
+                }
+
+                if (val2 == "" || val2 == null) {
+                    $('#fail').modal();
+                }
+                if(val3 == "" || val3 == null) {
+                    $('#fail').modal();
+                }
+
             }
-        }
-    });
+        })
 }
 
 //删除模板接口
@@ -162,14 +173,31 @@ function cs(){
         success: function (data) {
             //console.log('data:'+data);
             var jsonparse = JSON.parse(data);
-            var v=jsonparse[1];
+            var str="";
             var b="";
-            for (var key in v){
-                console.log(key)
-              b +="<label class='xinzeng'>"+key+"</label>"+"<input value='"+v[key]+"'>"+"<br>";
-                $(".showInfornamt").html(b);
+            console.log("jsonparse:"+jsonparse);
+            for(var i in jsonparse) {
+                str += "<tr>" + "<td>" + jsonparse[i]["Name"] +"<i class='glyphicon glyphicon-hand-right'  id='para' data-toggle='modal' href='#parameterList'>"+"</i>"+"</td>"+ "</tr>";
+                $('table[id="paraList"]').html(str);
+                b += "<label class='xinzeng'>" + jsonparse[i]["Name"] + "</label>" + "<input name=''>" + "<br>";
+                $("#ParaMeterL").html(b);
             }
-            var a="";
+            //for (var key in jsonparse[i]) {
+            //
+            //    b += "<label class='xinzeng'>" + key + "</label>" + "<input value='" + jsonparse[i][key] + "'>" + "<br>";
+            //    $("#ParaMeterL").html(b);
+            //}
+                //b += "<label class='xinzeng'>" + key + "</label>" + "<input value='" + jsonparse[i][key] + "'>" + "<br>";
+                //$(".showInfornamt").html(b);
+            //    //var v=jsonparse[1];
+            //    var b = "";
+            //    for (var key in jsonparse) {
+
+                    //b += "<label class='xinzeng'>" + key + "</label>" + "<input value='" + jsonparse[i][key] + "'>" + "<br>";
+                    //$(".showInfornamt").html(b);
+            //}
+            //i=0;i<jsonparse.length;i++
+            //var a="";
             //for(var i=0;i<jsonparse.length;i++){
             //    for (var key in jsonparse[1]){
             //        console.log(jsonparse[key]);
@@ -181,7 +209,7 @@ function cs(){
             //    a = jsonparse[i]["Name"];
             //    console.log(JSON.stringify(jsonparse[i]));
             //}
-            $('input[id="Name"]').val(a);
+            //$('input[id="Name"]').val(a);
             //console.log(JSON.parse(data));
 
         }
@@ -224,12 +252,50 @@ function templateTable() {
         success: function (data) {
             var tableList = data.data;
             var str = "";
+            var b="";
             for (var i = 0; i < tableList.length; i++) {
-                for(var j in tableList[i].operator) {
-                    str += " <tr class='choose'>" + "<td>" + "<input class='index' type='checkbox' name='radio' id='checkAll'>" + "</td>" + "<td>" + i + "</td>" + "<td>" +tableList[2].operator[j] + "</td>" + "<td>" + tableList[i].function + "</td>" + "<td>" + tableList[i].arguments + "</td>" + "</tr> ";
-                }
+                var ii=i+1;
+                //for (var j in tableList[i].arguments){
+                    str += "<tr class='choose'>" + "<td>" + "<input class='index' type='checkbox' name='radio' id='checkAll'>" + "</td>" + "<td>" + ii + "</td>" + "<td>" + "<label class='alignRight'>UI:</label>" + "<input id='uiSel' value='" + tableList[i].operator[1] + "'>" + "<br>" + "<label class='alignRight'>元素:</label>" + "<input id='elementSel'value='" + tableList[i].operator[2] + "'>" +"<br>"+ "<i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'></i>"+"</td>" + "<td>" + "<select  style='width:200px;' name='method'><option>"+tableList[i].function+"</option></select>"+ "</td>" + "<td>"+"<table id='paraList'>"+"<tr>"+ "<td>" + " Name:" + tableList[i].arguments[0].value +"<i class='glyphicon glyphicon-hand-right' id='para' data-toggle='modal' href='#parameterList' onclick='yy();'>"+"</i>"+"</td>"+"</tr>"+"</table>" + "</td>" +"<td>"+"<i id='5' class='glyphicon glyphicon-plus icon' onclick='ddRowByID(this.id)'>"+"</i>"+"</td>"+"</tr>";
+                    var argumentsarr =  tableList[i].arguments;
+                //for (var j = 0;j<3;j++) {
+                //    console.log(j);
+                //    b += "<label class='xinzeng'>" + argumentsarr[j].name + "</label>" + "<input value='" + argumentsarr[j].value + "'>" + "<br>";
+                //}
+                //$("#ParaMeterL").html(b);
+
+                //for(var j in tableList[i].operator) {
+                //    str += " <tr class='choose'>" + "<td>" + "<input class='index' type='checkbox' name='radio' id='checkAll'>" + "</td>" + "<td>" + i + "</td>" + "<td>" +tableList[2].operator[j] + "</td>" + "<td>" + tableList[i].function + "</td>" + "<td>" + tableList[i].arguments + "</td>" + "</tr> ";
+                //}
+            //}
+
             }
+
             $('table[id="sort"]>tbody').html(str);
+
+        }
+
+    });
+}
+
+function yy() {
+    var val1 = $('select[name="autid"]').val();
+    var val2 = $(':radio:checked').val();
+    $.ajax({
+        async: false,
+        url: 'http://10.108.226.152:8080/ATFCloud/scripttemplateController/showScripttemplateTable',
+        data: {
+            'aut_id': val1,
+            'script_id': val2
+        },
+        type: "POST",
+        success: function (data) {
+            var tableList = data.data;
+            var tableListrr = tableList.arguments;
+            for (var j in tableList[i].arguments){
+                console.log(tableListrr);
+            }
+            console.log(tableListrr);
 
         }
 
@@ -275,6 +341,20 @@ function templateTable() {
         $('input[id="showDesc"]').val(val3);
         $('input[id="showParameterizeColumn"]').val(val4);
     }
+
+//event.target问题
+    function ee(event){
+        tr=$(event.target).parent().parent();
+        alert(tr);
+    }
+
+
+
+
+//$("i").click(function(event){
+//    $("i").prev("input").val(event.target.nodeName);
+//
+//});
 //添加一行begin
 function addRowByID(currentRowID){
     //遍历每一行，找到指定id的行的位置i,然后在该行后添加新行
@@ -285,16 +365,38 @@ function addRowByID(currentRowID){
             //要添加的行的id
             var addRowID=parseInt(currentRowID)+1;
             str = "<tr id ='"+addRowID+"'><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'>"+addRowID+ "</td>"+
-            "<td> <label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"元素:"+"</label><input id='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'></i></td>"+
-            "<td> <select id='Method' size='1' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down' ></select> </td>"+
-            "<td id='parameter'><div class='showInfornamt'><label class=alignRight'>"+"Name:"+"</label><input id='showName' type='text'/> <br><label class='alignRight'>"+"Type:"+"</label><input id='showType' type='text' /> <br> <label class='alignRight'>"+"Desc:"+"</label><input id='showDesc' type='text' /> <br> </div> <i id='href' class='glyphicon glyphicon-search icon' data-toggle='modal' onclick='cs();' href='#parameterModal'></i> </td>>"+
-            "<td><i id='1' class='glyphicon glyphicon-plus icon'onclick='addRowByID(this.id)');></i></td></tr>";
+            "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"元素:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'onclick='ee(event);'></i></td>"+
+            "<td> <select  style='width:200px;' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down'> </td>"+
+            "<td> <div class='showInfornamt'> <table id='paraList'></table> </div> <i  id='href' class='glyphicon glyphicon-search icon'></i> </td>>"+
+            "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'></i></td>" +
+            "</tr>";
             //当前行之后插入一行
             currentRow.after(str);
         }
     });
 }
 //添加一行end
+
+//查询表格添加一行
+function AddRowByID(currentRowID){
+    //遍历每一行，找到指定id的行的位置i,然后在该行后添加新行
+    $.each( $('div[id="table"] table[id="sort"] tbody tr'), function(i, tr){
+        if($(this).attr('id')==currentRowID){
+            //获取当前行
+            var currentRow=  $('div[id="table"] table[id="sort"] tbody tr:eq('+i+')');
+            //要添加的行的id
+            var addRowID=parseInt(currentRowID)+1;
+            str = "<tr id ='"+addRowID+"'><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'>"+addRowID+ "</td>"+
+                "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"元素:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'onclick='ee(event);'></i></td>"+
+                "<td> <select size='1' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down' ></select> </td>"+
+                "<td><div class='showInfornamt'><label class=alignRight'>"+"Name:"+"</label><input id='showName' type='text'/> <br><label class='alignRight'>"+"Type:"+"</label><input id='showType' type='text' /> <br> <label class='alignRight'>"+"Desc:"+"</label><input id='showDesc' type='text' /> <br> </div> <i id='href' class='glyphicon glyphicon-search icon' data-toggle='modal' onclick='cs();' href='#parameterModal'></i> </td>>"+
+                "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='AddRowByID(this.id)'></i></td>" +
+                "</tr>";
+            //当前行之后插入一行
+            currentRow.after(str);
+        }
+    });
+}
 
 //上移下移begin
 $('#up').click(function ()
