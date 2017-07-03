@@ -67,6 +67,36 @@ $(document).ready(function() {
     })();
     // 页面跳转相关按钮事件点击初始化 结束
 
+    document.querySelector('#btn-alter').onclick = function(){
+        var data = {};
+        data.id = $('#alter-id').val();
+        data.username = $('#alter-username').val();
+        data.reallyname = $('#alter-name').val();
+        data.password = $('#alter-password').val();
+        data.email = $('#alter-email').val();
+        data.role = $('#alter-role').val();
+        data.dept = $('#alter-department').val();
+        data.tel = $('#alter-phonenumber').val();
+        data.phone = $('#alter-telephone').val();
+        data.email = $('#alter-email').val();
+        data.status = $('#alter-state').val();
+        $.ajax({
+            url: address + 'userController/updateByPrimaryKey',
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            success: function(data, statusText){
+                if(data.success === true){
+                    Vac.alert('修改成功！')
+                    $('#alterModal').modal('hide');
+                }else {
+                    Vac.alert('修改失败，' + data.msg);
+                }
+            }
+        });
+
+    };
+    $("#btn-search").click(search);
     $("#alterModal").on("hidden.bs.modal", (e) => {
         $(".glyphicon").removeClass("show").addClass("hidden");
         $("#alter-password").val("")
@@ -180,14 +210,7 @@ $(document).ready(function() {
         }
         detectAddInput();
     };
-    document.querySelector("#role").onchange = function() {
-        $("#add-feedback-role").addClass("glyphicon-ok show").removeClass("hidden").attr("style", "color:#468847;");
-        detectAddInput();
-    };
-    document.querySelector("#state").onchange = function() {
-        $("#add-feedback-status").addClass("glyphicon-ok show").removeClass("hidden").attr("style", "color:#468847;");
-        detectAddInput();
-    };
+ 
     // 随时检测输入的内容  for 添加
     function detectAddInput() {
         let tooltips = $("#addModal .glyphicon-remove");
@@ -227,20 +250,10 @@ $(document).ready(function() {
             data: data,
             success: (jsonDdata, textStatus) => {
                 if (jsonDdata.success === true) {
-                    alert(data.success);
-                    $.ajax({
-                        url: address + 'userController/selectAllByPage',
-                        type: 'post',
-                        dataType: 'json',
-                        data: "page=1" + "&rows=10000" + "&order=" + 'id' + "&sort=asc&username=&reallyname=&role=&tel=&dept=",
-                        success: (jsonDdata, textStatus) => {
-                            let id = jsonDdata.total;
-                            data.id = id;
-                            table.row.add(data).draw();
-                        }
-                    });
+                    Vac.alert('添加成功!');
+                    $('#addModal').modal('hide');
                 } else {
-                    alert(jsonDdata.msg);
+                    Vac.alert('添加失败, ' + jsonDdata.msg)
                 }
             }
         });
@@ -399,6 +412,7 @@ function showAlterModal(target){
         });
     }
 }
+
 function showAddModal(){
     loginDetect().then(
         function(response){
@@ -420,6 +434,7 @@ function showAddModal(){
 }
 function showViewModal(target){
      $("#viewModal").modal("show");
+     // $('#vac-alert').modal("show");
     var id = target.parentNode.parentNode.getElementsByClassName("td-id")[0].innerHTML;
     $.ajax({
         url: address + "userController/selectByPrimaryKey",
@@ -438,3 +453,34 @@ function showViewModal(target){
         }
     });
 }
+
+
+// 点击搜索按钮
+function search(){
+    var key = $("#search-type").val();           //select value
+    var searchkey = $("#searchKey").val();  //input value
+    for(var data in sendData){
+        sendData[data] = "";
+    }
+    sendData[key] = searchkey;
+    sendData["sort"] = "asc";
+    sendData["order"] = "id";
+
+    var page = 1; // 页码
+    var rows = showRows;  //每页的大小
+    var data =getSendData(page,rows);
+    $.ajax({
+        url: address + "userController/selectAllByPage",
+        type: "post",
+        data: data,
+        dataType: 'json',
+        success: function(data, statusText){
+            dataSet = data.rows;
+            var totalRows = data.total;
+            createTable(dataSet);
+            // func(totalRows, page);
+        }
+    });
+
+}
+// 点击搜索按钮结束

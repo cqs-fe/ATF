@@ -40,7 +40,7 @@
                                <label class="option-name control-label col-sm-3">测试阶段</label>
                                 <div class="col-sm-9">
                                     <select class="testphase form-control" v-model="testphaseValue">
-                                        <option v-for="item in testphases" v-bind:value="item.id">{{item.phasename}}</option>
+                                        <option v-for="item in testphases" v-bind:value="item.phasename">{{item.phasename}}</option>
                                     </select>
                                 </div>
                            </div>
@@ -80,21 +80,78 @@
                        </form>
                        <div class="test-control container">
                            <button class="btn btn-info" @click="executeAll()">批量执行</button>
+                           <button class="btn btn-info" @click="getCases()">获取实例</button>
                             <button class="btn btn-info" @click="addScene();">添加场景</button>
                        </div>
                        <div class="case-list-wrapper list-wrapper">
                            <span class="case-list-title list-title">用例列表</span>
                            <div class="case-list">
-                               <div v-for="item in testcases">
-                                   {{item.caseId}}
-                               </div>
+                                <div v-for="caseWrapper in testCaseList">
+                                 <template v-if="caseWrapper.caseCompositeType == 1">
+                                    <div class="case" >
+                                        <div class="case-header">
+                                            <input type="checkbox" v-bind:value="caseWrapper.caseId" class="check-case" v-model="selectedCases">
+                                            <p>{{caseWrapper.caseId}}</p>
+                                        </div>
+                                        <div class="case-main">
+                                            <p>{{caseWrapper.caseId}}</p>
+                                        </div>
+                                        <footer class="case-footer">
+                                            <i class="icon-remove success-flag"></i>
+                                        </footer>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="case" v-for="node in caseWrapper.flowNodes">
+                                        <div class="case-header">
+                                            <input type="checkbox" v-bind:value="node.flowNodeId" class="check-case" v-model="selectedCases">
+                                            <p>{{node.flowNodeId}}</p>
+                                        </div>
+                                        <div class="case-main">
+                                            <p>{{node.flowNodeCode}}</p>
+                                        </div>
+                                        <footer class="case-footer">
+                                            <i class="icon-remove success-flag"></i>
+                                        </footer>
+                                    </div>
+                                </template>
+                                </div>
                            </div>
                        </div>
-                        <div class="scene-list-wrapper list-wrapper" v-for="scene in testscenes">
-                           <span class="scene-list-title list-title">{{scene.sceneName}}</span>
-                           <div class="scene-list">
-                                <div v-for="case in scene.testCaseList" class="case-item">  {{case.caseId}}</div>
-                             
+                        <div class="scene-list-wrapper list-wrapper" v-for="scene in testSceneList">
+                           <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
+                           <div class="case-list">
+                                <div v-for="caseWrapper in scene.testCaseList" class="case-item">
+                                    <template v-if="caseWrapper.caseCompositeType == 1">
+                                    <div class="case" >
+                                        <div class="case-header">
+                                            <input type="checkbox" name="" class="check-case">
+                                            <p>{{caseWrapper.caseId}}</p>
+                                        </div>
+                                        <div class="case-main">
+                                            <p>{{caseWrapper.caseId}}</p>
+                                        </div>
+                                        <footer class="case-footer">
+                                            <i class="icon-remove success-flag"></i>
+                                        </footer>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="case" v-for="node in caseWrapper.flowNodes">
+                                        <div class="case-header">
+                                            <input type="checkbox" name="" class="check-case">
+                                            <p>{{node.flowNodeId}}</p>
+                                        </div>
+                                        <div class="case-main">
+                                            <p>{{node.flowNodeCode}}</p>
+                                        </div>
+                                        <footer class="case-footer">
+                                            <i class="icon-remove success-flag"></i>
+                                        </footer>
+                                    </div>
+                                </template>
+
+                                </div>
                            </div>
                         </div>
                     </div>
