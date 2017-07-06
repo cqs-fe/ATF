@@ -1,10 +1,13 @@
 $(document).ready(function(){
+	var submenuHeight = document.querySelector('#submenu').offsetHeight;
+			document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
+			document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
 	(function(){
 		var editDataVue = new Vue({
 			el: '#editData',
 			data: {
 				dataType:4,
-				isShow: true,
+				isShow: false,
 				insertTitle:null,
 				insertType: null,
 				isInsertDivShow:true,
@@ -31,7 +34,7 @@ $(document).ready(function(){
 		var insertDivVue = new Vue({
 			el: '#insertDiv',
 			data: {
-				isShow: true,
+				isShow: false,
 				type: null,
 				insertTitle:null,
 				trData: ['参数1','参数2','参数3','参数4'],
@@ -121,15 +124,25 @@ $(document).ready(function(){
                     data: null,
                     type: 'post',
                     dataType: 'json',
-                    success: function(data, textStatus){
-                        _this.selectItems = data.data;
-                        console.log(_this.selectItems);
+                    success: function(jsonData, textStatus){
+                        var data = [
+					        {
+					            "name": "测试点",
+					            "value": 1
+					        },
+					        {
+					            "name": "执行状态",
+					            "value": 2
+					        }
+					    ];
+					     _this.selectItems = data;
                     }
                 });
             },
             methods: {
                 toggle: function(){
                     this.flag = !this.flag;
+                    document.querySelector('.wtHolder').style.width = 'auto';
                 },
                 changeSelect: function(event){
                     var _this = this;
@@ -604,6 +617,9 @@ $(document).ready(function(){
 			if(handsontable !== null){
 				handsontable.render();
 			}
+			var submenuHeight = document.querySelector('#submenu').offsetHeight;
+			document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
+			document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
 		};
 		//保存按钮
 		document.getElementById('saveAll').onclick = function(){

@@ -89,6 +89,7 @@ $(document).ready(function() {
                 if(data.success === true){
                     Vac.alert('修改成功！')
                     $('#alterModal').modal('hide');
+                     sendQuery(1,updatePagination); 
                 }else {
                     Vac.alert('修改失败，' + data.msg);
                 }
@@ -252,6 +253,7 @@ $(document).ready(function() {
                 if (jsonDdata.success === true) {
                     Vac.alert('添加成功!');
                     $('#addModal').modal('hide');
+                     sendQuery(1,updatePagination); 
                 } else {
                     Vac.alert('添加失败, ' + jsonDdata.msg)
                 }
