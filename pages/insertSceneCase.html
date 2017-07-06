@@ -31,8 +31,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="breadcrumb">
-                            <li><a href="aut.html"><i class="icon-home"></i> 场景管理</a></li>
-                            <li><a href="SceneManagement.html">银行交易1</a></li>
+                            <li><a href="scene.html"><i class="icon-home"></i> 场景管理</a></li>
+                            <li><a href="SceneManagement.html">{{scenename}}</a></li>
                             <li><a href="#" class="active">添加场景用例</a></li>
                         </ul>
                     </div>
@@ -238,22 +238,73 @@
 
                             <div class="row">
                                 <div class="col-lg-2 col-lg-offset-10">
-                                        <a class="btn btn-primary insert-btn" @click="insert">确认添加</a>
+                                    <a class="btn btn-primary insert-btn" @click="insert">添加用例</a>
                                 </div>
                             </div>
                         </section>
                     </div>
                 </div>
                 <!-- table end -->
+                 <!-- successModal start -->
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作成功</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作成功！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- successModal end -->
+                        <!-- failModal start -->
+                        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作失败！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- failModal end -->
+                        <!-- selectAlertModal start -->
+                        <div class="modal fade" id="selectAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>请先选中一条数据！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- selectAlertModal end -->
             </section>
             <div class="footer">
                 <link rel="import" href="./common/copy-right.html?__inline">
             </div>
         </section>
         <!--main content end-->
-        <!-- <div class="footer">
-            <link rel="import" href="./common/copy-right.html?__inline">
-        </div> -->
     </div>
 </body>
 
@@ -262,26 +313,4 @@
 <!--script for this page only-->
 <script src="../lib/vue-resource.min.js"></script>
 <script type="text/javascript" src="../static/js/insertSceneCase.js"></script>
-<script src="../lib/fileinput.min.js"></script>
-<script src="../lib/zh.js"></script>
-<script>
-$("#input-1").fileinput({
-    language: "zh",
-    overwriteInitial: false,
-    uploadUrl: "http://10.108.226.152:8080/ATFCloud/TestcaseController/importexcel", //上传的地址(访问接口地址)
-    allowedFileExtensions: ['xls'], //接收的文件后缀
-    uploadAsync: true, //默认异步上传
-    showUpload: true, //是否显示上传按钮
-    showRemove: true, //显示移除按钮
-    showPreview: false, //是否显示预览
-    showCaption: true, //是否显示标题
-    browseClass: "btn btn-primary", //按钮样式  
-    dropZoneEnabled: false, //是否显示拖拽区域
-    //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
-    maxFileCount: 10, //表示允许同时上传的最大文件个数
-    enctype: 'multipart/form-data',
-    validateInitialCount: true,
-    previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
-    msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
-});
-</script>
+

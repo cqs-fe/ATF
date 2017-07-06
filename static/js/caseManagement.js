@@ -20,10 +20,10 @@ var app = new Vue({
         scriptmodeflag: '', //脚本模板
         casecode: '', //搜索时输入的案例编号
         sortparam: '', //排序参数
-        tt: "", //总条数
+        tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
-        totalPage: 10, //总页数
+        totalPage: 1, //总页数
         listnum: 10, //页面大小
         order: 'id',
         sort: 'desc',
@@ -43,12 +43,76 @@ var app = new Vue({
 
         //添加单案例
         insert: function() {
+            var casecompositetype=$('#insertSingleForm input[name="casecompositetype"]').val(),
+                caselibId=$('#insertSingleForm input[name="caselibId"]').val(),
+                casecode=$('#insertSingleForm input[name="casecode"]').val(),
+                submissionid=$('#insertSingleForm input[name="submissionid"]').val(),
+                autid=$('#insertSingleForm select[name="autid"]').val(),
+                versioncode=$('#insertSingleForm input[name="versioncode"]').val(),
+                transid=$('#insertSingleForm select[name="transid"]').val(),
+                scriptmodeflag=$('#insertSingleForm select[name="scriptmodeflag"]').val(),
+                testpoint=$('#insertSingleForm input[name="testpoint"]').val(),
+                testdesign=$('#insertSingleForm textarea[name="testdesign"]').val(),
+                prerequisites=$('#insertSingleForm textarea[name="prerequisites"]').val(),
+                datarequest=$('#insertSingleForm textarea[name="datarequest"]').val(),
+                teststep=$('#insertSingleForm textarea[name="teststep"]').val(),
+                expectresult=$('#insertSingleForm textarea[name="expectresult"]').val(),
+                checkpoint=$('#insertSingleForm textarea[name="checkpoint"]').val(),
+                caseproperty=$('#insertSingleForm select[name="caseproperty"]').val(),
+                casetype=$('#insertSingleForm select[name="casetype"]').val(),
+                priority=$('#insertSingleForm select[name="priority"]').val(),
+                author=$('#insertSingleForm select[name="author"]').val(),
+                reviewer=$('#insertSingleForm select[name="reviewer"]').val(),
+                executor=$('#insertSingleForm select[name="executor"]').val(),
+                executemethod=$('#insertSingleForm select[name="executemethod"]').val(),
+                scriptmode=$('#insertSingleForm select[name="scriptmode"]').val(),
+                usestatus=$('#insertSingleForm select[name="usestatus"]').val(),
+                note=$('#insertSingleForm textarea[name="note"]').val();
             $.ajax({
                 url: address + 'TestcaseController/import111',
                 type: 'post',
-                data: $("#insertSingleForm").serializeArray(),
+                data: {
+                   'casecompositetype':casecompositetype,
+                   'caselibId':caselibId,
+                   'casecode':casecode,
+                   'submissionid':submissionid,
+                   'autid':autid,
+                   'versioncode':versioncode,
+                   'transid':transid,
+                   'scriptmodeflag':scriptmodeflag,
+                   'testpoint':testpoint,
+                   'testdesign':testdesign,
+                   'prerequisites':prerequisites,
+                   'datarequest':datarequest,
+                   'teststep':teststep,
+                   'expectresult':expectresult,
+                   'checkpoint':checkpoint,
+                   'caseproperty':caseproperty,
+                   'casetype':casetype,
+                   'priority':priority,
+                   'author':author,
+                   'reviewer':reviewer,
+                   'executor':executor,
+                   'executemethod':executemethod,
+                   'scriptmode':scriptmode,
+                   'usestatus':usestatus,
+                   'note':note,
+
+                   'subcasecode':'',
+                   'actioncode':'',
+                   'steporder':'',
+                   'subautid':'',
+                   'subversioncode':'',
+                   'subtransid':'',
+                   'subscriptmodeflag':'',
+                   'subusestatus':'',
+                   'subexecutemethod':'',
+                   'subexecutor':'',
+                   'subscriptmode':'',
+                   'subnote':''
+                },
                 success: function(data) {
-                    console.info(data);
+                    console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
                     } else {
@@ -296,7 +360,7 @@ function queryCase() {
             'rows': app.listnum,
             'order': app.order,
             'sort': app.sort,
-            'caseCompositeType': app.caseCompositeType,
+            'caseCompositeType': app.caseCompositeType.join(","),
             'priority': app.priority.join(","),
             'executemethod': app.executeMethod.join(","),
             'usestatus': app.useStatus.join(","),

@@ -60,7 +60,14 @@ var vBody = new Vue({
 			dataname: null,
 			datavalue: null
 		},
-		poolDatas: null
+		poolDatas: null,
+
+		//场景id和名称
+		sceneid: '',
+		scenename: '场景名称'
+	},
+	ready:function(){
+		this.setVal();
 	},
 	created: function(){
 		var _this = this;
@@ -79,6 +86,17 @@ var vBody = new Vue({
 		});
 	},
 	methods: {
+		//获取上级页面选中的场景id和名称
+		setVal:function(){
+			var thisURL = document.URL,
+                getval = thisURL.split('?')[1],
+                keyval = getval.split('&');
+            this.sceneid = keyval[0].split('=')[1],
+            this.scenename = decodeURI(keyval[1].split('=')[1]);
+		},
+		toInsertSceneCase: function(){
+			location.href = "insertSceneCase.html?sceneid=" + this.sceneid + "&" + "scenename=" + this.scenename;
+		},
 		test: function(){
 			console.log(this.editTriggerData.conditions);
 		},

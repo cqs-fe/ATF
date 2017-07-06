@@ -64,7 +64,11 @@
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label hidden">案例组成类型</label>
                                                                 <div class="col-lg-4 hidden">
-                                                                    <input type="text" class="form-control" name="caseCompositeType" value="1">
+                                                                    <input type="text" class="form-control" name="casecompositetype" value="1">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label hidden">案例库</label>
+                                                                <div class="col-lg-4 hidden">
+                                                                    <input type="text" class="form-control" name="caselibId" value="1">
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">案例编号</label>
                                                                 <div class="col-lg-4">
@@ -106,43 +110,37 @@
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">测试意图</label>
                                                                 <div class="col-lg-10">
-                                                                    <textarea class="form-control" rows="3" name="testdesign">
-                                                                    </textarea>
+                                                                    <textarea class="form-control" rows="3" name="testdesign"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">前置条件</label>
                                                                 <div class="col-lg-10">
-                                                                    <textarea class="form-control" rows="3" name="prerequisites">
-                                                                    </textarea>
+                                                                    <textarea class="form-control" rows="3" name="prerequisites"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">数据需求</label>
                                                                 <div class="col-lg-10">
-                                                                    <textarea class="form-control" rows="3" name="datarequest">
-                                                                    </textarea>
+                                                                    <textarea class="form-control" rows="3" name="datarequest"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">测试步骤</label>
                                                                 <div class="col-lg-10">
-                                                                    <textarea class="form-control" rows="3" name="teststep">
-                                                                    </textarea>
+                                                                    <textarea class="form-control" rows="3" name="teststep"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">预期结果</label>
                                                                 <div class="col-lg-10">
-                                                                    <textarea class="form-control" rows="3" name="expectresult">
-                                                                    </textarea>
+                                                                    <textarea class="form-control" rows="3" name="expectresult"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label">附加检查点</label>
                                                                 <div class="col-lg-10">
-                                                                    <textarea class="form-control" rows="3" name="checkpoint">
-                                                                    </textarea>
+                                                                    <textarea class="form-control" rows="3" name="checkpoint"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -421,7 +419,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
+                                        <a data-dismiss="modal" class="btn btn-success"  v-on:click="insert()">添加</a>
                                     </div>
                                 </div>
                             </div>

@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
+                                        <a data-dismiss="modal" class="btn btn-success" @click="insert">添加</a>
                                     </div>
                                 </div>
                             </div>
@@ -68,11 +68,11 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">删除测试系统</h4>
+                                        <h4 class="modal-title">删除场景</h4>
                                     </div>
                                     <div class="modal-body">
                                         <!-- modal-body start -->
-                                        <h4>确认删除测试系统？</h4>
+                                        <h4>确认删除该场景？</h4>
                                         <!-- modal-body end -->
                                     </div>
                                     <div class="modal-footer">
@@ -119,7 +119,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="update()">修改</button>
                                     </div>
                                 </div>
                             </div>
@@ -276,16 +276,13 @@
                                     </tr>
                                 </thead>
                                 <tbody id="sceneTable">
-                                    <tr class="odd gradeX" v-for="scene in sceneList" id="{{scene.id}}" v-if="sceneList.length>0">
+                                    <tr class="odd gradeX" v-for="scene in sceneList" id="{{scene.id}}">
                                         <td width="5%">
                                             <input type="checkbox" v-model="" name="chk_list" id="{{scene.id}}" />
                                         </td>
                                         <td class="center hidden-phone" width="20%">{{ scene.scenename }}</td>
                                         <td width="55%">{{ scene.description }}</td>
-                                        <td class="hidden-phone" width="20%"><a href="">管理</a></td>
-                                    </tr>
-                                    <tr v-else>
-                                        <td colspan="4">暂无数据</td>
+                                        <td class="hidden-phone" width="20%"><a class="btn btn-primary" @click="toSceneManagement($event)">管理</a></td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -31,23 +31,39 @@ var app = new Vue({
         checkboxModel: [],
         checked: "",
         subCaseList: [], //流程节点
-        ids: ''
+        ids: '',
+        //场景id和名称
+        sceneid: '',
+        scenename: '场景名称'
     },
     ready: function() {
+        this.setVal();
         getCase(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
     },
     methods: {
-
+        //获取上级页面选中的场景id和名称
+        setVal:function(){
+            var thisURL = document.URL,
+                getval = thisURL.split('?')[1],
+                keyval = getval.split('&');
+            this.sceneid = keyval[0].split('=')[1],
+            this.scenename = decodeURI(keyval[1].split('=')[1]);
+        },
         //添加场景案例
         insert: function() {
             this.getIds();
             $.ajax({
                 url: address + 'scenetestcaseController/insertSelective',
                 type: 'post',
-                data: $("#insertSingleForm").serializeArray(),
+                data: {
+                    'sceneid': this.sceneid,
+                    'testcaseid': this.ids,
+                    'choosestate':'',
+                    'executetime':''
+                },
                 success: function(data) {
-                    console.info(data);
+                    console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
                     } else {

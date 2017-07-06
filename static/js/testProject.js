@@ -233,7 +233,7 @@ function queryTestProject() {
             console.log(app.testProjectList)
             app.tt = data.total;
             app.totalPage = Math.ceil(app.tt / app.listnum);
-            app.pageSize = app.listnum;
+            // app.pageSize = app.listnum;
         }
     });
 }
