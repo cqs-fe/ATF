@@ -32,6 +32,7 @@ var app = new Vue({
         getRecord(this.currentPage, this.pageSize, this.order, this.sort);
         getTestPhase();
         getTestRound();
+        getScene();
         changeListNum();
     },
     methods: {
@@ -101,7 +102,7 @@ var app = new Vue({
         //合并
         merge: function(){
             $.ajax({
-                url: address+'',
+                url: address+'testrecordController/merge',
                 type:'post',
                 data: $('#mergeForm').serializeArray(),
                 success:function(data){
@@ -136,25 +137,7 @@ var app = new Vue({
                 }
             });
         },
-        //修改场景
-        // update: function() {
-        //     $.ajax({
-        //         url: 'http://10.108.226.152:8080/ATFCloud/RecordController/update',
-        //         type: 'post',
-        //         data: {},
-        //         success: function(data) {
-        //             console.info(data);
-        //             if (data.success) {
-        //                 $('#successModal').modal();
-        //             } else {
-        //                 $('#failModal').modal();
-        //             }
-        //         },
-        //         error: function() {
-        //             $('#failModal').modal();
-        //         }
-        //     });
-        // },
+
         //获取当前选中行内容
         getSelected: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
@@ -209,6 +192,16 @@ function getTestRound(){
         type: 'get',
         success: function(data){
             app.testRoundList=data.obj;
+        }
+    });
+}
+//获取场景
+function getScene(){
+    $.ajax({
+        url: address+'sceneController/selectAll',
+        type: 'get',
+        success:function(data){
+            app.sceneList=data.obj;
         }
     });
 }
