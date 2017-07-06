@@ -47,7 +47,10 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">新来源渠道</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="newSourceChanne" >
+                                                        <select class="form-control" name="newTestPhase">
+                                                            <option value="PE4">PE4</option>
+                                                            <option value="PE6">PE6</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -61,30 +64,37 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">新测试轮次</label>
                                                     <div class="col-lg-5">
-                                                        <select class="form-control">
+                                                        <select class="form-control" name="newTestRound">
                                                             <option v-for="item in testRoundList" value="{{item.id}}">{{item.roundname}}</option>    
                                                         </select>
-                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">新场景</label>
+                                                    <div class="col-lg-5">
+                                                        <select class="form-control" name="newSceneid">
+                                                            <option v-for="item in sceneList" value="{{item.id}}">{{item.scenename}}</option>    
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">新执行轮次</label>
                                                     <div class="col-lg-5">
-                                                        <input class="form-control" rows="3" name="newExeRound">
+                                                        <input type="text" class="form-control"  name="newExeRound">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">新运行次数</label>
                                                     <div class="col-lg-5">
-                                                        <input class="form-control" rows="3" name="newRunNumber">
+                                                        <input type="text" class="form-control" name="newRunNumber">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">新激活状态</label>
                                                     <div class="col-lg-5">
-                                                        <select class="form-control" name="newRecorderStatus">
-                                                            <option>激活</option>
-                                                            <option>未激活</option>
+                                                        <select class="form-control" name="newRecorderStates">
+                                                            <option value="2">激活</option>
+                                                            <option value="1">未激活</option>
                                                         </select>
                                                     </div>
                                                 </div>
