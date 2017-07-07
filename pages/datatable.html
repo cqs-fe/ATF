@@ -22,7 +22,7 @@
 </head>
 
 <body id="v-body">
-    <div id="searchBox" v-show="isShow" class="searchBox" style="display: none;">
+    <div id="searchBox" v-show="isShow" class="searchBox" style="" v-cloak>
             <header class="searchBox-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'searchBox');" ondrag="dragController.searchBoxDrag(event,'searchBox')">
                 <span class="searchBox-title">查找与替换</span>
                 <span class="icon-remove" @click="hide();"></span>
@@ -53,7 +53,7 @@
                 <button class="btn btn-white" @click="hide();">关闭</button>
             </footer>
     </div>
-    <div id="editData" v-show="isShow" class="editData searchBox" style="display: block;">
+    <div id="editData" v-show="isShow" class="editData searchBox" v-cloak>
         <header class="editData-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'editData');" ondrag="dragController.searchBoxDrag(event,'editData')">
             <span class="editData-title">编辑数据项</span>
             <span class="icon-remove" @click="hide();"></span>
@@ -101,7 +101,7 @@
             <button class="btn btn-white editData-save" @click="saveEditData();">保存</button>
         </footer>
     </div>
-    <div class="insertDiv" v-show="isShow" id="insertDiv">
+    <div class="insertDiv" v-show="isShow" id="insertDiv" v-cloak>
         <header class="insertDivHeader" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'insertDiv');" ondrag="dragController.searchBoxDrag(event,'insertDiv')">
             <span>{{insertTitle}}</span>
         </header>
@@ -198,6 +198,16 @@
                     </button>
                 </div>
                 <main class="main">
+                     <!-- breadcrumb start -->
+                    <div class="row" style="margin-top: 10px;margin-bottom: 10px; height: auto; margin-right: 0;">
+                        <div class="col-lg-12">
+                            <ul class="breadcrumb" style="margin-bottom: 0;">
+                                <li><a href="#"><i class="icon-home"></i> 数据中心</a></li>
+                                <!-- <li class="active"><a href="#"> 任务管理</a></li> -->
+                                <!-- <li class="active"> 对象库</li> -->
+                            </ul>
+                        </div>
+                    </div>
                     <div class="top-bar">
                         <button class="btn btn-white"><i class="icon-cog"></i>
                         构建</button>
@@ -255,7 +265,6 @@
     <!--content end -->
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
-    <script src="../static/js/Vac.js"></script>
     <script src="../static/js/datatable.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
     <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>

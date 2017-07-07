@@ -131,6 +131,7 @@ $(document).ready(function(){
                     if(data.success === true){
                         $("#successModal").modal("show");
                         $("#addModal").modal("hide");
+                        updateTableAndPagination(currentPage); 
                     }else{
                         $("#failModal").modal("show");
                     }
@@ -154,6 +155,7 @@ $(document).ready(function(){
                     if(data.success === true){
                         $("#successModal").modal("show");
                         $("#alterModal").modal("hide");
+                        updateTableAndPagination(currentPage); 
                     }else{
                         $("#failModal").modal("show");
                     }

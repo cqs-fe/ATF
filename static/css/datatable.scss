@@ -1,3 +1,7 @@
+[v-cloak] {
+	display: none;
+}
+
 html, body{
 	height: 100%;
 	position: relative;
@@ -450,6 +454,6 @@ html, body{
 		}
 	}
 	.copy-right{
-		flex: 0 0 100px;
+		flex: 0 0 50px;
 	}
 }
