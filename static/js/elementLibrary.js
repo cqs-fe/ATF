@@ -704,6 +704,19 @@ function zTreeBeforeDrag(treeId, treeNodes) {
     return false;
 }
 
+
+$("#search-btn").click(searchNodes); 
+//用按钮查询节点  
+function searchNodes(){  
+    var treeObj = $.fn.zTree.getZTreeObj("elementtree");  
+    var keywords=$("#keyword").val();  
+    var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);  
+    if (nodes.length>0) {  
+        treeObj.selectNode(nodes[0]);  
+    }  
+}
+
+
 /*elementtree end*/
 
 /*UILinked objecttree start*/
