@@ -4,6 +4,7 @@ var app = new Vue({
         recordList: [], //测试记录
         testPhaseList:[],//测试阶段下拉列表
         testRoundList:[],//测试轮次下拉列表
+        sceneList:[],//场景下拉列表
         testphase: '',//测试阶段
         testround: '',//测试轮次
         recorderstate:'',//记录单状态
@@ -119,10 +120,10 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids);
             $.ajax({
-                url: address+'testrecordController/delete',
+                url: address+'testrecordController/batchDelete',
                 type: 'post',
                 data: {
-                    'id': app.ids
+                    'ids': app.ids
                 },
                 success: function(data) {
                     console.info(data);

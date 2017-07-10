@@ -138,16 +138,15 @@ var app = new Vue({
             $('input[name="id"]').val(selectedId);
             $('#updateForm input[name="testProjectCode"]').val(selectedInput.parent().next().html());
             $('#updateForm input[name="testProjectName"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm input[name="taskDescription"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm textarea[name="taskDescription"]').val(selectedInput.parent().next().next().next().html());
         },
-        
         //传递当前页选中测试项目id到功能点页面
         to: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             //存储测试项目id到sessionstorage
-            sessionStorage.setItem("selectedId",selectedId);
-            location.href = "transact.html?selectedId=" + selectedId;
+            sessionStorage.setItem("caselibid",selectedId);
+            // location.href = "transact.html?caselibid=" + selectedId;
         }
 
     },

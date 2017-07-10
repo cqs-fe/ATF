@@ -65,7 +65,7 @@
                                                     <label class="col-lg-3 control-label">新测试轮次</label>
                                                     <div class="col-lg-5">
                                                         <select class="form-control" name="newTestRound">
-                                                            <option v-for="item in testRoundList" value="{{item.id}}">{{item.roundname}}</option>    
+                                                            <option v-for="item in testRoundList" value="{{item.id}}">{{item.roundname}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -73,14 +73,14 @@
                                                     <label class="col-lg-3 control-label">新场景</label>
                                                     <div class="col-lg-5">
                                                         <select class="form-control" name="newSceneid">
-                                                            <option v-for="item in sceneList" value="{{item.id}}">{{item.scenename}}</option>    
+                                                            <option v-for="item in sceneList" value="{{item.id}}">{{item.scenename}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">新执行轮次</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control"  name="newExeRound">
+                                                        <input type="text" class="form-control" name="newExeRound">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -104,7 +104,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="merge">修改</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="merge">确定</button>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +131,6 @@
                             </div>
                         </div>
                         <!-- delModal end -->
-                        
                         <!-- successModal start -->
                         <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -200,20 +199,17 @@
                                 <div class="row">
                                     <form class="form-horizontal col-lg-12">
                                         <div class="form-group">
-                                            <label class="col-lg-1 control-label">搜索</label>
                                             <label class="col-lg-1 control-label">测试阶段</label>
                                             <div class="col-lg-2">
                                                 <select class="form-control" name="testphase" v-model="testphase">
                                                     <option v-for="item in testPhaseList" value="item.id">{{item.phasename}}</option>
                                                 </select>
-                                               
                                             </div>
                                             <label class="col-lg-1 control-label">测试轮次</label>
                                             <div class="col-lg-2">
                                                 <select class="form-control" name="testround" v-model="testround">
                                                     <option v-for="item in testRoundList" value="item.id">{{item.roundname}}</option>
                                                 </select>
-                                                
                                             </div>
                                             <label class="col-lg-2 control-label">记录单状态</label>
                                             <div class="col-lg-2">
@@ -224,19 +220,20 @@
                                                 </select>
                                             </div>
                                             <div class="col-lg-1">
-                                                <a class="btn btn-primary" onclick="queryRecord()">搜索</a>
+                                                <a class="btn btn-primary" onclick="queryRecord()">查询</a>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-lg-2  col-lg-offset-7 control-label">展示条目</label>
-                                            <div class="col-lg-2">
+                                            <label class="col-lg-2  col-lg-offset-8 control-label">展示条目</label>
+                                            <div class="col-lg-1">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="1" selected>1</option>
-                                                    <option value="3">3</option>
-                                                    <option value="5">5</option>
+                                                    <option value="5" selected>5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getRecord(1, {{pageSize}}, 'id', 'asc')">刷新</a></div>
+                                            <!--  <div class="col-lg-1"><a class="btn btn-white" onclick="getRecord(1, {{pageSize}}, 'id', 'asc')">刷新</a></div> -->
                                         </div>
                                     </form>
                                 </div>
@@ -245,8 +242,8 @@
                             <table class="table table-striped table-bordered border-top text-center" id="sample_1">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <!-- <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" /> -->
+                                        <th class="text-center">
+                                            <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                         </th>
                                         <th class="text-center">测试阶段</th>
                                         <th class="text-center">测试轮次</th>
@@ -270,7 +267,6 @@
                                         <td class="" width="">{{item.recorderstate}}</td>
                                         <td class="" width="">{{item.resultstatus}}</td>
                                     </tr>
-                                    
                                 </tbody>
                             </table>
                             <!-- 分页 -->

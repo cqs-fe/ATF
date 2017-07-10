@@ -11,7 +11,7 @@
     <title>添加场景用例</title>
     <style type="text/css">
         .insert-btn{
-            margin-bottom: 20px;
+            margin-left: 20px;
         }
     </style>
 </head>
@@ -45,6 +45,7 @@
                         <section class="panel">
                             <header class="panel-heading">
                                 添加场景用例
+                                <a class="btn btn-primary insert-btn" @click="insert">确认添加</a>
                             </header>
                             <div class="filter">
                                 <div class="row">
@@ -71,9 +72,10 @@
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="1" selected>1</option>
-                                                    <option value="3">3</option>
-                                                    <option value="5">5</option>
+                                                    <option value="5" selected>5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, {{pageSize}}, 'id', 'asc')">刷新</a></div>
@@ -167,7 +169,7 @@
                                         <th style="width:8px;">
                                             <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                         </th>
-                                        <th></th>
+                                        
                                         <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th  class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
@@ -183,7 +185,7 @@
                                         <td>
                                             <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
                                         </td>
-                                        <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)" ></span></td>
+                                        
                                         <td class="center hidden-phone">{{ case.casecode }}</td>
                                         <td>{{ case.autId }}</td>
                                         <td class="hidden-phone">{{ case.transId }}</td>
@@ -236,11 +238,11 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-lg-2 col-lg-offset-10">
                                     <a class="btn btn-primary insert-btn" @click="insert">添加用例</a>
                                 </div>
-                            </div>
+                            </div> -->
                         </section>
                     </div>
                 </div>
