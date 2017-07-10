@@ -25,7 +25,7 @@
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
                         <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
                         <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
-                        <a class="btn btn-white" data-toggle="modal" href="" @click="to"><i class="icon-cog"></i> 进入</a>
+                        <a class="btn btn-white"  @click="to"><i class="icon-cog"></i> 进入</a>
                         <!-- insertModal start -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -197,9 +197,10 @@
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="1" selected>1</option>
-                                                    <option value="3">3</option>
-                                                    <option value="5">5</option>
+                                                    <option value="5" selected>5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="20">50</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-1"><a class="btn btn-white" onclick="getTestProject(1, {{pageSize}}, 'id', 'asc')">刷新</a></div>
@@ -212,7 +213,7 @@
                                 <thead>
                                     <tr>
                                         <th width="5%" class="text-center">
-                                            <input type="checkbox" v-model="checked"  name="chk_all" id="chk_all" />
+                                            <!-- <input type="checkbox" v-model="checked"  name="chk_all" id="chk_all" /> -->
                                         </th>
                                         <th class="hidden-phone text-center" data-order="id" data-sort="asc" onclick="resort(this)">编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center">名称</th>
@@ -222,7 +223,7 @@
                                 <tbody id="testProjectTable">
                                     <tr class="odd gradeX" v-for="project in testProjectList" id="{{project.id}}">
                                         <td width="5%">
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{project.id}}" />
+                                            <input type="radio" v-model="" name="chk_list" id="{{project.id}}" />
                                         </td>
                                         <td class="center hidden-phone" width="20%">{{ project.testProjectCode }}</td>
                                         <td width="20%">{{ project.testProjectName }}</td>

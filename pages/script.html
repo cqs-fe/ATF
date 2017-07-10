@@ -137,7 +137,7 @@
             </div>
             <!-- 添加操作项 end -->
 
-            <!-- 添加多项 start-->
+            <!-- 添加多项操作项 start-->
             <div class="modal fade" id="addMultiModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -146,11 +146,12 @@
                             <h4 class="modal-title">添加多项操作项</h4>
                         </div>
                         <div class="modal-body" style="height: 280px;">
-                            <div>
+                            <div style="height:250px;">
                                 <div id="multiclassPart1">
                                     <label>元素库</label>
                                     <ul class="ztree" id="elementMulti"></ul>
                                 </div>
+
                                 <div id="multiclassPart2">
                                     <label>公共函数</label>
                                     <ul id="p_functionMulti" class="ztree"></ul>
@@ -159,61 +160,12 @@
                         </div>
                         <div class="modal-footer">
                             <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                            <button data-dismiss="modal" class="btn btn-success" id="confirmMulti" type="button">确认</button>
+                            <button class="btn btn-success" id="confirmMulti" data-dismiss="modal" type="button" type="submit">确认</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 添加多项 end -->
-
-                    <!--&lt;!&ndash; 添加多项 start &ndash;&gt;-->
-            <!--<div class="modal fade" id="addMultiModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">-->
-                <!--<div class="modal-dialog">-->
-                    <!--<div class="modal-content">-->
-                        <!--<div class="modal-header">-->
-                            <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-                            <!--<h4 class="modal-title">添加操作项</h4>-->
-                        <!--</div>-->
-                        <!--<div class="modal-body">-->
-                            <!--<label>元素库</label>-->
-                            <!--<ul class="ztree" id="elementMulti">-->
-                            <!--</ul>-->
-
-                            <!--<label>公共函数</label>-->
-                            <!--<ul id="p_functionMulti" class="ztree">-->
-                            <!--</ul>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="modal-footer">-->
-                        <!--<button data-dismiss="modal" class="btn btn-default" type="button">取消</button>-->
-                        <!--<button  id="confirmMulti" class="btn btn-success" type="button">确认</button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-                   <!--&lt;!&ndash; 添加多项end &ndash;&gt;-->
-            <!-- 添加参数 start-->
-            <!--<div class="modal fade" id="parameterModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">-->
-                <!--<div class="modal-dialog">-->
-                    <!--<div class="modal-content">-->
-                        <!--<div class="modal-header">-->
-                            <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-                            <!--<h4 class="modal-title">添加参数</h4>-->
-                        <!--</div>-->
-                        <!--<div class="modal-body">-->
-                            <!--<div>-->
-                                <!--<form id="parameterAdd">-->
-
-                                <!--</form>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="modal-footer">-->
-                            <!--<button data-dismiss="modal" class="btn btn-default" type="button">取消</button>-->
-                            <!--<button class="btn btn-success" type="button" onclick=" csShow();">确认</button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!-- 添加参数 end -->
+            <!-- 添加多项操作项 end -->
 
             <!-- 显示参数 start-->
             <div class="modal fade" id="parameterList" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
@@ -229,7 +181,7 @@
                         </div>
                         <div class="modal-footer">
                             <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                            <button data-dismiss="modal" class="btn btn-success" type="button">确认</button>
+                            <button data-dismiss="modal"  id="paraConfirm" class="btn btn-success" type="button">确认</button>
                         </div>
                     </div>
                 </div>
@@ -317,12 +269,11 @@
                                     <div class="showInfornamt">
                                         <table id="paraList"></table>
                                     </div>
-                                    <i  id="href" class="glyphicon glyphicon-search icon"></i>
+                                    <!--<i  id="href" class="glyphicon glyphicon-search icon" onclick="cs();"></i>-->
                                 </td>
                                 <td><i id="1" class="glyphicon glyphicon-plus icon" onclick="addRowByID(this.id)"></i></td>
                                 <!--<input id='1' type="button" value="添加行" onclick="addRowByID(this.id);" />-->
                             </tr>
-
                             </tbody>
                         </table>
 

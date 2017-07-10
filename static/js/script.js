@@ -2,22 +2,18 @@ $(document).ready(function(e) {
 
     beice(); //第一级函数
     gnd();
-    method();
     st();
     templateTable();
     $('select[name="autid"]').change(function() {
         gnd();
-        method();
         st();
         templateTable();
-
     })
     $('select[name="transid"]').change(function() {
         st();
         templateTable();
     })
-    $('input[name="classname"]').change(function() {
-        method();
+    $('input[class="classname"]').change(function() {
         cs();
     })
 });
@@ -131,10 +127,22 @@ function scmb(){
         }
     });
 }
+
+//操作项
+$("#confirm").click(function(){
+    if($("#p_functionWord").hide()){
+        $("#p_functionWord").show().css({"position":"relative","left":"-300px","top": "30px;"});
+        $("#elementWord").css({"position":"relative","left":"30px","top": "40px;"});
+    }
+    if($("#elementWord").hide()){
+        $("#elementWord").show().css({"position":"relative","left":"30px","top": "40px;"});
+        $("#p_functionWord").css({"width":"60px","position":"absolute","left":"50px","top": "-180px;"});
+    }
+});
 //方法接口
 function method() {
     var val1 = $('select[name="autid"]').val();
-    var val2=$('input[id="elementSel"]').val();
+    var val2= $('td input.uiSel',tr).val();
     $.ajax({
         async: false,
         url: 'http://10.108.226.152:8080/ATFCloud/autController/selectMethod',
@@ -149,7 +157,8 @@ function method() {
 
                 str += " <option value='" + methodList[i].mname + "'>" + methodList[i].mname + "</option> ";
             }
-            $('select[name="method"]').html(str);
+            $('select[name="method"]',tr).html(str);
+            cs();
 
         }
 
@@ -159,8 +168,9 @@ function method() {
 //参数接口
 function cs(){
     var val1 = $('select[name="autid"]').val();
-    var val2=$('input[id="elementSel"]').val();
+    var val2= $('td input.uiSel').val();
     var val3=$('select[name="method"]').val();
+    var val4=$('input[id="csnew"]').val();
     console.log(val1+","+val2+","+val3);
     $.ajax({
         async: false,
@@ -177,9 +187,9 @@ function cs(){
             var b="";
             console.log("jsonparse:"+jsonparse);
             for(var i in jsonparse) {
-                str += "<tr>" + "<td>" + jsonparse[i]["Name"] +"<i class='glyphicon glyphicon-hand-right'  id='para' data-toggle='modal' href='#parameterList'>"+"</i>"+"</td>"+ "</tr>";
-                $('table[id="paraList"]').html(str);
-                b += "<label class='xinzeng'>" + jsonparse[i]["Name"] + "</label>" + "<input name=''>" + "<br>";
+                str += "<tr>" + "<td>" + jsonparse[i]["Name"]+"<div class='blank'></div>"+"<i class='glyphicon glyphicon-hand-right'  id='para' data-toggle='modal' href='#parameterList'>"+"</i>"+"</td>"+ "</tr>";
+                $('table[id="paraList"]',tr).html(str);
+                b += "<label class='xinzeng'>" + jsonparse[i]["Name"] + "</label>" + "<input name=''id='csnew'>" + "<br>";
                 $("#ParaMeterL").html(b);
             }
             //for (var key in jsonparse[i]) {
@@ -217,6 +227,10 @@ function cs(){
     });
 }
 
+$("#paraConfirm").click(function(){
+    var val4=$('input[id="csnew"]').val();
+    $(".blank").html(val4);
+});
 //根据功能点查询模板接口
 function st() {
     var val = $('select[name="transid"]').val();
@@ -256,7 +270,7 @@ function templateTable() {
             for (var i = 0; i < tableList.length; i++) {
                 var ii=i+1;
                 //for (var j in tableList[i].arguments){
-                    str += "<tr class='choose'>" + "<td>" + "<input class='index' type='checkbox' name='radio' id='checkAll'>" + "</td>" + "<td>" + ii + "</td>" + "<td>" + "<label class='alignRight'>UI:</label>" + "<input id='uiSel' value='" + tableList[i].operator[1] + "'>" + "<br>" + "<label class='alignRight'>元素:</label>" + "<input id='elementSel'value='" + tableList[i].operator[2] + "'>" +"<br>"+ "<i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'></i>"+"</td>" + "<td>" + "<select  style='width:200px;' name='method'><option>"+tableList[i].function+"</option></select>"+ "</td>" + "<td>"+"<table id='paraList'>"+"<tr>"+ "<td>" + " Name:" + tableList[i].arguments[0].value +"<i class='glyphicon glyphicon-hand-right' id='para' data-toggle='modal' href='#parameterList' onclick='yy();'>"+"</i>"+"</td>"+"</tr>"+"</table>" + "</td>" +"<td>"+"<i id='5' class='glyphicon glyphicon-plus icon' onclick='ddRowByID(this.id)'>"+"</i>"+"</td>"+"</tr>";
+                    str += "<tr class='choose'>" + "<td class='number'>" + "<input class='checkboxes' type='checkbox' name='radio' id='checkAll'>" + "</td>" + "<td>" + ii + "</td>" + "<td>" + "<label class='alignRight'>UI:</label>" + "<input class='uiSel' name='classname' type='text' value='" + tableList[i].operator[1] +"'>" + "<br>" + "<label class='alignRight'>元素:</label>" + "<input class='elementSel' name='classname' type='text'value='" + tableList[i].operator[2] + "'>" +"<br>"+ "<i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal' onclick='ee(event);'></i>"+"</td>" + "<td>" + "<select  style='width:200px;' name='method'><option>"+tableList[i].function+"</option></select>"+ "</td>" + "<td>"+"<table id='paraList'>"+"<tr>"+ "<td>" + " Name:" + tableList[i].arguments[0].value +"<i class='glyphicon glyphicon-hand-right' id='para' data-toggle='modal' href='#parameterList' onclick='yy();'>"+"</i>"+"</td>"+"</tr>"+"</table>" + "</td>" +"<td>"+"<i id='5' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'>"+"</i>"+"</td>"+"</tr>";
                     var argumentsarr =  tableList[i].arguments;
                 //for (var j = 0;j<3;j++) {
                 //    console.log(j);
@@ -345,23 +359,14 @@ function yy() {
 //event.target问题
     function ee(event){
         tr=$(event.target).parent().parent();
-        alert(tr);
     }
 
-
-
-
-//$("i").click(function(event){
-//    $("i").prev("input").val(event.target.nodeName);
-//
-//});
-//添加一行begin
 function addRowByID(currentRowID){
     //遍历每一行，找到指定id的行的位置i,然后在该行后添加新行
-    $.each( $('div[id="table"] table[id="sort"] tbody tr'), function(i, tr){
+    $.each( $('tr'), function(i, tr){
         if($(this).attr('id')==currentRowID){
             //获取当前行
-            var currentRow=  $('div[id="table"] table[id="sort"] tbody tr:eq('+i+')');
+            var currentRow=$('tr:eq('+i+')');
             //要添加的行的id
             var addRowID=parseInt(currentRowID)+1;
             str = "<tr id ='"+addRowID+"'><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'>"+addRowID+ "</td>"+
@@ -387,7 +392,7 @@ function AddRowByID(currentRowID){
             //要添加的行的id
             var addRowID=parseInt(currentRowID)+1;
             str = "<tr id ='"+addRowID+"'><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'>"+addRowID+ "</td>"+
-                "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"元素:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'onclick='ee(event);'></i></td>"+
+                "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"元素:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal' onclick='ee(event);'></i></td>"+
                 "<td> <select size='1' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down' ></select> </td>"+
                 "<td><div class='showInfornamt'><label class=alignRight'>"+"Name:"+"</label><input id='showName' type='text'/> <br><label class='alignRight'>"+"Type:"+"</label><input id='showType' type='text' /> <br> <label class='alignRight'>"+"Desc:"+"</label><input id='showDesc' type='text' /> <br> </div> <i id='href' class='glyphicon glyphicon-search icon' data-toggle='modal' onclick='cs();' href='#parameterModal'></i> </td>>"+
                 "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='AddRowByID(this.id)'></i></td>" +

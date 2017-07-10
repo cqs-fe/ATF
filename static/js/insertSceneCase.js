@@ -31,7 +31,7 @@ var app = new Vue({
         checkboxModel: [],
         checked: "",
         subCaseList: [], //流程节点
-        ids: '',
+        ids:'',
         //场景id和名称
         sceneid: '',
         scenename: '场景名称'
@@ -54,16 +54,13 @@ var app = new Vue({
         insert: function() {
             this.getIds();
             $.ajax({
-                url: address + 'scenetestcaseController/insertSelective',
+                url: address + 'testexecutioninstanceController/inserttestcasetoscene',
                 type: 'post',
                 data: {
                     'sceneid': this.sceneid,
-                    'testcaseid': this.ids,
-                    'choosestate':'',
-                    'executetime':''
+                    'caseidList': '['+this.ids+']',
                 },
                 success: function(data) {
-                    console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
                     } else {
@@ -75,52 +72,52 @@ var app = new Vue({
                 }
             });
         },
-        //获取流程节点
-        getSubCase: function(e) {
-            var flowId = $(e.target).parent().parent().attr('id'),
-                flowTr = $(e.target).parent().parent();
-            console.log(flowId);
-            if ($(e.target).attr("class") === "icon-angle-right") {
-                $.ajax({
-                    url: address + 'TestcaseController/testcaseactionquery',
-                    type: 'post',
-                    data: { 'testcaseid': flowId },
-                    success: function(data) {
-                        this.subCaseList = data.obj;
-                        console.log(this.subCaseList);
-                        for (var i = 0; i < this.subCaseList.length; i++) {
-                            var subTr = $("<tr class='subShow'></tr>"),
-                                iconTd = $("<td></td>"),
-                                checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                                codeTd = $("<td></td>"),
-                                autTd = $("<td></td>"),
-                                transTd = $("<td></td>"),
-                                compositeTd = $("<td></td>"),
-                                useTd = $("<td></td>"),
-                                authorTd = $("<td></td>"),
-                                executorTd = $("<td></td>"),
-                                executeMethodTd = $("<td></td>");
-                            codeTd.html(this.subCaseList[i].subcasecode);
-                            autTd.html(this.subCaseList[i].autId);
-                            compositeTd.html(this.subCaseList[i].caseCompositeType);
-                            useTd.html(this.subCaseList[i].useStatus);
-                            authorTd.html(this.subCaseList[i].author);
-                            executorTd.html(this.subCaseList[i].executor);
-                            executeMethodTd.html(this.subCaseList[i].executeMethod);
-                            subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, authorTd, executorTd, executeMethodTd);
-                            flowTr.after(subTr);
-                        }
+        // //获取流程节点
+        // getSubCase: function(e) {
+        //     var flowId = $(e.target).parent().parent().attr('id'),
+        //         flowTr = $(e.target).parent().parent();
+        //     console.log(flowId);
+        //     if ($(e.target).attr("class") === "icon-angle-right") {
+        //         $.ajax({
+        //             url: address + 'TestcaseController/testcaseactionquery',
+        //             type: 'post',
+        //             data: { 'testcaseid': flowId },
+        //             success: function(data) {
+        //                 this.subCaseList = data.obj;
+        //                 console.log(this.subCaseList);
+        //                 for (var i = 0; i < this.subCaseList.length; i++) {
+        //                     var subTr = $("<tr class='subShow'></tr>"),
+        //                         iconTd = $("<td></td>"),
+        //                         checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+        //                         codeTd = $("<td></td>"),
+        //                         autTd = $("<td></td>"),
+        //                         transTd = $("<td></td>"),
+        //                         compositeTd = $("<td></td>"),
+        //                         useTd = $("<td></td>"),
+        //                         authorTd = $("<td></td>"),
+        //                         executorTd = $("<td></td>"),
+        //                         executeMethodTd = $("<td></td>");
+        //                     codeTd.html(this.subCaseList[i].subcasecode);
+        //                     autTd.html(this.subCaseList[i].autId);
+        //                     compositeTd.html(this.subCaseList[i].caseCompositeType);
+        //                     useTd.html(this.subCaseList[i].useStatus);
+        //                     authorTd.html(this.subCaseList[i].author);
+        //                     executorTd.html(this.subCaseList[i].executor);
+        //                     executeMethodTd.html(this.subCaseList[i].executeMethod);
+        //                     subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, authorTd, executorTd, executeMethodTd);
+        //                     flowTr.after(subTr);
+        //                 }
 
-                    }
-                });
-                $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
-            } else {
-                $(".subShow").css("display", "none");
-                $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
-            }
+        //             }
+        //         });
+        //         $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
+        //     } else {
+        //         $(".subShow").css("display", "none");
+        //         $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
+        //     }
 
 
-        },
+        // },
 
         //获取选中的id
         getIds: function() {
@@ -157,23 +154,23 @@ var app = new Vue({
             getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
         // 流程案例添加节点案例
-        addCaseNode: function() {
-            this.caseNodeNum++;
-            var cNode = $('<h3>流程节点案例' + this.caseNodeNum + this.caseNode);
-            var element = $("#addCaseNode").append(cNode);
-            this.$compile(element.get(0));
-            getUsers();
-            diyi(); //第一级函数
-            dier(); //第二级函数
-            disan(); //第三极函数
-            $('select[name="subautid"]').change(function() {
-                dier();
-                disan();
-            });
-            $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').change(function() {
-                disan();
-            });
-        },
+        // addCaseNode: function() {
+        //     this.caseNodeNum++;
+        //     var cNode = $('<h3>流程节点案例' + this.caseNodeNum + this.caseNode);
+        //     var element = $("#addCaseNode").append(cNode);
+        //     this.$compile(element.get(0));
+        //     getUsers();
+        //     diyi(); //第一级函数
+        //     dier(); //第二级函数
+        //     disan(); //第三极函数
+        //     $('select[name="subautid"]').change(function() {
+        //         dier();
+        //         disan();
+        //     });
+        //     $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').change(function() {
+        //         disan();
+        //     });
+        // },
         //搜索案例
         searchCase: function(id) {
             $.ajax({
@@ -220,7 +217,7 @@ function queryCase() {
             'rows': app.listnum,
             'order': app.order,
             'sort': app.sort,
-            'caseCompositeType': app.caseCompositeType,
+            'caseCompositeType': app.caseCompositeType.join(","),
             'priority': app.priority.join(","),
             'executemethod': app.executeMethod.join(","),
             'usestatus': app.useStatus.join(","),

@@ -20,7 +20,7 @@ function beforeClick(treeId, treeNode) {
     return check;
 }
 
-function onClick(e, treeId, treeNode) {
+function onClick(e, treeId, treeNode,event) {
     var zTree = $.fn.zTree.getZTreeObj("element"),
         nodes = zTree.getSelectedNodes(),
         v = "";
@@ -31,23 +31,24 @@ function onClick(e, treeId, treeNode) {
         return a.id - b.id;
     });
     for (var i = 0, l = nodes.length; i < l; i++) {
-        var s=nodes[i].name;
-        var u=node;
-        v = s+">"+u;
+        var s = nodes[i].name;
+        var u = node;
+        v = s + ">" + u;
     }
     if (v.length > 0)v.substring(0, v.length - 1);
-        var elementObj = $("#elementSel");
-        elementObj.attr("value", s);
-        var uiObj = $("#uiSel");
-        uiObj.attr("value",u);
-        $("#p_functionWord").hide();
-        $("#elementWord").css({"position":"absolute","left":"130px","top":"0px"});
+    var elementObj = $("td input.uiSel",tr);//tr是范围
+    elementObj.attr("value", s);
+    var uiObj = $("td input.elementSel",tr);
+    uiObj.attr("value", u);
+    method();
+    $("#p_functionWord").hide();
+    $("#elementWord").css({"position": "absolute", "left": "130px", "top": "0px"});
     var n = "";
     for (var i = 0, l = nodes.length; i < l; i++) {
         n += nodes[i].id + ",";
     }
     if (n.length > 0)n = n.substring(0, n.length - 1);
-        elementObj.attr("nameid", n);
+    elementObj.attr("nameid", n);
 }
 
 function beforeclick(treeId, treeNode) {
@@ -65,11 +66,11 @@ function onclick(e, treeId, treeNode) {
         v += nodes[i].classname + ",";
     }
     if (v.length > 0) v = v.substring(0, v.length - 1);
-    var elementObj = $("#elementSel");
+    var elementObj = $("td input.uiSel",tr);
     var st= " <option value='" +v+ "'>" +v+ "</option> ";
     elementObj.attr("value", v);
-    $('select[name="method"]').html(st);
-    var uiObj = $("#uiSel");
+    $('select[name="method"]',tr).html(st);
+    var uiObj = $("td input.elementSel",tr);
     uiObj.attr("value", "none");
     $("#elementWord").hide();
     $("#p_functionWord").css({"position":"absolute","left":"-150px","top":"180px"});
@@ -99,11 +100,12 @@ function ZtreeonClick(e, treeId, treeNode) {
     for (var i = 0; i < nodes.length; i++) {
         html += "<tr id =''><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'></td>" +
             "<td><label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value='"+node+"'/><br><label class='alignRight'>"+"元素："+"</label><input id='elementSel' name='classname' type='text' readonly value='"+ nodes[i].name +"'/><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href=''#addModal'></i></td>" +
-            "<td> <select size='1' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down' ></select> </td>" +
-            "<td id='2'><a id='temp' tabindex='0' data-toggle='popover'></a><i id='temp' tabindex='0' class='glyphicon glyphicon-edit' data-container='body'  title='参数' data-toggle='popover' data-placement='bottom'></i></td>" +
-            "<td><input class='icon-plus'type='button' value='添加一行' onclick='addRowByID(this.id);' id=''></td></tr>";
+            "<td> <select  style='width:200px;' name='method' class='glyphicon glyphicon-chevron-down' ></select> </td>" +
+            "<td id='parameter'><div class='showInfornamt'><table id='paraList'></table> </div><i  id='href' class='glyphicon glyphicon-search icon'  onclick='cs();'></i> </td>"+
+            "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'></i></td></tr>";
         $('table[id="sort"]>tbody').append(html);
     }
+    method();
 }
 
 function Ztreebeforeclick(treeId, treeNode) {
@@ -119,10 +121,10 @@ function Ztreeonclick(e, treeId, treeNode) {
         html = "";
     for (var i = 0; i < nodes.length; i++) {
         html += "<tr id =''><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'></td>" +
-            "<td><label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value='none'/><br><label class='alignRight'>"+"元素："+"</label><input id='elementSel' name='classname' type='text' readonly value='"+ nodes[i].classname+"'/><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href=''#addModal'></i></td>" +
-            "<td><select style='width:200px;' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down'> </select> </td>" +
-            "<td id='2'><a id='temp' tabindex='0' data-toggle='popover'></a><i id='temp' tabindex='0' class='glyphicon glyphicon-edit' data-container='body'  title='参数' data-toggle='popover' data-placement='bottom'></i></td>" +
-            "<td><input class='icon-plus'type='button' value='添加一行' onclick='addRowByID(this.id);' id=''></td></tr>";
+            "<td><label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value='"+ nodes[i].classname+"' /><br><label class='alignRight'>"+"元素："+"</label><input id='elementSel' name='classname' type='text' readonly value='none'/><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href=''#addModal'></i></td>" +
+            "<td> <select style='width:200px;' name='method' class='glyphicon glyphicon-chevron-down'><option>"+nodes[i].classname+"</option></select></td>" +
+            "<td id='parameter'><div class='showInfornamt'><table id='paraList'></table> </div><i  id='href' class='glyphicon glyphicon-search icon'  onclick='cs();'></i> </td>"+
+            "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'></i></td></tr>";
         $('table[id="sort"]>tbody').append(html);
     }
 }
