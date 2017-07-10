@@ -3,17 +3,116 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="import" href="./common/header.html?__inline">
-    <link rel="import" href="./noLoginAlert.html?__inline">
-    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
-    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/scene-management.css">
-    <script src="../lib/jquery.js"></script>
-    <script src="../lib/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../lib/vue.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta content="telephone=no" name="format-detection"/>
+<meta content="email=no" name="format-detection"/>
+
+
+    <div class="modal fade" id="vac-nologin-alert" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				用户尚未登录，请点击<a href="Login.html" style="color:#b94a48;">这里</a>进行登录！
+			</div>
+			<div class="modal-footer" style="text-align: center;">
+				<button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- successModal start -->
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">操作成功</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>操作成功！</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- successModal end -->
+        <!-- failModal start -->
+        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">操作失败</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>操作失败！</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- failModal end -->
     <title>Scene Manager</title>
+
+    <link rel="stylesheet" type="text/css" href="/public/static/css/base_6f29fff.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/index_e779e19.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/pagination_64872d5.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/metroStyle_5a9c382.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/scene-management_dc88108.css" />
+    <style type="text/css">
+	.vac-alert .modal-dialog {
+		margin-top: 80px;
+	}
+	.vac-alert .modal-content {
+		width: 500px;
+		margin: auto;
+		border: 1px solid #ddd;
+		/*box-shadow: 5px 5px 2px #d9edf7;*/
+	}
+	.vac-alert .modal-header {
+		padding: 10px 15px;
+		background-color: #55A8A1;
+	}
+	.vac-alert .modal-body {
+		padding: 15px 15px;
+		color: #a94442;
+	}
+	.vac-alert .modal-footer {
+		padding: 10px 20px;
+	}
+
+
+    .vac-confirm .modal-dialog {
+        margin-top: 80px;
+    }
+    .vac-confirm .modal-content {
+        width: 500px;
+        margin: auto;
+        border: 1px solid #ddd;
+        /*box-shadow: 5px 5px 2px #d9edf7;*/
+    }
+    .vac-confirm .modal-header {
+        padding: 10px 15px;
+        background-color: #55A8A1;
+    }
+    .vac-confirm .modal-body {
+        padding: 15px 15px;
+        color: #a94442;
+    }
+    .vac-confirm .modal-footer {
+        padding: 10px 20px;
+    }
+</style>
 </head>
 
 <body id="v-body" v-cloak>
@@ -170,10 +269,136 @@
         </div>
     </div>
         <!--header start-->
-        <link rel="import" href="./common/header-guide.html?__inline">
+        <header class="header white-bg">
+    <div class="sidebar-toggle-box">
+        <div data-original-title="点击折叠" data-placement="right" class="icon-reorder tooltips"></div>
+    </div>
+    <!--logo start-->
+    <a href="#" class="logo"><span>ATF</span></a>
+    <!--logo end-->
+
+    <div class="top-nav ">
+        <!--user info start-->
+        <ul class="nav pull-right top-menu">
+            <!-- user login dropdown start-->
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <img alt="" src="/public/static/images/avatar1_small_64c14fd.jpg">
+                    <span class="username">李唤</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <div class="log-arrow-up"></div>
+                    <li><a href="#"><i class=" icon-suitcase"></i>个人中心</a></li>
+                    <li><a href="#"><i class="icon-cog"></i> 设置</a></li>
+                    <li><a href="#"><i class="icon-bell-alt"></i> 通知</a></li>
+                    <li><a href="login.html"><i class="icon-key"></i> 注销</a></li>
+                </ul>
+            </li>
+            <!-- user login dropdown end -->
+        </ul>
+        <!--search & user info end-->
+    </div>
+</header>
         <!--header end-->
         <!--sidebar start-->
-        <link rel="import" href="./common/aside-guide.html?__inline">
+        <aside>
+    <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu">
+            <li class="sub-menu">
+                <a href="caseManagement.html" class="">
+                    <i class="icon-book"></i>
+                    <span>案例管理</span>
+                    <!-- <span class="arrow"></span> -->
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-th"></i>
+                    <span>系统管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li class="sub-menu">
+                        <a class="" href="testitems.html">测试任务</a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="usermanagement.html">系统用户</a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="aut.html">
+                            <span>测试系统</span>
+                            <!-- <span class="arrow"></span> -->
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu">
+                <a href="architecture.html">
+                    <span>开发架构</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="scene.html">
+                    <span>场景管理</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="testProject.html">
+                    <span>测试项目管理</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="testphase.html">
+                    <span>测试阶段</span>
+                </a>
+            </li>
+             <li class="sub-menu">
+                <a href="testroundManage.html">
+                    <span>测试轮次管理</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="testround.html">
+                    <span>测试轮次</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="datatable.html">
+                    <span>数据中心</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="transact.html">
+                    <span>功能点</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="elementLibrary.html">
+                    <span>元素库</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="objectRepo.html">
+                    <span>对象库</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="script.html">
+                    <span>脚本模板</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="testRecord.html">
+                    <span>测试记录</span>
+                </a>
+            </li>
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>
+
         <!--sidebar end-->
 
     <div class="content">
@@ -182,15 +407,10 @@
             <section class="content-wrapper"
              :class="{'bigMarginBottom':!tooltipFlag, 'smallMarginBottom':tooltipFlag}">
                 <main class="main">
-                     <!-- breadcrumb start -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <ul class="breadcrumb">
-                                <li><a href="scene.html"><i class="icon-home"></i>场景管理</a></li>
-                                <li><a href="transact.html">{{scenename}}</a></li>
-                                <!-- <li class="active"> 对象库</li> -->
-                            </ul>
-                        </div>
+                    <div class="route-position">
+                        <a href="scene.html">场景管理</a>
+                        <span> > </span>
+                        <a href="">{{scenename}}</a>
                     </div>
                     <div class="top-bar">
                         <a class="btn btn-white" @click="toInsertSceneCase"><i class="icon-plus"></i> 添加用例</a>
@@ -215,12 +435,13 @@
                             <div class="checkbox-wrapper">
                                 <!-- <label>全选</label> -->
                                 <input type="checkbox" class="checkall" @change="checkallToggle($event);">
+
                             </div>
                             <div class="case-wrapper">
                                 <template v-if="case_wrapper.caseCompositeType == '1'">
                                     <div class="case" >
                                         <div class="case-header">
-                                            <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case" v-model="selectedCases" @change="checkChanged()">
+                                            <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case" v-model="selectedCases" @change="test()">
                                             <p>{{case_wrapper.id}}</p>
                                         </div>
                                         <div class="case-main">
@@ -234,8 +455,7 @@
                                 <template v-else>
                                     <div class="case" v-for="item in case_wrapper.flowNodeDtos">
                                         <div class="case-header">
-                                            <input type="checkbox" v-bind:value="item.id" 
-                                            class="check-case" v-model="selectedCases" @change="checkChanged()">
+                                            <input type="checkbox" v-bind:value="item.id" class="check-case" v-model="selectedCases" @change="test()">
                                             <p>{{item.id}}</p>
                                         </div>
                                         <div class="case-main">
@@ -473,6 +693,12 @@
                             </tbody>
                         </table>
                     </div>
+<!--                     <div>
+                        <button class="btn btn-info triggerSave">
+                            保存
+                        </button>
+                    </div>
+
                 </div>
             </div>
             <link rel="import" href="./common/copy-right.html?__inline">
@@ -481,13 +707,78 @@
     </div>
     <!--content end -->
 
-    <link rel="import" href="./common-vac/alert.html?__inline">
-    <link rel="import" href="./common-vac/confirm.html?__inline">
-    <script src="../static/js/config.js"></script>
-    <script src="../static/js/vac-functions.es.js"></script>
-    <script src="../static/js/scene-management.es.js"></script>
-    <script src="../../lib/common-scripts.js"></script>
-    <script type="text/javascript">
+    <div class="modal fade vac-alert" tabindex="-1" role="dialog" id="vac-alert" >	  
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4  class="modal-title">提示信息</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-message"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#vac-alert">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+    <div class="modal fade vac-confirm" tabindex="-1" role="dialog" id="vac-confirm" >    
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cancelConfirm" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4  class="modal-title">警告信息</h4>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message">确认要进行此操作吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary cancelConfirm">取消</button>
+                <button type="button" class="btn btn-info okConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/public/lib/jquery_9d91e40.js"></script>
+<script src="/public/lib/bootstrap.min_6d91d60.js"></script>
+<script type="text/javascript" src="/public/lib/vue_1a55fd3.js"></script>
+<script>
+	var Vac = Vac || {};
+	Vac.alert = function(message) {
+		$('.vac-alert .modal-message').html(message);
+		$('#vac-alert').modal('show');
+	};
+
+
+    var Vac = Vac || {};
+    Vac.confirm = function(divSelector, okSelector, cancelSelector) {
+        var confirmDiv = document.querySelector(divSelector);
+        console.log('hakjadkjhakjsd')
+        $(divSelector).modal('show');
+        return new Promise(function(resolve, reject) {
+            confirmDiv.querySelector(okSelector).onclick = function() {
+                resolve();
+                $(divSelector).modal('hide');
+            };
+            var cancelButtons = confirmDiv.querySelectorAll(cancelSelector);
+            for (var i = 0; i < cancelButtons.length; i++) {
+                cancelButtons[i].onclick = function() {
+                    reject();
+                    $(divSelector).modal('hide');
+                }
+            }
+        });
+    }
+</script>
+<script src="/public/static/js/config_c802f56.js"></script>
+<script src="/public/static/js/vac-functions.es_fa790d3.js"></script>
+<script src="/public/static/js/scene-management.es_dccb8fa.js"></script>
+<script src="/public/lib/common-scripts_de7c4e5.js"></script>
+<script type="text/javascript">
     document.querySelector('.sidebar-toggle-box').addEventListener('click', function() {
         if (document.body.offsetWidth <= 768) {
             return;

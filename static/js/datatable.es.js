@@ -118,31 +118,26 @@ $(document).ready(function(){
                 checkedArray:[]
             },
             created: function(){
-                var _this = this;
-                $.ajax({
-                    url: "/api/selectTypes",
-                    data: null,
-                    type: 'post',
-                    dataType: 'json',
-                    success: function(jsonData, textStatus){
-                        var data = [
-					        {
-					            "name": "测试点",
-					            "value": 1
-					        },
-					        {
-					            "name": "执行状态",
-					            "value": 2
-					        }
-					    ];
-					     _this.selectItems = data;
-                    }
-                });
+
+            },
+            ready: function() {
+            	var _this = this;
+                var data = [
+			        {
+			            "name": "测试点",
+			            "value": 1
+			        },
+			        {
+			            "name": "执行状态",
+			            "value": 2
+			        }
+			    ];
+				_this.selectItems = data;
             },
             methods: {
                 toggle: function(){
                     this.flag = !this.flag;
-                    document.querySelector('.wtHolder').style.width = 'auto';
+                    document.querySelector('.wtHolder') && (document.querySelector('.wtHolder').style.width = 'auto');
                 },
                 changeSelect: function(event){
                     var _this = this;

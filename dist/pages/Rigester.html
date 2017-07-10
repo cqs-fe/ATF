@@ -1,0 +1,215 @@
+<!DOCTYPE  >
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+        <title>
+            用户注册
+        </title>
+    
+    <link rel="stylesheet" type="text/css" href="/public/static/css/Register_258dbb5.css" />
+</head>
+    <body>
+        <div class="title">
+            <span id="ATF">
+                ATF
+            </span>
+            <span id="title">
+                用户注册
+            </span>
+        </div>
+        <div class="ui-stepBar-wrap" id="stepBar">
+            <div class="ui-stepInfo-wrap">
+                <div>
+                    <div class="ui-stepInfo">
+                        <img height="16" src="/static/images/OK.png" width="16">
+                            填写账户信息
+                        </img>
+                    </div>
+                    <div class="ui-stepInfo">
+                        注册成功
+                    </div>
+                    <div class="clear">
+                    </div>
+                </div>
+                <div class="ui-stepBar">
+                    <div class="ui-stepProcess1">
+                    </div>
+                    <div class="ui-stepProcess2">
+                    </div>
+                    <div class="clear">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            <form action="" id="form" method="post">
+                <div class="form-div">
+                    <div id="result">
+                    </div>
+                    <div class="bitiantitle">
+                        必填信息
+                    </div>
+                    <div class="bitian">
+                        <div class="form-group">
+                            <label class="item-label" for="username">
+                                用户名
+                            </label>
+                            <input id="username" name="username" placeholder="请输入4-16位英文字母或数字" type="text"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="item-label" for="reallyname">
+                                姓名
+                            </label>
+                            <input id="reallyname" name="reallyname" placeholder="请输入姓名" type="text"/>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="item-label" for="password">
+                                密码
+                            </label>
+                            <input id="password" name="password" placeholder="请输入6-16位密码" type="password"/>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="item-label" for="repassword">
+                                确认密码
+                            </label>
+                            <input id="repassword" name="repassword" placeholder="请确认密码" type="password"/>
+
+                        </div>
+                    </div>
+                    <div class="xuantiantitle">
+                        选填信息
+                    </div>
+                    <div class="xuantian">
+                    <div class="form-group">
+                        <label class="item-label" for="department">
+                            所属部门
+                        </label>
+                        <input id="department" name="dept" placeholder="请填写所属部门，例如“行政部”" type="text"/>
+
+                        </div>
+                        <div class="form-group">
+                        <label class="item-label" for="phonenumber">
+                            手机号
+                        </label>
+                        <input id="phonenumber" name="tel" placeholder="请输入手机号码" type="tel"/>
+
+                        </div>
+                        <div class="form-group">
+                        <label class="item-label" for="number">
+                            固定电话
+                        </label>
+                        <input id="number" name="phone" placeholder="请填写固定电话" type="tel"/>
+
+                        </div>
+                        <div class="form-group">
+                        <label class="item-label" for="email">
+                            电子邮箱
+                        </label>
+                        <input  id="email" name="email" placeholder="请填写电子邮箱" type="text"/>
+
+                        </div>
+                        <div class="form-group">
+                        <label for="authCode" >
+                            验证码
+                        </label>
+                        <input class="authCode" id="authCode" name="authCode" placeholder="请填写验证码" type="text"/>
+                        <span id="image">
+                            <img id="codeImage" onclick="chageCode()" style="cursor:pointer;" title="图片看不清？点击重新得到验证码" type="image"/>
+                        </span>
+                        <span class="autherror"></span>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button name="cancel" style="background-color:#CCC" type="button">
+                            取消
+                        </button>
+                        <button id="submit" name="submit" style="background-color:#F33" type="button">
+                            注册
+                        </button>
+                        
+                    </div>
+                    <br class="clear">
+                    </br>
+                </div>
+            </form>
+        </div>
+    
+<script src="/public/lib/jquery_9d91e40.js"></script>
+<script src="/public/lib/jquery.validate_1e98aa0.js"></script>
+<script src="/public/lib/Validate_49a0213.js"></script>
+<script type="text/javascript">
+             var baseurl = "http://10.108.226.152:8080/ATFCloud/";
+        //var baseurl = "http://127.0.0.1:8080/ATFCloud/";
+        var authcode = false;
+        function chageCode() {
+            $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random());//链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+            //获取sessionId并将其存放在sessionstorage之中
+            $.ajax({
+                type:'post',
+                url: baseurl + "userController/getSessionId",//
+                dataType:'json',
+                success:function(data){
+                    sessionStorage.setItem('sessionId',data.obj.sessionId);
+                }
+            });
+        }
+        function setHtml(id,msg){
+            $(id).html(msg);
+
+        }
+        $(document).ready(function () {
+            $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random());
+                $.ajax({
+                    type:'post',
+                    url: baseurl + "userController/getSessionId",
+                    dataType:'json',
+                    success:function(data){
+                    sessionStorage.setItem('sessionId',data.obj.sessionId);
+                }
+            });
+            $('#authCode').blur(function(){
+                $.ajax({
+                    type:'post',
+                    url: baseurl + "userController/checkauthcode",
+                    data: {"authCode":$("#authCode").val(),"sessionId":sessionStorage.getItem('sessionId')},
+                    dataType:"json",
+                    success:function(data){
+                        if(data.success){
+                            authcode=true;
+                            console.info(true);
+                            $(".autherror").html("");
+                        }else{
+                            console.info("验证码错误");
+                            $(".autherror").html("验证码错误");
+                        }
+
+                    }
+                });
+                
+            });
+            $('#submit').click(function(){
+                console.info("$form.valid()"+$("#form").valid());
+                if($("#form").valid()&&authcode){
+                  $.ajax({
+                    type:'post',
+                    url: baseurl + "userController/register",
+                    data: $("#form").serialize()+"&sessionId="+sessionStorage.getItem('sessionId'),
+                    dataType:"json",
+                    success:function(data){
+                        console.info(data);
+                        if(data.success){
+                                    window.location.href = "Register_suc.html";//注册成功页
+                                }else{
+
+                                    setHtml("#result",data.msg);
+                                }
+                            }
+                        }) ;
+              }
+          });
+        });
+        </script>
+</body>
+</html>
