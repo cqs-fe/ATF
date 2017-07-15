@@ -6,20 +6,21 @@ var app = new Vue({
         objId: '',
         objName: '对象名称',
         propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
-        classtypeList:[]
+        classtypeList: []
     },
     ready: function() {
         this.autSelect();
         this.setval();
-        $('#autSelect').change(function() {
-            app.transactSelect();
-            app.autId=$('#autSelect').val();
-        });
-        $('#transactSelect').change(()=>{
-            app.transactId=$('#transactSelect').val();
-        });
         this.classtypeSelect();
         getObjTree();
+        $('#autSelect').change(function() {
+            app.transactSelect();
+            app.autId = $('#autSelect').val();
+        });
+        $('#transactSelect').change(() => {
+            app.transactId = $('#transactSelect').val();
+            updateObjTree();
+        });
     },
     methods: {
         //获取测试系统
@@ -74,43 +75,45 @@ var app = new Vue({
         },
         //设置所属测试系统和所属功能点为上级页面选中的值
         setval: function() {
-            var thisURL = document.URL,
-                getval = thisURL.split('?')[1],
-                keyval = getval.split('&');
-            this.autId = keyval[0].split('=')[1],
-                this.transactId = keyval[1].split('=')[1];
-            $("#autSelect").val(this.autId);
-            $("#transactSelect").val(this.transactId);
-            $.ajax({
-                url: address + 'transactController/transactqueryByPage',
-                type: 'GET',
-                async: false,
-                data: {
-                    'page': 1,
-                    'rows': 10,
-                    'order': 'id',
-                    'sort': 'asc',
-                    'id': this.transactId,
-                    'transcode': '',
-                    'transname': '',
-                    'autctgId': '',
-                    'descript': '',
-                    'maintainer': '',
-                    'autId': '',
-                    'useStatus': ''
-                },
-                success: function(data) {
-                    var transactList = data.o.rows;
-                    // console.log(transactList)
-                    var str = "";
-                    for (var i = 0; i < transactList.length; i++) {
+            const thisURL = document.URL;
+            if (thisURL.indexOf('?') >= 0) {
+                const getval = thisURL.split('?')[1];
+                const keyval = getval.split('&');
+                this.autId = keyval[0].split('=')[1],
+                    this.transactId = keyval[1].split('=')[1];
+                $("#autSelect").val(this.autId);
+                $("#transactSelect").val(this.transactId);
+                $.ajax({
+                    url: address + 'transactController/transactqueryByPage',
+                    type: 'GET',
+                    async: false,
+                    data: {
+                        'page': 1,
+                        'rows': 10,
+                        'order': 'id',
+                        'sort': 'asc',
+                        'id': this.transactId,
+                        'transcode': '',
+                        'transname': '',
+                        'autctgId': '',
+                        'descript': '',
+                        'maintainer': '',
+                        'autId': '',
+                        'useStatus': ''
+                    },
+                    success: function(data) {
+                        var transactList = data.o.rows;
+                        // console.log(transactList)
+                        var str = "";
+                        for (var i = 0; i < transactList.length; i++) {
 
-                        str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                            str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                        }
+                        $('#transactSelect').html(str);
+
                     }
-                    $('#transactSelect').html(str);
-
-                }
-            });
+                });
+            }
         },
         addObj: function() {
             var objName = $("#addObjName").val(),
@@ -505,7 +508,19 @@ function getObjTree() {
         }
     });
 }
-
+//刷新对象库
+function updateObjTree() {
+    $.ajax({
+        url: address + 'object_repoController/queryObject_repoAll',
+        type: 'post',
+        data: { "transid": app.transactId },
+        success: function(data) {
+            if (data !== null) {
+                $.fn.zTree.init($("#objectTree"), setting1, data.obj);
+            }
+        }
+    });
+}
 //禁止拖动
 function zTreeBeforeDrag(treeId, treeNodes) {
     return false;
@@ -525,9 +540,9 @@ $('#search-btn').click(() => {
 //点击保存按钮后更新属性
 function updateProp() {
     const treeObj = $.fn.zTree.getZTreeObj("objectTree"),
-          nodes = treeObj.getSelectedNodes(true),
-          id = nodes[0].id,
-          classtype = $('#classtypeSelect').val();
+        nodes = treeObj.getSelectedNodes(true),
+        id = nodes[0].id,
+        classtype = $('#classtypeSelect').val();
     $.ajax({
         url: address + 'object_repoController/queryObject_repo',
         type: 'post',
