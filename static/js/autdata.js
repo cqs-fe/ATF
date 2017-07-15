@@ -1,7 +1,10 @@
 var app = new Vue({
     el: '#v-autdata',
     data: {
+        autId: '',
+        autName: '',
         autdataList: [],
+        autdataListLength: 0,
         tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
@@ -13,14 +16,36 @@ var app = new Vue({
         ids: []
     },
     ready: function() {
-        autSelect();
-        setval();
+        this.getAutId();
+        this.getautdata();
         changeListNum();
-        $('#autSelect').change(function() {
-            queryautdata();
-        });
     },
     methods: {
+        //获取autid autname
+        getAutId() {
+            var thisURL = document.URL,
+                getval = thisURL.split('?')[1],
+                keyval = getval.split('&');
+            this.autId = keyval[0].split('=')[1];
+            this.autName = keyval[1].split('=')[1];
+            console.log(this.autId)
+        },
+        getautdata() {
+            $.ajax({
+                url: address + 'dataPoolController/selectByCondition',
+                type: 'post',
+                data: {
+                    'poolname': '被测系统数据池',
+                    'poolobjid': this.autId,
+                    'dataname': '',
+                },
+                success: function(data) {
+                    console.log(data.obj);
+                    app.autdataList = data.obj;
+                    app.autdataListLength = data.obj.length;
+                }
+            });
+        },
         //获取选中的id
         getIds: function() {
             var id_array = new Array();
@@ -52,17 +77,18 @@ var app = new Vue({
             //页数变化时的回调
             getautdata(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-        //添加功能点
+        //添加
         insert: function() {
             $('#insertForm input[name="autid"]').val($('#autSelect').val()),
                 $.ajax({
-                    url: address+'autdataController/insertautdata',
+                    url: address + 'dataPoolController/insert',
                     type: 'post',
                     data: $("#insertForm").serializeArray(),
                     success: function(data) {
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
+                            getautdata();
                         } else {
                             $('#failModal').modal();
                         }
@@ -72,20 +98,28 @@ var app = new Vue({
                     }
                 });
         },
-        //删除功能点
+        //删除
+        checkDel: () => {
+            app.getIds();
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                $('#deleteModal').modal();
+            }
+        },
         del: function() {
-            this.getIds();
-            console.log(app.ids)
             $.ajax({
-                url: address+'autdataController/deleteautdata',
+                url: address + 'dataPoolController/delete',
                 type: 'post',
                 data: {
-                    'autdataid': app.ids
+                    'id': app.ids
                 },
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getautdata();
                     } else {
                         $('#failModal').modal();
                     }
@@ -96,84 +130,73 @@ var app = new Vue({
             });
         },
         //修改功能点
+        checkUpdate: () => {
+            app.getIds();
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                app.getSelected();
+                $('#updateModal').modal();
+            }
+        },
         update: function() {
-            $.ajax({
-                url: address+'autdataController/updateautdata',
-                type: 'post',
-                data: $("#updateForm").serializeArray(),
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                    } else {
+                $.ajax({
+                    url: address + 'dataPoolController/update',
+                    type: 'post',
+                    data: $("#updateForm").serializeArray(),
+                    success: function(data) {
+                        console.info(data);
+                        if (data.success) {
+                            $('#successModal').modal();
+                            getautdata();
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+                });
         },
         //获取当前选中行内容
         getSelected: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
-            $('#updateForm input[name="autdataid"]').val(selectedId);
-            $('#updateForm input[name="autdatacode"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="autdataname"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().next().html());
-        },
-        //传递当前页选中的测试系统id和功能点id到元素库页面
-        toElementLib: function() {
-            var selectedInput = $('input[name="chk_list"]:checked');
-            if (selectedInput.length === 0) {
-                $('#selectAlertModal').modal();
-            } else {
-                var autdataId = selectedInput.attr('id');
-                var autId = $('#autSelect').val();
-                location.href = "elementLibrary.html?autId=" + autId + "&" + "autdataId=" + autdataId;
-            }
-        },
-        //传递当前页选中的测试系统id和功能点id到对象库页面
-        toObjectRepo: function() {
-            var selectedInput = $('input[name="chk_list"]:checked');
-            if (selectedInput.length === 0) {
-                $('#selectAlertModal').modal();
-            } else {
-                var autdataId = selectedInput.attr('id');
-                var autId = $('#autSelect').val();
-                location.href = "objectRepo.html?autId=" + autId + "&" + "autdataId=" + autdataId;
-            }
+            $('#updateForm input[name="id"]').val(selectedId);
+            $('#updateForm input[name="dataname"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="datavalue"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm textarea[name="datadesc"]').val(selectedInput.parent().next().next().next().html());
         },
 
     },
 
 });
 
+//获取autid autname
+function getAutId() {
+    var thisURL = document.URL,
+        getval = thisURL.split('?')[1],
+        keyval = getval.split('&');
+    app.autId = keyval[0].split('=')[1];
+    app.autName = keyval[1].split('=')[1];
+    console.log(app.autId)
+}
 
-function getautdata(page, listnum, order, sort) {
-
-    //获取list通用方法，只需要传入多个所需参数
+function getautdata() {
     $.ajax({
-        url: address+'autdataController/selectAllByPage',
-        type: 'GET',
+        url: address + 'dataPoolController/selectByCondition',
+        type: 'post',
         data: {
-            'page': page,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
+            'poolname': '被测系统数据池',
+            'poolobjid': app.autId,
+            'dataname': '',
         },
         success: function(data) {
-            console.info(data);
-            console.info(data.rows);
-            // var data = JSON.parse(data);
-            app.autdataList = data.o.rows;
-            app.tt = data.o.total;
-            app.totalPage = Math.ceil(app.tt / listnum);
-            app.pageSize = listnum;
+            console.log(data.obj);
+            app.autdataList = data.obj;
         }
     });
-
 }
 
 //改变页面大小
@@ -211,90 +234,3 @@ function resort(target) {
     getautdata(1, 10, app.order, app.sort);
 }
 //重新排序 结束
-
-//获取测试系统
-function autSelect() {
-    $.ajax({
-        async: false,
-        url: address+"autController/selectAll",
-        type: "POST",
-        success: function(data) {
-            var autList = data.obj;
-            var str = "";
-            for (var i = 0; i < autList.length; i++) {
-
-                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
-            }
-
-            $('#autSelect').html(str);
-
-        }
-    });
-}
-
-//设置所属被测系统select为aut页面选中的aut
-function setval() {
-    var thisURL = document.URL;
-    var getVal = thisURL.split('?')[1];
-    var oneVal = getVal.split('=')[1];
-    $("#autSelect").val(oneVal);
-    $.ajax({
-        url: address+'autdataController/autdataqueryByPage',
-        type: 'POST',
-        data: {
-            'page': 1,
-            'rows': 10,
-            'order': 'id',
-            'sort': 'asc',
-            'id': '',
-            'transcode': '',
-            'transname': '',
-            'autctgId': '',
-            'descript': '',
-            'maintainer': '',
-            'autId': $('#autSelect').val(),
-            'useStatus': '',
-
-        },
-        success: function(data) {
-            app.autdataList = data.o.rows;
-            app.tt = data.o.total;
-            app.totalPage = Math.ceil(app.tt / app.listnum);
-            app.pageSize = app.listnum;
-        },
-        error: function() {
-            $('#failModal').modal();
-        }
-    });
-}
-//通过选择被测系统筛选查询功能点 
-function queryautdata() {
-    $.ajax({
-        url: address+'autdataController/autdataqueryByPage',
-        type: 'POST',
-        data: {
-            'page': app.currentPage,
-            'rows': app.listnum,
-            'order': app.order,
-            'sort': app.sort,
-            'id': '',
-            'transcode': '',
-            'transname': '',
-            'autctgId': '',
-            'descript': '',
-            'maintainer': '',
-            'autId': $('#autSelect').val(),
-            'useStatus': '',
-
-        },
-        success: function(data) {
-            app.autdataList = data.o.rows;
-            app.tt = data.o.total;
-            app.totalPage = Math.ceil(app.tt / app.listnum);
-            app.pageSize = app.listnum;
-        },
-        error: function() {
-            $('#failModal').modal();
-        }
-    });
-}

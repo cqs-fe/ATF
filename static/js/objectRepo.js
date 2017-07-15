@@ -4,14 +4,19 @@ var app = new Vue({
         autId: '',
         transactId: '',
         objId: '',
-        objName: '',
+        objName: '对象名称',
         propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        classtypeList:[]
     },
     ready: function() {
         this.autSelect();
         this.setval();
         $('#autSelect').change(function() {
             app.transactSelect();
+            app.autId=$('#autSelect').val();
+        });
+        $('#transactSelect').change(()=>{
+            app.transactId=$('#transactSelect').val();
         });
         this.classtypeSelect();
         getObjTree();
@@ -21,7 +26,7 @@ var app = new Vue({
         autSelect: function() {
             $.ajax({
                 async: false,
-                url: address+"autController/selectAll",
+                url: address + "autController/selectAll",
                 type: "POST",
                 success: function(data) {
                     var autList = data.obj;
@@ -38,7 +43,7 @@ var app = new Vue({
         transactSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
-                url: address+'transactController/showalltransact',
+                url: address + 'transactController/showalltransact',
                 data: { 'autlistselect': val },
                 type: "POST",
                 success: function(data) {
@@ -54,19 +59,14 @@ var app = new Vue({
             });
         },
         //获取classtype
-        classtypeSelect: function() {
-            var val = $('#autSelect').val();
+        classtypeSelect: () => {
+            const val = $('#autSelect').val();
             $.ajax({
-                url: address+'autController/selectClass',
+                url: address + 'autController/selectClass',
                 data: { 'id': val },
                 type: "POST",
                 success: function(data) {
-                    var classtypeList = data;
-                    var str = "";
-                    for (var i = 0; i < classtypeList.length; i++) {
-                        str += " <option>" + classtypeList[i].className + "</option> ";
-                    }
-                    $('#classtypeSelect').html(str);
+                    app.classtypeList = data;
 
                 }
 
@@ -82,7 +82,7 @@ var app = new Vue({
             $("#autSelect").val(this.autId);
             $("#transactSelect").val(this.transactId);
             $.ajax({
-                url: address+'transactController/transactqueryByPage',
+                url: address + 'transactController/transactqueryByPage',
                 type: 'GET',
                 async: false,
                 data: {
@@ -115,7 +115,7 @@ var app = new Vue({
         addObj: function() {
             var objName = $("#addObjName").val(),
                 treeObj = $.fn.zTree.getZTreeObj("objectTree"),
-                nodes = treeObj.getCheckedNodes(true),
+                nodes = treeObj.getSelectedNodes(true),
                 parentid;
             if (nodes.length === 0) {
                 parentid = "0";
@@ -123,7 +123,7 @@ var app = new Vue({
                 parentid = nodes[0].id;
             }
             $.ajax({
-                url: address+'object_repoController/insertObject_repo',
+                url: address + 'object_repoController/insertObject_repo',
                 type: 'post',
                 data: {
                     "name": objName,
@@ -135,7 +135,8 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                        window.location.reload();
+                        $('#successModal').modal();
+                        getObjTree();
                     } else {
                         $('#failModal').modal();
                     }
@@ -147,14 +148,14 @@ var app = new Vue({
         },
         delObj: function() {
             var treeObj = $.fn.zTree.getZTreeObj("objectTree");
-            var nodes = treeObj.getCheckedNodes(true);
+            var nodes = treeObj.getSelectedNodes(true);
             var ids;
             for (var i = 0; i < nodes.length; i++) {
                 ids = nodes[i].id;
             }
 
             $.ajax({
-                url: address+'object_repoController/deleteObejct_repo',
+                url: address + 'object_repoController/deleteObejct_repo',
                 type: 'post',
                 data: {
                     "id": ids,
@@ -163,7 +164,8 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                        window.location.reload();
+                        $('#successModal').modal();
+                        getObjTree();
                     } else {
                         $('#failModal').modal();
                     }
@@ -173,101 +175,101 @@ var app = new Vue({
                 }
             });
         },
-        queryObj: function() {
-            $(':input', '#objForm').val(' ');
-            // $('#mainProp').children().remove();
-            // $('#addiProp').children().remove();
-            // $('#assisProp').children().remove();
-            $.ajax({
-                url: address+'object_repoController/queryObject_repo',
-                type: 'post',
-                data: {
-                    "id": app.objId,
-                    "transid": app.transactId,
-                },
-                success: function(data) {
-                    console.log(data);
-                    app.objName = data.obj.name;
-                    $('#objForm input[name="name"]').val(data.obj.name);
-                    $('#classtypeSelect').val(data.obj.classtype);
-                    //主属性
-                    var mainList = data.obj[0].locatePropertyCollection.main_properties;
-                    for (var i = 0; i < mainList.length; i++) {
-                        var mainTr = $('<tr></tr>'),
-                            mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                            mainNameTd = $('<td contenteditable="true"></td>'),
-                            mainValTd = $('<td contenteditable="true"></td>');
-                        mainNameTd.html(mainList[i].name);
-                        mainValTd.html(mainList[i].value);
-                        mainTr.append(mainCheckTd, mainNameTd, mainValTd);
-                        $('#mainProp').append(mainTr);
-                    }
-                    //附加属性
-                    var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
-                    for (var j = 0; j < addiList.length; j++) {
-                        var addiTr = $('<tr></tr>'),
-                            addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                            addiNameTd = $('<td contenteditable="true"></td>'),
-                            addiValTd = $('<td contenteditable="true"></td>');
-                        addiNameTd.html(addiList[j].name);
-                        addiValTd.html(addiList[j].value);
-                        addiTr.append(addiCheckTd, addiNameTd, addiValTd);
-                        $('#addiProp').append(addiTr);
-                    }
-                    //辅助属性
-                    var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
-                    for (var k = 0; k < assiList.length; k++) {
-                        var assiTr = $('<tr></tr>'),
-                            assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                            assiNameTd = $('<td contenteditable="true"></td>'),
-                            assiValTd = $('<td contenteditable="true"></td>');
-                        assiNameTd.html(assiList[k].name);
-                        assiValTd.html(assiList[k].value);
-                        assiTr.append(assiCheckTd, assiNameTd, assiValTd);
-                        $('#assisProp').append(assiTr);
-                    }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-        },
+        // queryObj: function() {
+        //     $(':input', '#objForm').val(' ');
+        //     // $('#mainProp').children().remove();
+        //     // $('#addiProp').children().remove();
+        //     // $('#assisProp').children().remove();
+        //     $.ajax({
+        //         url: address + 'object_repoController/queryObject_repo',
+        //         type: 'post',
+        //         data: {
+        //             "id": app.objId,
+        //             "transid": app.transactId,
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //             app.objName = data.obj.name;
+        //             $('#objForm input[name="name"]').val(data.obj.name);
+        //             $('#classtypeSelect').val(data.obj.classtype);
+        //             //主属性
+        //             var mainList = data.obj[0].locatePropertyCollection.main_properties;
+        //             for (var i = 0; i < mainList.length; i++) {
+        //                 var mainTr = $('<tr></tr>'),
+        //                     mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+        //                     mainNameTd = $('<td contenteditable="true"></td>'),
+        //                     mainValTd = $('<td contenteditable="true"></td>');
+        //                 mainNameTd.html(mainList[i].name);
+        //                 mainValTd.html(mainList[i].value);
+        //                 mainTr.append(mainCheckTd, mainNameTd, mainValTd);
+        //                 $('#mainProp').append(mainTr);
+        //             }
+        //             //附加属性
+        //             var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
+        //             for (var j = 0; j < addiList.length; j++) {
+        //                 var addiTr = $('<tr></tr>'),
+        //                     addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+        //                     addiNameTd = $('<td contenteditable="true"></td>'),
+        //                     addiValTd = $('<td contenteditable="true"></td>');
+        //                 addiNameTd.html(addiList[j].name);
+        //                 addiValTd.html(addiList[j].value);
+        //                 addiTr.append(addiCheckTd, addiNameTd, addiValTd);
+        //                 $('#addiProp').append(addiTr);
+        //             }
+        //             //辅助属性
+        //             var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
+        //             for (var k = 0; k < assiList.length; k++) {
+        //                 var assiTr = $('<tr></tr>'),
+        //                     assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+        //                     assiNameTd = $('<td contenteditable="true"></td>'),
+        //                     assiValTd = $('<td contenteditable="true"></td>');
+        //                 assiNameTd.html(assiList[k].name);
+        //                 assiValTd.html(assiList[k].value);
+        //                 assiTr.append(assiCheckTd, assiNameTd, assiValTd);
+        //                 $('#assisProp').append(assiTr);
+        //             }
+        //         },
+        //         error: function() {
+        //             $('#failModal').modal();
+        //         }
+        //     });
+        // },
         updateObj: function() {
             var treeObj = $.fn.zTree.getZTreeObj("objectTree"),
-                nodes = treeObj.getCheckedNodes(true),
+                nodes = treeObj.getSelectedNodes(true),
                 id = nodes[0].id,
                 name = nodes[0].name,
                 parentElementId = nodes[0].parentid,
                 classtype = $('#classtypeSelect').val();
             //主属性
             var mainTd,
-                mainName = '',
-                mainVal = '';
+                mainName = [],
+                mainVal = [];
             $('#mainProp').find('tr').each(function() {
                 mainTd = $(this).children();
-                mainName = mainTd.eq(1).html(); //主属性名称
-                mainVal = mainTd.eq(2).html(); //主属性值
+                mainName.push(mainTd.eq(1).html()); //主属性名称
+                mainVal.push(mainTd.eq(2).html()); //主属性值
             });
             //附加属性
             var addiTd,
-                addiName = '',
-                addiVal = '';
+                addiName = [],
+                addiVal = [];
             $('#addiProp').find('tr').each(function() {
                 addiTd = $(this).children();
-                addiName = addiTd.eq(1).html(); //附加属性名称
-                addiVal = addiTd.eq(2).html(); //附加属性值
+                addiName.push(addiTd.eq(1).html()); //附加属性名称
+                addiVal.push(addiTd.eq(2).html()); //附加属性值
             });
             //辅助属性
             var assisTd,
-                assisName = '',
-                assisVal = '';
+                assisName = [],
+                assisVal = [];
             $('#assisProp').find('tr').each(function() {
                 assisTd = $(this).children();
-                assisName = assisTd.eq(1).html(); //辅助属性名称
-                assisVal = assisTd.eq(2).html(); //辅助属性值
+                assisName.push(assisTd.eq(1).html()); //辅助属性名称
+                assisVal.push(assisTd.eq(2).html()); //辅助属性值
             });
             $.ajax({
-                url: address+'object_repoController/updateObejct_repo',
+                url: address + 'object_repoController/updateObejct_repo',
                 type: 'post',
                 data: {
                     "id": id,
@@ -276,18 +278,18 @@ var app = new Vue({
                     "parentElementId": parentElementId,
                     "classtype": classtype,
                     "compositeType": "",
-                    "mainpropertiesname": mainName,
-                    "mainpropertiesvalue": mainVal,
+                    "mainpropertiesname": mainName.toString(),
+                    "mainpropertiesvalue": mainVal.toString(),
                     "mainpropertiesmatchMethod": '',
                     "mainpropertiesisRelative": '',
                     "mainpropertiestoolName": '',
-                    "addtionalpropertiesname": addiName,
-                    "addtionalpropertiesvalue": addiVal,
+                    "addtionalpropertiesname": addiName.toString(),
+                    "addtionalpropertiesvalue": addiVal.toString(),
                     "addtionalpropertiesmatchMethod": '',
                     "addtionalpropertiesisRelative": '',
                     "addtionalpropertiestoolName": '',
-                    "assistantpropertiesname": assisName,
-                    "assistantpropertiesvalue": assisVal,
+                    "assistantpropertiesname": assisName.toString(),
+                    "assistantpropertiesvalue": assisVal.toString(),
                     "assistantpropertiesmatchMethod": '',
                     "assistantpropertiesisRelative": '',
                     "assistantpropertiestoolName": ''
@@ -296,6 +298,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        // updateProp();
                     } else {
                         $('#failModal').modal();
                     }
@@ -312,7 +315,8 @@ var app = new Vue({
         delProp: function(e) {
             var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
             selectedTr.remove();
-        }
+        },
+
 
     },
 });
@@ -325,7 +329,7 @@ var setting1 = {
         selectedMulti: false
     },
     check: {
-        enable: true,
+        enable: false,
         chkStyle: "checkbox",
         chkboxType: { "Y": "s", "N": "ps" }
     },
@@ -352,7 +356,7 @@ var setting1 = {
             $('#objForm input[name="name"]').val(treeNode.name);
             app.objId = treeNode.id;
             $.ajax({
-                url: address+'object_repoController/queryObject_repo',
+                url: address + 'object_repoController/queryObject_repo',
                 type: 'post',
                 data: {
                     "id": app.objId,
@@ -413,8 +417,8 @@ var setting1 = {
                             assiTr.append(assiCheckTd, assiNameTd, assiValTd);
                             $('#assisProp').append(assiTr);
                         }
-                    }else{
-                         $('#assisProp').children().remove();
+                    } else {
+                        $('#assisProp').children().remove();
                         $('#assisProp').append(app.propTr);
                     }
 
@@ -487,11 +491,11 @@ var setting1 = {
 
     }
 };
-// 页面初始化获取元素库
+// 页面初始化获取对象库
 function getObjTree() {
     var transid = $("#transactSelect").val();
     $.ajax({
-        url: address+'object_repoController/queryObject_repoAll',
+        url: address + 'object_repoController/queryObject_repoAll',
         type: 'post',
         data: { "transid": transid },
         success: function(data) {
@@ -507,4 +511,93 @@ function zTreeBeforeDrag(treeId, treeNodes) {
     return false;
 }
 
+// 搜索节点
+$('#search-btn').click(() => {
+    var treeObj = $.fn.zTree.getZTreeObj("objectTree");
+    var keywords = $("#keyword").val();
+    var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);
+    if (nodes.length > 0) {
+        treeObj.selectNode(nodes[0]);
+    }
+});
 /*objtree end*/
+
+//点击保存按钮后更新属性
+function updateProp() {
+    const treeObj = $.fn.zTree.getZTreeObj("objectTree"),
+          nodes = treeObj.getSelectedNodes(true),
+          id = nodes[0].id,
+          classtype = $('#classtypeSelect').val();
+    $.ajax({
+        url: address + 'object_repoController/queryObject_repo',
+        type: 'post',
+        data: {
+            "id": id,
+            "transid": app.transactId,
+        },
+        success: function(data) {
+            console.log(data);
+            $('#classtypeSelect').val(data.obj.classtype);
+            //主属性
+            var mainList = data.obj[0].locatePropertyCollection.main_properties;
+            if (mainList.length !== 0) {
+                $('#mainProp').children().remove();
+                for (var i = 0; i < mainList.length; i++) {
+                    var mainTr = $('<tr></tr>'),
+                        mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                        mainNameTd = $('<td contenteditable="true"></td>'),
+                        mainValTd = $('<td contenteditable="true"></td>');
+                    mainNameTd.html(mainList[i].name);
+                    mainValTd.html(mainList[i].value);
+                    mainTr.append(mainCheckTd, mainNameTd, mainValTd);
+                    $('#mainProp').append(mainTr);
+                }
+            } else {
+                $('#mainProp').children().remove();
+                $('#mainProp').append(app.propTr);
+            }
+
+            //附加属性
+            var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
+            if (addiList.length !== 0) {
+                $('#addiProp').children().remove();
+                for (var j = 0; j < addiList.length; j++) {
+                    var addiTr = $('<tr></tr>'),
+                        addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                        addiNameTd = $('<td contenteditable="true"></td>'),
+                        addiValTd = $('<td contenteditable="true"></td>');
+                    addiNameTd.html(addiList[j].name);
+                    addiValTd.html(addiList[j].value);
+                    addiTr.append(addiCheckTd, addiNameTd, addiValTd);
+                    $('#addiProp').append(addiTr);
+                }
+            } else {
+                $('#addiProp').children().remove();
+                $('#addiProp').append(app.propTr);
+            }
+
+            //辅助属性
+            var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
+            if (assiList.length !== 0) {
+                $('#assisProp').children().remove();
+                for (var k = 0; k < assiList.length; k++) {
+                    var assiTr = $('<tr></tr>'),
+                        assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                        assiNameTd = $('<td contenteditable="true"></td>'),
+                        assiValTd = $('<td contenteditable="true"></td>');
+                    assiNameTd.html(assiList[k].name);
+                    assiValTd.html(assiList[k].value);
+                    assiTr.append(assiCheckTd, assiNameTd, assiValTd);
+                    $('#assisProp').append(assiTr);
+                }
+            } else {
+                $('#assisProp').children().remove();
+                $('#assisProp').append(app.propTr);
+            }
+
+        },
+        error: function() {
+            $('#failModal').modal();
+        }
+    });
+}

@@ -2,10 +2,10 @@ var app = new Vue({
     el: '#v-aut',
     data: {
         autList: [],
-        tt: "", //总条数
+        tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
-        totalPage: 10, //总页数
+        totalPage: 1, //总页数
         listnum: 10, //页面大小
         order: 'id',
         sort: 'asc',
@@ -13,6 +13,7 @@ var app = new Vue({
         checkboxModel: [],
         checked: "",
         queryAutCode: '',
+        abstrList:[],//开发架构
         //当前选中行
         selectedId: '',
         selectedAutCode: '',
@@ -22,6 +23,7 @@ var app = new Vue({
     },
     ready: function() {
         getAut(this.currentPage, this.pageSize, this.order, this.sort);
+        getAbstr();
         changeListNum();
     },
     methods: {
@@ -162,6 +164,17 @@ var app = new Vue({
                 location.href = "component.html?selectedId=" + selectedId+"&selectedName="+selectedName;
             }
         },
+        //传递当前页选中测试系统id到自动化构件维护页面
+        toAutdata: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var selectedId = selectedInput.attr('id');
+                var selectedName=selectedInput.parent().next().next().html();
+                location.href = "autdata.html?selectedId=" + selectedId+"&selectedName="+selectedName;
+            }
+        },
 
     },
 
@@ -248,6 +261,17 @@ function queryAut() {
             app.tt = data.total;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             app.pageSize = app.listnum;
+        }
+    });
+}
+
+//获取addModal 开发架构select下拉列表
+function getAbstr(){
+    $.ajax({
+        url: address+'abstractarchitectureController/selectAll',
+        type:'post',
+        success:function(data){
+            app.abstrList=data.obj;
         }
     });
 }

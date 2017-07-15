@@ -344,8 +344,6 @@ function getUsers() {
         url: address + 'userController/selectAll',
         type: 'GET',
         success: function(data) {
-            // console.info(data);
-            // console.info(data.o.rows);
             app.users = data.obj;
         }
     });
