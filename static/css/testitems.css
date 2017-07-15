@@ -12,6 +12,7 @@ table td {
   text-align: center; }
 table .btn-alter, table .btn-view {
   margin: 0 5px;
+  padding: 4px;
   font-size: 12px; }
 
 .table-tool {

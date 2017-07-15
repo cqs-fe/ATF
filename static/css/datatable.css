@@ -92,10 +92,10 @@ html, body {
   display: block;
   left: 50%;
   top: 50%;
-  overflow: visible;
+  overflow: auto;
   transform: translate(-50%, -50%);
   width: 700px;
-  height: 600px;
+  height: 605px;
   background-color: #fff; }
   .editData header {
     padding: 5px 10px;
@@ -105,30 +105,49 @@ html, body {
     .editData header .icon-remove {
       float: right; }
   .editData main {
-    height: 520px; }
+    height: calc(100% - 70px); }
     .editData main .type-wrapper {
       height: 30px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       margin-left: 40px; }
       .editData main .type-wrapper label, .editData main .type-wrapper div {
         display: inline-block;
         margin-right: 20px; }
     .editData main .data-content {
-      margin-top: 10px;
-      margin-bottom: 10px;
+      height: 35px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       margin-left: 40px;
       overflow: hidden; }
       .editData main .data-content .form-group {
         width: 75%; }
       .editData main .data-content .btn {
         padding: 4px 5px; }
-    .editData main .operation {
+    .editData main .operation-wrapper {
+      height: 448px;
       margin-left: 40px; }
-      .editData main .operation label {
+      .editData main .operation-wrapper .operation label {
         vertical-align: top; }
+      .editData main .operation-wrapper .operation .before-operation-table, .editData main .operation-wrapper .operation .after-operation-table {
+        width: 100%;
+        margin: 5px auto; }
+        .editData main .operation-wrapper .operation .before-operation-table td, .editData main .operation-wrapper .operation .after-operation-table td {
+          text-align: center; }
+        .editData main .operation-wrapper .operation .before-operation-table td.add-row, .editData main .operation-wrapper .operation .after-operation-table td.add-row {
+          color: #ff6c60; }
+        .editData main .operation-wrapper .operation .before-operation-table td.delete-row, .editData main .operation-wrapper .operation .after-operation-table td.delete-row {
+          color: #ff6c60; }
+        .editData main .operation-wrapper .operation .before-operation-table td input, .editData main .operation-wrapper .operation .after-operation-table td input {
+          vertical-align: top; }
+        .editData main .operation-wrapper .operation .before-operation-table thead td:first-child, .editData main .operation-wrapper .operation .before-operation-table thead td:nth-child(2), .editData main .operation-wrapper .operation .before-operation-table tbody td:first-child, .editData main .operation-wrapper .operation .before-operation-table tbody td:nth-child(2), .editData main .operation-wrapper .operation .after-operation-table thead td:first-child, .editData main .operation-wrapper .operation .after-operation-table thead td:nth-child(2), .editData main .operation-wrapper .operation .after-operation-table tbody td:first-child, .editData main .operation-wrapper .operation .after-operation-table tbody td:nth-child(2) {
+          width: 50px; }
+        .editData main .operation-wrapper .operation .before-operation-table thead td:last-child, .editData main .operation-wrapper .operation .before-operation-table tbody td:last-child, .editData main .operation-wrapper .operation .after-operation-table thead td:last-child, .editData main .operation-wrapper .operation .after-operation-table tbody td:last-child {
+          width: 30px; }
+        .editData main .operation-wrapper .operation .before-operation-table thead td.operations, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations, .editData main .operation-wrapper .operation .after-operation-table thead td.operations, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations {
+          width: 30%; }
   .editData footer {
-    height: 50px;
+    height: 40px;
     text-align: center; }
     .editData footer .btn-cancel {
       background-color: #ccc;

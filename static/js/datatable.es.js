@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	var submenuHeight = document.querySelector('#submenu').offsetHeight;
-			document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
-			document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
+			// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
+			// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
 	(function(){
 		var editDataVue = new Vue({
 			el: '#editData',
@@ -11,9 +11,92 @@ $(document).ready(function(){
 				insertTitle:null,
 				insertType: null,
 				isInsertDivShow:true,
-				selection: null
+				selection: null,
+				beforeOperationRows: [{id:Symbol()},{id:Symbol()},{id: Symbol()},{id: Symbol()}],
+				afterOperationRows: [{id:Symbol()},{id:Symbol()},{id: Symbol()},{id: Symbol()}],
+				// ztree的设置项
+				zTreeSettings: {
+					uiAndElement: {
+						callback: {
+						},
+						data: {
+							simpleData: {
+								enable: true,
+								idKey: 'id',
+								pIdKey: 'parentid',
+								rootPId: 0
+							}
+						}
+					},
+					functions: {
+						callback: {
+						},
+						data: {
+					        key:{
+					            name:"classname",
+					        },
+					        simpleData: {
+					            enable: true,
+					            idKey: 'classid', 
+					            pIdKey: 'parentid', 
+					            rootPId: 0
+					        }
+					    }
+					}
+				},
+				uiOrFunctions: {
+					changed: false,
+					type: 'ui',
+					ui: '',
+					element: '',
+					function: '',
+					target: null
+				}
 			},
 			created: function(){},
+			ready: function() {
+				var _this = this;
+				this.zTreeSettings.uiAndElement.callback.onClick = this.zTreeOnClick;
+				this.zTreeSettings.functions.callback.onClick = this.zTreeOnClick;
+				// 设置table可以拖拽行
+				$( function() {
+                    $( "#sortable" ).sortable({
+                        stop: (event, ui) => {
+                        	if(+(ui.item[0].rowIndex - 1) === +ui.item[0].getAttribute('data-index')){
+                        		return
+                        	}
+                        	// 拖拽停止后，改变绑定的数组中元素的顺序
+                        	var target = ui.item[0].rowIndex - 1
+                        	console.log(target)
+                        	var start = ui.item[0].getAttribute('data-index');
+                        	// console.log(`target: ${target} -- start: ${start}--end: ${end}`)
+                        	if(target < 0) {
+                        		_this.beforeOperationRows.unshift(_this.beforeOperationRows.splice(start, 1)[0])
+                        	} else {
+                        		_this.beforeOperationRows.splice(target, 0, _this.beforeOperationRows.splice(start, 1)[0])
+                        	}
+                        }
+                    });
+                    $( "#sortable" ).disableSelection();
+                    $( "#sortable2" ).sortable({
+                        stop: (event, ui) => {
+                        	if(+(ui.item[0].rowIndex - 1) === +ui.item[0].getAttribute('data-index')){
+                        		return
+                        	}
+                        	// 拖拽停止后，改变绑定的数组中元素的顺序
+                        	var target = ui.item[0].rowIndex - 1
+                        	var start = ui.item[0].getAttribute('data-index');
+                        	// console.log(`target: ${target} -- start: ${start}--end: ${end}`)
+                        	if(target < 0) {
+                        		_this.afterOperationRows.unshift(_this.afterOperationRows.splice(start, 1)[0])
+                        	} else {
+                        		_this.afterOperationRows.splice(target, 0, _this.afterOperationRows.splice(start, 1)[0])
+                        	}
+                        }
+                    });
+                    $( "#sortable2" ).disableSelection();
+                } );
+			},
 			methods: {
 				hide: function(){this.isShow = false;insertDivVue.isShow = false;},
 				show: function(selection){
@@ -28,9 +111,123 @@ $(document).ready(function(){
 					console.log(inputValue);
 					handsontable.setDataAtCell(this.selection.start.row,this.selection.start.col,inputValue);
 					handsontable.render();
+				},
+				addRow: function(type){
+					let s = {id: Symbol()}
+					type === 1 ? 
+						(this.beforeOperationRows.push(s)) : 
+						(this.afterOperationRows.push(s))
+					
+				},
+				deleteRow: function(index, type) {
+					type === 1 
+						? (this.beforeOperationRows.splice(index,1))
+						: (this.afterOperationRows.splice(index,1))
+				},
+				showUiAndElement: function(event) {
+					var _this = this;
+					this.uiOrFunctions.target = event.target;
+					this.uiOrFunctions.changed = false;
+					// 请求Ui和Elment
+					$.ajax({
+						url: address + 'elementlibraryController/showUIandElement',
+						data: 'transid=1',
+						type: 'post',
+						dataType: 'json',
+						success: (data, statusText) => {
+							if(data && data.success === true && (data.obj instanceof Array)) {
+								$.fn.zTree.init($('#ui-element-ul'),_this.zTreeSettings.uiAndElement, data.obj);
+							}
+						}
+					})
+					$.ajax({
+						url: address + 'omclassController/selectAll',
+						type: 'post',
+						dataType: 'json',
+						success: (data, statusText) => {
+							if(data && data.success === true && (data.obj instanceof Array)) {
+								$.fn.zTree.init($('#functions-ul'),_this.zTreeSettings.functions, data.obj);
+							}	
+						}
+					})
+
+					$('#ui-ele-modal').modal('show')
+				},
+				zTreeOnClick: function(event, treeId, treeNode) {
+					if(treeNode.isParent){
+						return
+					}
+					console.log(treeNode)
+					if(treeId === 'ui-element-ul') {
+						var parent = treeNode.getParentNode()
+						if (!parent) {
+							return
+						}
+						this.uiOrFunctions.type = 'ui'
+						this.uiOrFunctions.ui = treeNode.name
+						this.uiOrFunctions.element = parent.name;
+					} else {
+						this.uiOrFunctions.type = 'function'
+						this.uiOrFunctions.function = treeNode.classname;
+					}
+					this.uiOrFunctions.changed = true;
+				},
+				// remove the row who is checked when 
+				removeRow: function(event) {
+					var parent = $(event.target).closest('.operation-wrapper')
+					parent.find("tbody input[type='checkbox']:checked").closest('tr').remove()
+				},
+				moveUp: function(event, type) {
+					var _this = this;
+					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows )
+					var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
+					$.each(trs, (index, row) => {
+						var originIndex = row.getAttribute('data-index')
+						originIndex >= 1 &&
+						operationRows.splice(originIndex - 1, 0, operationRows.splice(originIndex,1)[0])
+					})
+				},
+				moveDown: function(event, type) {
+					var _this = this;
+					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows )
+					var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
+					$.each(trs, (index, row) => {
+						var originIndex = row.getAttribute('data-index')
+						operationRows.splice(+originIndex + 1, 0, operationRows.splice(originIndex,1)[0])
+					})
+				},
+				saveOperation: function(event) {
+					var a3 = this.beforeOperationRows.splice(3,1)
+					console.log(a3)
+					this.beforeOperationRows.splice(1, 0, a3[0])
 				}
 			},
 		});
+		var modalVue = new Vue({
+			el: '#ui-ele-modal',
+			data: {},
+			methods: {
+				editRow: function () {
+					var _this = this;
+					var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
+					if (editDataVue.uiOrFunctions.type === 'ui') {
+						$('.operation-element', parentRow).val(editDataVue.uiOrFunctions.element)
+						$('.operation-ui', parentRow).val(editDataVue.uiOrFunctions.ui)
+
+					} else {
+						$('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
+						$('.operation-ui', parentRow).val(editDataVue.uiOrFunctions.function)
+						$('.operation-element', parentRow).val('none')
+						var data = {
+							autid: 8,
+							className: editDataVue.uiOrFunctions.function,
+
+						}
+					}
+					$('#ui-ele-modal').modal('hide')
+				}
+			}
+		})
 		var insertDivVue = new Vue({
 			el: '#insertDiv',
 			data: {
@@ -41,7 +238,6 @@ $(document).ready(function(){
 				dataPoolType: null,
 				dataWritable: "",
 				functionName: ""
-
 			},
 			created: function(){
 
@@ -149,7 +345,6 @@ $(document).ready(function(){
                             type: 'post',
                             dataType: "json",
                             success: function(data,textStatus){
-                                // checkedItems = 
                                 data.o.forEach(function(value,index){
                                     var arrayItem = {};
                                     ({testpoint:arrayItem.value} = value);
@@ -270,7 +465,7 @@ $(document).ready(function(){
 		        	hidden: function(){
 		        		// [startRow, startCol, endRow, endCol]
 		        		var selection = handsontable.getSelected();
-		        		if(selection[1] >= 8 && selection[0] == selection[2] && selection[1] == selection[3]){
+		        		if(selection && selection[1] >= 8 && selection[0] == selection[2] && selection[1] == selection[3]){
 		        			return false;
 		        		}
 		        		return true;
@@ -612,9 +807,12 @@ $(document).ready(function(){
 			if(handsontable !== null){
 				handsontable.render();
 			}
-			var submenuHeight = document.querySelector('#submenu').offsetHeight;
-			document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
-			document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
+			try {
+				var submenuHeight = document.querySelector('#submenu').offsetHeight;
+				document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
+				document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
+			} catch(e) {}
+			
 		};
 		//保存按钮
 		document.getElementById('saveAll').onclick = function(){
@@ -846,26 +1044,28 @@ $(document).ready(function(){
 		}
 	})();
 
-
+	var editDiv = document.querySelector('#editData')
+	var header = document.querySelector('#editData>header')
+	Vac.startDrag(header, editDiv)
 });
 
-var dragController = {
-	pointerStart: {X: 0,Y: 0},
-	pointerEnd: {X: 0,Y: 0},
-	searchBoxDragStart: function(event){
+// var dragController = {
+// 	pointerStart: {X: 0,Y: 0},
+// 	pointerEnd: {X: 0,Y: 0},
+// 	searchBoxDragStart: function(event){
 
-	},
-	searchBoxDragEnd: function(event,id){
-		// console.log(event.clientX);
-		this.pointerEnd.X = event.clientX;
-		this.pointerEnd.Y = event.clientY;
-		document.getElementById(id).style.left = this.pointerEnd.X+'px';
-		document.getElementById(id).style.top = this.pointerEnd.Y + document.getElementById(id).offsetHeight/2 + 'px';
-	},
-	searchBoxDrag: function(event,id){
-		this.pointerEnd.X = event.clientX;
-		this.pointerEnd.Y = event.clientY;
-		document.getElementById(id).style.left = this.pointerEnd.X+'px';
-		document.getElementById(id).style.top = this.pointerEnd.Y+ document.getElementById(id).offsetHeight/2+'px';
-	}
-};
+// 	},
+// 	searchBoxDragEnd: function(event,id){
+// 		// console.log(event.clientX);
+// 		this.pointerEnd.X = event.clientX;
+// 		this.pointerEnd.Y = event.clientY;
+// 		document.getElementById(id).style.left = this.pointerEnd.X+'px';
+// 		document.getElementById(id).style.top = this.pointerEnd.Y + document.getElementById(id).offsetHeight/2 + 'px';
+// 	},
+// 	searchBoxDrag: function(event,id){
+// 		this.pointerEnd.X = event.clientX;
+// 		this.pointerEnd.Y = event.clientY;
+// 		document.getElementById(id).style.left = this.pointerEnd.X+'px';
+// 		document.getElementById(id).style.top = this.pointerEnd.Y+ document.getElementById(id).offsetHeight/2+'px';
+// 	}
+// };

@@ -221,71 +221,64 @@ var vBody = new Vue({
 		setSelectListener: function(){
 			document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
 			// 防止点击用例框时也进行选取
-			var caseLibs = document.querySelectorAll('.case-lib');
-			for(var i = 0; i < caseLibs.length; i++){
-				caseLibs[i].addEventListener('mousedown', function(event){
-					event.stopPropagation();
-				}, false);
-			}
-			// var checkall = document.querySelectorAll('.checkall');
 		},
 		// 点击checkbox
 		checkChanged: function(){
-			var inputs = Array.from(event.target.parentNode.parentNode.parentNode.querySelectorAll('.check-case'))
-			if(inputs.every((value) => {
-				return value.checked === true 
-			})) {
-				event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = true;
-			} else {
-				event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = false;
-			}
+			// var inputs = Array.from(event.target.parentNode.parentNode.parentNode.querySelectorAll('.check-case'))
+			// if(inputs.every((value) => {
+			// 	return value.checked === true 
+			// })) {
+			// 	event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = true;
+			// } else {
+			// 	event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = false;
+			// }
 		},
 		// 全选case-lib中的case
 		checkallToggle: function(event){
-			console.log(event.target)
-			var flag = event.target.checked;
-			console.log(flag)
-			var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
-			if(flag) {
-				for(var i=0; i<inputs.length; i++) {
-					if (!this.selectedCases.includes(+inputs[i].value)) {
-						this.selectedCases.push(+inputs[i].value)
-					}
-				}
-			} else {
-				for (var input of inputs) {
-					if(this.selectedCases.includes(input.value)) {
+			// console.log(event.target)
+			// var flag = event.target.checked;
+			// console.log(flag)
+			// var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
+			// if(flag) {
+			// 	for(var i=0; i<inputs.length; i++) {
+			// 		if (!this.selectedCases.includes(+inputs[i].value)) {
+			// 			this.selectedCases.push(+inputs[i].value)
+			// 		}
+			// 	}
+			// } else {
+			// 	for (var input of inputs) {
+			// 		if(this.selectedCases.includes(input.value)) {
 
-					}else {
-						continue
-					}
-				}
-			}
-			console.log(this.selectedCases);
+			// 		}else {
+			// 			continue
+			// 		}
+			// 	}
+			// }
+			// console.log(this.selectedCases);
 		},
 		checkall: function(event){
-			console.log(event.target)
-			var checkboxs = Array.from(document.querySelectorAll('.case-lib .check-case'));
-			var checkalls = Array.from(document.querySelectorAll('.case-lib .checkall'))
+			// console.log(event.target)
+			// var checkboxs = Array.from(document.querySelectorAll('.case-lib .check-case'));
+			// var checkalls = Array.from(document.querySelectorAll('.case-lib .checkall'))
 
-			var flag = event.target.checked
-			for (var checkall of checkalls) {
-				checkall.checked = flag;
-			}
-			if(flag) {
-				for (var checkbox of checkboxs) {
-					if (this.selectedCases.includes(+checkbox.value)) {
-						continue
-					} else {
-						this.selectedCases.push(+checkbox.value)
-					}
-				}
-			} else {
-				for (var i=0,m=this.selectedCases.length; i < m;i++) {
-					this.selectedCases.pop()
-				}
-			}
-			console.log(this.selectedCases)
+			// var flag = event.target.checked
+			// for (var checkall of checkalls) {
+			// 	checkall.checked = flag;
+			// }
+			// if(flag) {
+			// 	for (var checkbox of checkboxs) {
+			// 		if (this.selectedCases.includes(+checkbox.value)) {
+			// 			continue
+			// 		} else {
+			// 			this.selectedCases.push(+checkbox.value)
+			// 		}
+			// 	}
+			// } else {
+			// 	for (var i=0,m=this.selectedCases.length; i < m;i++) {
+			// 		this.selectedCases.pop()
+			// 	}
+			// }
+			// console.log(this.selectedCases)
 		},
 		toggleTooltip: function(event){
 			this.tooltipFlag = !this.tooltipFlag;
@@ -309,11 +302,6 @@ var vBody = new Vue({
 			this.editTriggerData.occasions = [];
 			this.editTriggerData.Conditionrelate = null;
 			$('#conditionsBody').empty();
-			// var wrapper = document.querySelector('.trigger-action-wrapper');
-			// var divs = document.querySelectorAll('.action-item-wrapper');
-			// for(var i=0;i<divs.length;i++){
-			// 	wrapper.removeChild(divs[i]);
-			// }
 			$('.action-item-wrapper').remove();
 		},
 		openTrigger: function(type){

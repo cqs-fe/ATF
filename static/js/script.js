@@ -1,3 +1,4 @@
+
 $(document).ready(function(e) {
 
     beice(); //第一级函数
@@ -430,7 +431,6 @@ var fixHelperModified = function (e, tr) {
     updateIndex = function (e, ui) {
         $('td.index', ui.item.parent()).each(function (i) {
             $(this).html(i + 1);
-
         });
     };
 $("#sort tbody").sortable({
