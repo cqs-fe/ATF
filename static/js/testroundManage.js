@@ -105,6 +105,7 @@ var app = new Vue({
                     success: function(data) {
                         console.info(data);
                         if (data.success) {
+                            getTestRound();
                             $('#successModal').modal();
                         } else {
                             $('#failModal').modal();
@@ -130,6 +131,7 @@ var app = new Vue({
                     success: function(data) {
                         console.info(data);
                         if (data.success) {
+                            getTestRound();
                             $('#successModal').modal();
                         } else {
                             $('#failModal').modal();

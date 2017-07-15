@@ -11,6 +11,7 @@ var app = new Vue({
         executeMethod: [], // 执行方式
         caseCompositeType: [], // 案例组成类型
         useStatus: [], // 案例状态
+        filterSceneId:'',//所属场景
         testpoint: '', // 测试点
         author: '', //编写者
         executor: '', //执行者
@@ -32,7 +33,8 @@ var app = new Vue({
         checked: "",
         subCaseList: [], //流程节点
         ids:'',
-        //场景id和名称
+        //场景
+        sceneList:[],
         sceneid: '',
         scenename: '场景名称'
     },
@@ -40,6 +42,7 @@ var app = new Vue({
         this.setVal();
         getCase(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
+        getScene();
     },
     methods: {
         //获取上级页面选中的场景id和名称
@@ -207,7 +210,7 @@ function getCase(currentPage, listnum, order, sort) {
     });
 }
 
-//筛选查询案例
+//查询案例
 function queryCase() {
     $.ajax({
         url: address + 'TestcaseController/testcasequeryByPage',
@@ -243,7 +246,50 @@ function queryCase() {
         }
     });
 }
-
+//筛选案例
+function filterCase(){
+        var data=[{
+        "propertyName": "priority",
+        "compareType": "in",
+        "propertyValue": "",
+        "propertyValues": app.priority,
+        "propertyValueList": ''
+    }, {
+            "propertyName": "executeMethod",
+            "compareType": "in",
+            "propertyValue": "",
+            "propertyValues": app.executeMethod,
+            "propertyValueList": ''
+        },{
+            "propertyName": "caseCompositeType",
+            "compareType": "in",
+            "propertyValue": "",
+            "propertyValues": app.caseCompositeType,
+            "propertyValueList": ''
+        },{
+            "propertyName": "useStatus",
+            "compareType": "in",
+            "propertyValue": "",
+            "propertyValues": app.useStatus,
+            "propertyValueList": ''
+        },{
+            "propertyName": "sceneId",
+            "compareType": "in",
+            "propertyValue": "",
+            "propertyValues": app.filterSceneId,
+            "propertyValueList": ''
+        }];
+}
+//获取场景
+function getScene(){
+    $.ajax({
+        url: address+'sceneController/selectAll',
+        type: 'get',
+        success:function(data){
+            app.sceneList=data.obj;
+        }
+    });
+}
 //改变页面大小
 function changeListNum() {
     $('#mySelect').change(function() {

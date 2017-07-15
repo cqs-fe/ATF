@@ -19,26 +19,26 @@
         <!--main content start-->
         <section id="main-content">
             <section class="wrapper">
-                <!--top-button start-->
-                <div class="row">
                 <!-- breadcrumb start -->
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="breadcrumb">
                             <li><a href="#"><i class="icon-home"></i> 系统管理</a></li>
                             <li class="active"><a href="#"> 测试系统</a></li>
-                            <!-- <li class="active"> 对象库</li> -->
                         </ul>
                     </div>
                 </div>
+                <!-- breadcrumb start -->
+                <!--top-button start-->
+                <div class="row">
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
                         <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
                         <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
                         <a class="btn btn-white" data-toggle="modal" href="" @click="toTransact"><i class="icon-cog"></i> 管理功能点</a>
-                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 配置系统数据</a>
+                        <a class="btn btn-white" @click="toAutdata"><i class="icon-cog"></i> 配置系统数据</a>
                         <a class="btn btn-white" data-toggle="modal" @click="toComponent"><i class="icon-cog"></i> 自动化构件维护</a>
-                        <a class="btn btn-white" data-toggle="modal" href=""><i class="icon-cog"></i> 执行代码管理</a>
+                        <a class="btn btn-white"  href="execcode.html"><i class="icon-cog"></i> 执行代码管理</a>
                         <!-- insertModal start -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -66,7 +66,9 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">开发架构</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="abstractarchitecture_name">
+                                                        <select class="form-control" name="abstractarchitecture_name">
+                                                            <option v-for="item in abstrList" value="{{item.id]}}">{{item.architecturename}}</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -240,9 +242,10 @@
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="1" selected>1</option>
-                                                    <option value="3">3</option>
-                                                    <option value="5">5</option>
+                                                    <option value="5" selected>5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-1"><a class="btn btn-white" onclick="getAut(1, {{pageSize}}, 'id', 'asc')">刷新</a></div>
