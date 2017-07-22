@@ -54,38 +54,17 @@ var app = new Vue({
         },
         //添加功能点
         insert: function() {
-            $('#insertForm input[name="autid"]').val($('#autSelect').val()),
-                $.ajax({
-                    url: address+'transactController/inserttransact',
-                    type: 'post',
-                    data: $("#insertForm").serializeArray(),
-                    success: function(data) {
-                        console.info(data);
-                        if (data.success) {
-                            $('#successModal').modal();
-                        } else {
-                            $('#failModal').modal();
-                        }
-                    },
-                    error: function() {
-                        $('#failModal').modal();
-                    }
-                });
-        },
-        //删除功能点
-        del: function() {
-            this.getIds();
-            console.log(app.ids)
+            $('#insertForm input[name="autid"]').val($('#autSelect').val());
+            var self=this;
             $.ajax({
-                url: address+'transactController/deletetransact',
+                url: address + 'transactController/inserttransact',
                 type: 'post',
-                data: {
-                    'transactid': app.ids
-                },
+                data: $("#insertForm").serializeArray(),
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
                     } else {
                         $('#failModal').modal();
                     }
@@ -95,16 +74,62 @@ var app = new Vue({
                 }
             });
         },
+
+        checkDel:()=>{
+            app.getIds();
+            const selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                $('#deleteModal').modal();
+            } 
+        },
+        //删除功能点
+        del: function() {
+            this.getIds();
+            var self=this;
+            $.ajax({
+                url: address + 'transactController/deletetransact',
+                type: 'post',
+                data: {
+                    'transactid': app.ids
+                },
+                success: function(data) {
+                    console.info(data);
+                    if (data.success) {
+                        $('#successModal').modal();
+                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                    } else {
+                        $('#failModal').modal();
+                    }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        },
+
+        checkUpdate:()=>{
+            app.getSelected();
+            const selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                $('#updateModal').modal();
+            } 
+        },
         //修改功能点
         update: function() {
+            var self=this;
             $.ajax({
-                url: address+'transactController/updatetransact',
+                url: address + 'transactController/updatetransact',
                 type: 'post',
                 data: $("#updateForm").serializeArray(),
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
                     } else {
                         $('#failModal').modal();
                     }
@@ -121,7 +146,7 @@ var app = new Vue({
             $('#updateForm input[name="transactid"]').val(selectedId);
             $('#updateForm input[name="transactcode"]').val(selectedInput.parent().next().html());
             $('#updateForm input[name="transactname"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().next().html());
+            $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().html());
         },
         //传递当前页选中的测试系统id和功能点id到元素库页面
         toElementLib: function() {
@@ -145,6 +170,17 @@ var app = new Vue({
                 location.href = "objectRepo.html?autId=" + autId + "&" + "transactId=" + transactId;
             }
         },
+        //传递当前页选中的测试系统id和功能点id到基础脚本
+        toScript: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var transactId = selectedInput.attr('id');
+                var autId = $('#autSelect').val();
+                location.href = "script.html?autId=" + autId + "&" + "transactId=" + transactId;
+            }
+        },
 
     },
 
@@ -155,7 +191,7 @@ function getTransact(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address+'transactController/selectAllByPage',
+        url: address + 'transactController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -216,7 +252,7 @@ function resort(target) {
 function autSelect() {
     $.ajax({
         async: false,
-        url: address+"autController/selectAll",
+        url: address + "autController/selectAll",
         type: "POST",
         success: function(data) {
             var autList = data.obj;
@@ -239,7 +275,7 @@ function setval() {
     var oneVal = getVal.split('=')[1];
     $("#autSelect").val(oneVal);
     $.ajax({
-        url: address+'transactController/transactqueryByPage',
+        url: address + 'transactController/transactqueryByPage',
         type: 'POST',
         data: {
             'page': 1,
@@ -270,7 +306,7 @@ function setval() {
 //通过选择被测系统筛选查询功能点 
 function queryTransact() {
     $.ajax({
-        url: address+'transactController/transactqueryByPage',
+        url: address + 'transactController/transactqueryByPage',
         type: 'POST',
         data: {
             'page': app.currentPage,

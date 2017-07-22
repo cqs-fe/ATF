@@ -38,83 +38,137 @@ var app = new Vue({
         getCase(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
         getUsers();
+        $(".myFileUpload").change(function() {
+            var arrs = $(this).val().split('\\');
+            var filename = arrs[arrs.length - 1];
+            $(".show").val(filename);
+        });
     },
     methods: {
 
         //添加单案例
         insert: function() {
-            var casecompositetype=$('#insertSingleForm input[name="casecompositetype"]').val(),
-                caselibId=$('#insertSingleForm input[name="caselibId"]').val(),
-                casecode=$('#insertSingleForm input[name="casecode"]').val(),
-                submissionid=$('#insertSingleForm input[name="submissionid"]').val(),
-                autid=$('#insertSingleForm select[name="autid"]').val(),
-                versioncode=$('#insertSingleForm input[name="versioncode"]').val(),
-                transid=$('#insertSingleForm select[name="transid"]').val(),
-                scriptmodeflag=$('#insertSingleForm select[name="scriptmodeflag"]').val(),
-                testpoint=$('#insertSingleForm input[name="testpoint"]').val(),
-                testdesign=$('#insertSingleForm textarea[name="testdesign"]').val(),
-                prerequisites=$('#insertSingleForm textarea[name="prerequisites"]').val(),
-                datarequest=$('#insertSingleForm textarea[name="datarequest"]').val(),
-                teststep=$('#insertSingleForm textarea[name="teststep"]').val(),
-                expectresult=$('#insertSingleForm textarea[name="expectresult"]').val(),
-                checkpoint=$('#insertSingleForm textarea[name="checkpoint"]').val(),
-                caseproperty=$('#insertSingleForm select[name="caseproperty"]').val(),
-                casetype=$('#insertSingleForm select[name="casetype"]').val(),
-                priority=$('#insertSingleForm select[name="priority"]').val(),
-                author=$('#insertSingleForm select[name="author"]').val(),
-                reviewer=$('#insertSingleForm select[name="reviewer"]').val(),
-                executor=$('#insertSingleForm select[name="executor"]').val(),
-                executemethod=$('#insertSingleForm select[name="executemethod"]').val(),
-                scriptmode=$('#insertSingleForm select[name="scriptmode"]').val(),
-                usestatus=$('#insertSingleForm select[name="usestatus"]').val(),
-                note=$('#insertSingleForm textarea[name="note"]').val();
+            var self = this;
+            var casecompositetype = $('#insertSingleForm input[name="casecompositetype"]').val(),
+                caselibId = $('#insertSingleForm input[name="caselibId"]').val(),
+                casecode = $('#insertSingleForm input[name="casecode"]').val(),
+                submissionid = $('#insertSingleForm input[name="submissionid"]').val(),
+                autid = $('#insertSingleForm select[name="autid"]').val(),
+                versioncode = $('#insertSingleForm input[name="versioncode"]').val(),
+                transid = $('#insertSingleForm select[name="transid"]').val(),
+                scriptmodeflag = $('#insertSingleForm select[name="scriptmodeflag"]').val(),
+                testpoint = $('#insertSingleForm input[name="testpoint"]').val(),
+                testdesign = $('#insertSingleForm textarea[name="testdesign"]').val(),
+                prerequisites = $('#insertSingleForm textarea[name="prerequisites"]').val(),
+                datarequest = $('#insertSingleForm textarea[name="datarequest"]').val(),
+                teststep = $('#insertSingleForm textarea[name="teststep"]').val(),
+                expectresult = $('#insertSingleForm textarea[name="expectresult"]').val(),
+                checkpoint = $('#insertSingleForm textarea[name="checkpoint"]').val(),
+                caseproperty = $('#insertSingleForm select[name="caseproperty"]').val(),
+                casetype = $('#insertSingleForm select[name="casetype"]').val(),
+                priority = $('#insertSingleForm select[name="priority"]').val(),
+                author = $('#insertSingleForm select[name="author"]').val(),
+                reviewer = $('#insertSingleForm select[name="reviewer"]').val(),
+                executor = $('#insertSingleForm select[name="executor"]').val(),
+                executemethod = $('#insertSingleForm select[name="executemethod"]').val(),
+                scriptmode = $('#insertSingleForm select[name="scriptmode"]').val(),
+                usestatus = $('#insertSingleForm select[name="usestatus"]').val(),
+                note = $('#insertSingleForm textarea[name="note"]').val();
             $.ajax({
                 url: address + 'TestcaseController/import111',
                 type: 'post',
                 data: {
-                   'casecompositetype':casecompositetype,
-                   'caselibId':caselibId,
-                   'casecode':casecode,
-                   'submissionid':submissionid,
-                   'autid':autid,
-                   'versioncode':versioncode,
-                   'transid':transid,
-                   'scriptmodeflag':scriptmodeflag,
-                   'testpoint':testpoint,
-                   'testdesign':testdesign,
-                   'prerequisites':prerequisites,
-                   'datarequest':datarequest,
-                   'teststep':teststep,
-                   'expectresult':expectresult,
-                   'checkpoint':checkpoint,
-                   'caseproperty':caseproperty,
-                   'casetype':casetype,
-                   'priority':priority,
-                   'author':author,
-                   'reviewer':reviewer,
-                   'executor':executor,
-                   'executemethod':executemethod,
-                   'scriptmode':scriptmode,
-                   'usestatus':usestatus,
-                   'note':note,
+                    'casecompositetype': casecompositetype,
+                    'caselibId': caselibId,
+                    'casecode': casecode,
+                    'submissionid': submissionid,
+                    'autid': autid,
+                    'versioncode': versioncode,
+                    'transid': transid,
+                    'scriptmodeflag': scriptmodeflag,
+                    'testpoint': testpoint,
+                    'testdesign': testdesign,
+                    'prerequisites': prerequisites,
+                    'datarequest': datarequest,
+                    'teststep': teststep,
+                    'expectresult': expectresult,
+                    'checkpoint': checkpoint,
+                    'caseproperty': caseproperty,
+                    'casetype': casetype,
+                    'priority': priority,
+                    'author': author,
+                    'reviewer': reviewer,
+                    'executor': executor,
+                    'executemethod': executemethod,
+                    'scriptmode': scriptmode,
+                    'usestatus': usestatus,
+                    'note': note,
 
-                   'subcasecode':'',
-                   'actioncode':'',
-                   'steporder':'',
-                   'subautid':'',
-                   'subversioncode':'',
-                   'subtransid':'',
-                   'subscriptmodeflag':'',
-                   'subusestatus':'',
-                   'subexecutemethod':'',
-                   'subexecutor':'',
-                   'subscriptmode':'',
-                   'subnote':''
+                    'subcasecode': '',
+                    'actioncode': '',
+                    'steporder': '',
+                    'subautid': '',
+                    'subversioncode': '',
+                    'subtransid': '',
+                    'subscriptmodeflag': '',
+                    'subusestatus': '',
+                    'subexecutemethod': '',
+                    'subexecutor': '',
+                    'subscriptmode': '',
+                    'subnote': ''
                 },
                 success: function(data) {
                     console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                    } else {
+                        $('#failModal').modal();
+                    }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        },
+        //导出
+        // export () {
+        //     $.ajax({
+        //         url: address + 'TestcaseController/exportexcel',
+        //         type: 'post',
+        //         data: $('#exportForm').serializeArray(),
+        //         success: function(data) {
+        //             if (data.success) {
+        //                 $('#successModal').modal();
+        //             } else {
+        //                 $('#failModal').modal();
+        //             }
+        //         }
+        //     });
+        // },
+
+        //获取caseLibid
+        getCaseLibId: function() {
+            const caselibId = sessionStorage.getItem('caselibid');
+            console.log(caselibId);
+            $('#caselibId').val(caselibId);
+        },
+        //导入
+        import:function(){
+            var self=this;
+            var formData= new FormData($('#importForm')[0]);
+            $.ajax({
+                url: address+'TestcaseController/importexcel',
+                type:'post',
+                data:formData,
+                async: false,  
+                cache: false, 
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data.success) {
+                        $('#successModal').modal();
+                        getCase(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -181,8 +235,28 @@ var app = new Vue({
             $('input[name="ids"]').val(id_array.join(','));
         },
 
+        checkExport: () => {
+            app.getIds();
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                $('#exportModal').modal();
+            }
+        },
+
+        checkExe: () => {
+            app.getIds();
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                $('#assignModal').modal();
+            }
+        },
         //分配执行者
         executor: function() {
+            var self = this;
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
@@ -200,6 +274,7 @@ var app = new Vue({
                         console.info(data.msg);
                         if (data.msg == "完成") {
                             $('#successModal').modal();
+                            getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -210,8 +285,19 @@ var app = new Vue({
                 });
             }
         },
+
+        checkExeM: () => {
+            app.getIds();
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                $('#runModeModal').modal();
+            }
+        },
         //更改执行方式
         execute_method: function() {
+            var self = this;
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
@@ -229,6 +315,7 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
+                            getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -240,26 +327,16 @@ var app = new Vue({
             }
 
         },
-        //设置功能点及模板脚本
-        transid: function() {
-            $.ajax({
-                url: address + 'TestcaseController/trans_id',
-                type: 'post',
-                data: $("#transidForm").serializeArray(),
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                    } else {
-                        $('#failModal').modal();
-                    }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-        },
 
+        checkTransid: () => {
+            app.getIds();
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                $('#transid').modal();
+            }
+        },
         // 排序
         sortBy: function(sortparam) {
             this.sortparam = sortparam;
@@ -648,6 +725,7 @@ function transid() {
             console.info(data);
             if (data.success) {
                 $('#successModal').modal();
+                getCase(app.currentPage, app.pageSize, app.order, app.sort);
             } else {
                 $('#failModal').modal();
             }

@@ -73,6 +73,7 @@ var app = new Vue({
 
         //添加单案例
         insert: function() {
+            var self=this;
             $.ajax({
                 url: address+'autController/insert',
                 type: 'post',
@@ -81,6 +82,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -90,8 +92,19 @@ var app = new Vue({
                 }
             });
         },
+
+        checkDel:()=>{
+            app.getIds();
+            const selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                $('#deleteModal').modal();
+            } 
+        },
         //删除测试系统
         del: function() {
+            var self=this;
             this.getIds();
             console.log(app.ids)
             $.ajax({
@@ -104,6 +117,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -113,16 +127,27 @@ var app = new Vue({
                 }
             });
         },
+
+        checkUpdate:()=>{
+            app.getSelected();
+            const selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                $('#updateModal').modal();
+            } 
+        },
         //修改测试系统
         update: function() {
+            var self=this;
             $.ajax({
                 url: address+'autController/update',
                 type: 'post',
                 data: $("#updateForm").serializeArray(),
                 success: function(data) {
-                    console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -139,7 +164,7 @@ var app = new Vue({
             $('input[name="id"]').val(selectedId);
             $('#updateForm input[name="autCode"]').val(selectedInput.parent().next().html());
             $('#updateForm input[name="autName"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm input[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm select[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().id);
             $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
         },
 
@@ -164,7 +189,7 @@ var app = new Vue({
                 location.href = "component.html?selectedId=" + selectedId+"&selectedName="+selectedName;
             }
         },
-        //传递当前页选中测试系统id到自动化构件维护页面
+        //传递当前页选中测试系统id和名称到配置系统数据页面
         toAutdata: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
@@ -173,6 +198,17 @@ var app = new Vue({
                 var selectedId = selectedInput.attr('id');
                 var selectedName=selectedInput.parent().next().next().html();
                 location.href = "autdata.html?selectedId=" + selectedId+"&selectedName="+selectedName;
+            }
+        },
+        //传递当前页选中测试系统id和名称到执行代码管理页面
+        toExeccode: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var selectedId = selectedInput.attr('id');
+                var selectedName=selectedInput.parent().next().next().html();
+                location.href = "execcode.html?autId=" + selectedId+"&autName="+selectedName;
             }
         },
 

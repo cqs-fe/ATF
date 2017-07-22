@@ -6,7 +6,7 @@
     <!-- css for this page only -->
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
-    <link rel="stylesheet" href="../static/css/fileinput.min.css">
+    <!-- <link rel="stylesheet" href="../static/css/fileinput.min.css"> -->
     <!-- pagination css -->
     <title>Case Management</title>
 </head>
@@ -26,11 +26,11 @@
                 <div class="row">
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#addModal"><i class="icon-plus"></i> 添加</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#importModal"><i class="icon-share-alt"></i> 导入</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#exportModal" @click="getIds()"><i class="icon-reply"></i> 导出</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#assignModal"><i class="icon-user"></i> 分配</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#runModeModal"><i class="icon-retweet"></i> 更改执行方式</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#transid" @click="getIds()"><i class="icon-cog"></i> 设置功能点及模板脚本</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#importModal" @click="getCaseLibId"><i class="icon-share-alt"></i> 导入</a>
+                        <a class="btn btn-white" data-toggle="modal" @click="checkExport"><i class="icon-reply"></i> 导出</a>
+                        <a class="btn btn-white" data-toggle="modal" @click="checkExe"><i class="icon-user"></i> 分配</a>
+                        <a class="btn btn-white" data-toggle="modal" @click="checkExeM"><i class="icon-retweet"></i> 更改执行方式</a>
+                        <a class="btn btn-white" data-toggle="modal" @click="checkTransid"><i class="icon-cog"></i> 设置功能点及模板脚本</a>
                         <!-- addModal start -->
                         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -147,7 +147,6 @@
                                                                 <label class="col-lg-2 control-label">案例性质</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="caseproperty">
-
                                                                         <option value="1">正常值</option>
                                                                         <option value="2">错误值</option>
                                                                         <option value="3">边界值</option>
@@ -345,7 +344,7 @@
                                                                 <label class="col-lg-2 control-label">优先级</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="priority">
-                                                                         <option value="1">1级</option>
+                                                                        <option value="1">1级</option>
                                                                         <option value="2">2级</option>
                                                                         <option value="3">3级</option>
                                                                         <option value="4">4级</option>
@@ -419,7 +418,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <a data-dismiss="modal" class="btn btn-success"  v-on:click="insert()">添加</a>
+                                        <a data-dismiss="modal" class="btn btn-success" v-on:click="insert()">添加</a>
                                     </div>
                                 </div>
                             </div>
@@ -434,17 +433,28 @@
                                         <h4 class="modal-title">导入</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form role="form" id="importExcel">
+                                        <form role="form" id="importForm">
+                                            <div class="form-group hidden">
+                                                <label class="control-label">caselibId</label>
+                                                <input type="text" name="caselibId" class="form-control" id="caselibId">
+                                            </div>
                                             <div class="form-group">
-                                                <label for="input-1" class="control-label">请选择文件</label>
-                                                <input type="file" id="input-1" class="file" data-preview-file-type="text" name="file">
+                                                <!-- <label for="input-1" class="control-label">请选择文件</label>
+                                                <input type="file" id="input-1" class="file" data-preview-file-type="text" name="file"> -->
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control show" disabled> 
+                                                </div>
+                                                <span class="btn btn-success fileinput-button">
+           `                                         <span>选择文件</span>
+                                                     <input type="file" class="myFileUpload" name="file">
+                                                </span>
                                             </div>
                                         </form>
                                     </div>
-                                   <!--  <div class="modal-footer">
+                                    <div class="modal-footer">
                                         <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="importExcel()">确认</button>
-                                    </div> -->
+                                        <a data-dismiss="modal" class="btn btn-success" @click="import">确认</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -457,7 +467,7 @@
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                         <h4 class="modal-title">导出</h4>
                                     </div>
-                                    <form role="form" id="exportForm" action="http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel" method="post">
+                                    <form role="form" id="exportForm" class="form-horizontal" action="http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel" method="post">
                                         <div class="modal-body">
                                             <div class="form-group hidden">
                                                 <label class="col-lg-2 control-label">id列表</label>
@@ -675,7 +685,6 @@
                                     </div>
                                     <form class="form-horizontal col-lg-10">
                                         <div class="form-group">
-                                            <label class="col-lg-1 control-label">搜索</label>
                                             <div class="col-lg-2">
                                                 <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号" name="casecode" v-model="casecode">
                                             </div>
@@ -691,7 +700,7 @@
                                                     <option value="50">50</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, {{pageSize}}, 'id', 'asc')">刷新</a></div>
+                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, {{pageSize}}, 'id', 'desc')">刷新</a></div>
                                         </div>
                                         <div class="form-group">
                                         </div>
@@ -745,7 +754,6 @@
                                                                 <input type="checkbox" v-model="caseCompositeType" value="1">单案例</label>
                                                             <label class="checkbox-inline" for="checkbox-14">
                                                                 <input type="checkbox" v-model="caseCompositeType" value="2">流程案例</label>
-                                                        
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -784,7 +792,7 @@
                                         </th>
                                         <th></th>
                                         <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th  class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                        <th class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="hidden-phone text-center" data-order="caseCompositeType" data-sort="desc" onclick="resort(this)">案例组成类型 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="hidden-phone text-center" data-order="useStatus" data-sort="desc" onclick="resort(this)">状态 <span class="icon-sort-up" aria-hidden="true"></span></th>
@@ -798,7 +806,7 @@
                                         <td>
                                             <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
                                         </td>
-                                        <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)" ></span></td>
+                                        <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td>
                                         <td class="center hidden-phone">{{ case.casecode }}</td>
                                         <td>{{ case.autId }}</td>
                                         <td class="hidden-phone">{{ case.transId }}</td>
@@ -808,10 +816,8 @@
                                         <td class="center hidden-phone">{{ case.executor }}</td>
                                         <td class="center hidden-phone">{{ case.executeMethod }}</td>
                                     </tr>
-                            
                                 </tbody>
                             </table>
-
                             <!-- 分页 -->
                             <div class="row">
                                 <div class="col-lg-12 text-center">
@@ -869,10 +875,6 @@
 </html>
 <link rel="import" href="./common/footer.html?__inline">
 <!--script for this page only-->
-<!-- <script type="text/javascript" src="../lib/jquery.dataTables.js"></script>
-<script type="text/javascript" src="../lib/DT_bootstrap.js"></script>
-<script src="../lib/dynamic-table.js"></script> -->
-<script src="../lib/vue-resource.min.js"></script>
 <script type="text/javascript" src="../static/js/caseManagement.js"></script>
 <script src="../lib/fileinput.min.js"></script>
 <script src="../lib/zh.js"></script>
@@ -880,7 +882,7 @@
 $("#input-1").fileinput({
     language: "zh",
     overwriteInitial: false,
-    uploadUrl: "http://10.108.226.152:8080/ATFCloud/TestcaseController/importexcel", //上传的地址(访问接口地址)
+    uploadUrl: address + "TestcaseController/importexcel", //上传的地址(访问接口地址)
     allowedFileExtensions: ['xls'], //接收的文件后缀
     uploadAsync: true, //默认异步上传
     showUpload: true, //是否显示上传按钮
@@ -895,5 +897,7 @@ $("#input-1").fileinput({
     validateInitialCount: true,
     previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
     msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+    //其他参数
+    uploadExtraData: { 'caselibId': document.getElementById('caselibId').value },
 });
 </script>

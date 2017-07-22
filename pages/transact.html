@@ -33,11 +33,11 @@
                 <div class="row">
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
+                        <a class="btn btn-white" @click="checkDel"><i class="icon-trash"></i> 删除</a>
+                        <a class="btn btn-white" @click="checkUpdate"><i class="icon-edit"></i> 修改</a>
                         <a class="btn btn-white"  @click="toElementLib"><i class="icon-cog"></i> 元素库</a>
                         <a class="btn btn-white" @click="toObjectRepo"><i class="icon-cog"></i> 对象库</a>
-                        <a class="btn btn-white" ><i class="icon-cog"></i> 基础脚本</a>
+                        <a class="btn btn-white" @click="toScript"><i class="icon-cog"></i> 基础脚本</a>
                         <!-- insertModal start -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -212,9 +212,10 @@
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="1" selected>1</option>
-                                                    <option value="3">3</option>
-                                                    <option value="5">5</option>
+                                                    <option value="5" selected>5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-1"><a class="btn btn-white" onclick="queryTransact()">刷新</a></div>
