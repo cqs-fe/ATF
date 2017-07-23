@@ -24,8 +24,8 @@
                 <div class="row">
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
+                        <a class="btn btn-white" @click="checkDel"><i class="icon-trash"></i> 删除</a>
+                        <a class="btn btn-white" @click="checkUpdate"><i class="icon-edit"></i> 修改</a>
                         <!-- insertModal start -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -96,7 +96,7 @@
                                         <section class="panel">
                                             <form id="updateForm" class="form-horizontal" role="form">
                                                 <div class="form-group hidden">
-                                                    <label class="col-lg-3 control-label" >id</label>
+                                                    <label class="col-lg-3 control-label">id</label>
                                                     <div class="col-lg-5">
                                                         <input type="text" name="id" v-model="selectedId">
                                                     </div>
@@ -229,6 +229,24 @@
                             </div>
                         </div>
                         <!-- failModal end -->
+                        <!-- selectAlertModal start -->
+                        <div class="modal fade" id="selectAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>请先选中一个场景！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- selectAlertModal end -->
                     </div>
                 </div>
                 <!--topbutton end-->
@@ -253,9 +271,10 @@
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="1" selected>1</option>
-                                                    <option value="3">3</option>
-                                                    <option value="5">5</option>
+                                                    <option value="5" selected>5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-1"><a class="btn btn-white" onclick="getScene(1, {{pageSize}}, 'id', 'asc')">刷新</a></div>
