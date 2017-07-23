@@ -53,7 +53,7 @@
                 <button class="btn btn-white" @click="hide();">关闭</button>
             </footer>
     </div>
-    <div id="editData" v-show="true" class="editData searchBox" v-cloak>
+    <div id="editData" v-show="isShow" class="editData searchBox" v-cloak>
         <header class="editData-header">
             <span class="editData-title">编辑数据项</span>
             <span class="icon-remove" @click="hide();"></span>
