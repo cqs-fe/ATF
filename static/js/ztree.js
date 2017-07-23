@@ -1,7 +1,7 @@
 /**
  * Created by aitongwen on 2017/4/18.
  */
-//ÔªËØ¿â
+//Ԫ�ؿ�
 $(document).ready(function() {
     getElementTree();
     getObjTree();
@@ -36,7 +36,7 @@ function onClick(e, treeId, treeNode,event) {
         v = s + ">" + u;
     }
     if (v.length > 0)v.substring(0, v.length - 1);
-    var elementObj = $("td input.uiSel",tr);// 填充到表格
+    var elementObj = $("td input.uiSel",tr);//tr�Ƿ�Χ
     elementObj.attr("value", s);
     var uiObj = $("td input.elementSel",tr);
     uiObj.attr("value", u);
@@ -53,7 +53,7 @@ function onClick(e, treeId, treeNode,event) {
 
 function beforeclick(treeId, treeNode) {
     var check = (treeNode && !treeNode.isParent);
-    if (!check) alert("Çë²»ÒªÑ¡ÔñÀà±ð...");
+    if (!check) alert("�벻Ҫѡ�����...");
     return check;
 }
 
@@ -84,7 +84,7 @@ function onclick(e, treeId, treeNode) {
 
 function ZtreebeforeClick(treeId, treeNode) {
     var check = (treeNode && !treeNode.isParent);
-    if (!check) alert("Çë²»ÒªÑ¡ÔñÀà±ð...");
+    if (!check) alert("�벻Ҫѡ�����...");
     return check;
 }
 
@@ -99,7 +99,7 @@ function ZtreeonClick(e, treeId, treeNode) {
     }
     for (var i = 0; i < nodes.length; i++) {
         html += "<tr id =''><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'></td>" +
-            "<td><label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value='"+node+"'/><br><label class='alignRight'>"+"ÔªËØ£º"+"</label><input id='elementSel' name='classname' type='text' readonly value='"+ nodes[i].name +"'/><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href=''#addModal'></i></td>" +
+            "<td><label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value='"+node+"'/><br><label class='alignRight'>"+"Ԫ�أ�"+"</label><input id='elementSel' name='classname' type='text' readonly value='"+ nodes[i].name +"'/><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href=''#addModal'></i></td>" +
             "<td> <select  style='width:200px;' name='method' class='glyphicon glyphicon-chevron-down' ></select> </td>" +
             "<td id='parameter'><div class='showInfornamt'><table id='paraList'></table> </div><i  id='href' class='glyphicon glyphicon-search icon'  onclick='cs();'></i> </td>"+
             "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'></i></td></tr>";
@@ -110,7 +110,7 @@ function ZtreeonClick(e, treeId, treeNode) {
 
 function Ztreebeforeclick(treeId, treeNode) {
     var check = (treeNode && !treeNode.isParent);
-    if (!check) alert("Çë²»ÒªÑ¡ÔñÀà±ð...");
+    if (!check) alert("�벻Ҫѡ�����...");
     return check;
 }
 
@@ -121,7 +121,7 @@ function Ztreeonclick(e, treeId, treeNode) {
         html = "";
     for (var i = 0; i < nodes.length; i++) {
         html += "<tr id =''><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'></td>" +
-            "<td><label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value='"+ nodes[i].classname+"' /><br><label class='alignRight'>"+"ÔªËØ£º"+"</label><input id='elementSel' name='classname' type='text' readonly value='none'/><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href=''#addModal'></i></td>" +
+            "<td><label class='alignRight'>"+"UI:"+"</label><input id='uiSel' name='classname' type='text' readonly value='"+ nodes[i].classname+"' /><br><label class='alignRight'>"+"Ԫ�أ�"+"</label><input id='elementSel' name='classname' type='text' readonly value='none'/><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href=''#addModal'></i></td>" +
             "<td> <select style='width:200px;' name='method' class='glyphicon glyphicon-chevron-down'><option>"+nodes[i].classname+"</option></select></td>" +
             "<td id='parameter'><div class='showInfornamt'><table id='paraList'></table> </div><i  id='href' class='glyphicon glyphicon-search icon'  onclick='cs();'></i> </td>"+
             "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'></i></td></tr>";
@@ -140,7 +140,7 @@ function Ztreeonclick(e, treeId, treeNode) {
     //if (n.length > 0) n = n.substring(0, n.length - 1);
     //nameObj.attr("nameid", n);
 
-//function getPathText(node){//¹Ø¼ü´úÂë£¬Í¨¹ýtreeNode±éÀú¸¸Ç×½Úµã£¬¸ù½ÚµãÔÙ´Îµ÷ÓÃgetParentNodeµÃµ½nullÖÕÖ¹Ñ­»·
+//function getPathText(node){//�ؼ����룬ͨ��treeNode�������׽ڵ㣬���ڵ��ٴε���getParentNode�õ�null��ֹѭ��
 //    var s=node.name;
 //    while(node=node.getParentNode())s=node.name+'/'+s;
 //    return s;
@@ -165,15 +165,15 @@ var setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: 'id', //id±àºÅÃüÃû
-            pIdKey: 'parentid', //¸¸id±àºÅÃüÃû
+            idKey: 'id', //id�������
+            pIdKey: 'parentid', //��id�������
             rootPId: 0
         }
     }
 };
 
 
-// Ò³Ãæ³õÊ¼»¯»ñÈ¡
+// ҳ���ʼ����ȡ
 function getElementTree() {
     var transid = $("#transactSelect").val();
     console.info($.fn.zTree);
@@ -213,12 +213,12 @@ var setting1 = {
         },
         simpleData: {
             enable: true,
-            idKey: 'classid'  //classid±àºÅÃüÃû
+            idKey: 'classid'  //classid�������
         }
     }
 };
 
-// Ò³Ãæ³õÊ¼»¯»ñÈ¡
+// ҳ���ʼ����ȡ
 function getObjTree() {
     console.log("a");
     $.ajax({
@@ -247,14 +247,14 @@ var setting2 = {
     data: {
         simpleData: {
             enable: true,
-            idKey: 'id', //id±àºÅÃüÃû
-            pIdKey: 'parentid', //¸¸id±àºÅÃüÃû
+            idKey: 'id', //id�������
+            pIdKey: 'parentid', //��id�������
             rootPId: 0
         }
     }
 };
 
-// Ò³Ãæ³õÊ¼»¯»ñÈ¡
+// ҳ���ʼ����ȡ
 function getElementTree_Multi() {
     var transid = $("#transactSelect").val();
     console.info($.fn.zTree);
@@ -297,14 +297,14 @@ var setting3 = {
         },
         simpleData: {
             enable: true,
-            idKey: 'id', //id±àºÅÃüÃû
-            pIdKey: 'parentid', //¸¸id±àºÅÃüÃû
+            idKey: 'id', //id�������
+            pIdKey: 'parentid', //��id�������
             rootPId: 0
         }
     }
 };
 
-// Ò³Ãæ³õÊ¼»¯»ñÈ¡
+// ҳ���ʼ����ȡ
 function getObjTree_Multi() {
     console.info($.fn.zTree);
     $.ajax({

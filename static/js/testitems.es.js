@@ -12,18 +12,16 @@ var itemId;
 var sendData = {
     order:"id",
     sort:"asc",
-    testProjectName:"",
-    type:"",
-    userId:"",
-    autId:"",
-    productLineId:""
+    missionName:"",
+    missionCode:"",
+    testProjectId:""
 };
 
 $(document).ready(function(){
     //页面的初始化操作
     // 立即执行函数，获取服务器全部数据
     (function() {
-        $("#showRows").val("2");
+        $("#showRows").val("5");
         showRows =  $("#showRows").val();
         let xmlHttpRequest = null;
         if (window.XMLHttpRequest) {
@@ -31,7 +29,7 @@ $(document).ready(function(){
         } else {
             xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        let url = address + "testProjectController/selectAllByPage";
+        let url = address + "missionController/selectAllByPage";
         xmlHttpRequest.open("post", url, true);
         xmlHttpRequest.setRequestHeader("CONTENT-TYPE", "application/x-www-form-urlencoded");
         xmlHttpRequest.onreadystatechange = function() {
@@ -46,6 +44,7 @@ $(document).ready(function(){
         let page = 1;
         let rows = showRows;
         let data = getSendData(page,rows);
+        console.log(data)
         xmlHttpRequest.send(data);
     })();// 立即执行函数，获取服务器全部数据结束
 
@@ -121,9 +120,9 @@ $(document).ready(function(){
     //添加按钮，发送ajax
     (function(){
         $("#btn-add").click(function(){
-            var data = $("#addForm").serialize()+"&createDate="+Vac.getNowFormatDate();
+            var data = $("#addForm").serialize();
             $.ajax({
-                url: address + "testProjectController/insert",
+                url: address + "missionController/insert",
                 type: "post",
                 dataType: "json",
                 data: data,
@@ -145,9 +144,9 @@ $(document).ready(function(){
     //更改按钮，发送ajax
     (function(){
         $("#btn-alter").click(function(){
-            var data = $("#alterForm").serialize()+"&id="+itemId+"&createDate=";
+            var data = $("#alterForm").serialize()+"&id="+itemId;
             $.ajax({
-                url: address + "testProjectController/update",
+                url: address + "missionController/update",
                 type: "post",
                 dataType: "json",
                 data: data,
@@ -231,31 +230,31 @@ function showAlterModal(button){
             return;
         });
     //console.log(this);
+    // var itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
+    // var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
+    // var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
+    // var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
+
+    // $('#view-itemcode').val(itemId);
+    // $('#view-itemname').val(itemName);
+    // $('#view-itemtype').val(itemType);
+    // $('#view-projectCode').val(projectCode);
     var tr = button.parentNode.parentNode;
     itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
     var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
     var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
-    // var autName = tr.getElementsByClassName("td-autName")[0].innerHTML;
-    var description = tr.getElementsByClassName("td-description")[0].innerHTML;
+    var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
         // initial Form
     function initialForm(userid, username){
         $('#alterModal').modal('show');
          var tr = button.parentNode.parentNode;
-        var itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
         var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
         var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
-        var user = tr.getElementsByClassName('td-user')[0].innerHTML;
         var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
-        var date = tr.getElementsByClassName('td-createDate')[0].innerHTML;
-        var description = tr.getElementsByClassName("td-description")[0].innerHTML;
 
-        $('#alter-itemcode').val(itemId);
         $('#alter-itemname').val(itemName);
         $('#alter-itemtype').val(itemType);
-        $('#alter-createDate').val(date);
-        $('#alter-createUser').val(user);
         $('#alter-projectCode').val(projectCode);
-        $('#alter-itemdesc').text(description);
 
     };// initial Form end
 }
@@ -267,18 +266,12 @@ function showViewModal(button){
     var itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
     var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
     var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
-    var user = tr.getElementsByClassName('td-user')[0].innerHTML;
     var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
-    var date = tr.getElementsByClassName('td-createDate')[0].innerHTML;
-    var description = tr.getElementsByClassName("td-description")[0].innerHTML;
 
     $('#view-itemcode').val(itemId);
     $('#view-itemname').val(itemName);
     $('#view-itemtype').val(itemType);
-    $('#view-createDate').val(date);
-    $('#view-createUser').val(user);
     $('#view-projectCode').val(projectCode);
-    $('#view-itemdesc').text(description);
 }
 // Show view modal end
 
@@ -288,7 +281,7 @@ function updateTableAndPagination(destinatePage){
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -328,7 +321,7 @@ function nextPage(){
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -382,7 +375,7 @@ function previousPage(){
     var rows = showRows;  //每页的大小
     var data = getSendData(page, rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -434,7 +427,7 @@ function firstPage(){
     var rows = showRows;  //每页的大小
     var data = getSendData(page, rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -475,7 +468,7 @@ function lastPage(){
     var rows = showRows;  //每页的大小
     var data = getSendData(page,rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -517,7 +510,7 @@ function gotoPage(){
     var rows = showRows;  //每页的大小
     var data = getSendData(page,rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -602,7 +595,7 @@ function changeShowRows(event){
     var rows = event.target.value;  //每页的大小
     var data = getSendData(page, rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -651,15 +644,12 @@ function createTable(dataSet){
     tbody.empty();
     dataSet.forEach(value => {
     let tr = $('<tr></tr>');
-    let tdId = $(`<td class="td-itemId"></td>`).text(value.id);
-    let tdName = $(`<td class="td-name"></td>`).text(value.testProjectName);
-    let tdType = $(`<td class="td-type"></td>`).text(value.type);
-    let tdUser = $(`<td class="td-user"></td>`).text(value.user);
-    let tdCreateDate = $(`<td class="td-createDate"></td>`).text(value.createDate);
-    let tdDescription = $(`<td class="td-description"></td>`).text(value.taskDescription);
-    let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.testProjectCode);
+    let tdId = $(`<td class="td-itemId"></td>`).text(value.id); // id
+    let tdName = $(`<td class="td-name"></td>`).text(value.testProjectName);  // 编号
+    let tdType = $(`<td class="td-type"></td>`).text(value.type); // 项目id
+    let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.testProjectCode);    // 名称
     let tdOperation = $(`<td class="td-operation"><a data-toggle="modal" class="btn btn-view btn-white" onclick="showViewModal(this);" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
-    tr.append(tdId, tdName, tdType, tdUser, tdProjectCode, tdCreateDate, tdDescription,tdOperation);
+    tr.append(tdId, tdName, tdType, tdProjectCode,tdOperation);
     tbody.append(tr);
     });
 }
@@ -670,12 +660,9 @@ function destructe(data){
         var newValue = {};
         ({
             id: newValue.id,
-            testProjectCode:  newValue.testProjectCode,
-            testProjectName: newValue.testProjectName,
-            type: newValue.type,
-            createDate: newValue.createDate,
-            taskDescription: newValue.taskDescription,
-            creatorId:newValue.user,
+            missionName:  newValue.testProjectCode,
+            missionCode: newValue.testProjectName,
+            testProjectId: newValue.type,
         } = value);
         return newValue;
     });
@@ -699,7 +686,7 @@ function search(){
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
     $.ajax({
-        url: address + "testProjectController/selectAllByPage",
+        url: address + "missionController/selectAllByPage",
         type: "post",
         data: data,
         dataType: 'json',
@@ -801,6 +788,6 @@ function loginDetect(){
 //检测用户登录状态，添加 更改操作需要有登陆权限 结束
 //得到发送的data
 function getSendData(page, rows){
-    return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&testProjectName="+sendData.testProjectName+"&type="+sendData.type+"&userId="+sendData.userId+"&autId="+sendData.autId+"&productLineId="+sendData.productLineId;
+    return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&missionName="+sendData.missionName+"&missionCode="+sendData.missionCode+"&testProjectId="+sendData.testProjectId;
 }
 //得到发送的data

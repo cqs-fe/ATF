@@ -196,11 +196,12 @@ html, body{
 				}
 			}
 			.operation {
+				width: 100%;
 				label {
 					vertical-align: top;
 				}
 				.before-operation-table, .after-operation-table {
-					width: 100%;
+					width: 150%;
 					margin: 5px auto;
 					td {
 						text-align: center;
@@ -256,14 +257,23 @@ html, body{
 							}
 						}
 						td.parameters {
-
+							
 						}
 					}
 
 				}
 			}
 		}
-
+		.operation-wrapper .operation .parameters .param-table {
+			vertical-align: top;
+			width: 100%;
+			td:first-child {
+				width: 40%;
+			}
+			td:last-child {
+				width: 60%;
+			}
+		}
 	}
 	footer {
 		height: 40px;

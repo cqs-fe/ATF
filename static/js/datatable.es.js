@@ -10,10 +10,11 @@ $(document).ready(function(){
 				isShow: false,
 				insertTitle:null,
 				insertType: null,
-				isInsertDivShow:true,
+				isInsertDivShow:true, //
 				selection: null,
-				beforeOperationRows: [{id:Symbol()},{id:Symbol()},{id: Symbol()},{id: Symbol()}],
-				afterOperationRows: [{id:Symbol()},{id:Symbol()},{id: Symbol()},{id: Symbol()}],
+				beforeOperationRows: [],//[{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
+				afterOperationRows: [],
+				parameterVue: null,
 				// ztree的设置项
 				zTreeSettings: {
 					uiAndElement: {
@@ -33,7 +34,7 @@ $(document).ready(function(){
 						},
 						data: {
 					        key:{
-					            name:"classname",
+					            name:"mname",
 					        },
 					        simpleData: {
 					            enable: true,
@@ -45,12 +46,13 @@ $(document).ready(function(){
 					}
 				},
 				uiOrFunctions: {
-					changed: false,
-					type: 'ui',
-					ui: '',
-					element: '',
-					function: '',
-					target: null
+					changed: false,  	// 模态框出现后是否点击过，如果点击过，在模态框点击保存时才会进行更改
+					type: 'ui',			// 保存最后点击的是UI还是函数集，据此来确定不同的后续执行行为
+					ui: '',				// 保存点击的ui
+					element: '',		// 保存点击的元素
+					function: '',		// 保存点击的函数集中的项
+					target: null,		// 保存点击编辑的target，据此可以获得parent tr
+					table: 1			// 保存当前操作的是前置操作还是后置操作
 				}
 			},
 			created: function(){},
@@ -113,21 +115,22 @@ $(document).ready(function(){
 					handsontable.render();
 				},
 				addRow: function(type){
-					let s = {id: Symbol()}
+					let s = {id: Symbol(), operation: {element:'', ui:''}, functions:[], parameters: []}
 					type === 1 ? 
 						(this.beforeOperationRows.push(s)) : 
 						(this.afterOperationRows.push(s))
-					
 				},
 				deleteRow: function(index, type) {
 					type === 1 
 						? (this.beforeOperationRows.splice(index,1))
 						: (this.afterOperationRows.splice(index,1))
 				},
-				showUiAndElement: function(event) {
+				// 显示UI和元素 、函数集
+				showUiAndElement: function(event, type) {
 					var _this = this;
 					this.uiOrFunctions.target = event.target;
 					this.uiOrFunctions.changed = false;
+					this.uiOrFunctions.table = type;
 					// 请求Ui和Elment
 					$.ajax({
 						url: address + 'elementlibraryController/showUIandElement',
@@ -140,44 +143,84 @@ $(document).ready(function(){
 							}
 						}
 					})
+					// 请求函数集
 					$.ajax({
-						url: address + 'omclassController/selectAll',
+						url: address + 'autController/selectFunctionSet',
+						data: 'id=2',
 						type: 'post',
 						dataType: 'json',
 						success: (data, statusText) => {
-							if(data && data.success === true && (data.obj instanceof Array)) {
-								$.fn.zTree.init($('#functions-ul'),_this.zTreeSettings.functions, data.obj);
+							if(data.ommethod) {
+								$.fn.zTree.init($('#functions-ul'),_this.zTreeSettings.functions, data.ommethod);
 							}	
 						}
 					})
 
 					$('#ui-ele-modal').modal('show')
 				},
+				// 确定ztree的点击事件
 				zTreeOnClick: function(event, treeId, treeNode) {
 					if(treeNode.isParent){
-						return
+						return					// 如果点击了父节点，则返回
 					}
-					console.log(treeNode)
+					// 判断树结构是ui还是函数集
 					if(treeId === 'ui-element-ul') {
 						var parent = treeNode.getParentNode()
 						if (!parent) {
-							return
+							return			// 没有父元素，则返回
 						}
 						this.uiOrFunctions.type = 'ui'
 						this.uiOrFunctions.ui = treeNode.name
 						this.uiOrFunctions.element = parent.name;
 					} else {
 						this.uiOrFunctions.type = 'function'
-						this.uiOrFunctions.function = treeNode.classname;
+						// 获取节点的全部内容
+						this.uiOrFunctions.function = treeNode;
+						// console.log(treeNode)
 					}
-					this.uiOrFunctions.changed = true;
+					this.uiOrFunctions.changed = true;			// 已经在模态框中点击了树节点
+				},
+				// 编辑参数方法，出现模态框，进行函数的编辑
+				editParameter: function(event, type) {
+					var _this = this
+					// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
+					var parentRow = $(event.target).parents('tr')
+					var index = parentRow.attr('data-index');
+					var operationRows = type === 1 ? _this.beforeOperationRows : _this.afterOperationRows;
+
+					_this.parameterVue = new Vue({
+						el: '#edit-parameter-modal',
+						data: {
+							parameters: null
+						},
+						methods: {
+							okParameter: function(event) {
+								var inputs = $('#edit-parameter-modal input')
+								console.log(inputs)
+								for(var i=0;i<operationRows[index].parameters.length;i++) {
+									operationRows[index].parameters[i].Value = inputs[i].value
+								}
+								modalVue.updateRow(operationRows, index)
+								console.log(operationRows)
+								$('#edit-parameter-modal').modal('hide')
+							}
+						}
+					})
+					_this.parameterVue.parameters = operationRows[index].parameters;
+					$('#edit-parameter-modal').modal('show')
 				},
 				// remove the row who is checked when 
-				removeRow: function(event) {
+				removeRow: function(event, type) {
 					var parent = $(event.target).closest('.operation-wrapper')
-					parent.find("tbody input[type='checkbox']:checked").closest('tr').remove()
+					var trs = parent.find("tbody input[type='checkbox']:checked").closest('tr')
+
+					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows)
+					for(var tr of trs) {
+						operationRows.splice(tr.getAttribute('data-index'), 1)
+					}
 				},
 				moveUp: function(event, type) {
+					console.log('moveUp')
 					var _this = this;
 					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows )
 					var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
@@ -188,13 +231,14 @@ $(document).ready(function(){
 					})
 				},
 				moveDown: function(event, type) {
+					console.log(JSON.parse(`[{"Name":"输入值1","Type":"","Desc":"","ParameterizeColumn":"{element}"},{"Name":"输入值2","Type":"","Desc":"","ParameterizeColumn":"{element}"}]`))
 					var _this = this;
 					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows )
 					var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
-					$.each(trs, (index, row) => {
-						var originIndex = row.getAttribute('data-index')
-						operationRows.splice(+originIndex + 1, 0, operationRows.splice(originIndex,1)[0])
-					})
+					for (var i = trs.length - 1; i >= 0; i--) {
+						var originIndex = trs[i].getAttribute('data-index')
+						operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
+					}
 				},
 				saveOperation: function(event) {
 					var a3 = this.beforeOperationRows.splice(3,1)
@@ -207,24 +251,86 @@ $(document).ready(function(){
 			el: '#ui-ele-modal',
 			data: {},
 			methods: {
+				// 在模态框中点击了保存按钮
 				editRow: function () {
 					var _this = this;
+					if(!editDataVue.uiOrFunctions.changed) {
+						return;		// 没有点击树结构，则返回
+					}
+					// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
 					var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
+					var index = parentRow.attr('data-index');
+					var operationRows = editDataVue.uiOrFunctions.table === 1 ? editDataVue.beforeOperationRows : editDataVue.afterOperationRows;
+
 					if (editDataVue.uiOrFunctions.type === 'ui') {
-						$('.operation-element', parentRow).val(editDataVue.uiOrFunctions.element)
-						$('.operation-ui', parentRow).val(editDataVue.uiOrFunctions.ui)
+						// 点击了ui 与 元素后, 更新operation
+						operationRows[index].operation = {
+							ui: editDataVue.uiOrFunctions.ui,
+							element: editDataVue.uiOrFunctions.element
+						};
 
-					} else {
-						$('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
-						$('.operation-ui', parentRow).val(editDataVue.uiOrFunctions.function)
-						$('.operation-element', parentRow).val('none')
+						// 使用splice方法，通过改变数组项的id更新绑定的数组，
+						_this.updateRow(operationRows, index);
+
+						// 发送ajax请求函数的数据
 						var data = {
-							autid: 8,
-							className: editDataVue.uiOrFunctions.function,
-
+							id: 8,		// autid
+							classname: editDataVue.uiOrFunctions.ui,		// classname
 						}
+
+						var getFunctions = new Promise((resolve, reject) => {
+							$.ajax({
+								url: address + 'autController/selectMethod',
+								data: data,
+								type: 'post',
+								dataType: 'json',
+								success: function(data, statusText) {
+									var ommethod = data.ommethod;
+									operationRows[index].functions = ommethod;
+									_this.updateRow(operationRows, index)
+									resolve();
+								}
+							})
+						})
+						getFunctions.then(() => {
+							// 获取函数项的值
+							// var mname = $('.functions-select', parentRow).val()
+							var mname = operationRows[index].functions[0].mname
+							var data = {
+								autid: 8,	
+								className: editDataVue.uiOrFunctions.ui,
+								methodName: mname
+							}
+							return new Promise((resolve, reject) => {
+								$.ajax({
+									url: address + 'autController/selectParameterlist',
+									data: data,
+									type: 'post',
+									dataType: 'json',
+									success: function(data, statusText) {
+										operationRows[index].parameters = JSON.parse(`${data}`)
+										_this.updateRow(operationRows, index)
+										resolve()
+									}
+								})
+							})
+						}).then(() => {
+							console.log('success')
+						})
+					} else {
+						// $('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
+						operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
+						console.log()
+						operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
+						_this.updateRow(operationRows, index)
 					}
 					$('#ui-ele-modal').modal('hide')
+				},
+				updateRow: function(rows, index) {
+					// 使用splice方法，通过改变数组项的id更新绑定的数组，
+					var cache = rows[index]
+					cache.id = Symbol()
+					rows.splice(index, 1, cache)
 				}
 			}
 		})
@@ -345,6 +451,7 @@ $(document).ready(function(){
                             type: 'post',
                             dataType: "json",
                             success: function(data,textStatus){
+                            	 _this.checkedItems = []
                                 data.o.forEach(function(value,index){
                                     var arrayItem = {};
                                     ({testpoint:arrayItem.value} = value);
@@ -1048,24 +1155,3 @@ $(document).ready(function(){
 	var header = document.querySelector('#editData>header')
 	Vac.startDrag(header, editDiv)
 });
-
-// var dragController = {
-// 	pointerStart: {X: 0,Y: 0},
-// 	pointerEnd: {X: 0,Y: 0},
-// 	searchBoxDragStart: function(event){
-
-// 	},
-// 	searchBoxDragEnd: function(event,id){
-// 		// console.log(event.clientX);
-// 		this.pointerEnd.X = event.clientX;
-// 		this.pointerEnd.Y = event.clientY;
-// 		document.getElementById(id).style.left = this.pointerEnd.X+'px';
-// 		document.getElementById(id).style.top = this.pointerEnd.Y + document.getElementById(id).offsetHeight/2 + 'px';
-// 	},
-// 	searchBoxDrag: function(event,id){
-// 		this.pointerEnd.X = event.clientX;
-// 		this.pointerEnd.Y = event.clientY;
-// 		document.getElementById(id).style.left = this.pointerEnd.X+'px';
-// 		document.getElementById(id).style.top = this.pointerEnd.Y+ document.getElementById(id).offsetHeight/2+'px';
-// 	}
-// };

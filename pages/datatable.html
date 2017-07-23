@@ -53,7 +53,7 @@
                 <button class="btn btn-white" @click="hide();">关闭</button>
             </footer>
     </div>
-    <div id="editData" v-show="isShow" class="editData searchBox" v-cloak>
+    <div id="editData" v-show="true" class="editData searchBox" v-cloak>
         <header class="editData-header">
             <span class="editData-title">编辑数据项</span>
             <span class="icon-remove" @click="hide();"></span>
@@ -90,11 +90,7 @@
                 <div class="sticky-top">
                      <label>前置操作</label>
                      <div>
-                         <button class="btn btn-white">
-                             <i class="icon-plus"></i>
-                             添加多项
-                         </button>
-                         <button class="btn btn-white" @click="removeRow($event)">
+                         <button class="btn btn-white" @click="removeRow($event, 1)">
                              <i class="icon-remove"></i>
                              删除
                          </button>
@@ -137,24 +133,38 @@
                                <td class="operations">
                                    <div>
                                        <label>元素</label>
-                                       <input type="text" class="operation-element" readonly="true" name="">
+                                       <input type="text" class="operation-element" readonly="true" name="" value={{row.operation.element}}>
                                    </div>
                                     <div>
                                        <label>UI</label>
-                                       <input type="text" readonly="true" class="operation-ui" name="">
+                                       <input type="text" readonly="true" class="operation-ui" name="" value={{row.operation.ui}}>
                                    </div>
-                                   <i class="icon-edit" @click="showUiAndElement($event)"></i>
+                                   <i class="icon-edit" @click="showUiAndElement($event, 1)"></i>
                                </td>
                                <td class="functions">
                                    <select class="functions-select">
-                                       <option value=""></option>
+                                       <option value="" v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
                                    </select>
                                </td>
                                <td class="parameters">
-                                   
+                                    <span class="icon-edit" style="color: #ff6c60" @click="editParameter($event, 1)"></span>
+                                    <table class="param-table" border="1">
+                                        <thead>
+                                            <tr>
+                                                <td>名称</td>
+                                                <td>参数值</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="parameter in row.parameters">
+                                                <td>{{parameter.Name}}</td>
+                                                <td>{{parameter.Value}}</td>
+                                            </tr>
+                                        </tbody>
+                                   </table>
                                </td>
                                <td class="delete-row">
-                                    <i class="icon-minus" @click="deleteRow(index, 2)"></i>
+                                    <i class="icon-minus" @click="deleteRow(index, 1)"></i>
                                </td>
                             </tr>
                         </tbody>
@@ -164,11 +174,7 @@
                  <div class="sticky-top">
                       <label>后置操作</label>
                      <div>
-                         <button class="btn btn-white">
-                             <i class="icon-plus"></i>
-                             添加多项
-                         </button>
-                         <button class="btn btn-white" @click="removeRow($event)">
+                         <button class="btn btn-white" @click="removeRow($event, 1)">
                              <i class="icon-remove"></i>
                              删除
                          </button>
@@ -210,21 +216,37 @@
                                </td> 
                                <td class="index">{{index + 1}}</td>
                                <td class="operations">
-                                   <div>
-                                       <label>UI</label>
-                                       <input type="text" readonly="true" class="operation-ui" name="">
-                                   </div>
-                                   <div>
+                                    <div>
                                        <label>元素</label>
-                                       <input type="text" class="operation-element" readonly="true" name="">
+                                       <input type="text" class="operation-element" readonly="true" name="" value={{row.operation.element}}>
                                    </div>
-                                   <i class="icon-edit" @click="showUiAndElement($event)"></i>
+                                    <div>
+                                       <label>UI</label>
+                                       <input type="text" readonly="true" class="operation-ui" name="" value={{row.operation.ui}}>
+                                   </div>
+                                   <i class="icon-edit" @click="showUiAndElement($event, 2)"></i>
                                </td>
                                <td class="functions">
-                                   <select class="functions-select"></select>
+                                   <select class="functions-select">
+                                       <option value="" v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
+                                   </select>
                                </td>
-                               <td class="parameters">
-                                   
+                               <td class="parameters" contenteditable="false">
+                                    <span class="icon-edit" style="color: #ff6c60" @click="editParameter($event, 2)"></span>
+                                    <table class="param-table" border="1">
+                                        <thead>
+                                            <tr>
+                                                <td>名称</td>
+                                                <td>参数值</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="parameter in row.parameters">
+                                                <td>{{parameter.Name}}</td>
+                                                <td contenteditable="false">{{parameter.Value}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                </td>
                                <td class="delete-row">
                                    <i class="icon-minus" @click="deleteRow(index, 2)"></i>
@@ -322,6 +344,7 @@
                         <div>
                             <label>筛选类型</label>
                             <select @change="changeSelect($event)">
+                                <option style="color: #ccc;">请选择</option>
                                 <option v-for="item in selectItems" v-bind:value="item.value">{{item.name}}</option>
                             </select>
                         </div>
@@ -417,6 +440,34 @@
                 </div>
             </div>
         </div> <!-- modal end -->
+        <div class="modal fade  bs-example-modal-sm" tabindex="-1" role="dialog" id="edit-parameter-modal">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" type="buton" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">编辑参数</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="width: 100%;">
+                            <div class="row">
+                                <label class="col-md-4 col-md-offset-2">参数名称</label>
+                                <label class="col-md-4">参数值</label>
+                            </div>
+                            <div v-for="parameter in parameters" class="row" style="margin-top: 5px;">
+                                <label class="col-md-4 col-md-offset-2">{{parameter.Name}}</label>
+                                <input type="text" name="" value={{parameter.Value}} class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button class="btn btn-primary" @click="okParameter($event)">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     <!--content end -->
