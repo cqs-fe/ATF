@@ -146,9 +146,9 @@ var app = new Vue({
         //传递当前页选中测试项目id到功能点页面
         to: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
-            var selectedId = selectedInput.attr('id');
+            var caselibId = selectedInput.parent().next().next().next().next().html();
             //存储测试项目id到sessionstorage
-            sessionStorage.setItem("caselibid",selectedId);
+            sessionStorage.setItem("caselibid",caselibId);
             // location.href = "transact.html?caselibid=" + selectedId;
         }
 

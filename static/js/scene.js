@@ -82,6 +82,7 @@ var app = new Vue({
 
         //添加场景
         insert: function() {
+            var self=this;
             var scenename = $('#insertForm input[name="scenename"]').val();
             var description = $('#insertForm textarea[name="description"]').val();
             $.ajax({
@@ -98,6 +99,7 @@ var app = new Vue({
                     console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getScene(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -108,9 +110,18 @@ var app = new Vue({
             });
         },
         //删除场景
+        checkDel:()=>{
+            app.getIds();
+            const selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                $('#deleteModal').modal();
+            } 
+        },
         del: function() {
             this.getIds();
-            console.log(app.ids);
+            var self=this;
             $.ajax({
                 url: address + 'sceneController/delete',
                 type: 'post',
@@ -121,6 +132,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        getScene(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -131,7 +143,17 @@ var app = new Vue({
             });
         },
         //修改场景
+        checkUpdate:()=>{
+            app.getSelected();
+            const selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                $('#updateModal').modal();
+            } 
+        },
         update: function() {
+            var self=this;
             $.ajax({
                 url: address + 'sceneController/update',
                 type: 'post',
@@ -140,6 +162,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                         getScene(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }

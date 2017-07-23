@@ -163,12 +163,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="mainTbody">
-                                                <tr>
+                                                <tr v-for="item in mainList">
                                                     <td>
                                                         <input type="checkbox" name="chk_list" />
                                                     </td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.value}}</td>
+                                                </tr>
+                                                <tr v-show="mainListLength==0" class="text-center">
+                                                    <td colspan="3">暂无数据</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -188,12 +191,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="addiTbody">
-                                                <tr>
+                                                <tr v-for="item in addiList">
                                                     <td>
                                                         <input type="checkbox" name="chk_list" />
                                                     </td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.value}}</td>
+                                                </tr>
+                                                <tr v-show="addiListLength==0" class="text-center">
+                                                    <td colspan="3">暂无数据</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -213,12 +219,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="assiTbody">
-                                                <tr>
+                                                <tr v-for="item in assiList">
                                                     <td>
                                                         <input type="checkbox" name="chk_list" />
                                                     </td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.value}}</td>
+                                                </tr>
+                                                <tr v-show="assiListLength==0" class="text-center">
+                                                    <td colspan="3">暂无数据</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -241,11 +250,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="relateNameTbody">
-                                                    <tr>
+                                                    <tr v-for="item in relateElementList">
                                                         <td>
-                                                            <input type="checkbox" name="chk_list" />
+                                                            <input type="radio" name="chk_list" />
                                                         </td>
-                                                        <td contenteditable="true"></td>
+                                                        <td contenteditable="true">{{item.name}}</td>
+                                                    </tr>
+                                                    <tr v-show="relateElementListLength==0" class="text-center">
+                                                        <td colspan="3">暂无数据</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

@@ -33,12 +33,12 @@
                 <div class="row">
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
-                        <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
+                        <!-- <a class="btn btn-white" @click='checkDel'><i class="icon-trash"></i> 删除</a> -->
+                        <a class="btn btn-white" @click="checkUpdate"><i class="icon-edit"></i> 修改</a>
                         <a class="btn btn-white" data-toggle="modal" href="" @click="toTransact"><i class="icon-cog"></i> 管理功能点</a>
                         <a class="btn btn-white" @click="toAutdata"><i class="icon-cog"></i> 配置系统数据</a>
                         <a class="btn btn-white" data-toggle="modal" @click="toComponent"><i class="icon-cog"></i> 自动化构件维护</a>
-                        <a class="btn btn-white"  href="execcode.html"><i class="icon-cog"></i> 执行代码管理</a>
+                        <a class="btn btn-white"  @click="toExeccode"><i class="icon-cog"></i> 执行代码管理</a>
                         <!-- insertModal start -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -67,7 +67,7 @@
                                                     <label class="col-lg-3 control-label">开发架构</label>
                                                     <div class="col-lg-5">
                                                         <select class="form-control" name="abstractarchitecture_name">
-                                                            <option v-for="item in abstrList" value="{{item.id]}}">{{item.architecturename}}</option>
+                                                            <option v-for="item in abstrList" value="{{item.id}}">{{item.architecturename}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -131,7 +131,7 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试系统编号</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autCode" value="selectedAutCode">
+                                                        <input type="text" class="form-control" name="autCode" value="{{selectedAutCode}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -143,7 +143,10 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">开发架构</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="abstractarchitecture_name" value="{{selectedAbstractarchitecture_name}}">
+                                                        <select class="form-control" name="abstractarchitecture_id">
+                                                            <option value="">-- 选择开发架构 --</option>
+                                                            <option v-for="item in abstrList" value="{{item.id}}">{{item.architecturename}}</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -273,7 +276,7 @@
                                         </td>
                                         <td class="center hidden-phone" width="20%">{{ aut.autCode }}</td>
                                         <td width="20%">{{ aut.autName }}</td>
-                                        <td class="hidden-phone" width="20%">{{ aut.abstractarchitecture_name }}</td>
+                                        <td width="20%" id="{{aut.abstractarchitecture_id}}">{{ aut.abstractarchitecture_name }}</td>
                                         <td class="hidden-phone" width="40%">{{ aut.aut_desc }}</td>
                                     </tr>
                                 </tbody>
