@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/datatable.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/datatable.scss">
     <script src="../lib/jquery.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="../lib/vue.js"></script>
@@ -22,7 +22,7 @@
 </head>
 
 <body id="v-body">
-    <div id="searchBox" v-show="isShow" class="searchBox" style="" v-cloak>
+    <div id="searchBox" v-show="isShow" class="searchBox" v-cloak>
             <header class="searchBox-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'searchBox');" ondrag="dragController.searchBoxDrag(event,'searchBox')">
                 <span class="searchBox-title">查找与替换</span>
                 <span class="icon-remove" @click="hide();"></span>
@@ -54,15 +54,11 @@
             </footer>
     </div>
     <div id="editData" v-show="isShow" class="editData searchBox" v-cloak>
-        <header class="editData-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'editData');" ondrag="dragController.searchBoxDrag(event,'editData')">
+        <header class="editData-header">
             <span class="editData-title">编辑数据项</span>
             <span class="icon-remove" @click="hide();"></span>
         </header>
         <main class="editData-body container">
-            <div class="before-operation operation">
-                <label>前置操作</label>
-                <div></div>
-            </div>
             <div class="type-wrapper" >
                 <label class="">数据类型</label>
                 <div><input type="radio" name="type" value="1" v-model="dataType">文本</div>
@@ -90,10 +86,175 @@
                 <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
                 <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
             </form>
-            
-            <div class="after-operation operation">
-                <label>后置操作</label>
-                <div></div>
+            <div class="operation-wrapper">
+                <div class="sticky-top">
+                     <label>前置操作</label>
+                     <div>
+                         <button class="btn btn-white" @click="removeRow($event, 1)">
+                             <i class="icon-remove"></i>
+                             删除
+                         </button>
+                         <button class="btn btn-white" @click="moveUp($event, 1)">
+                             <i class="icon-angle-up"></i>
+                             上移
+                         </button>
+                         <button class="btn btn-white" @click="moveDown($event, 1)">
+                             <i class="icon-angle-down"></i>
+                             下移
+                         </button>
+                         <button class="btn btn-white" @click="saveOperation($event, 1)">
+                             <i class="icon-save"></i>
+                             保存
+                         </button>
+                     </div>
+                </div>
+                <div class="before-operation operation">
+                    <table class="before-operation-table" border="1">
+                        <thead>
+                            <tr>
+                                <td class="check">
+                                    全选&nbsp;<input type="checkbox" class="checkall">
+                                </td>
+                                <td class="index">行号</td>
+                                <td class="operations">操作项</td>
+                                <td class="functions">方法</td>
+                                <td class="parameters">参数</td>
+                                <td class="add-row">
+                                    <i class="icon-plus" @click="addRow(1)"></i>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody class="ui-sortable" id="sortable">
+                            <tr v-for="(index, row) in beforeOperationRows" class="before-operation-row ui-sortable-handle" track-by="id" data-index={{index}}>
+                               <td class="check">
+                                   <input type="checkbox" class="checkone">
+                               </td> 
+                               <td class="index">{{index + 1}}</td>
+                               <td class="operations">
+                                   <div>
+                                       <label>元素</label>
+                                       <input type="text" class="operation-element" readonly="true" name="" value={{row.operation.element}}>
+                                   </div>
+                                    <div>
+                                       <label>UI</label>
+                                       <input type="text" readonly="true" class="operation-ui" name="" value={{row.operation.ui}}>
+                                   </div>
+                                   <i class="icon-edit" @click="showUiAndElement($event, 1)"></i>
+                               </td>
+                               <td class="functions">
+                                   <select class="functions-select">
+                                       <option value="" v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
+                                   </select>
+                               </td>
+                               <td class="parameters">
+                                    <span class="icon-edit" style="color: #ff6c60" @click="editParameter($event, 1)"></span>
+                                    <table class="param-table" border="1">
+                                        <thead>
+                                            <tr>
+                                                <td>名称</td>
+                                                <td>参数值</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="parameter in row.parameters">
+                                                <td>{{parameter.Name}}</td>
+                                                <td>{{parameter.Value}}</td>
+                                            </tr>
+                                        </tbody>
+                                   </table>
+                               </td>
+                               <td class="delete-row">
+                                    <i class="icon-minus" @click="deleteRow(index, 1)"></i>
+                               </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                 <div class="sticky-top">
+                      <label>后置操作</label>
+                     <div>
+                         <button class="btn btn-white" @click="removeRow($event, 1)">
+                             <i class="icon-remove"></i>
+                             删除
+                         </button>
+                         <button class="btn btn-white" @click="moveUp($event, 2)">
+                             <i class="icon-angle-up"></i>
+                             上移
+                         </button>
+                         <button class="btn btn-white"  @click="moveDown($event, 2)">
+                             <i class="icon-angle-down"></i>
+                             下移
+                         </button>
+                         <button class="btn btn-white"  >
+                             <i class="icon-save"></i>
+                             保存
+                         </button>
+                     </div>
+                </div>
+                <div class="after-operation operation">
+                   
+                    <table class="after-operation-table" border="1">
+                        <thead>
+                            <tr>
+                                <td class="check">
+                                    全选&nbsp;<input type="checkbox" class="checkall">
+                                </td>
+                                <td class="index">行号</td>
+                                <td class="operations">操作项</td>
+                                <td class="functions">方法</td>
+                                <td class="parameters">参数</td>
+                                <td class="add-row">
+                                    <i class="icon-plus" @click="addRow(2)"></i>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody class="ui-sortable" id="sortable2">
+                            <tr v-for="(index, row) in afterOperationRows" data-index={{index}} class="after-operation-row" track-by="id">
+                               <td class="check">
+                                   <input type="checkbox" class="checkone">
+                               </td> 
+                               <td class="index">{{index + 1}}</td>
+                               <td class="operations">
+                                    <div>
+                                       <label>元素</label>
+                                       <input type="text" class="operation-element" readonly="true" name="" value={{row.operation.element}}>
+                                   </div>
+                                    <div>
+                                       <label>UI</label>
+                                       <input type="text" readonly="true" class="operation-ui" name="" value={{row.operation.ui}}>
+                                   </div>
+                                   <i class="icon-edit" @click="showUiAndElement($event, 2)"></i>
+                               </td>
+                               <td class="functions">
+                                   <select class="functions-select">
+                                       <option value="" v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
+                                   </select>
+                               </td>
+                               <td class="parameters" contenteditable="false">
+                                    <span class="icon-edit" style="color: #ff6c60" @click="editParameter($event, 2)"></span>
+                                    <table class="param-table" border="1">
+                                        <thead>
+                                            <tr>
+                                                <td>名称</td>
+                                                <td>参数值</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="parameter in row.parameters">
+                                                <td>{{parameter.Name}}</td>
+                                                <td contenteditable="false">{{parameter.Value}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                               </td>
+                               <td class="delete-row">
+                                   <i class="icon-minus" @click="deleteRow(index, 2)"></i>
+                               </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
         <footer class="editData-footer">
@@ -182,12 +343,16 @@
                     <div class="selectDiv">
                         <div>
                             <label>筛选类型</label>
-                            <select @change="changeSelect($event)" v-model="">
+                            <select @change="changeSelect($event)">
+                                <option style="color: #ccc;">请选择</option>
                                 <option v-for="item in selectItems" v-bind:value="item.value">{{item.name}}</option>
                             </select>
                         </div>
                         <div>
-                            <label v-for="item in checkedItems" class="checkedItem" track-by="$index"><input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" @change="changeChecked($event)">{{item.name}}</label>
+                            <label v-for="(index,item) in checkedItems" class="checkedItem"  track-by="$index">
+                            <input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" @change="changeChecked($event)">
+                            {{item.name}}
+                            </label>
                         </div>
                     </div>
                     <div class="tree-wrapper ztree" id="tree-wrapper">
@@ -242,17 +407,7 @@
                         举头望明月，低头思故乡</br>
                         窗前明月光，疑是地上霜</br>
                         举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
+                        窗前明月光，疑是地上霜
                       </div>
                     </div>
                 </main>
@@ -261,12 +416,68 @@
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>
         <!--main content end-->
+        <div class="modal fade" tabindex="-1" role="dialog" id="ui-ele-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">选择UI与元素</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ui-element">
+                            <ul id="ui-element-ul" class="ztree"></ul>
+                        </div>
+                        <div class="function-div">
+                            <ul id="functions-ul" class="ztree"></ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button class="btn btn-primary" @click="editRow()">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- modal end -->
+        <div class="modal fade  bs-example-modal-sm" tabindex="-1" role="dialog" id="edit-parameter-modal">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" type="buton" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">编辑参数</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="width: 100%;">
+                            <div class="row">
+                                <label class="col-md-4 col-md-offset-2">参数名称</label>
+                                <label class="col-md-4">参数值</label>
+                            </div>
+                            <div v-for="parameter in parameters" class="row" style="margin-top: 5px;">
+                                <label class="col-md-4 col-md-offset-2">{{parameter.Name}}</label>
+                                <input type="text" name="" value={{parameter.Value}} class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button class="btn btn-primary" @click="okParameter($event)">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <!--content end -->
+
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
     <script src="../static/js/datatable.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
+    <!-- 使用其表格拖拽功能 -->
+    <script type="text/javascript" src="../lib/jquery-ui.js"></script> 
     <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
     <script type="text/javascript">
     (function(){

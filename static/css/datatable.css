@@ -1,6 +1,25 @@
 [v-cloak] {
   display: none; }
 
+.modal .modal-body {
+  overflow-x: hidden;
+  max-height: 500px;
+  overflow: auto; }
+  .modal .modal-body > div {
+    float: left;
+    width: 48%;
+    padding: 10px 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd; }
+    .modal .modal-body > div:last-child {
+      margin-left: 2%; }
+
+.modal-header {
+  padding: 10px 15px; }
+
+.modal-footer {
+  padding: 10px 15px; }
+
 html, body {
   height: 100%;
   position: relative; }
@@ -14,7 +33,7 @@ html, body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1100;
+  z-index: 1040;
   border: 1px solid #ddd;
   background-color: #eee; }
   .searchBox .searchBox-header {
@@ -92,10 +111,10 @@ html, body {
   display: block;
   left: 50%;
   top: 50%;
-  overflow: visible;
+  overflow: auto;
   transform: translate(-50%, -50%);
   width: 700px;
-  height: 600px;
+  height: 605px;
   background-color: #fff; }
   .editData header {
     padding: 5px 10px;
@@ -105,30 +124,103 @@ html, body {
     .editData header .icon-remove {
       float: right; }
   .editData main {
-    height: 520px; }
+    height: calc(100% - 70px); }
     .editData main .type-wrapper {
       height: 30px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       margin-left: 40px; }
       .editData main .type-wrapper label, .editData main .type-wrapper div {
         display: inline-block;
         margin-right: 20px; }
     .editData main .data-content {
-      margin-top: 10px;
-      margin-bottom: 10px;
+      height: 35px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       margin-left: 40px;
       overflow: hidden; }
       .editData main .data-content .form-group {
         width: 75%; }
       .editData main .data-content .btn {
         padding: 4px 5px; }
-    .editData main .operation {
-      margin-left: 40px; }
-      .editData main .operation label {
-        vertical-align: top; }
+    .editData main .operation-wrapper {
+      height: 448px;
+      margin-left: 40px;
+      overflow: auto; }
+      .editData main .operation-wrapper .sticky-top {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 1;
+        height: 60px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #ddd; }
+        .editData main .operation-wrapper .sticky-top button i {
+          color: #ff6c60; }
+        .editData main .operation-wrapper .sticky-top > div {
+          display: flex;
+          justify-content: space-around; }
+      .editData main .operation-wrapper .operation {
+        width: 100%; }
+        .editData main .operation-wrapper .operation label {
+          vertical-align: top; }
+        .editData main .operation-wrapper .operation .before-operation-table, .editData main .operation-wrapper .operation .after-operation-table {
+          width: 150%;
+          margin: 5px auto; }
+          .editData main .operation-wrapper .operation .before-operation-table td, .editData main .operation-wrapper .operation .after-operation-table td {
+            text-align: center; }
+          .editData main .operation-wrapper .operation .before-operation-table td.add-row, .editData main .operation-wrapper .operation .after-operation-table td.add-row {
+            color: #ff6c60; }
+          .editData main .operation-wrapper .operation .before-operation-table td.delete-row, .editData main .operation-wrapper .operation .after-operation-table td.delete-row {
+            color: #ff6c60; }
+          .editData main .operation-wrapper .operation .before-operation-table td input, .editData main .operation-wrapper .operation .after-operation-table td input {
+            vertical-align: top; }
+          .editData main .operation-wrapper .operation .before-operation-table thead td:first-child, .editData main .operation-wrapper .operation .before-operation-table thead td:nth-child(2), .editData main .operation-wrapper .operation .before-operation-table tbody td:first-child, .editData main .operation-wrapper .operation .before-operation-table tbody td:nth-child(2), .editData main .operation-wrapper .operation .after-operation-table thead td:first-child, .editData main .operation-wrapper .operation .after-operation-table thead td:nth-child(2), .editData main .operation-wrapper .operation .after-operation-table tbody td:first-child, .editData main .operation-wrapper .operation .after-operation-table tbody td:nth-child(2) {
+            width: 50px; }
+          .editData main .operation-wrapper .operation .before-operation-table thead td:last-child, .editData main .operation-wrapper .operation .before-operation-table tbody td:last-child, .editData main .operation-wrapper .operation .after-operation-table thead td:last-child, .editData main .operation-wrapper .operation .after-operation-table tbody td:last-child {
+            width: 30px; }
+          .editData main .operation-wrapper .operation .before-operation-table thead td.operations, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations, .editData main .operation-wrapper .operation .after-operation-table thead td.operations, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations {
+            position: relative;
+            width: 30%;
+            padding: 5px 0; }
+            .editData main .operation-wrapper .operation .before-operation-table thead td.operations div, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations div, .editData main .operation-wrapper .operation .after-operation-table thead td.operations div, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations div {
+              width: calc(100% - 20px);
+              overflow: hidden; }
+              .editData main .operation-wrapper .operation .before-operation-table thead td.operations div label, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations div label, .editData main .operation-wrapper .operation .after-operation-table thead td.operations div label, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations div label {
+                width: 30px;
+                text-align: right;
+                float: left; }
+              .editData main .operation-wrapper .operation .before-operation-table thead td.operations div .operation-ui, .editData main .operation-wrapper .operation .before-operation-table thead td.operations div .operation-element, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations div .operation-ui, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations div .operation-element, .editData main .operation-wrapper .operation .after-operation-table thead td.operations div .operation-ui, .editData main .operation-wrapper .operation .after-operation-table thead td.operations div .operation-element, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations div .operation-ui, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations div .operation-element {
+                width: calc(100% - 40px);
+                float: left;
+                margin-left: 10px;
+                border: 1px solid #888; }
+            .editData main .operation-wrapper .operation .before-operation-table thead td.operations div:last-child, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations div:last-child, .editData main .operation-wrapper .operation .after-operation-table thead td.operations div:last-child, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations div:last-child {
+              margin-top: 5px; }
+            .editData main .operation-wrapper .operation .before-operation-table thead td.operations i, .editData main .operation-wrapper .operation .before-operation-table tbody td.operations i, .editData main .operation-wrapper .operation .after-operation-table thead td.operations i, .editData main .operation-wrapper .operation .after-operation-table tbody td.operations i {
+              position: absolute;
+              float: rigth;
+              top: 45%;
+              right: 0;
+              color: #ff6c60;
+              font-size: 18px; }
+          .editData main .operation-wrapper .operation .before-operation-table thead td.functions, .editData main .operation-wrapper .operation .before-operation-table tbody td.functions, .editData main .operation-wrapper .operation .after-operation-table thead td.functions, .editData main .operation-wrapper .operation .after-operation-table tbody td.functions {
+            text-align: center;
+            width: 20%;
+            max-width: 20%;
+            overflow: auto; }
+            .editData main .operation-wrapper .operation .before-operation-table thead td.functions select, .editData main .operation-wrapper .operation .before-operation-table tbody td.functions select, .editData main .operation-wrapper .operation .after-operation-table thead td.functions select, .editData main .operation-wrapper .operation .after-operation-table tbody td.functions select {
+              width: 90%; }
+    .editData main .operation-wrapper .operation .parameters .param-table {
+      vertical-align: top;
+      width: 100%; }
+      .editData main .operation-wrapper .operation .parameters .param-table td:first-child {
+        width: 40%; }
+      .editData main .operation-wrapper .operation .parameters .param-table td:last-child {
+        width: 60%; }
   .editData footer {
-    height: 50px;
+    height: 40px;
     text-align: center; }
     .editData footer .btn-cancel {
       background-color: #ccc;
@@ -143,7 +235,7 @@ html, body {
   right: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1101;
+  z-index: 1041;
   height: 350px;
   width: 400px;
   color: #333;

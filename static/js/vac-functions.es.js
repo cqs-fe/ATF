@@ -97,3 +97,39 @@ Vac.removeClass = function(element,className){
      element.className = element.className.replace(pattern,"");
  }
 };
+
+/**
+ * 实现元素的拖动效果
+ * @param { Element } triggerElement 触发拖动的元素
+ * @param { Element } targetElement 将要被拖动的元素
+ */
+Vac.startDrag = function (triggerElement, targetElement) {
+  triggerElement.style.cursor = 'move'
+  triggerElement.addEventListener('mousedown', function (event) {
+    var originMouseX, originMouseY, moveX, moveY
+    // 保存鼠标点下时的初始值
+    originMouseX = event.clientX
+    originMouseY = event.clientY
+    document.addEventListener('mousemove', mouseMove, false)
+    document.addEventListener('mouseup', mouseUp, false)
+
+    function mouseMove (event) {
+      moveX = event.clientX - originMouseX
+      moveY = event.clientY - originMouseY
+      originMouseX = event.clientX
+      originMouseY = event.clientY
+      targetElement.style.left = +moveX + +targetElement.offsetLeft + 'px'
+      targetElement.style.top = +moveY + +targetElement.offsetTop + 'px'
+      // 防止选取文字
+      event.preventDefault()
+      triggerElement.onselectstart = function () {
+        return false
+      }
+    } // mouseMove end
+
+    function mouseUp (event) {
+      document.removeEventListener('mousemove', mouseMove, false)
+      document.removeEventListener('mouseup', mouseUp, false)
+    } // mouseUp end
+  }, false)
+}

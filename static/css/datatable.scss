@@ -2,6 +2,29 @@
 	display: none;
 }
 
+.modal {
+	.modal-body {
+		overflow-x: hidden;
+		max-height: 500px;
+		overflow: auto;
+		&>div {
+			float: left;
+			width: 48%;
+			padding: 10px 5px;
+			border-radius: 5px;
+			border: 1px solid #ddd;
+			&:last-child {
+				margin-left: 2%;
+			}
+		}
+	}
+}
+.modal-header {
+	padding: 10px 15px;
+}
+.modal-footer {
+	padding: 10px 15px;
+}
 html, body{
 	height: 100%;
 	position: relative;
@@ -15,7 +38,7 @@ html, body{
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	z-index: 1100;
+	z-index: 1040;
 	border: 1px solid #ddd;
 	background-color: #eee;
 	.searchBox-header{
@@ -112,10 +135,10 @@ html, body{
 	display: block;
 	left: 50%;
 	top: 50%;
-	overflow: visible;
+	overflow: auto;
 	transform: translate(-50%,-50%);
 	width: 700px;
-	height: 600px;
+	height: 605px;
 	background-color: #fff;
 	header {
 		padding: 5px 10px;
@@ -127,11 +150,11 @@ html, body{
 		}
 	}
 	main {
-		height: 520px;
+		height: calc(100% - 70px);
 		.type-wrapper {
 			height: 30px;
-			margin-top: 10px;
-			margin-bottom: 10px;
+			margin-top: 5px;
+			margin-bottom: 5px;
 			margin-left: 40px;
 			label,div{
 				display: inline-block;
@@ -139,8 +162,9 @@ html, body{
 			}
 		}
 		.data-content {
-			margin-top: 10px;
-			margin-bottom: 10px;
+			height: 35px;
+			margin-top: 5px;
+			margin-bottom: 5px;
 			margin-left: 40px;
 			overflow: hidden;
 			.form-group {
@@ -150,15 +174,109 @@ html, body{
 				padding: 4px 5px;
 			}
 		}
-		.operation {
+		.operation-wrapper {
+			height: 448px;
 			margin-left: 40px;
-			label {
-				vertical-align: top;
+			overflow: auto;
+			.sticky-top {
+				position: sticky;
+				top: 0;
+				background-color: #fff;
+				z-index: 1;
+				height: 60px;
+				width: 100%;
+				box-sizing: border-box;
+				border: 1px solid #ddd;
+				button i {
+					color: #ff6c60;
+				}
+				&>div {
+					display: flex;
+					justify-content: space-around;
+				}
+			}
+			.operation {
+				width: 100%;
+				label {
+					vertical-align: top;
+				}
+				.before-operation-table, .after-operation-table {
+					width: 150%;
+					margin: 5px auto;
+					td {
+						text-align: center;
+					}
+					td.add-row {color: #ff6c60;}
+					td.delete-row { color: #ff6c60; }
+					td input {
+						vertical-align: top;
+					}
+					thead, tbody {
+						td:first-child, td:nth-child(2) {
+							width: 50px;
+						}
+						td:last-child {width: 30px;}
+						td.operations{
+							position:relative;
+							width: 30%;
+							padding: 5px 0;
+							div {
+								width: calc(100% - 20px);
+								overflow: hidden;
+								label {
+									width: 30px;
+									text-align: right;
+									float:left;
+								}
+								.operation-ui, .operation-element {
+									width: calc(100% - 40px);
+									float: left;
+									margin-left: 10px;
+									border: 1px solid #888;
+								}
+							}
+							div:last-child {
+								margin-top: 5px;
+							}
+							i {
+								position:absolute;
+								float: rigth;
+								top: 45%;
+								right: 0;
+								color: #ff6c60;
+								font-size: 18px;
+							}
+						}
+						td.functions {
+							text-align: center;
+							width: 20%;
+							max-width: 20%;
+							overflow: auto;
+							select {
+								width: 90%;
+							}
+						}
+						td.parameters {
+							
+						}
+					}
+
+				}
+			}
+		}
+		.operation-wrapper .operation .parameters .param-table {
+			vertical-align: top;
+			width: 100%;
+			td:first-child {
+				width: 40%;
+			}
+			td:last-child {
+				width: 60%;
 			}
 		}
 	}
 	footer {
-		height: 50px;
+		height: 40px;
 		text-align: center;
 		.btn-cancel {
 			background-color: #ccc;
@@ -170,14 +288,14 @@ html, body{
 			color: white;
 		}
 	}
-	
+
 }
 .insertDiv {
 		position: absolute;
 		right: 50%;
 		top: 50%;
 		transform: translate(-50%,-50%);
-		z-index: 1101;
+		z-index: 1041;
 		height: 350px;
 		width: 400px;
 		color: #333;
