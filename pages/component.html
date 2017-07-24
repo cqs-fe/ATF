@@ -43,7 +43,7 @@
                                     <div class="property">
                                         控件类型
                                         <a class="btn btn-white btn-sm pull-right" data-toggle="modal" href="#addClassModal"><i class="icon-plus"></i></a>
-                                        <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a>
+                                        <!-- <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a> -->
                                     </div>
                                     <div class="property">
                                         <table class="table table-bordered">
@@ -141,6 +141,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-lg-2 control-label">执行时间</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="maintainTime" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">执行代码</label>
+                                        <div class="col-lg-8">
+                                            <textarea type="text" name="executecode" class="form-control" rows='5'></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
                                         <label class="col-lg-2 control-label">mtype</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="mtype" class="form-control" value="">
@@ -159,7 +171,7 @@
                                         <div class="col-lg-3">
                                             <input type="text" name="inputargdesc" class="form-control" value="">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!--    <div class="form-group">
                                         <label class="col-lg-2 control-label">有无参数</label>
                                         <div class="col-lg-3">
@@ -179,21 +191,21 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
-                                                    <th>参数名称</th>
-                                                    <th>值类型</th>
-                                                    <th>参数化列</th>
-                                                    <th>描述</th>
+                                                    <th id="name">参数名称</th>
+                                                    <th id="type">值类型</th>
+                                                    <th id="parameterizeColumn">参数化列</th>
+                                                    <th id="desc">描述</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="methodPara">
-                                                <tr>
+                                                <tr v-for="item in paraList">
                                                     <td>
                                                         <input type="checkbox" name="chk_list" />
                                                     </td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.type}}</td>
+                                                    <td contenteditable="true">{{item.parameterizeColumn}}</td>
+                                                    <td contenteditable="true">{{item.desc}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -316,7 +328,7 @@
                                                     <input type="text" class="form-control" name="methoddesc" id="">
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                           <!--  <div class="form-group">
                                                 <label class="col-lg-3 control-label">mtype</label>
                                                 <div class="col-lg-5">
                                                     <input type="text" class="form-control" name="mtype" id="">
@@ -345,7 +357,7 @@
                                                 <div class="col-lg-5">
                                                     <input type="text" class="form-control" name="inputargdesc" id="">
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!--                      <div class="form-group">
                                                 <label class="col-lg-3 control-label">有无参数</label>
                                                 <div class="col-lg-3">

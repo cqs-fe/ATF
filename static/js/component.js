@@ -9,7 +9,8 @@ var app = new Vue({
         methodPropTr: '<tr><td><input type="radio" name="method"/></td><td ></td><td ></td></tr>',
         paraTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         autId: '',
-        autName: '被测系统名称'
+        autName: '被测系统名称',
+        paraList: [],//参数列表
     },
     ready: function() {
         this.getAutId();
@@ -20,7 +21,7 @@ var app = new Vue({
         getAutId() {
             var thisUrl = document.URL,
                 getVal = thisUrl.split('?')[1],
-                autId = getVal.split('=')[1];
+                autId = getVal.split('&')[0].split('=')[1];
             this.autId = autId;
         },
         //添加控件类型
@@ -28,7 +29,7 @@ var app = new Vue({
             var classname = $('#addClassForm input[name="classname"]').val(),
                 descname = $('#addClassForm input[name="descname"]').val();
             $.ajax({
-                url: address+'omclassController/insertSelective',
+                url: address + 'omclassController/insertSelective',
                 type: 'post',
                 data: {
                     "classname": classname,
@@ -38,8 +39,8 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                        // window.location.reload();
                         $('#successModal').modal();
+                        getClass();
                     } else {
                         $('#failModal').modal();
                     }
@@ -58,7 +59,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: address+'omclassController/delete',
+                    url: address + 'omclassController/delete',
                     type: 'post',
                     data: {
                         "classid": classid,
@@ -67,6 +68,7 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
+                            getClass();
                         } else {
                             $('#failModal').modal();
                         }
@@ -81,31 +83,31 @@ var app = new Vue({
         //添加方法
         addMethod: function() {
             var methodname = $('#addMethodForm input[name="methodname"]').val(),
-                methoddesc = $('#addMethodForm input[name="methoddesc"]').val(),
-                mtype = $('#addMethodForm input[name="mtype"]').val(),
-                author = $('#addMethodForm input[name="author"]').val(),
-                maintainTime = $('#addMethodForm input[name="maintainTime"]').val(),
-                outputvaluedesc = $('#addMethodForm input[name="outputvaluedesc"]').val(),
-                inputargdesc = $('#addMethodForm input[name="inputargdesc"]').val();
+                methoddesc = $('#addMethodForm input[name="methoddesc"]').val();
+                // mtype = $('#addMethodForm input[name="mtype"]').val(),
+                // author = $('#addMethodForm input[name="author"]').val(),
+                // maintainTime = $('#addMethodForm input[name="maintainTime"]').val(),
+                // outputvaluedesc = $('#addMethodForm input[name="outputvaluedesc"]').val(),
+                // inputargdesc = $('#addMethodForm input[name="inputargdesc"]').val();
 
             $.ajax({
-                url: address+'ommethodController/insertSelective',
+                url: address + 'ommethodController/insertSelective',
                 type: 'post',
                 data: {
                     "forClassid": this.classId,
                     "mname": methodname,
                     "mdesc": methoddesc,
-                    "mtype": mtype,
+                    "mtype": '',
                     "argsCount": '',
                     "labelArgument": '',
-                    'author': author,
-                    "maintainTime": maintainTime,
-                    "outputvaluedesc": outputvaluedesc,
-                    "inputargdesc": inputargdesc
+                    'author': '',
+                    "maintainTime": '',
+                    "outputvaluedesc": '',
+                    "inputargdesc": ''
                 },
                 success: function(data) {
                     if (data.success) {
-                        window.location.reload();
+                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }
@@ -124,7 +126,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: address+'ommethodController/delete',
+                    url: address + 'ommethodController/delete',
                     type: 'post',
                     data: {
                         "methodid": methodid,
@@ -159,7 +161,7 @@ var app = new Vue({
             var classname = $('#classForm input[name="classname"]').val(),
                 descname = $('#classForm input[name="descname"]').val();
             $.ajax({
-                url: address+'omclassController/update',
+                url: address + 'omclassController/update',
                 type: 'post',
                 data: {
                     "classid": app.classId,
@@ -169,7 +171,10 @@ var app = new Vue({
                 },
                 success: function(data) {
                     if (data.success) {
-                        window.location.reload();
+                        $('#successModal').modal();
+                        $('#classForm input[name="classname"]').val('');
+                        $('#classForm input[name="descname"]').val('');
+                        getClass();
                     } else {
                         $('#failModal').modal();
                     }
@@ -183,24 +188,50 @@ var app = new Vue({
         updateMethod: function() {
             var methodname = $('#methodForm input[name="name"]').val(),
                 methoddescription = $('#methodForm input[name="description"]').val(),
-                waittime = $('#methodForm input[name="waittime"]').val();
-            tableToJson();
+                maintainTime = $('#methodForm input[name="maintainTime"]').val(),
+                executecode=$('#methodForm textarea[name="executecode"]').val();
+            var paraList = '[',
+                pTable = $('#pTable'),
+                pRow = pTable.find('tr'),
+                pCol = pRow[0].children;
+
+            for (var j = 1; j < pRow.length; j++) {
+                var r = '{';
+                for (var i = 1; i < pCol.length; i++) {
+                    var tds = pRow[j].children;
+                    r += "\"" + pCol[i].id + "\"\:\"" + tds[i].innerHTML + "\",";
+                }
+                r = r.substring(0, r.length - 1);
+                r += "},";
+                paraList += r;
+            }
+            paraList = paraList.substring(0, paraList.length - 1);
+            paraList += "]";
+
+            console.log(paraList);
+
             $.ajax({
-                url: address+'ommethodController/update',
+                url: address + 'ommethodController/update',
                 type: 'post',
                 data: {
                     "methodid": this.methodId,
                     "forClassid": this.classId,
                     "mname": methodname,
                     "mdesc": methoddescription,
-                    "parameterlist": paraList,
-                    "objectcode": objectcode,
-                    "arcclassid": app.classId,
-                    "autId": this.autId
+                    "mtype": '1',
+                    "argsCount": '',
+                    "labelArgument": '',
+                    "author": '',
+                    "maintainTime": maintainTime,
+                    "outputvaluedesc":'',
+                    "autId":  this.autId,
+                    "inputargdesc":'',
+                    "executecode": executecode,
+                    "arguments": paraList,
                 },
                 success: function(data) {
                     if (data.success) {
-                        window.location.reload();
+                        $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }
@@ -209,28 +240,10 @@ var app = new Vue({
                     $('#failModal').modal();
                 }
             });
-        }
+        },
+
     },
-    //获取参数列表
-    tableToJson() {
-        var paraList = '[',
-            pTable = $('#pTable'),
-            pRow = pTable.find('tr'),
-            pCol = pRow[0].find('th');
-        for (var j = 1; j < pRow.length; j++) {
-            var r = '{';
-            for (var i = 1; i < pCol.length; i++) {
-                var tds = pRow[j].find('td');
-                r += "\"" + pCol[i].innerHTML + "\"\:\"" + tds[i].innerHTML + "\",";
-            }
-            r = r.substring(0, r.length - 1);
-            r += "},";
-            paraList += r;
-        }
-        paraList = paraList.substring(0, paraList.length - 1);
-        paraList += "]";
-        return paraList;
-    }
+
 });
 
 //获取当前被测系统的控件类型
@@ -238,11 +251,11 @@ function getClass() {
     var thisUrl = document.URL,
         getVal = thisUrl.split('?')[1],
         para = getVal.split('&'),
-        autId=para[0].split('=')[1];
-    var autName=decodeURI(para[1].split('=')[1]);
+        autId = para[0].split('=')[1];
+    var autName = decodeURI(para[1].split('=')[1]);
     $('.autName').html(autName);
     $.ajax({
-        url: address+'omclassController/selectClassMethodByAutId',
+        url: address + 'omclassController/selectClassMethodByAutId',
         type: 'post',
         data: { 'autId': autId },
         success: function(data) {
@@ -279,7 +292,7 @@ function classClick(event) {
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: address+'ommethodController/selectByClassId',
+            url: address + 'ommethodController/selectByClassId',
             type: 'post',
             data: {
                 forClassid: app.classId,
@@ -311,14 +324,12 @@ function methodClick(event) {
 
         $('#methodForm input[name="name"]').val('');
         $('#methodForm input[name="description"]').val('');
-        $('#methodForm select[name="mtype"]').val('');
-        $('#methodForm select[name="author"]').val('');
-        $('#methodForm select[name="outputvaluedesc"]').val('');
-        $('#methodForm select[name="inputargdesc"]').val('');
+        $('#methodForm input[name="maintainTime"]').val('');
+        $('#methodForm textarea[name="executecode"]').val('');
 
         app.methodId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: address+'ommethodController/selectByPrimaryKey',
+            url: address + 'ommethodController/selectByPrimaryKey',
             type: 'post',
             data: {
                 methodid: app.methodId,
@@ -327,30 +338,10 @@ function methodClick(event) {
                 var method = data.obj;
                 $('#methodForm input[name="name"]').val(method.mname);
                 $('#methodForm input[name="description"]').val(method.mdesc);
-                $('#methodForm input[name="mtype"]').val(method.mtype);
-                $('#methodForm input[name="author"]').val(method.author);
-                $('#methodForm input[name="outputvaluedesc"]').val(method.outputvaluedesc);
-                $('#methodForm input[name="inputargdesc"]').val(method.inputargdesc);
-                var paraList = method.argumentslist;
-                console.log(paraList)
-                if (paraList !== '') {
-                    $('#methodPara').children().remove();
-                }
-                for (var j = 0; j < paraList.length; j++) {
-                    var paraTr = $('<tr></tr>'),
-                        checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                        nameTd = $('<td contenteditable="true"></td>'),
-                        typeTd = $('<td contenteditable="true"></td>'),
-                        descTd = $('<td contenteditable="true"></td>'),
-                        paraColumnTd = $('<td contenteditable="true"></td>');
-                    nameTd.html(paraList[j].name);
-                    typeTd.html(paraList[j].type);
-                    descTd.html(paraList[j].desc);
-                    paraColumnTd.html(paraList[j].parameterizeColumn);
-                    paraTr.append(checkTd, nameTd, typeTd, paraColumnTd, descTd);
-                    $('#methodPara').append(paraTr);
-                }
-
+                $('#methodForm input[name="maintainTime"]').val(method.maintainTime);
+                $('#methodForm textarea[name="executecode"]').val(method.executecode);
+                app.paraList = method.argumentslist;
+                console.log(app.paraList);
             }
         });
     }

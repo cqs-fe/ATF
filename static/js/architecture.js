@@ -7,11 +7,14 @@ var app = new Vue({
         methodId: '',
         methodName: '方法',
         propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td ></td><td ></td></tr>',
-        paraTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>'
+        paraTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        archiList:[],
+        methodList:[],
     },
     ready: function() {
         getArchiTree();
         getDefMethod();
+        this.getArchiList();
     },
     methods: {
         addArchi: function() {
@@ -31,7 +34,8 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                        window.location.reload();
+                       $('#successModal').modal();
+                       getArchiTree();
                     } else {
                         $('#failModal').modal();
                     }
@@ -61,6 +65,7 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
+                            getArchiTree();
                         } else {
                             $('#failModal').modal();
                         }
@@ -93,7 +98,8 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                        window.location.reload();
+                        $('#successModal').modal();
+                        getArchiTree();
                     } else {
                         $('#failModal').modal();
                     }
@@ -102,6 +108,16 @@ var app = new Vue({
                     $('#failModal').modal();
                 }
             });
+        },
+        //获取增加开发架构modal中父架构list
+        getArchiList(){
+            $.ajax({
+                url:address+"abstractarchitectureController/showarchitecture",
+                success:function(data){
+                    this.archiList=data.obj;
+                    console.log(this.archiList)
+                }
+            })
         },
         //添加控件类型
         addClass: function() {
@@ -163,6 +179,15 @@ var app = new Vue({
                 });
             }
 
+        },
+        //获取控件类型默认方法下拉列表
+        getMethod(){
+            $.ajax({
+                url:address+"methodController/selectAll",
+                success:function(data){
+                    this.methodList=data.obj;
+                }
+            })
         },
         //添加方法
         addMethod: function() {

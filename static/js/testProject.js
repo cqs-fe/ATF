@@ -143,13 +143,13 @@ var app = new Vue({
             $('#updateForm input[name="testProjectName"]').val(selectedInput.parent().next().next().html());
             $('#updateForm textarea[name="taskDescription"]').val(selectedInput.parent().next().next().next().html());
         },
-        //传递当前页选中测试项目id到功能点页面
+        //进入
         to: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             var caselibId = selectedInput.parent().next().next().next().next().html();
             //存储测试项目id到sessionstorage
             sessionStorage.setItem("caselibid",caselibId);
-            // location.href = "transact.html?caselibid=" + selectedId;
+            location.href = "caseManagement.html";
         }
 
     },

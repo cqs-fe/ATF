@@ -27,7 +27,7 @@
                             <header class="panel-heading">
                                 开发架构
                                 <div class="archi-btn">
-                                    <a class="btn btn-white btn-sm" data-toggle="modal" href="#addArchModal"><i class="icon-plus"></i></a>
+                                    <a class="btn btn-white btn-sm" data-toggle="modal" href="#addArchModal"><i class="icon-plus" @click="getArchiList"></i></a>
                                     <a class="btn btn-white btn-sm " @click="delArchi"><i class="icon-remove"></i></a>
                                     <a class="btn btn-white btn-sm " data-toggle="modal" href="#updateArchModal"><i class="icon-edit"></i></a>
                                 </div>
@@ -122,7 +122,10 @@
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">默认方法名称</label>
                                         <div class="col-lg-3">
-                                            <select class="form-control" name="dname"></select>
+                                            <select class="form-control" name="dname">
+                                                <option value="">-- 请选择方法 --</option>
+                                                <option v-for='item in methodList' value="item.id">{{item.methodname}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </form>
@@ -335,7 +338,10 @@
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">父架构</label>
                                                 <div class="col-lg-5">
-                                                    <select class="form-control" name="inherit"></select>
+                                                    <select class="form-control" name="inherit">
+                                                        <option value=''>-- 请选择父架构 --</option>
+                                                        <option v-for="item in archiList" value="item.id">{{item.name}}</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -350,7 +356,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button data-dismiss="modal" class="btn btn-default">取消</button>
-                                    <button data-dismiss="modal" class="btn btn-success" @click="">添加</button>
+                                    <button data-dismiss="modal" class="btn btn-success" @click="addArchi">添加</button>
                                 </div>
                             </div>
                         </div>
