@@ -205,7 +205,7 @@ label.alignRight{
 }
 
 .table-wrapper table#newtable tr td.check,.table-wrapper table#newtable tr td.index{
-    width: 70px;
+    width: 40px;
 }
 .check input {
     /*float: left;*/

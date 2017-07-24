@@ -318,9 +318,15 @@ $(document).ready(function(){
 							console.log('success')
 						})
 					} else {
-						// $('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
+						// 清空functions数组并新添加选中的公共方法
+						operationRows[index].functions = [];
 						operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
-						console.log()
+						// 清空操作项
+						operationRows[index].operation = {
+							ui: '',
+							element: ''
+						};
+						// 更新参数
 						operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
 						_this.updateRow(operationRows, index)
 					}
