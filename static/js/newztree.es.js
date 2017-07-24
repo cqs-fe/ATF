@@ -35,6 +35,45 @@ $(document).ready(function(){
 				    }
 				}
 			},
+			zTreeSettings2: {
+				uiAndElement: {
+					callback: {
+					},
+					data: {
+						simpleData: {
+							enable: true,
+							idKey: 'id',
+							pIdKey: 'parentid',
+							rootPId: 0
+						}
+					},
+					check: {
+						enable: true,
+						chkStyle: "checkbox",
+						chkboxType: { "Y": "ps", "N": "ps" }
+					}
+				},
+				functions: {
+					callback: {
+					},
+					data: {
+				        key:{
+				            name:"mname",
+				        },
+				        simpleData: {
+				            enable: true,
+				            idKey: 'classid', 
+				            pIdKey: 'parentid', 
+				            rootPId: 0
+				        }
+				    },
+				    check: {
+						enable: true,
+						chkStyle: "checkbox",
+						chkboxType: { "Y": "ps", "N": "ps" }
+					}
+				}
+			},
 			uiOrFunctions: {
 				changed: false,  	// 模态框出现后是否点击过，如果点击过，在模态框点击保存时才会进行更改
 				type: 'ui',			// 保存最后点击的是UI还是函数集，据此来确定不同的后续执行行为
@@ -43,6 +82,7 @@ $(document).ready(function(){
 				function: '',		// 保存点击的函数集中的项
 				target: null,		// 保存点击编辑的target，据此可以获得parent tr
 			},
+			autId: 8
 		},
 		ready: function() {
 				var _this = this;
@@ -139,6 +179,34 @@ $(document).ready(function(){
 				})
 
 				$('#ui-ele-modal').modal('show')
+			},
+			showUIModal: function() {
+				var _this = this;
+				$.ajax({
+					url: address + 'elementlibraryController/showUIandElement',
+					data: 'transid=1',
+					type: 'post',
+					dataType: 'json',
+					success: (data, statusText) => {
+						if(data && data.success === true && (data.obj instanceof Array)) {
+							$.fn.zTree.init($('#ui-element-ul2'),_this.zTreeSettings2.uiAndElement, data.obj);
+						}
+					}
+				})
+				// 请求函数集
+				$.ajax({
+					url: address + 'autController/selectFunctionSet',
+					data: 'id=2',
+					type: 'post',
+					dataType: 'json',
+					success: (data, statusText) => {
+						if(data.ommethod) {
+							$.fn.zTree.init($('#functions-ul2'),_this.zTreeSettings2.functions, data.ommethod);
+						}	
+					}
+				})
+
+				$('#ui-ele-modal2').modal('show')
 			},
 			// 确定ztree的点击事件
 			zTreeOnClick: function(event, treeId, treeNode) {
@@ -277,6 +345,70 @@ $(document).ready(function(){
 				var cache = rows[index]
 				cache.id = Symbol()
 				rows.splice(index, 1, cache)
+			}
+		}
+	})
+	var modalVue2 = new Vue({
+		el: '#ui-ele-modal2',
+		data: {},
+		methods: {
+			// 在模态框中点击了保存按钮
+			editRowMultiple: function () {
+				console.log(uiNodes)
+				var uiTree =  $.fn.zTree.getZTreeObj("ui-element-ul2");
+				var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
+				var uiNodes = uiTree.getCheckedNodes(true);
+
+				var functionNodes = functionTree.getCheckedNodes(true)
+				console.log(functionNodes)
+
+				for ( var node of uiNodes) {
+					if (node.isParent) {
+						continue;
+					}
+					let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}
+					newRow.id = Symbol()
+					newRow.operation = {
+						element: node.getParentNode().name,
+						ui: node.name
+					}
+					newRow.functions = []
+					$.ajax({
+						url: address + 'autController/selectMethod',
+						data: {id: editDataVue.autId, classname: newRow.operation.ui},
+						type: 'post',
+						dataType: 'json',
+						success: function(data, statusText) {
+							for (var method of data.ommethod) {
+								newRow.functions.push(method)
+							}
+							// data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
+							// 把第一个function的参数取出来，放入
+							data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
+							editDataVue.operationRows.push(newRow)
+						}
+					})
+				}
+				for (var node of functionNodes) {
+					console.log(node)
+					let newRow = {}
+					newRow.id = Symbol()
+					newRow.operation = {
+						element: '',
+						ui: ''
+					},
+					newRow.functions = []
+					newRow.functions.push(node)
+					newRow.parameters = JSON.parse(node.arguments)
+					editDataVue.operationRows.push(newRow)
+				}
+				$('#ui-ele-modal2').modal('hide')
+			},
+			updateRow: function(rows, index) {
+				// 使用splice方法，通过改变数组项的id更新绑定的数组，
+				// var cache = rows[index]
+				// cache.id = Symbol()
+				// rows.splice(index, 1, cache)
 			}
 		}
 	})

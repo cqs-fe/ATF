@@ -6,8 +6,6 @@
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 <meta content="telephone=no" name="format-detection"/>
 <meta content="email=no" name="format-detection"/>
-
-
     <div class="modal fade" id="vac-nologin-alert" tabindex="-1" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -70,7 +68,7 @@
     </style>
 
     <link rel="stylesheet" type="text/css" href="/public/static/css/base_6f29fff.css" />
-    <link rel="stylesheet" type="text/css" href="/public/static/css/index_e779e19.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/index_b033547.css" />
     <link rel="stylesheet" type="text/css" href="/public/static/css/pagination_64872d5.css" />
     <link rel="stylesheet" type="text/css" href="/public/static/css/testitems_97851ae.css" />
     <style type="text/css">
@@ -217,7 +215,7 @@
         <!--main content start-->
         <section id="main-content">
             <section class="wrapper">
-                                <!-- breadcrumb start -->
+                <!-- breadcrumb start -->
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="breadcrumb">
@@ -242,37 +240,20 @@
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label" for="itemname">任务名称</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="itemname" name="testProjectName">
+                                                    <input type="text" required class="form-control" id="itemname" name="missionName">
                                                 </div>
                                                 <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-itemname" style="color: #b94a48;"></span>
                                             </div>
-
                                             <div class="form-group">
-                                                <label for="itemtype" class="col-lg-3 control-label">类型</label>
+                                                <label for="createUser" class="col-lg-3 control-label">测试任务编号</label>
                                                 <div class="col-lg-8">
-                                                    <select id="itemtype" class="form-control" name="type">
-                                                      <option value="01">需求类</option>
-                                                      <option value="02">问题修复类</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="createUser" class="col-lg-3 control-label">创建人编号</label>
-                                                <div class="col-lg-8">
-                                                   <input type="text" name="creatorId" class="form-control" id="createUser">
+                                                   <input type="text" name="missionCode" class="form-control" id="createUser">
                                                 </div>
                                             </div>
                                              <div class="form-group">
-                                                <label for="projectCode" class="control-label col-lg-3">被测任务编号</label>
+                                                <label for="projectCode" class="control-label col-lg-3">测试项目id</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" class="form-control" name="testProjectCode" id="projectCode">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="itemdesc" class="control-label col-lg-3">任务描述</label>
-                                                <div class="col-lg-8">
-                                                    <textarea rows="10" cols="50" id="itemdesc" class="form-control" name="taskDescription" style="resize: none;"></textarea>
+                                                    <input type="text" class="form-control" name="testProjectId" id="projectCode">
                                                 </div>
                                             </div>
                                         </form>
@@ -295,9 +276,9 @@
                         <div class="table-tool container">
                             <form class="table-search col-lg-6">
                                 <select id="search-type" class="form-control inline-block">
-                                    <option value="testProjectName">任务名称</option>
-                                    <option value="type">任务类型</option>
-                                    <option value="userId">创建人编号</option>
+                                    <option value="missionName">任务名称</option>
+                                    <option value="missionCode">任务编号</option>
+                                    <option value="testProjectId">测试任务id</option>
                                 </select>
                                 <input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
                                 <button type="button" class="btn btn-white inline-block" id="btn-search">搜索</button>
@@ -305,9 +286,9 @@
                             <div class="display-items col-lg-2 col-lg-offset-3">
                                 <label class="inline-block">展示条目</label>
                                 <select class="form-control inline-block" id="showRows">
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
+                                    <option value="5">05</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
                                 </select>
                             </div>
                             <div class="col-lg-1">
@@ -317,14 +298,11 @@
                         <table id="example" class="table  table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th data-order="id" data-sort="desc" onclick="resort(this);">任务编号&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
-                                    <th>任务名称&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th data-order="type" data-sort="desc" onclick="resort(this);">类型&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>创建人编号&nbsp;<span class="" aria-hidden="true"></span></th>
-                                     <th>被测任务编号&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>创建日期&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>描述</th>
-                                    <th>操作</th>
+                                    <th data-order="id" data-sort="desc" onclick="resort(this);">测试任务id&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
+                                    <th data-order="type" data-sort="desc" onclick="resort(this);">测试任务编号&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th>测试项目id&nbsp;<span class="" aria-hidden="true"></span></th>
+                                     <th>测试任务名称&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th>操作&nbsp;<span class="" aria-hidden="true"></span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -364,47 +342,29 @@
                                         <div class="modal-body">
                                             <form class="form-horizontal" role="form">
                                                 <div class="form-group">
-                                                    <label for="view-itemcode" class="col-lg-3 control-label">任务编号</label>
+                                                    <label for="view-itemcode" class="col-lg-3 control-label">任务id</label>
                                                     <div class="col-lg-8">
                                                         <input type="text" id="view-itemcode" class="form-control" value="001" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="view-itemname">任务名称</label>
+                                                    <label class="col-lg-3 control-label" for="view-itemname">任务编号</label>
                                                     <div class="col-lg-8">
                                                         <input type="text" disabled class="form-control" value="hel" id="view-itemname">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="view-itemtype" class="col-lg-3 control-label">类型</label>
+                                                    <label for="view-itemtype" class="col-lg-3 control-label">测试项目id</label>
                                                     <div class="col-lg-8">
                                                         <input type="text" name="" id="view-itemtype" class="form-control" value="Leixing" disabled>
                                                     </div>
                                                 </div>
                                                 <!-- </div> -->
                                                 <div class="form-group">
-                                                    <label for="view-projectCode" class="control-label col-lg-3">被测任务编号</label>
+                                                    <label for="view-projectCode" class="control-label col-lg-3">任务名称</label>
                                                     <div class="col-lg-8">
                                                         <input type="text" name="" value="" id="view-projectCode" class="form-control" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="view-createUser" class="control-label col-lg-3">创建人</label>
-                                                    <div class="col-lg-8">
-                                                        <input type="text" name="" value="中国银行" id="view-createUser" class="form-control" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="view-createDate" class="control-label col-lg-3">创建时间</label>
-                                                    <div class="col-lg-8">
-                                                        <input type="text" name="" value="中国银行" id="view-createDate" class="form-control" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="view-itemdesc" class="control-label col-lg-3">任务描述</label>
-                                                    <div class="col-lg-8 ">
-                                                        <textarea rows="10" class="form-control" id="view-itemdesc" cols="20"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -427,38 +387,22 @@
                                     <div class="modal-body">
                                         <form class="form-horizontal " role="form" id="alterForm">
                                             <div class="form-group">
-                                                <label class="col-lg-3 control-label" for="alter-itemname">任务名称</label>
+                                                <label class="col-lg-3 control-label" for="alter-itemname">测试任务编号</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="alter-itemname" name="testProjectName">
+                                                    <input type="text" required class="form-control" id="alter-itemname" name="missionCode">
                                                     <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-itemname" style="color: #468847;"></span>
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <label for="alter-itemtype" class="col-lg-3 control-label">类型</label>
+                                                <label for="alter-itemtype" class="col-lg-3 control-label">测试项目编号</label>
                                                 <div class="col-lg-8">
-                                                    <select id="alter-itemtype" class="form-control" name="type">
-                                                    <option value="01">需求类</option>
-                                                      <option value="02">问题修复类</option>
-                                                    </select>
+                                                     <input type="text" required class="form-control" id="alter-itemtype" name="testProjectId">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="alter-itemcode" class="col-lg-3 control-label">创建人编号</label>
-                                                <div class="col-lg-8 ">
-                                                   <input type="text" name="creatorId" value="" id="alter-createUser" class="form-control" disabled>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-projectCode" class="control-label col-lg-3">被测任务编号</label>
+                                                <label for="alter-projectCode" class="control-label col-lg-3">测试任务名称</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" name="testProjectCode" id="alter-projectCode" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-itemdesc" class="control-label col-lg-3">任务描述</label>
-                                                <div class="col-lg-8">
-                                                    <textarea rows="10" cols="50" id="alter-itemdesc" class="form-control" name="taskDescription"></textarea>
+                                                    <input type="text" name="missionName" id="alter-projectCode" class="form-control">
                                                 </div>
                                             </div>
                                         </form>
@@ -497,8 +441,8 @@
 <script type="text/javascript" src="/public/lib/vue_1a55fd3.js"></script>
 <script src="//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js"></script>
 <script src="/public/static/js/config_c802f56.js"></script>
-<script src="/public/static/js/vac-functions.es_fa790d3.js"></script>
-<script src="/public/static/js/testitems.es_5bf28a8.js"></script>
+<script src="/public/static/js/vac-functions.es_708bf68.js"></script>
+<script src="/public/static/js/testitems.es_02ff872.js"></script>
 <script src="/public/lib/jquery.scrollTo.min_e300145.js"></script>
 <script type="text/javascript" src="/public/lib/jquery.nicescroll_b183fad.js"></script>
 <script src="/public/lib/owl.carousel_9bc6f1e.js"></script>

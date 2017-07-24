@@ -1,2 +1,3 @@
 .vscode/
 static/css/*.css.map
+dist/
