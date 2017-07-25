@@ -187,6 +187,7 @@ function changeListNum() {
     $('#mySelect').change(function() {
         listnum = $(this).children('option:selected').val();
         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+         app.currentPage=1;
         getTestProject('1', listnum, 'id', 'asc');
     })
 }

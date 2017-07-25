@@ -50,7 +50,7 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-            getTransact(ts.currentPage, ts.pageSize, 'id', 'asc');
+            queryTransact();
         },
         //添加功能点
         insert: function() {
@@ -217,6 +217,7 @@ function changeListNum() {
     $('#mySelect').change(function() {
         app.listnum = $(this).children('option:selected').val();
         $("#mySelect").find("option[text='" + app.listnum + "']").attr("selected", true);
+        app.currentPage=1;
         queryTransact();
     });
 }
@@ -327,7 +328,7 @@ function queryTransact() {
             app.transactList = data.o.rows;
             app.tt = data.o.total;
             app.totalPage = Math.ceil(app.tt / app.listnum);
-            app.pageSize = app.listnum;
+            // app.pageSize = app.listnum;
         },
         error: function() {
             $('#failModal').modal();

@@ -33,7 +33,7 @@
                 <div class="row">
                     <div class="col-lg-12 top-btn">
                         <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
-                        <a class="btn btn-white" @click="checkDel"><i class="icon-trash"></i> 删除</a>
+                        <!-- <a class="btn btn-white" @click="checkDel"><i class="icon-trash"></i> 删除</a> -->
                         <a class="btn btn-white" @click="checkUpdate"><i class="icon-edit"></i> 修改</a>
                         <a class="btn btn-white"  @click="toElementLib"><i class="icon-cog"></i> 元素库</a>
                         <a class="btn btn-white" @click="toObjectRepo"><i class="icon-cog"></i> 对象库</a>
@@ -211,9 +211,9 @@
                                             </div>
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
-                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="5" selected>5</option>
-                                                    <option value="10">10</option>
+                                                <select size="1" name="sample_1_length" class="form-control" v-model="pageSize" id="mySelect">
+                                                    <option value="5">5</option>
+                                                    <option value="10" selected>10</option>
                                                     <option value="20">20</option>
                                                     <option value="50">50</option>
                                                 </select>

@@ -191,12 +191,12 @@ var app = new Vue({
         },
         //添加方法
         addMethod: function() {
-            var methodname = $('#methodForm input[name="name"]').val(),
-                methoddescription = $('#methodForm input[name="description"]').val(),
-                objectcode = $('#methodForm textarea[name="objectcode"]').val(),
-                isparameter = $('#methodForm select[name="isparameter"]').val(),
-                waittime = $('#methodForm input[name="waittime"]').val(),
-                timeout = $('#methodForm input[name="timeout"]').val();
+            var methodname = $('#addMethodForm input[name="methodname"]').val(),
+                methoddescription = $('#addMethodForm input[name="methoddescription"]').val(),
+                objectcode = $('#addMethodForm textarea[name="objectcode"]').val(),
+                isparameter = $('#addMethodForm select[name="isparameter"]').val(),
+                waittime = $('#addMethodForm input[name="waittime"]').val(),
+                timeout = $('#addMethodForm input[name="timeout"]').val();
             $.ajax({
                 url: address+'methodController/insert',
                 type: 'post',
@@ -212,7 +212,7 @@ var app = new Vue({
                 },
                 success: function(data) {
                     if (data.success) {
-                        window.location.reload();
+                        $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }
@@ -282,7 +282,7 @@ var app = new Vue({
                 },
                 success: function(data) {
                     if (data.success) {
-                        window.location.reload();
+                       $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
                     }

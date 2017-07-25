@@ -255,9 +255,9 @@ function getClass() {
     var autName = decodeURI(para[1].split('=')[1]);
     $('.autName').html(autName);
     $.ajax({
-        url: address + 'omclassController/selectClassMethodByAutId',
+        url: address + 'autController/selectClass',
         type: 'post',
-        data: { 'autId': autId },
+        data: { 'id': autId },
         success: function(data) {
             $('#classProp').children().remove();
             var classList = data;
@@ -266,9 +266,9 @@ function getClass() {
                     classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
                     classNameTd = $('<td ></td>'),
                     classDescriptionTd = $('<td ></td>');
-                classTr.attr('id', classList[i].classid);
+                classTr.attr('id', classList[i].classId);
                 classNameTd.html(classList[i].classname);
-                classDescriptionTd.html(classList[i].descname);
+                classDescriptionTd.html(classList[i].classDesc);
                 classTr.append(classCheckTd, classNameTd, classDescriptionTd);
                 $('#classProp').append(classTr);
             }
