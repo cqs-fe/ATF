@@ -3,7 +3,7 @@ var vBody = new Vue({
 	data: {
 		alertShow: false,
 		tooltipMessage:'',
-		caselibId: 2,
+		caselibId: 3,
 		// save the value obtained from back end and will set to the selects' options
 		testphases: [], 
 		testrounds: [],
@@ -18,8 +18,12 @@ var vBody = new Vue({
 		testSceneList:[],
 		// get all the scenes when user click addScene
 		allscenes: null,
-		// selected Scenes which will be send to back end
-		selectedScene: [],
+		// selected Scene which is checked
+		selectedScenes: [],
+		selectedCases: [],
+		selectedSceneCases: [],
+		// Scenes in add-scene modal
+		selectedScene: [],					// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
 
 	},
 	created: function(){
@@ -33,6 +37,9 @@ var vBody = new Vue({
 			success: function(data, statusTest){
 				if(data.success == true){
 					_this.testphases = data.obj;
+					if(_this.testphases[0]) {
+						_this.testphaseValue = _this.testphases[0].phasename
+					}
 				}
 			}
 		});
@@ -45,12 +52,13 @@ var vBody = new Vue({
 			success: function(data, statusText){
 				if(data.success == true){
 					_this.testrounds = data.obj;
+					if(_this.testrounds[0]) {
+						_this.testroundValue = _this.testrounds[0].id
+					}
 				}
 				console.log(_this.testrounds)
 			}
 		});
-		// get all case and scenes
-		// this.getCases();
 
 		// init the modal 
 		$('#add-modal').on('hidden.bs.modal', function (e) {
@@ -72,7 +80,7 @@ var vBody = new Vue({
 			
 			$.ajax({
 				url: address + 'sceneController/selectBycaseLibId',
-				data: 'caseLibId=2',
+				data: 'caseLibId='+this.caselibId,
 				dataType: 'json',
 				type: 'post',
 				success: function(data, statusText){
@@ -90,10 +98,11 @@ var vBody = new Vue({
 				caselibId: this.caselibId,
 				testPhase: this.testphaseValue,
 				testRound: this.testroundValue,
-				testcaseList: '',
-				sceneList: '[' + this.selectedScene.toString() + ']',
-				scenecaseList: ''
+				testcaseList: '',				// [1,2]
+				sceneList: '[' + this.selectedScene.toString() + ']',     // [3]
+				scenecaseList: ''			// [{"sceneId":1,"testcaseList":[1,2]}]
 			};
+			console.log(data)
 			// send data and display the modal 
 			$.ajax({
 				url: address + 'testexecutioninstanceController/insert',
@@ -103,8 +112,11 @@ var vBody = new Vue({
 				success: function(data, statusText){
 					if(data.success){
 						$('#add-modal').modal('hide');
-						_this.alertShow = true;
-						_this.tooltipMessage = '添加成功';
+						Vac.alert('添加成功')
+						// _this.alertShow = true;
+						// _this.tooltipMessage = '添加成功';
+					}else {
+						Vac.alert("添加失败")
 					}
 				}
 			});
@@ -125,7 +137,7 @@ var vBody = new Vue({
 			var data = {
 				caselibId: this.caselibId,
 				testPhase: this.testphaseValue,
-				testRound: '2',
+				testRound: this.testroundValue,
 				roundFlag: 2,
 				scopeFlag: 1
 			};

@@ -170,8 +170,8 @@ html, body {
         #main-content .content-wrapper .main .main-content .case {
           flex: 1 0 auto;
           display: inline-block;
-          margin-bottom: 5px;
-          margin-left: 5px;
+          margin-bottom: 10px;
+          margin-left: 10px;
           border: 1px solid #ccc;
           border-radius: 5px; }
           #main-content .content-wrapper .main .main-content .case .case-header {
@@ -303,11 +303,12 @@ html, body {
       margin-right: 10px; }
     #main-content #testround-main .list-wrapper .case-list, #main-content #testround-main .list-wrapper .scene-list {
       flex: 1 1 auto;
-      border: 1px dashed #ddd; }
+      border: 1px dashed #ddd;
+      padding: 10px; }
       #main-content #testround-main .list-wrapper .case-list .case-item, #main-content #testround-main .list-wrapper .scene-list .case-item {
         display: inline-block;
         flex: 1 1 auto;
-        margin: 10px; }
+        margin: 10px 10px 0 0; }
 
 .modal .modal-header {
   padding: 8px 10px; }

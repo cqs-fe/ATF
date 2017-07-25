@@ -187,7 +187,7 @@
                         <div class="col-lg-12">
                             <ul class="breadcrumb">
                                 <li><a href="scene.html"><i class="icon-home"></i>场景管理</a></li>
-                                <li><a href="transact.html">{{scenename}}</a></li>
+                                <li><a href={{url}}>{{scenename}}</a></li>
                                 <!-- <li class="active"> 对象库</li> -->
                             </ul>
                         </div>
@@ -206,28 +206,28 @@
                         数据资源池配置</button>
                         <button class="btn btn-white" @click="operationType(5);"><i class="icon-wrench"></i>
                         调试</button>
-                        <button class="btn btn-white"><i class="icon-file"></i>
-                        生成报告</button>
+                       <!--  <button class="btn btn-white"><i class="icon-file"></i>
+                        生成报告</button> -->
                     </div>
                     <div class="main-content">
                         <div class="check-all-case"><input type="checkbox"  @change="checkall($event)"></div>
                         <div class="case-lib" v-for="case_wrapper in sceneInfo.caseDtos">
                             <div class="checkbox-wrapper">
                                 <!-- <label>全选</label> -->
-                                <input type="checkbox" class="checkall" @change="checkallToggle($event);">
+                                <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases" @change="checkallToggle($event);">
                             </div>
                             <div class="case-wrapper">
                                 <template v-if="case_wrapper.caseCompositeType == '1'">
                                     <div class="case" >
                                         <div class="case-header">
-                                            <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case" v-model="selectedCases" @change="checkChanged()">
+                                            <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case" @change="checkChanged()">
                                             <p>{{case_wrapper.id}}</p>
                                         </div>
                                         <div class="case-main">
                                             <p>{{case_wrapper.casecode}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <i class="icon-remove success-flag"></i>
+                                            <!-- <i class="icon-remove success-flag"></i> -->
                                         </footer>
                                     </div>
                                 </template>
@@ -235,14 +235,14 @@
                                     <div class="case" v-for="item in case_wrapper.flowNodeDtos">
                                         <div class="case-header">
                                             <input type="checkbox" v-bind:value="item.id" 
-                                            class="check-case" v-model="selectedCases" @change="checkChanged()">
+                                            class="check-case" @change="checkChanged()">
                                             <p>{{item.id}}</p>
                                         </div>
                                         <div class="case-main">
                                             <p>{{item.casecode}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <i class="icon-remove success-flag"></i>
+                                            <!-- <i class="icon-remove success-flag"></i> -->
                                         </footer>
                                     </div>
                                 </template>

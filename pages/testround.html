@@ -29,10 +29,14 @@
         <section id="main-content" >
             <section class="content-wrapper" style="margin-bottom: 50px;">
                 <main class="main">
-                    <div class="route-position">
-                        <a href="">测试计划</a>
-                        <span> > </span>
-                        <a href="">测试轮次</a>
+                     <!-- breadcrumb start -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="breadcrumb">
+                                <li><a href="testround.html"><i class="icon-home"></i> 测试计划及执行</a></li>
+                                <!-- <li class="active"> 对象库</li> -->
+                            </ul>
+                        </div>
                     </div>
                     <div class="main-content" id="testround-main">
                        <form id="test-options" class=" form-horizontal form-inline">
@@ -40,7 +44,7 @@
                                <label class="option-name control-label col-sm-3">测试阶段</label>
                                 <div class="col-sm-9">
                                     <select class="testphase form-control" v-model="testphaseValue">
-                                        <option v-for="item in testphases" v-bind:value="item.phasename">{{item.phasename}}</option>
+                                        <option v-for="(index,item) in testphases" v-bind:value="item.phasename">{{item.phasename}}</option>
                                     </select>
                                 </div>
                            </div>
@@ -71,7 +75,7 @@
                                </label>
                                <div class="col-sm-9">
                                    <select class="execute-range form-control" v-model="executeRange">
-                                   <option value="1">所有</option>
+                                   <option value="1" selected>所有</option>
                                    <option value="2">已选择</option>
                                </select>
                                </div>
@@ -80,7 +84,7 @@
                        </form>
                        <div class="test-control container">
                            <button class="btn btn-info" @click="executeAll()">批量执行</button>
-                           <button class="btn btn-info" @click="getCases()">获取实例</button>
+                           <button class="btn btn-info" @click="getCases()">查询</button>
                             <button class="btn btn-info" @click="addScene();">添加场景</button>
                        </div>
                        <div class="case-list-wrapper list-wrapper">
@@ -88,30 +92,36 @@
                            <div class="case-list">
                                 <div v-for="caseWrapper in testCaseList">
                                  <template v-if="caseWrapper.caseCompositeType == 1">
+                                    <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
+                                        <input type="checkbox" :value="caseWrapper.caseId" class="checkall" v-model="selectedCases">
+                                    </div>
                                     <div class="case" >
                                         <div class="case-header">
-                                            <input type="checkbox" v-bind:value="caseWrapper.caseId" class="check-case" v-model="selectedCases">
+                                            <!-- <input type="checkbox" v-bind:value="caseWrapper.caseId" class="check-case" v-model="selectedCases"> -->
                                             <p>{{caseWrapper.caseId}}</p>
                                         </div>
                                         <div class="case-main">
-                                            <p>{{caseWrapper.caseId}}</p>
+                                            <p>{{caseWrapper.caseCompositeType}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <i class="icon-remove success-flag"></i>
+                                            <!-- <i class="icon-remove success-flag"></i> -->
                                         </footer>
                                     </div>
                                 </template>
                                 <template v-else>
+                                    <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
+                                        <input type="checkbox" :value="caseWrapper.caseId" class="checkall" v-model="selectedCases">
+                                    </div>
                                     <div class="case" v-for="node in caseWrapper.flowNodes">
                                         <div class="case-header">
-                                            <input type="checkbox" v-bind:value="node.flowNodeId" class="check-case" v-model="selectedCases">
+                                            <!-- <input type="checkbox" v-bind:value="node.flowNodeId" class="check-case" v-model="selectedCases"> -->
                                             <p>{{node.flowNodeId}}</p>
                                         </div>
                                         <div class="case-main">
                                             <p>{{node.flowNodeCode}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <i class="icon-remove success-flag"></i>
+                                            <!-- <i class="icon-remove success-flag"></i> -->
                                         </footer>
                                     </div>
                                 </template>
@@ -119,24 +129,31 @@
                            </div>
                        </div>
                         <div class="scene-list-wrapper list-wrapper" v-for="scene in testSceneList">
-                           <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
-                           <div class="case-list">
+                            <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
+                                  <input type="checkbox" :value="scene.sceneId" class="checkall" v-model="selectedScenes">
+                            </div>
+                            <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
+                            <div class="case-list">
                                 <div v-for="caseWrapper in scene.testCaseList" class="case-item">
-                                    <template v-if="caseWrapper.caseCompositeType == 1">
+                                  <template v-if="caseWrapper.caseCompositeType == 1">
+
                                     <div class="case" >
                                         <div class="case-header">
-                                            <input type="checkbox" name="" class="check-case">
+                                            <input type="checkbox" name="" value={{scene.sceneId}}+{{caseWrapper.caseId}} class="check-case" v-model="selectedSceneCases">
                                             <p>{{caseWrapper.caseId}}</p>
                                         </div>
                                         <div class="case-main">
                                             <p>{{caseWrapper.caseId}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <i class="icon-remove success-flag"></i>
+                                            <!-- <i class="icon-remove success-flag"></i> -->
                                         </footer>
                                     </div>
                                 </template>
                                 <template v-else>
+                                    <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
+                                      <input type="checkbox" value={{scene.sceneId}}+{{caseWrapper.caseId}}  class="checkall" v-model="selectedSceneCases">
+                                    </div>
                                     <div class="case" v-for="node in caseWrapper.flowNodes">
                                         <div class="case-header">
                                             <input type="checkbox" name="" class="check-case">
@@ -146,7 +163,7 @@
                                             <p>{{node.flowNodeCode}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <i class="icon-remove success-flag"></i>
+                                            <!-- <i class="icon-remove success-flag"></i> -->
                                         </footer>
                                     </div>
                                 </template>
@@ -212,9 +229,10 @@
             <button type="button" class="btn btn-primary" @click="hideAlert()">确定</button>
         </footer>
     </div>
+    <link rel="import" href="./common-vac/alert.html?__inline">
+    <link rel="import" href="./common-vac/confirm.html?__inline">
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
-    <script src="../static/js/Vac.js"></script>
     <script src="../static/js/testround.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
 </body>

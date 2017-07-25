@@ -220,8 +220,8 @@ $okGreen: #66F60C;
 				.case {
 					flex: 1 0 auto;
 					display: inline-block;
-					margin-bottom: 5px;
-					margin-left: 5px;
+					margin-bottom: 10px;
+					margin-left: 10px;
 					border: 1px solid #ccc;
 					border-radius: 5px;
 					$caseHeaderheight: 30px;
@@ -445,10 +445,12 @@ $okGreen: #66F60C;
 				// display: flex;
 				flex: 1 1 auto;
 				border: 1px dashed #ddd;
+				padding: 10px;
 				.case-item {
 					display: inline-block;
 					flex: 1 1 auto;
-					margin: 10px;
+					margin: 10px 10px 0 0;
+
 				}
 			}
 		}

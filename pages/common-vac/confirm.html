@@ -39,9 +39,12 @@
 </style>
 <script type="text/javascript">
     var Vac = Vac || {};
-    Vac.confirm = function(divSelector, okSelector, cancelSelector) {
+    Vac.confirm = function(divSelector, okSelector, cancelSelector, confirmString) {
         var confirmDiv = document.querySelector(divSelector);
-        console.log('hakjadkjhakjsd')
+        if(confirmString) {
+            document.querySelector(divSelector + ' ' + ".modal-message").innerHTML = confirmString;
+        }
+        // console.log('hakjadkjhakjsd')
         $(divSelector).modal('show');
         return new Promise(function(resolve, reject) {
             confirmDiv.querySelector(okSelector).onclick = function() {

@@ -42,7 +42,6 @@ var vBody = new Vue({
 
 		// save the selected cases
 		selectedCases: [],
-
 		// 执行时间设置的相关参数
 		executeTime: null,
 		executeDateFlag: null,
@@ -62,6 +61,7 @@ var vBody = new Vue({
 		poolDatas: null,
 
 		//场景id和名称
+		url: '',
 		sceneid: '',
 		scenename: '场景名称'
 	},
@@ -89,9 +89,20 @@ var vBody = new Vue({
 	methods: {
 		//获取上级页面选中的场景id和名称
 		setVal:function(){
-			var thisURL = document.URL,
-                getval = thisURL.split('?')[1],
-                keyval = getval.split('&');
+			var thisURL = document.URL;
+            var getval = thisURL.split('?')[1];
+            if (!getval) {
+            	var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "请从场景管理页面进入！");
+            	promise.then(() => {
+            		location.href = "scene.html"
+            	}, () => {
+            		location.href = "scene.html"
+            	})
+            	
+            }
+            var keyval = getval.split('&');
+            this.url = document.URL;
+            
             this.sceneid = keyval[0].split('=')[1],
             this.scenename = decodeURI(keyval[1].split('=')[1]);
 		},
@@ -108,6 +119,16 @@ var vBody = new Vue({
 				success: function(data, statusText){
 					if(data.success == true){
 						_this.sceneInfo = data.obj;
+						({
+							exeStrategy1Status: _this.exe_strategy.exe_strategy1_status,
+							exeStrategy2Start:_this.exe_strategy.exe_strategy2_start,
+							exeStrategy2Order: _this.exe_strategy.exe_strategy2_order,
+							exeStrategy2Status: _this.exe_strategy.exe_strategy2_status,
+							exeStrategy3Start: _this.exe_strategy.exe_strategy3_start,
+							exeStrategy3Order: _this.exe_strategy.exe_strategy3_order,
+							exeStrategy3Status: _this.exe_strategy.exe_strategy3_status,
+							exeStrategyErr: _this.exe_strategy.exe_strategy_err
+						} = data.obj)
 					}
 				}
 			});
@@ -292,7 +313,13 @@ var vBody = new Vue({
 				this.getTriggers();
 			}else if(type === 4){
 				this.getDataPool();
+			} else if (type === 3) {
+				this.getExecuteStrategy();
 			}
+		},
+		// 获取执行策略
+		getExecuteStrategy: function(){
+
 		},
 		// 打开关闭触发器设置的弹出框
 		closeTrigger: function(){
@@ -343,9 +370,9 @@ var vBody = new Vue({
 								var length = conditions.length;
 								for(var i=0;i<length;i++){
 									var tr = $(`<tr><td><select class="objectname"><option value="1" selected>用例编号</option>
-                                    <option value="2">优先级</option>
-                                    <option value="3">用例类型</option>
-                                    <option value="4">执行结果</option></select> </td><td><select class="matchtype"><option value="1">
+                                    <option value="2">测试系统名称</option>
+                                    <option value="3">功能点名称</option>
+                                    </select> </td><td><select class="matchtype"><option value="1">
 										等于</option><option value="2">大于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
                             			</td><td><button class="btn btn-default">删除</button>
                             			</td></tr>`);
@@ -404,6 +431,7 @@ var vBody = new Vue({
 						success: function(data, statusText){
 							if(data.success === true) {
 								Vac.alert(data.msg);
+								_this.getTriggers();
 							}else {
 								Vac.alert('删除失败' + data.msg);
 							}
@@ -420,10 +448,9 @@ var vBody = new Vue({
 
 			var _this = this;
 			var tr = $(`<tr><td><select class="objectname"><option value="1">用例编号</option>
-                                    <option value="2">优先级</option>
-                                    <option value="3">用例类型</option>
-                                    <option value="4">执行结果</option></select> </td><td><select class="matchtype"><option value="1">
-										等于</option><option value="2">大于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
+                                    <option value="2">测试系统名称</option>
+                                    <option value="3">功能点名称</option></select> </td><td><select class="matchtype"><option value="1">
+										等于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
                             			</td><td><button class="btn btn-default">删除</button>
                             			</td></tr>`);
 			$('.btn-default', tr).click(_this.removeTriggerCondition);
@@ -442,7 +469,7 @@ var vBody = new Vue({
 			var div = $(`
 					<div class="action-item-wrapper"><button class="btn-removeaction"><span style="z-index:-1;" class="icon-remove"></span></button>
 					<div class="item-row"><label>选择操作</label><select class="actionname">
-					<option value="1">发送邮件</option><option value="2">打开网页</option></select></div><div class="item-row"><label>脚本类型</label>
+					<option value="1">执行脚本</option><option value="2">groovy类型</option></select></div><div class="item-row"><label>脚本类型</label>
 					<select class="actiontype"> <option value="2">groovy</option><option value="1">2</option>
 					</select></div><div class="item-row"><label>脚本内容</label><textarea rows="5" class="scriptcontent" cols=""></textarea>
 					</div></div>
@@ -487,6 +514,8 @@ var vBody = new Vue({
 						if(data.success){
 							Vac.alert(data.msg);
 							this.triggerShow = false;
+							_this.getTriggers();
+							_this.triggerShow = false
 						} else {
 							Vac.alert(data.msg);
 						}
@@ -524,6 +553,8 @@ var vBody = new Vue({
 						if(data.success){
 							Vac.alert(data.msg);
 							this.triggerShow = false;
+							_this.getTriggers();
+							_this.triggerShow = false
 						}else {
 							Vac.alert(data.msg);
 						}
@@ -565,13 +596,14 @@ var vBody = new Vue({
 			}
 		},
 		saveTriggerState: function() {
+			var _this = this;
 			var trs = document.querySelectorAll('#triggers tr')
 			var dataArray = [];
 			for(var i=0;i<trs.length;i++){
 				var item = {};
 				item.id = trs[i].querySelector('input').value;
 				// console.log(item.id)
-				item.id = trs[i].querySelector('select').value;
+				item.state = trs[i].querySelector('select').value;
 				dataArray.push(JSON.stringify(item))
 			}
 			$.ajax({
@@ -582,6 +614,9 @@ var vBody = new Vue({
 				success: function(data, statusText) {
 					if(data.success === true) {
 						Vac.alert('保存成功！')
+						_this.getTriggers()
+					} else {
+						Vac.alert('保存失败')
 					}
 				}
 			})
@@ -597,6 +632,7 @@ var vBody = new Vue({
 				type: 'post',
 				success: function(data){
 					Vac.alert(data.msg);
+					_this.getCases();
 				}
 			});
 		},
@@ -605,6 +641,7 @@ var vBody = new Vue({
 		},
 		removeCases: function(){
 			console.log(this.selectedCases.toString())
+			var _this = this;
 			var data = {
 				sceneid: this.sceneid,
 				caseidList: '[' + this.selectedCases.toString() + ']'
@@ -617,6 +654,7 @@ var vBody = new Vue({
 				success: function(data, statusText){
 					if(data.success === true){
 						Vac.alert("删除成功！");
+						_this.selectedCases = [];
 						_this.getCases()
 					}else {
 						Vac.alert('删除失败！');
@@ -625,6 +663,9 @@ var vBody = new Vue({
 			});
 		},
 		// 执行时间规划
+		getExecuteTime: function(){
+
+		},
 		saveExecuteTime: function(){
 			var data = {
 				sceneid: this.sceneid,
