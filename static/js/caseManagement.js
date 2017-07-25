@@ -30,8 +30,8 @@ var app = new Vue({
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
-
-        subCaseList: [] //流程节点
+        subCaseList: [], //流程节点
+        caselibid: '',//案例库id
 
     },
     ready: function() {
@@ -152,6 +152,7 @@ var app = new Vue({
             const caselibId = sessionStorage.getItem('caselibid');
             console.log(caselibId);
             $('#caselibId').val(caselibId);
+            this.caselibid=caselibid;
         },
         //导入
         import:function(){
@@ -360,7 +361,8 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-            getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
+            // getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
+            queryCase();
         },
         // 流程案例添加节点案例
         addCaseNode: function() {
@@ -427,6 +429,7 @@ function getUsers() {
 }
 //筛选查询案例
 function queryCase() {
+
     $.ajax({
         url: address + 'TestcaseController/testcasequeryByPage',
         type: 'POST',
@@ -435,6 +438,7 @@ function queryCase() {
             'rows': app.listnum,
             'order': app.order,
             'sort': app.sort,
+            'caselibid':app.caselibid,
             'caseCompositeType': app.caseCompositeType.join(","),
             'priority': app.priority.join(","),
             'executemethod': app.executeMethod.join(","),
@@ -454,7 +458,8 @@ function queryCase() {
             app.caseList = data.o.rows;
             app.tt = data.o.total;
             app.totalPage = Math.ceil(app.tt / app.listnum);
-            app.pageSize = app.listnum;
+            app.listnum = app.pageSize;
+            app.currentPage=1;
         },
         error: function() {
             $('#failModal').modal();
@@ -467,6 +472,7 @@ function changeListNum() {
     $('#mySelect').change(function() {
         listnum = $(this).children('option:selected').val();
         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+        app.currentPage=1;
         getCase(1, listnum, 'id', 'asc');
     })
 }

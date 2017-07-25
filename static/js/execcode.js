@@ -36,7 +36,7 @@ var app = new Vue({
                 url:address+'toolController/update',
                 type:'post',
                 data:{
-                    'id':'',
+                    'id':'12',
                     'toolname': 'groovy',
                     'autId':this.autId,
                     'maincodeBegin':maincodeBegin,

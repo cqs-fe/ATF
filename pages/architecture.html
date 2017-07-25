@@ -155,9 +155,9 @@
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">有无参数</label>
                                         <div class="col-lg-3">
-                                            <select class="form-control" name="isPara">
-                                                <option>有</option>
-                                                <option>无</option>
+                                            <select class="form-control" name="isparameter">
+                                                <option value="1">有</option>
+                                                <option value="0">无</option>
                                             </select>
                                         </div>
                                     </div>
@@ -447,6 +447,7 @@
                                                 <label class="col-lg-3 control-label">默认方法名称</label>
                                                 <div class="col-lg-5">
                                                     <select class="form-control">
+                                                        <option v-for="item in methodList" value="item.id">{{item.methodname}}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -473,7 +474,7 @@
                                 <div class="modal-body">
                                     <!-- modal-body start -->
                                     <section class="panel">
-                                        <form id="addClassForm" class="form-horizontal" role="form">
+                                        <form id="addMethodForm" class="form-horizontal" role="form">
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">名称</label>
                                                 <div class="col-lg-5">
@@ -490,8 +491,8 @@
                                                 <label class="col-lg-3 control-label">有无参数</label>
                                                 <div class="col-lg-3">
                                                     <select class="form-control" name="isparameter">
-                                                        <option>有</option>
-                                                        <option>无</option>
+                                                        <option value="1">有</option>
+                                                        <option value="0">无</option>
                                                     </select>
                                                 </div>
                                             </div>

@@ -204,6 +204,7 @@ function changeListNum() {
     $('#mySelect').change(function() {
         app.listnum = $(this).children('option:selected').val();
         $("#mySelect").find("option[text='" + app.listnum + "']").attr("selected", true);
+        app.currentPage=1;
         queryautdata();
     });
 }
