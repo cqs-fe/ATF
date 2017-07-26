@@ -30,10 +30,15 @@
         <section id="main-content">
             <section class="content-wrapper" style="margin-bottom: 50px;" :class={'bigMarginBottom':!tooltipFlag,'smallMarginBottom':tooltipFlag}>
                 <main class="main">
-                    <div class="route-position">
-                        <a href="">测试计划</a>
-                        <span> > </span>
-                        <a href="">测试阶段</a>
+                   <!-- breadcrumb start -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="breadcrumb">
+                                <li><a href=""><i class="icon-home"></i> 测试计划</a></li>
+                                <li class="active"><a href=""> 测试阶段</a></li>
+                                <!-- <li class="active"> 对象库</li> -->
+                            </ul>
+                        </div>
                     </div>
                     <div class="top-bar">
                         <button type="button" class="btn btn-white" data-toggle="modal" data-target="#add-modal"><i class="icon-plus" ></i>

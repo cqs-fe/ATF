@@ -74,6 +74,7 @@ function xzmb(){
             'description':val3
         },
         url: 'http://10.108.226.152:8080/ATFCloud/scripttemplateController/insert',
+        type: 'post',
         async: false,
         error: function (request) {
                 $('#fail').modal();

@@ -1,4 +1,136 @@
 $(document).ready(function(){
+	var mainVue = new Vue({
+		el: '#main',
+		data: {
+			autId: 22,
+			autIds: [],
+			transId: 57,
+			transIds: [],
+			templateList: [],
+			checkedTemplate: [],
+			// 新增模板绑定数据
+			newTemplate: {
+				name: '',
+				description: ''
+			}
+		},
+		ready: function() {
+			var _this = this;
+		    _this.getAuts();
+		    _this.getTrans();
+		    _this.getScriptTemplate();
+		    $('#addtemplateModal').on('hidden.bs.modal', function (e) {
+		    	_this.newTemplate = {
+		    		name: '',
+					description: ''
+		    	}
+		    })
+		},
+		computed: {
+		},
+		methods: {
+			getTrans: function() {
+				var _this = this;
+				$.ajax({
+			        url: address + 'transactController/showalltransact',
+			        data: {'autlistselect': _this.autId},
+			        type: "POST",
+			        success: function (data) {
+			            _this.transIds = data.o;
+			            if(_this.transIds[0]) {
+			            	_this.transId = _this.transIds[0].id
+			            }
+			        }
+
+			    });
+			},
+			getAuts: function() {
+				var _this = this;
+				$.ajax({
+			        url: address + "autController/selectAll",
+			        type: "GET",
+			        success: function(data) {
+			            _this.autIds = data.obj;
+			            if(_this.autIds[0]) {
+			            	_this.autId = _this.autIds[0].id
+			            }
+			        }
+			    });
+			},
+			getScriptTemplate: function() {
+				var _this = this;
+				$.ajax({
+			        url: address + 'scripttemplateController/showallscripttemplate',
+			        data: {'transactid': _this.transId},
+			        type: "POST",
+			        success: function (data) {
+			            _this.templateList = data.o;
+			        }
+			    });
+			},
+			change: function() {
+				var _this = this;
+				var length = this.checkedTemplate.length
+				if( length > 0) {
+					var templateId = this.checkedTemplate[length - 1].id
+					var data = {
+						aut_id: _this.autId,
+						script_id: templateId
+					}
+					$.ajax({
+						url: address + 'scripttemplateController/showScripttemplateTable',
+						data: data,
+						type: 'post',
+						dataType: 'json',
+						success: function(data) {
+							if (data) {
+
+							}
+						}
+					})
+				}
+			},
+			saveTemplate: function() {
+				_this.newTemplate.transId = _this.transId
+				$.ajax({
+					url: address + 'scripttemplateController/insert',
+					data: _this.newTemplate,
+					type: 'post',
+					dataType: 'json',
+					success: function(data) {
+						Vac.alert('添加成功！')
+						$('#addtemplateModal').modal('hide')
+					},
+					error: function() {
+						Vac.alert('添加失败！')
+					}
+				})
+			},
+			deleteTemplate: function() {
+				var _this = this;
+				if(!_this.checkedTemplate.length) {	
+					Vac.alert('请选择要删除的模板！')
+					return
+				}
+				$.ajax({
+					url: address + 'scripttemplateController/delete',
+					data: 'id=' + _this.checkedTemplate[_this.checkedTemplate.length - 1],
+					type: 'post',
+					dataType: 'json',
+					success: function(data) {
+						if (data) {
+							Vac.alert('删除成功！')
+							_this.checkedTemplate.pop()
+						}
+					},
+					error: function () {
+						Vac.alert('删除失败！')
+					}
+				})
+			}
+		}
+	})
+
 	var editDataVue = new Vue({
 		el:'#table2',
 		data: {
@@ -81,8 +213,7 @@ $(document).ready(function(){
 				element: '',		// 保存点击的元素
 				function: '',		// 保存点击的函数集中的项
 				target: null,		// 保存点击编辑的target，据此可以获得parent tr
-			},
-			autId: 8
+			}
 		},
 		ready: function() {
 				var _this = this;
@@ -156,7 +287,7 @@ $(document).ready(function(){
 				// 请求Ui和Elment
 				$.ajax({
 					url: address + 'elementlibraryController/showUIandElement',
-					data: 'transid=1',
+					data: 'transid='+mainVue.transId,
 					type: 'post',
 					dataType: 'json',
 					success: (data, statusText) => {
@@ -168,7 +299,7 @@ $(document).ready(function(){
 				// 请求函数集
 				$.ajax({
 					url: address + 'autController/selectFunctionSet',
-					data: 'id=2',
+					data: 'id=22',
 					type: 'post',
 					dataType: 'json',
 					success: (data, statusText) => {
@@ -184,7 +315,7 @@ $(document).ready(function(){
 				var _this = this;
 				$.ajax({
 					url: address + 'elementlibraryController/showUIandElement',
-					data: 'transid=1',
+					data: 'transid='+mainVue.transId,
 					type: 'post',
 					dataType: 'json',
 					success: (data, statusText) => {
@@ -288,7 +419,7 @@ $(document).ready(function(){
 
 					// 发送ajax请求函数的数据
 					var data = {
-						id: 8,		// autid
+						id: mainVue.autId,		// autid
 						classname: editDataVue.uiOrFunctions.ui,		// classname
 					}
 
@@ -311,7 +442,7 @@ $(document).ready(function(){
 						// var mname = $('.functions-select', parentRow).val()
 						var mname = operationRows[index].functions[0].mname
 						var data = {
-							autid: 8,	
+							autid: mainVue.autId,	
 							className: editDataVue.uiOrFunctions.ui,
 							methodName: mname
 						}
@@ -375,7 +506,7 @@ $(document).ready(function(){
 					newRow.functions = []
 					$.ajax({
 						url: address + 'autController/selectMethod',
-						data: {id: editDataVue.autId, classname: newRow.operation.ui},
+						data: {id: mainVue.autId, classname: newRow.operation.ui},
 						type: 'post',
 						dataType: 'json',
 						success: function(data, statusText) {

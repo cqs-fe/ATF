@@ -47,6 +47,7 @@
                                         <option v-for="(index,item) in testphases" v-bind:value="item.phasename">{{item.phasename}}</option>
                                     </select>
                                 </div>
+                                <span>点击查询，选q</span>
                            </div>
                            <div class="form-group col-sm-6">
                                <label class="option-name control-label col-sm-3">
@@ -58,13 +59,14 @@
                                    </option>
                                </select>
                                </div>
+                               <span>点击查询， 选2</span>
                            </div>
                            <div class="form-group col-sm-6">
                                <label class="option-name col-sm-3 control-label">
                                    执行轮次
                                </label>
                                <div class="col-sm-9">
-                                   <input type="text" class="form-control" name="" v-model="executeRound">
+                                   <input type="text" class="form-control" name="" v-model="executionround">
                                </select>
                                </div>
                                
@@ -74,12 +76,22 @@
                                    执行范围
                                </label>
                                <div class="col-sm-9">
-                                   <select class="execute-range form-control" v-model="executeRange">
-                                   <option value="1" selected>所有</option>
-                                   <option value="2">已选择</option>
-                               </select>
+                                  <select class="execute-range form-control" v-model="exeScope">
+                                    <option value="1" selected>所有</option>
+                                    <!-- <option value="2">已选择</option> -->
+                                  </select>
                                </div>
-                               
+                           </div>
+                           <div class="form-group col-sm-6">
+                               <label class="option-name col-sm-3 control-label">
+                                   caseLibId
+                               </label>
+                               <div class="col-sm-9">
+                                  <select class="execute-range form-control" v-model="caselibId">
+                                    <option v-for="caselibId in caselibIds" :value="caselibId.caselibId">{{caselibId.caselibId}}</option>
+                                  </select>
+                               </div>
+                               <span>因为数据问题，暂时添加该下拉框，用于选取caseLiId, 选3可以查出数据</span>
                            </div>
                        </form>
                        <div class="test-control container">
@@ -101,6 +113,7 @@
                                             <p>{{caseWrapper.caseId}}</p>
                                         </div>
                                         <div class="case-main">
+                                            <p>单用例</p>
                                             <p>{{caseWrapper.caseCompositeType}}</p>
                                         </div>
                                         <footer class="case-footer">
@@ -109,7 +122,9 @@
                                     </div>
                                 </template>
                                 <template v-else>
+                                  <div>
                                     <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
+                                        <span>流程用例</span>
                                         <input type="checkbox" :value="caseWrapper.caseId" class="checkall" v-model="selectedCases">
                                     </div>
                                     <div class="case" v-for="node in caseWrapper.flowNodes">
@@ -118,12 +133,14 @@
                                             <p>{{node.flowNodeId}}</p>
                                         </div>
                                         <div class="case-main">
-                                            <p>{{node.flowNodeCode}}</p>
+                                          <p>单用例</p>
+                                          <p>{{node.flowNodeCode}}</p>
                                         </div>
                                         <footer class="case-footer">
                                             <!-- <i class="icon-remove success-flag"></i> -->
                                         </footer>
                                     </div>
+                                  </div>
                                 </template>
                                 </div>
                            </div>
@@ -134,7 +151,7 @@
                             </div>
                             <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
                             <div class="case-list">
-                                <div v-for="caseWrapper in scene.testCaseList" class="case-item">
+                                <div v-for="caseWrapper in scene.testCaseList" :class="{'case-item': caseWrapper.caseCompositeType==1}" >
                                   <template v-if="caseWrapper.caseCompositeType == 1">
 
                                     <div class="case" >
@@ -151,6 +168,7 @@
                                     </div>
                                 </template>
                                 <template v-else>
+                                  
                                     <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
                                       <input type="checkbox" value={{scene.sceneId}}+{{caseWrapper.caseId}}  class="checkall" v-model="selectedSceneCases">
                                     </div>

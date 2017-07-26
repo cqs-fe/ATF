@@ -169,22 +169,24 @@
             });
             $('#loginInput').click(function(){
                 if(checkform("#form")&&authcode){
-                  $.ajax({
-                    type:'post',
-                    url: baseurl + "userController/login",
-                    data: $("#form").serialize()+"&sessionId="+sessionStorage.getItem('sessionId'),
-                    dataType:"json",
-                    success:function(data){
-                        console.info(data);
-                        if(data.success){
-                                    console.info(data.success);//跳转到登录成功页
-                                    window.location.href = "testitems.html";
-                                }else{
+                    $.ajax({
+                        type:'post',
+                        url: baseurl + "userController/login",
+                        data: $("#form").serialize()+"&sessionId="+sessionStorage.getItem('sessionId'),
+                        dataType:"json",
+                        success:function(data){
+                            console.info(data);
+                            if(data.success){
+                            sessionStorage.setItem('sessionId',data.obj.sessionId);
+                                console.info(data.success);//跳转到登录成功页
+                                sessionStorage.setItem('userId', data.obj)
+                                window.location.href = "testProject.html";
+                            }else{
 
-                                    setHtml("#result",data.msg);
-                                }
+                                setHtml("#result",data.msg);
                             }
-                        });
+                        }
+                    });
               }
 
 
