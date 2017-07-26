@@ -71,7 +71,7 @@ var app = new Vue({
         },
 
 
-        //添加单案例
+        //添加
         insert: function() {
             var self=this;
             $.ajax({

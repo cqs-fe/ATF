@@ -14,7 +14,6 @@ var app = new Vue({
     },
     ready: function() {
         getArchiTree();
-        getDefMethod();
         this.getArchiList();
     },
     methods: {
@@ -124,7 +123,7 @@ var app = new Vue({
         addClass: function() {
             var eclassname = $('#addClassForm input[name="eclassname"]').val(),
                 cclassname = $('#addClassForm input[name="cclassname"]').val(),
-                defaultmethodname = $('#addClassForm select[name="defaultmethodname"]').val(),
+                // defaultmethodname = $('#addClassForm select[name="defaultmethodname"]').val(),
                 treeObj = $.fn.zTree.getZTreeObj("archiTree"),
                 nodes = treeObj.getSelectedNodes(true),
                 arcid = nodes[0].id;
@@ -134,7 +133,7 @@ var app = new Vue({
                 data: {
                     "eclassname": eclassname,
                     "cclassname": cclassname,
-                    "defaultmethodname": defaultmethodname,
+                    "defaultmethodname": '',
                     "arcid": arcid,
                     "supportparameterlist": ''
 
@@ -182,14 +181,14 @@ var app = new Vue({
 
         },
         //获取控件类型默认方法下拉列表
-        getMethod(){
-            $.ajax({
-                url:address+"methodController/selectAll",
-                success:function(data){
-                    this.methodList=data.obj;
-                }
-            })
-        },
+        // getMethod(){
+        //     $.ajax({
+        //         url:address+"methodController/selectAll",
+        //         success:function(data){
+        //             this.methodList=data.obj;
+        //         }
+        //     })
+        // },
         //添加方法
         addMethod: function() {
             var methodname = $('#addMethodForm input[name="methodname"]').val(),
@@ -598,6 +597,7 @@ function classClick(event) {
             success: function(data) {
                 $('#methodProp').children().remove();
                 var methodList = data.obj;
+                app.methodList=methodList;
                 for (var i = 0; i < methodList.length; i++) {
                     var methodTr = $('<tr></tr>'),
                         methodCheckTd = $("<td><input type='checkbox' name='chk_list' onclick='methodClick(event)'/></td>"),
