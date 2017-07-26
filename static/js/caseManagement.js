@@ -149,9 +149,9 @@ var app = new Vue({
 
         //获取caseLibid
         getCaseLibId: function() {
-            const caselibId = sessionStorage.getItem('caselibid');
-            console.log(caselibId);
-            $('#caselibId').val(caselibId);
+            var caselibid = sessionStorage.getItem('caselibid');
+            console.log(caselibid);
+            $('#caselibid').val(caselibid);
             this.caselibid=caselibid;
         },
         //导入

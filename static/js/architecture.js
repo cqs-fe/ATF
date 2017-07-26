@@ -10,6 +10,7 @@ var app = new Vue({
         paraTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         archiList:[],
         methodList:[],
+        methodParamList:[],
     },
     ready: function() {
         getArchiTree();
@@ -345,26 +346,7 @@ var app = new Vue({
             });
         }
     },
-    //获取参数列表
-    tableToJson: function() {
-        var paraList = '[',
-            pTable = $('#pTable'),
-            pRow = pTable.find('tr'),
-            pCol = pRow[0].find('th');
-        for (var j = 1; j < pRow.length; j++) {
-            var r = '{';
-            for (var i = 1; i < pCol.length; i++) {
-                var tds = pRow[j].children;
-                r += "\"" + pCol[i].innerHTML + "\"\:\"" + tds[i].innerHTML + "\",";
-            }
-            r = r.substring(0, r.length - 1);
-            r += "},";
-            paraList += r;
-        }
-        paraList = paraList.substring(0, paraList.length - 1);
-        paraList += "]";
-        return paraList;
-    }
+
 });
 
 /*architree start*/
@@ -679,9 +661,10 @@ function methodClick(event) {
                     $('#methodForm input[name="name"]').val(methodList[i].methodname);
                     $('#methodForm input[name="description"]').val(methodList[i].methoddescription);
                     $('#methodForm select[name="isPara"]').val(methodList[i].isparameter);
-                    $('#methodForm select[name="waittime"]').val(methodList[i].waittime);
-                    $('#methodForm select[name="timeout"]').val(methodList[i].timeout);
+                    $('#methodForm input[name="waittime"]').val(methodList[i].waittime);
+                    $('#methodForm input[name="timeout"]').val(methodList[i].timeout);
                     $('#methodForm textarea[name="objectcode"]').val(methodList[i].objectcode);
+                    app.methodParamList=methodList[i].parameterlist;
                 }
             }
         });

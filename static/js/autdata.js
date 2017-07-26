@@ -27,7 +27,7 @@ var app = new Vue({
                 getval = thisURL.split('?')[1],
                 keyval = getval.split('&');
             this.autId = keyval[0].split('=')[1];
-            this.autName = keyval[1].split('=')[1];
+            this.autName = decodeURI(keyval[1].split('=')[1]);
             console.log(this.autId)
         },
         getautdata() {
