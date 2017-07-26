@@ -85,12 +85,14 @@ var app = new Vue({
             var self=this;
             var scenename = $('#insertForm input[name="scenename"]').val();
             var description = $('#insertForm textarea[name="description"]').val();
+            var caselibid=sessionStorage.getItem('caselibid');
             $.ajax({
                 url: address + 'sceneController/insertSelective',
                 type: 'post',
                 data: {
                     'scenename': scenename,
                     'description': description,
+                    'caselibid': caselibid,
                     'exeStrategyTestcase': '',
                     'exeStrategyTestcaseaction': '',
                     'errStrategy': ''

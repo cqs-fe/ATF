@@ -13,7 +13,7 @@ var app = new Vue({
             var thisURL = document.URL;
             var params = thisURL.split('?')[1];
             this.autId = params.split('&')[0].split('=')[1];
-            this.autName = params.split('&')[1].split('=')[1];
+            this.autName = decodeURI(params.split('&')[1].split('=')[1]);
         },
         getCode (){
             $.ajax({

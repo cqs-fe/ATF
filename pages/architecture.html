@@ -179,15 +179,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="methodPara">
-                                                <tr>
+                                                <tr v-for="item in methodParamList">
                                                     <td>
                                                         <input type="checkbox" name="chk_list" />
                                                     </td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
-                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.valueclass}}</td>
+                                                    <td contenteditable="true">{{item.parameterizedcolumn}}</td>
+                                                    <td contenteditable="true">{{item.defaultvalue}}</td>
+                                                    <td contenteditable="true">{{item.description}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

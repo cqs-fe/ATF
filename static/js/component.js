@@ -208,8 +208,6 @@ var app = new Vue({
             paraList = paraList.substring(0, paraList.length - 1);
             paraList += "]";
 
-            console.log(paraList);
-
             $.ajax({
                 url: address + 'ommethodController/update',
                 type: 'post',
@@ -228,6 +226,7 @@ var app = new Vue({
                     "inputargdesc":'',
                     "executecode": executecode,
                     "arguments": paraList,
+                    "classMapflag":''
                 },
                 success: function(data) {
                     if (data.success) {
@@ -267,7 +266,7 @@ function getClass() {
                     classNameTd = $('<td ></td>'),
                     classDescriptionTd = $('<td ></td>');
                 classTr.attr('id', classList[i].classId);
-                classNameTd.html(classList[i].classname);
+                classNameTd.html(classList[i].className);
                 classDescriptionTd.html(classList[i].classDesc);
                 classTr.append(classCheckTd, classNameTd, classDescriptionTd);
                 $('#classProp').append(classTr);
