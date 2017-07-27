@@ -72,10 +72,12 @@ $(document).ready(function(){
 				var _this = this;
 				var length = this.checkedTemplate.length
 				if( length > 0) {
-					var templateId = this.checkedTemplate[length - 1].id
+					var templateId = this.checkedTemplate[length - 1]
+					// return 
+					console.log( _this.templateList[templateId].id)
 					var data = {
 						aut_id: _this.autId,
-						script_id: templateId
+						script_id: _this.templateList[templateId].id
 					}
 					$.ajax({
 						url: address + 'scripttemplateController/showScripttemplateTable',
@@ -83,8 +85,32 @@ $(document).ready(function(){
 						type: 'post',
 						dataType: 'json',
 						success: function(data) {
-							if (data) {
-
+							if (data.success === true) {
+								console.log(data.o.data)
+								// {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name:'', Value: ''}]}}
+								for(var operationRow of data.o.data) {
+									let row = {
+										id: null,
+										functions: [],
+										operation: {
+											element: '',
+											ui: ''
+										},
+										parameters: []
+									}
+									row.id = Symbol()
+									row.functions.push({mname: operationRow.function})
+									row.operation.element = operationRow.operator[0]
+									row.operation.ui = operationRow.operator[1]
+									for(let para of operationRow.arguments) {
+										row.parameters.push({
+											Name: para.value,
+											Value: ''
+										})
+									}
+									// 插入到operationRows中
+									editDataVue.operationRows.push(row)
+								}
 							}
 						}
 					})
@@ -135,8 +161,8 @@ $(document).ready(function(){
 		el:'#table2',
 		data: {
 			// 保存table中每一行的数据 [{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
-			operationRows: [{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],		
-			parameterVue: null,
+			operationRows: [],		
+			// parameterVue: null,
 			// ztree的设置项
 			zTreeSettings: {
 				uiAndElement: {
@@ -213,6 +239,7 @@ $(document).ready(function(){
 				element: '',		// 保存点击的元素
 				function: '',		// 保存点击的函数集中的项
 				target: null,		// 保存点击编辑的target，据此可以获得parent tr
+				index: 0			// 保存每一行的index
 			}
 		},
 		ready: function() {
@@ -240,6 +267,9 @@ $(document).ready(function(){
 		            });
 		            $( "#sortable" ).disableSelection();
 		        } );
+		        $('#edit-parameter-modal').on('hidden.bs.modal', function() {
+
+		        })
 		},
 		methods: {
 			addRow: function() {
@@ -278,6 +308,28 @@ $(document).ready(function(){
 					var originIndex = trs[i].getAttribute('data-index')
 					operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
 				}
+			},
+			tableSave: function() {
+				//UI("denglu").webedit("username").set(1,"123");
+				var sendDataArray = [];
+				var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
+				for(var tr of trs) {
+					// 
+					var UI = tr.querySelector('.operation-element').value
+					var webedit = tr.querySelector('.operation-ui').value
+					var method = tr.querySelector('.functions-select').value
+					// 获取参数列表
+					var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
+					var paramValues = []
+					for(var paramTr of paramTrs) {
+						paramValues.push(`"${paramTr.innerHTML}"`)
+					}
+					var parameterString = paramValues.toString()
+					var string = `UI("${UI}").webedit("${webedit}").${method}(${paramValues})`
+					sendDataArray.push(string)
+				}
+				var sendData = sendDataArray.join(';')
+				console.log(sendData)
 			},
 			// 显示UI和元素 、函数集
 			showUiAndElement: function(event, type) {
@@ -365,33 +417,42 @@ $(document).ready(function(){
 			editParameter: function(event, type) {
 				var _this = this
 				// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
+				_this.uiOrFunctions.target = event.target
 				var parentRow = $(event.target).parents('tr')
-				var index = parentRow.attr('data-index');
-				var operationRows = _this.operationRows;
+				_this.uiOrFunctions.index = parentRow.attr('data-index');
 
-				_this.parameterVue = new Vue({
-					el: '#edit-parameter-modal',
-					data: {
-						parameters: null
-					},
-					methods: {
-						okParameter: function(event) {
-							var inputs = $('#edit-parameter-modal input')
-							console.log(inputs)
-							for(var i=0;i<operationRows[index].parameters.length;i++) {
-								operationRows[index].parameters[i].Value = inputs[i].value
-							}
-							modalVue.updateRow(operationRows, index)
-							console.log(operationRows)
-							$('#edit-parameter-modal').modal('hide')
-						}
-					}
-				})
-				_this.parameterVue.parameters = operationRows[index].parameters;
+				parameterVue.parameters = _this.operationRows[_this.uiOrFunctions.index].parameters;
 				$('#edit-parameter-modal').modal('show')
 			},
 		}
 	})
+	var parameterVue = new Vue({
+		el: '#edit-parameter-modal',
+		data: {
+			parameters: null
+		},
+		ready: function() {
+			// console.log(editDataVue.uiOrFunctions.index)
+			// console.log(editDataVue.operationRows[editDataVue.uiOrFunctions.index].parameters)
+			// this.parameters = editDataVue.operationRows[editDataVue.uiOrFunctions.index].parameters;
+		},
+		methods: {
+			okParameter: function(event) {
+				var inputs = $('#edit-parameter-modal input')
+
+				var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
+				var operationRows = editDataVue.operationRows
+				var index = editDataVue.uiOrFunctions.index
+				for(var i=0;i<operationRows[index].parameters.length;i++) {
+					operationRows[index].parameters[i].Value = inputs[i].value
+				}
+				modalVue.updateRow(operationRows, index)
+				// console.log(operationRows)
+				$('#edit-parameter-modal').modal('hide')
+			}
+		}
+	})
+
 	var modalVue = new Vue({
 		el: '#ui-ele-modal',
 		data: {},
@@ -405,6 +466,7 @@ $(document).ready(function(){
 				// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
 				var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
 				var index = parentRow.attr('data-index');
+				console.log(index)
 				var operationRows =  editDataVue.operationRows;
 
 				if (editDataVue.uiOrFunctions.type === 'ui') {
