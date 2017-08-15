@@ -1,11 +1,11 @@
 fis.hook('commonjs');
 
-fis.match('*.{js,scss,png,jpg,css}', {
+fis.match('*.{js,scss,png,jpg,css,gif,PNG}', {
 	useHash: true,
 	release: '/public/$0'
 });
 
-fis.match('*.{eot,svg,ttf,woff,woff2}', {
+fis.match('*.{eot,svg,ttf,woff,woff2,eot@,wd3}', {
 	release: '/public/$0'
 });
 
@@ -30,10 +30,10 @@ fis.match('::package', {
     })
 });
 
-fis.match('/static/modules/*.js', {
-    isMod: true, // 设置 comp 下都是一些组件，组件建议都是匿名方式 define
-    release: '../public/$0'
-});
+// fis.match('/static/modules/*.js', {
+//     isMod: true, // 设置 comp 下都是一些组件，组件建议都是匿名方式 define
+//     release: '../public/$0'
+// });
 
 fis.media('debug').match('*.{js,scss,png}', {
 	useHash: false,
@@ -65,6 +65,7 @@ fis.media('push').match('{/static/**,/lib/**}', {
 
 fis.set('project.fileType.text', 'es');
 fis.match('*.es.js', {
+    // parser: fis.plugin('babel-6.x', {
     parser: fis.plugin('babel-6.x', {
         // presets: [
         // 注意一旦这里在这里添加了 presets 配置，则会覆盖默认加载的 preset-2015 等插件，因此需要自行添加所有需要使用的 presets

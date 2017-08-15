@@ -1,3 +1,4 @@
+  __inline('./scene-management/checked.js');
 var vBody = new Vue({
 	el: '#v-body',
 	data: {
@@ -11,6 +12,9 @@ var vBody = new Vue({
 		tooltipMessage: '',
 
 		sceneInfo: null,
+		caseIds: [],
+		flowNodeIds: new Map(),
+
 		triggers: null,
 		triggerInfo: {
 			selectedTrigger: [],
@@ -40,8 +44,11 @@ var vBody = new Vue({
 			exe_strategy_err: ''
 		},
 
+		checkall: false,
 		// save the selected cases
 		selectedCases: [],
+		// save the checked flow nodes
+		checkedFlowNodes: [],
 		// 执行时间设置的相关参数
 		executeTime: null,
 		executeDateFlag: null,
@@ -63,7 +70,13 @@ var vBody = new Vue({
 		//场景id和名称
 		url: '',
 		sceneid: '',
-		scenename: '场景名称'
+		scenename: '场景名称',
+		exeImgs: {
+			waiting: '../static/images/waiting.png',
+			running: '../static/images/running.png',
+			success: '../static/images/success.png',
+			failed: '../static/images/failed.png'
+		}
 	},
 	ready:function(){
 		this.setVal();
@@ -86,7 +99,32 @@ var vBody = new Vue({
 	created: function(){
 		
 	},
+	watch: {
+		"selectedCases": function(newValue, oldValue) {
+			console.log('heheh')
+			this.checkall = (newValue.length === this.caseIds.length)
+			this.setBackground()
+		},
+		"checkedFlowNodes": function(newValue, oldValue) {
+			// this.setBackground()
+			console.log(this.flowNodeIds)
+			for(let key of this.flowNodeIds.keys()) {
+				let flag = this.flowNodeIds.get(key).every((flowNodeId) => {
+					return this.checkedFlowNodes.includes(flowNodeId)
+							? true : false 
+				})
+				if(flag) {
+					this.pushNoRepeat(this.selectedCases, +key)
+				} else {
+					let set = new Set(this.selectedCases);
+					set.delete(+key);
+					this.selectedCases = [...set]
+				}
+			}
+		}
+	},
 	methods: {
+		setBackground: checkFunction.setBackground,
 		//获取上级页面选中的场景id和名称
 		setVal:function(){
 			var thisURL = document.URL;
@@ -112,9 +150,10 @@ var vBody = new Vue({
 		getCases: function(){
 			var _this = this;
 			$.ajax({
-				url: address + 'sceneController/selectByPrimaryKey',
+				// url: address + 'sceneController/selectByPrimaryKey',
+				url: '/api/getcaseinscene',
 				data: 'id='+_this.sceneid,
-				type: 'post',
+				type: 'get',
 				dataType: 'json',
 				success: function(data, statusText){
 					if(data.success == true){
@@ -128,7 +167,19 @@ var vBody = new Vue({
 							exeStrategy3Order: _this.exe_strategy.exe_strategy3_order,
 							exeStrategy3Status: _this.exe_strategy.exe_strategy3_status,
 							exeStrategyErr: _this.exe_strategy.exe_strategy_err
-						} = data.obj)
+						} = data.obj);
+
+						for (var i = data.obj.caseDtos.length - 1; i >= 0; i--) {
+							_this.caseIds.includes(data.obj.caseDtos[i].id) ? 1 : (_this.caseIds.push(data.obj.caseDtos[i].id))
+							if(data.obj.caseDtos[i].caseCompositeType == 2) {
+								let arr = []
+								for (var j = data.obj.caseDtos[i].flowNodeDtos.length - 1; j >= 0; j--) {
+									arr.push(data.obj.caseDtos[i].id+'-'+data.obj.caseDtos[i].flowNodeDtos[j].id)
+								}
+								_this.flowNodeIds.set(+data.obj.caseDtos[i].id, arr)
+							}
+						}
+
 					}
 				}
 			});
@@ -147,159 +198,63 @@ var vBody = new Vue({
 				}
 			});
 		},
-		setSelect: function(event){
-			var target  = event.target;
-			if(!target.classList.contains('main-content')) {
-				return
-			}
-			var fileNodes = document.querySelectorAll(".case input[type='checkbox']");
-			var startX = event.offsetX;
-			var startY = event.offsetY;
-			var moveBeforeX = event.pageX;
-			var moveBeforeY = event.pageY;
-			var selDiv = document.createElement('div');
-			selDiv.style.cssText = 
-			`position:absolute;width:0px;height:0px;
-			font-size:0px;margin:0px;padding:0px;border:1px dashed #0099FF;
-			background-color:#C3D5ED;z-index:1000;filter:alpha(opacity:60);
-			opacity:0.6;display:none;`;
-			selDiv.id = 'selectDiv';
-			document.querySelector('.main-content').appendChild(selDiv);
-			selDiv.style.left = startX + "px";
-			selDiv.style.top = startY + 'px';
-			var _x = null;
-			var _y = null;
-			var moveAfterX = null;
-			var moveAfterY = null;
-			event.stopPropagation();
-			event.preventDefault();
-			var selectedRange = [];
-			target.addEventListener('mousemove', mouseMoveFunction, false);
-			target.addEventListener('mouseup', (event) => {
-				this.isSelect = true;
-				if (selDiv){
-					document.querySelector('.main-content').removeChild(selDiv);
-				}
-				target.removeEventListener('mousemove', mouseMoveFunction, false);
-				selDiv = null;
-				var caseLib = document.querySelectorAll('.case-lib');
-				for(var i=0; i<caseLib.length; i++){
-					var inputs = Array.from(caseLib[i].getElementsByClassName('check-case'));
-					if(inputs.every(function(value){
-						if(value.checked===true)
-							{return true;} 
-						return false;
-					})){
-						caseLib[i].getElementsByClassName('checkall')[0].checked = true;
-					} else {
-						caseLib[i].getElementsByClassName('checkall')[0].checked = false;
-					}
-				}
-			}, false);
-
-
-			function mouseMoveFunction(event){
-				if(selDiv.style.display == 'none'){
-					selDiv.style.display = "block";
-				}
-				moveAfterX = event.pageX;
-				moveAfterY = event.pageY;
-				// 获取鼠标移动后的位置
-				_x = startX - moveBeforeX + moveAfterX;
-				_y = startY - moveBeforeY + moveAfterY;
-				// console.log("_X:" + _x + "-- _Y:" + _y);
-				selDiv.style.left = Math.min(_x, startX) + "px";
-				selDiv.style.top = Math.min(_y, startY) + "px";
-				// console.log("Left:" + selDiv.style.left + "-- Top:" + selDiv.style.top);
-				selDiv.style.width = Math.abs(_x - startX) + "px";
-				selDiv.style.height  = Math.abs(_y - startY) + "px";
-
-				var _l = selDiv.offsetLeft, _t = selDiv.offsetTop;
-				var _w = selDiv.offsetWidth, _h = selDiv.offsetHeight;
-				
-				for(var i=0; i < fileNodes.length; i++){
-					var inputRight = fileNodes[i].offsetLeft + fileNodes[i].offsetWidth;
-					var inputBottom = fileNodes[i].offsetTop + fileNodes[i].offsetHeight;
-					if( inputRight > _l && inputBottom > _t && fileNodes[i].offsetLeft < _l + _w && fileNodes[i].offsetTop < _t + _h) {
-						if(!selectedRange.includes(fileNodes[i])){
-							selectedRange.push(fileNodes[i]);
-						}
-					}
-				}
-				for(var i=0; i<selectedRange.length; i++){
-					var inputRight = selectedRange[i].offsetLeft + selectedRange[i].offsetWidth;
-					var inputBottom = selectedRange[i].offsetTop + selectedRange[i].offsetHeight;
-					if( inputRight > _l && inputBottom > _t && selectedRange[i].offsetLeft < _l + _w && selectedRange[i].offsetTop < _t + _h) {
-						selectedRange[i].checked = true;
-					} else {
-						selectedRange[i].checked = false;
-					}
-				}
-				event.stopPropagation();
-				event.preventDefault();
-			};
-		},
+		setSelect: checkFunction.setSelect,
+		pushNoRepeat: checkFunction.pushNoRepeat,
 		setSelectListener: function(){
 			document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
 			// 防止点击用例框时也进行选取
 		},
 		// 点击checkbox
-		checkChanged: function(){
-			// var inputs = Array.from(event.target.parentNode.parentNode.parentNode.querySelectorAll('.check-case'))
-			// if(inputs.every((value) => {
-			// 	return value.checked === true 
-			// })) {
-			// 	event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = true;
-			// } else {
-			// 	event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = false;
-			// }
+		checkChanged: function(event){
+			var parent = event.target.parentNode.parentNode.parentNode
+			var checkallId = +parent.parentNode.querySelector('.checkall').value
+			var inputs = Array.from(parent.querySelectorAll('.check-case'))
+			if(inputs.every((value) => {
+				return value.checked === true 
+			})) {
+				this.selectedCases.push(checkallId)
+			} else {
+				let set = new Set(this.selectedCases)
+				set.delete(checkallId)
+				this.selectedCases = [...set]
+			}
 		},
 		// 全选case-lib中的case
 		checkallToggle: function(event){
-			// console.log(event.target)
-			// var flag = event.target.checked;
-			// console.log(flag)
-			// var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
-			// if(flag) {
-			// 	for(var i=0; i<inputs.length; i++) {
-			// 		if (!this.selectedCases.includes(+inputs[i].value)) {
-			// 			this.selectedCases.push(+inputs[i].value)
-			// 		}
-			// 	}
-			// } else {
-			// 	for (var input of inputs) {
-			// 		if(this.selectedCases.includes(input.value)) {
-
-			// 		}else {
-			// 			continue
-			// 		}
-			// 	}
-			// }
-			// console.log(this.selectedCases);
+			var flag = event.target.checked;
+			var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
+			if(flag) {
+				for(var input of inputs) {
+					(!this.checkedFlowNodes.includes(input.value))
+					? (this.checkedFlowNodes.push(input.value))
+					: 1 
+				}
+			} else {
+				for (var input of inputs) {
+					let set = new Set(this.checkedFlowNodes)
+					let value = input.value
+					if(set.has(input.value)) {
+						set.delete(input.value)
+					}
+					this.checkedFlowNodes = [...set]
+				}
+			}
 		},
-		checkall: function(event){
-			// console.log(event.target)
-			// var checkboxs = Array.from(document.querySelectorAll('.case-lib .check-case'));
-			// var checkalls = Array.from(document.querySelectorAll('.case-lib .checkall'))
-
-			// var flag = event.target.checked
-			// for (var checkall of checkalls) {
-			// 	checkall.checked = flag;
-			// }
-			// if(flag) {
-			// 	for (var checkbox of checkboxs) {
-			// 		if (this.selectedCases.includes(+checkbox.value)) {
-			// 			continue
-			// 		} else {
-			// 			this.selectedCases.push(+checkbox.value)
-			// 		}
-			// 	}
-			// } else {
-			// 	for (var i=0,m=this.selectedCases.length; i < m;i++) {
-			// 		this.selectedCases.pop()
-			// 	}
-			// }
-			// console.log(this.selectedCases)
+		checkallBox: function(event){
+			console.log(this.checkall)
+			if(this.checkall === true) {
+				this.caseIds.forEach((value) => {
+						this.selectedCases.includes(value) ? 1 : (this.selectedCases.push(value))
+						this.flowNodeIds.has(+value)
+							? (
+								this.checkedFlowNodes = [...this.checkedFlowNodes,...this.flowNodeIds.get(+value)]
+							)
+							: 1
+					})
+			} else {
+				this.selectedCases = []
+				this.checkedFlowNodes = [];
+			}
 		},
 		toggleTooltip: function(event){
 			this.tooltipFlag = !this.tooltipFlag;

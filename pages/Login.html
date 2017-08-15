@@ -126,17 +126,17 @@
             //var baseurl = "http://127.0.0.1:8080/ATFCloud/";
             var authcode = false;
             function chageCode() {
-            $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random());//链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
-            //获取sessionId并将其存放在sessionstorage之中
-            $.ajax({
-                type:'post',
-                url: baseurl + "userController/getSessionId",//
-                dataType:'json',
-                success:function(data){
-                    sessionStorage.setItem('sessionId',data.obj.sessionId);
-                }
-            });
-        }
+                $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random());//链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+                //获取sessionId并将其存放在sessionstorage之中
+                $.ajax({
+                    type:'post',
+                    url: baseurl + "userController/getSessionId",//
+                    dataType:'json',
+                    success:function(data){
+                        sessionStorage.setItem('sessionId',data.obj.sessionId);
+                    }
+                });
+            }
         function setHtml(id,msg){
             $(id).html(msg);
         }
@@ -179,8 +179,19 @@
                             if(data.success){
                             sessionStorage.setItem('sessionId',data.obj.sessionId);
                                 console.info(data.success);//跳转到登录成功页
-                                sessionStorage.setItem('userId', data.obj)
-                                window.location.href = "testProject.html";
+                                $.ajax({
+                                    url: baseurl + 'userController/getSessionId',
+                                    type: 'get',
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        if (data.success === true)
+                                        {   
+                                            sessionStorage.setItem('sessionId',data.obj.sessionId);
+                                            window.location.href = "testProject.html";
+                                        }
+                                    }
+                                })
+                                // sessionStorage.setItem('sessionId', data.obj)
                             }else{
                                 setHtml("#result",data.msg);
                             }

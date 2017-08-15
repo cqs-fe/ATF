@@ -2,7 +2,20 @@ $(document).ready(function(){
 	// var submenuHeight = document.querySelector('#submenu').offsetHeight;
 	// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
-
+	(function(){
+        
+        var tooltipwindow = new Vue({
+          el: '#tooltipwindow',
+          data: {
+            flag: true
+          },
+          methods: {
+            toggle: function(){
+              this.flag = !this.flag;
+            }
+          }
+        });
+    })();
 	(function(){
 		var editDataVue = new Vue({
 			el: '#editData',
@@ -448,7 +461,7 @@ $(document).ready(function(){
 			        }
 			    ];
 				_this.selectItems = data;
-				getInfo();
+				_this.getInfo();
             },
             methods: {
             	getInfo: function() {

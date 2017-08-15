@@ -1,6 +1,6 @@
 $(document).ready(function(e) {
 
-    beice(); //第一级函数
+    beice(); //碌脷脪禄录露潞炉脢媒
     gnd();
     st();
     templateTable();
@@ -18,7 +18,7 @@ $(document).ready(function(e) {
     })
 });
 
-//被测系统接口
+//卤禄虏芒脧碌脥鲁陆脫驴脷
 function beice() {
     $.ajax({
         async: false,
@@ -38,7 +38,7 @@ function beice() {
     });
 }
 
-//所属功能点接口
+//脣霉脢么鹿娄脛脺碌茫陆脫驴脷
 function gnd() {
     var val = $('select[name="autid"]').val();
     $.ajax({
@@ -60,7 +60,7 @@ function gnd() {
     });
 }
 
-//新增模板接口
+//脨脗脭枚脛拢掳氓陆脫驴脷
 function xzmb(){
     var val1=$('option[id="transOption"]').val();
     var val2=$('input[id="scriptName"]').val();
@@ -89,7 +89,7 @@ function xzmb(){
             });
                 if(txt != val2){
                     var str = "";
-                    //接收后台返回的结果
+                    //陆脫脢脮潞贸脤篓路碌禄脴碌脛陆谩鹿没
                     //alert("Connection success");
                     $('#success').modal();
                     str = "<tr class='choose'>" + "<td>" + "<input class='index' type='radio' name='radio' onclick='templateTable();' id='checkAll'>" + "</td>" + "<td>" + val2 + "</td>" + "<td>" + val3 + "</td>" + "</tr> ";
@@ -106,8 +106,94 @@ function xzmb(){
             }
         })
 }
-
-//删除模板接口
+// [
+    {
+        "relateIdentifyObjectId": null,
+        "relateParentIdentifyObjectId": null,
+        "name": "welcome to the system",
+        "elements": [
+            {
+                "name": "webedit",
+                "classtype": "",
+                "identifyElement": {
+                    "id": 0,
+                    "name": "webedit",
+                    "classtype": "",
+                    "locatePropertyCollection": {
+                        "main_properties": [],
+                        "addtional_properties": [],
+                        "assistant_properties": []
+                    },
+                    "uniqueId": "",
+                    "compositeType": null,
+                    "subIdentifyElements": null,
+                    "relateIdentifyElements": null,
+                    "parentElement": null,
+                    "childElements": null,
+                    "parentElementId": 0,
+                    "childElementIds": null,
+                    "ancestorList": []
+                },
+                "relateIdentifyObjectId": null,
+                "relateParentIdentifyObjectId": null,
+                "relateElementList": null
+            },
+            {
+                "name": "button",
+                "classtype": "",
+                "identifyElement": {
+                    "id": 0,
+                    "name": "button",
+                    "classtype": "",
+                    "locatePropertyCollection": {
+                        "main_properties": [],
+                        "addtional_properties": [],
+                        "assistant_properties": []
+                    },
+                    "uniqueId": "",
+                    "compositeType": null,
+                    "subIdentifyElements": null,
+                    "relateIdentifyElements": null,
+                    "parentElement": null,
+                    "childElements": null,
+                    "parentElementId": 0,
+                    "childElementIds": null,
+                    "ancestorList": []
+                },
+                "relateIdentifyObjectId": null,
+                "relateParentIdentifyObjectId": null,
+                "relateElementList": null
+            },
+            {
+                "name": "webedit",
+                "classtype": "",
+                "identifyElement": {
+                    "id": 0,
+                    "name": "button",
+                    "classtype": "",
+                    "locatePropertyCollection": {
+                        "main_properties": [],
+                        "addtional_properties": [],
+                        "assistant_properties": []
+                    },
+                    "uniqueId": "",
+                    "compositeType": null,
+                    "subIdentifyElements": null,
+                    "relateIdentifyElements": null,
+                    "parentElement": null,
+                    "childElements": null,
+                    "parentElementId": 0,
+                    "childElementIds": null,
+                    "ancestorList": []
+                },
+                "relateIdentifyObjectId": null,
+                "relateParentIdentifyObjectId": null,
+                "relateElementList": null
+            }
+        ]
+    }
+]
+//脡戮鲁媒脛拢掳氓陆脫驴脷
 function scmb(){
     var val = $(':radio:checked').val();
     $.ajax({
@@ -119,17 +205,17 @@ function scmb(){
             $('#fail').modal();
         },
         success: function () {
-            //接收后台返回的结果
+            //陆脫脢脮潞贸脤篓路碌禄脴碌脛陆谩鹿没
             $('#success').modal();
             $('input:radio:checked').parent().parent().remove();
             //var radio = $('table[id="top_table"]>tbody>tr').find(':radio:checked');
-            //    // 如果选择框被选中则删除该行;
+            //    // 脠莽鹿没脩隆脭帽驴貌卤禄脩隆脰脨脭貌脡戮鲁媒赂脙脨脨;
             //    $('table[id="top_table"]>tbody>tr').remove();
         }
     });
 }
 
-//操作项
+//虏脵脳梅脧卯
 $("#confirm").click(function(){
     if($("#p_functionWord").hide()){
         $("#p_functionWord").show().css({"position":"relative","left":"-300px","top": "30px;"});
@@ -140,7 +226,7 @@ $("#confirm").click(function(){
         $("#p_functionWord").css({"width":"60px","position":"absolute","left":"50px","top": "-180px;"});
     }
 });
-//方法接口
+//路陆路篓陆脫驴脷
 function method() {
     var val1 = $('select[name="autid"]').val();
     var val2= $('td input.uiSel',tr).val();
@@ -166,7 +252,7 @@ function method() {
     });
 }
 
-//参数接口
+//虏脦脢媒陆脫驴脷
 function cs(){
     var val1 = $('select[name="autid"]').val();
     var val2= $('td input.uiSel').val();
@@ -232,7 +318,7 @@ $("#paraConfirm").click(function(){
     var val4=$('input[id="csnew"]').val();
     $(".blank").html(val4);
 });
-//根据功能点查询模板接口
+//赂霉戮脻鹿娄脛脺碌茫虏茅脩炉脛拢掳氓陆脫驴脷
 function st() {
     var val = $('select[name="transid"]').val();
     $.ajax({
@@ -254,7 +340,7 @@ function st() {
 }
 
 
-//查询模板脚本表格接口
+//虏茅脩炉脛拢掳氓陆脜卤戮卤铆赂帽陆脫驴脷
 function templateTable() {
     var val1 = $('select[name="autid"]').val();
     var val2 = $(':radio:checked').val();
@@ -271,7 +357,7 @@ function templateTable() {
             for (var i = 0; i < tableList.length; i++) {
                 var ii=i+1;
                 //for (var j in tableList[i].arguments){
-                    str += "<tr class='choose'>" + "<td class='number'>" + "<input class='checkboxes' type='checkbox' name='radio' id='checkAll'>" + "</td>" + "<td>" + ii + "</td>" + "<td>" + "<label class='alignRight'>UI:</label>" + "<input class='uiSel' name='classname' type='text' value='" + tableList[i].operator[1] +"'>" + "<br>" + "<label class='alignRight'>元素:</label>" + "<input class='elementSel' name='classname' type='text'value='" + tableList[i].operator[2] + "'>" +"<br>"+ "<i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal' onclick='ee(event);'></i>"+"</td>" + "<td>" + "<select  style='width:200px;' name='method'><option>"+tableList[i].function+"</option></select>"+ "</td>" + "<td>"+"<table id='paraList'>"+"<tr>"+ "<td>" + " Name:" + tableList[i].arguments[0].value +"<i class='glyphicon glyphicon-hand-right' id='para' data-toggle='modal' href='#parameterList' onclick='yy();'>"+"</i>"+"</td>"+"</tr>"+"</table>" + "</td>" +"<td>"+"<i id='5' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'>"+"</i>"+"</td>"+"</tr>";
+                    str += "<tr class='choose'>" + "<td class='number'>" + "<input class='checkboxes' type='checkbox' name='radio' id='checkAll'>" + "</td>" + "<td>" + ii + "</td>" + "<td>" + "<label class='alignRight'>UI:</label>" + "<input class='uiSel' name='classname' type='text' value='" + tableList[i].operator[1] +"'>" + "<br>" + "<label class='alignRight'>脭陋脣脴:</label>" + "<input class='elementSel' name='classname' type='text'value='" + tableList[i].operator[2] + "'>" +"<br>"+ "<i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal' onclick='ee(event);'></i>"+"</td>" + "<td>" + "<select  style='width:200px;' name='method'><option>"+tableList[i].function+"</option></select>"+ "</td>" + "<td>"+"<table id='paraList'>"+"<tr>"+ "<td>" + " Name:" + tableList[i].arguments[0].value +"<i class='glyphicon glyphicon-hand-right' id='para' data-toggle='modal' href='#parameterList' onclick='yy();'>"+"</i>"+"</td>"+"</tr>"+"</table>" + "</td>" +"<td>"+"<i id='5' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'>"+"</i>"+"</td>"+"</tr>";
                     var argumentsarr =  tableList[i].arguments;
                 //for (var j = 0;j<3;j++) {
                 //    console.log(j);
@@ -317,7 +403,7 @@ function yy() {
     });
 }
 
-//页面表格保存的接口
+//脪鲁脙忙卤铆赂帽卤拢麓忙碌脛陆脫驴脷
     function tableSave(){
         var a = $(':radio:checked').val();
         var b=$('input[id="uiSel"]').val();
@@ -345,7 +431,7 @@ function yy() {
         });
     }
 
-//点击保存按钮，参数模态框的值显示到页面中
+//碌茫禄梅卤拢麓忙掳麓脜楼拢卢虏脦脢媒脛拢脤卢驴貌碌脛脰碌脧脭脢戮碌陆脪鲁脙忙脰脨
     function csShow(){
         var val1=  $('input[id="Name"]').val();
         var val2= $('input[id="Type"]').val();
@@ -357,54 +443,54 @@ function yy() {
         $('input[id="showParameterizeColumn"]').val(val4);
     }
 
-//event.target问题
+//event.target脦脢脤芒
     function ee(event){
         tr=$(event.target).parent().parent();
     }
 
 function addRowByID(currentRowID){
-    //遍历每一行，找到指定id的行的位置i,然后在该行后添加新行
+    //卤茅脌煤脙驴脪禄脨脨拢卢脮脪碌陆脰赂露篓id碌脛脨脨碌脛脦禄脰脙i,脠禄潞贸脭脷赂脙脨脨潞贸脤铆录脫脨脗脨脨
     $.each( $('tr'), function(i, tr){
         if($(this).attr('id')==currentRowID){
-            //获取当前行
+            //禄帽脠隆碌卤脟掳脨脨
             var currentRow=$('tr:eq('+i+')');
-            //要添加的行的id
+            //脪陋脤铆录脫碌脛脨脨碌脛id
             var addRowID=parseInt(currentRowID)+1;
             str = "<tr id ='"+addRowID+"'><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'>"+addRowID+ "</td>"+
-            "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"元素:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'onclick='ee(event);'></i></td>"+
+            "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"脭陋脣脴:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal'onclick='ee(event);'></i></td>"+
             "<td> <select  style='width:200px;' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down'> </td>"+
             "<td> <div class='showInfornamt'> <table id='paraList'></table> </div> <i  id='href' class='glyphicon glyphicon-search icon'></i> </td>>"+
             "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='addRowByID(this.id)'></i></td>" +
             "</tr>";
-            //当前行之后插入一行
+            //碌卤脟掳脨脨脰庐潞贸虏氓脠毛脪禄脨脨
             currentRow.after(str);
         }
     });
 }
-//添加一行end
+//脤铆录脫脪禄脨脨end
 
-//查询表格添加一行
+//虏茅脩炉卤铆赂帽脤铆录脫脪禄脨脨
 function AddRowByID(currentRowID){
-    //遍历每一行，找到指定id的行的位置i,然后在该行后添加新行
+    //卤茅脌煤脙驴脪禄脨脨拢卢脮脪碌陆脰赂露篓id碌脛脨脨碌脛脦禄脰脙i,脠禄潞贸脭脷赂脙脨脨潞贸脤铆录脫脨脗脨脨
     $.each( $('div[id="table"] table[id="sort"] tbody tr'), function(i, tr){
         if($(this).attr('id')==currentRowID){
-            //获取当前行
+            //禄帽脠隆碌卤脟掳脨脨
             var currentRow=  $('div[id="table"] table[id="sort"] tbody tr:eq('+i+')');
-            //要添加的行的id
+            //脪陋脤铆录脫碌脛脨脨碌脛id
             var addRowID=parseInt(currentRowID)+1;
             str = "<tr id ='"+addRowID+"'><td class='number'><input type='checkbox' class='checkboxes' value='1' /></td><td class='index'>"+addRowID+ "</td>"+
-                "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"元素:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal' onclick='ee(event);'></i></td>"+
+                "<td> <label class='alignRight'>"+"UI:"+"</label><input class='uiSel' name='classname' type='text' readonly value=''/> <br> <label class='alignRight'>"+"脭陋脣脴:"+"</label><input class='elementSel' name='classname' type='text' readonly value='' /><i id='h'  class='glyphicon glyphicon-search icon' data-toggle='modal' href='#addModal' onclick='ee(event);'></i></td>"+
                 "<td> <select size='1' aria-controls='sample_1' name='method' class='glyphicon glyphicon-chevron-down' ></select> </td>"+
                 "<td><div class='showInfornamt'><label class=alignRight'>"+"Name:"+"</label><input id='showName' type='text'/> <br><label class='alignRight'>"+"Type:"+"</label><input id='showType' type='text' /> <br> <label class='alignRight'>"+"Desc:"+"</label><input id='showDesc' type='text' /> <br> </div> <i id='href' class='glyphicon glyphicon-search icon' data-toggle='modal' onclick='cs();' href='#parameterModal'></i> </td>>"+
                 "<td><i id='1' class='glyphicon glyphicon-plus icon' onclick='AddRowByID(this.id)'></i></td>" +
                 "</tr>";
-            //当前行之后插入一行
+            //碌卤脟掳脨脨脰庐潞贸虏氓脠毛脪禄脨脨
             currentRow.after(str);
         }
     });
 }
 
-//上移下移begin
+//脡脧脪脝脧脗脪脝begin
 $('#up').click(function ()
 {
     var insert = $('table tr :checkbox:checked').closest('tr');
@@ -417,9 +503,9 @@ $('#down').click(function ()
     var tr = insert.next('tr');
     tr.after(insert);
 });
-//上移下移end
+//脡脧脪脝脧脗脪脝end
 
-//拖拽begin
+//脥脧脳搂begin
 var fixHelperModified = function (e, tr) {
         var $originals = tr.children();
         var $helper = tr.clone();
@@ -438,52 +524,52 @@ $("#sort tbody").sortable({
     helper: fixHelperModified,
     stop: updateIndex
 }).disableSelection();
-//拖拽end
+//脥脧脳搂end
 
-//新增模板begin
+//脨脗脭枚脛拢掳氓begin
 $("#template_add").click(function () {
     //var _len = $("#top_table tr").length+1;
     //$("#top_table").append("<tr class='choose' align='center'>"
     //    + "<td class='number' class='index'><input type='radio' id='checkAll'</td>"
-    //    + "<td class='number'>脚本" + _len + "</td>"
-    //    + "<td>简单描述</td>"
+    //    + "<td class='number'>陆脜卤戮" + _len + "</td>"
+    //    + "<td>录貌碌楼脙猫脢枚</td>"
     //    + "</tr>");
 });
-//新增模板end
+//脨脗脭枚脛拢掳氓end
 
-//删除模板begin
+//脡戮鲁媒脛拢掳氓begin
             $("#template_remove").click(function() {
-                $("input[id='checkAll']:checked").each(function() { // 遍历选中的checkbox
-                    n = $(this).parents("tr").index()+1;  // 获取checkbox所在行的顺序
+                $("input[id='checkAll']:checked").each(function() { // 卤茅脌煤脩隆脰脨碌脛checkbox
+                    n = $(this).parents("tr").index()+1;  // 禄帽脠隆checkbox脣霉脭脷脨脨碌脛脣鲁脨貌
                     $("table#top_table").find("tr:eq("+n+")").remove();
                 });
             });
-//删除模板end
+//脡戮鲁媒脛拢掳氓end
 
-//下方表格删除begin
+//脧脗路陆卤铆赂帽脡戮鲁媒begin
 $("#script_remove").click(function() {
-    $("input[class='checkboxes']:checked").each(function() { // 遍历选中的checkbox
-        n = $(this).parents("tr").index()+1;  // 获取checkbox所在行的顺序
+    $("input[class='checkboxes']:checked").each(function() { // 卤茅脌煤脩隆脰脨碌脛checkbox
+        n = $(this).parents("tr").index()+1;  // 禄帽脠隆checkbox脣霉脭脷脨脨碌脛脣鲁脨貌
         $("table#sort").find("tr:eq("+n+")").remove();
     });
 });
-//下方表格删除end
+//脧脗路陆卤铆赂帽脡戮鲁媒end
 
-//变色
+//卤盲脡芦
 $("#top_table").delegate("tr","click",function(){
     $(this).addClass("selected").siblings().removeClass("selected").end().find(":radio").attr("checked",true);
 });
 
 
 
-    //参数begin
+    //虏脦脢媒begin
    /* $('#temp').popover(
         {
-            trigger: 'click', //触发方式
-            template: '', //你自定义的模板
-            title: "标题",//设置 弹出框 的标题
-            html: true, // 为true的话，data-content里就能放html代码了
-            content: "",//这里可以直接写字符串，也可以 是一个函数，该函数返回一个字符串；
+            trigger: 'click', //麓楼路垄路陆脢陆
+            template: '', //脛茫脳脭露篓脪氓碌脛脛拢掳氓
+            title: "卤锚脤芒",//脡猫脰脙 碌炉鲁枚驴貌 碌脛卤锚脤芒
+            html: true, // 脦陋true碌脛禄掳拢卢data-content脌茂戮脥脛脺路脜html麓煤脗毛脕脣
+            content: "",//脮芒脌茂驴脡脪脭脰卤陆脫脨麓脳脰路没麓庐拢卢脪虏驴脡脪脭 脢脟脪禄赂枚潞炉脢媒拢卢赂脙潞炉脢媒路碌禄脴脪禄赂枚脳脰路没麓庐拢禄
         }
     );
     $(function () {
@@ -515,14 +601,14 @@ $("#top_table").delegate("tr","click",function(){
         });
     });
     function ContentMethod(txt) {
-        return '<table class="table table-bordered"><tr><th>序号</th><th>名称</th><th>值</th></tr>' +
+        return '<table class="table table-bordered"><tr><th>脨貌潞脜</th><th>脙没鲁脝</th><th>脰碌</th></tr>' +
             '<tr><td>1</td><td><input type="text" style="width: 70px;"> </td><td><input type="text" style="width: 70px;"></td></tr>' +
             '<tr><td>2</td><td><input type="text" style="width: 70px;"></td><td><input type="text" style="width: 70px;"></td></tr>' +
             '</table>' +
-            '<input style="float:right;" type="submit" value="确定">';
+            '<input style="float:right;" type="submit" value="脠路露篓">';
     }*/
 
-//参数end
+//虏脦脢媒end
 
 
 

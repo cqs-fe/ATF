@@ -91,15 +91,15 @@
                      <label>前置操作</label>
                      <div>
                          <button class="btn btn-white" @click="removeRow($event, 1)">
-                             <i class="icon-remove"></i>
+                             <i class=" icon-trash"></i>
                              删除
                          </button>
                          <button class="btn btn-white" @click="moveUp($event, 1)">
-                             <i class="icon-angle-up"></i>
+                             <i class="icon-double-angle-up"></i>
                              上移
                          </button>
                          <button class="btn btn-white" @click="moveDown($event, 1)">
-                             <i class="icon-angle-down"></i>
+                             <i class="icon-double-angle-down"></i>
                              下移
                          </button>
                          <button class="btn btn-white" @click="saveOperation($event, 1)">
@@ -175,15 +175,15 @@
                       <label>后置操作</label>
                      <div>
                          <button class="btn btn-white" @click="removeRow($event, 1)">
-                             <i class="icon-remove"></i>
+                             <i class=" icon-trash"></i>
                              删除
                          </button>
                          <button class="btn btn-white" @click="moveUp($event, 2)">
-                             <i class="icon-angle-up"></i>
+                             <i class="icon-double-angle-up"></i>
                              上移
                          </button>
                          <button class="btn btn-white"  @click="moveDown($event, 2)">
-                             <i class="icon-angle-down"></i>
+                             <i class="icon-double-angle-down"></i>
                              下移
                          </button>
                          <button class="btn btn-white"  >
@@ -476,20 +476,7 @@
     <script type="text/javascript" src="../lib/jquery-ui.js"></script> 
     <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
     <script type="text/javascript">
-    (function(){
-        
-        var tooltipwindow = new Vue({
-          el: '#tooltipwindow',
-          data: {
-            flag: true
-          },
-          methods: {
-            toggle: function(){
-              this.flag = !this.flag;
-            }
-          }
-        });
-    })();
+    
     </script>
 </body>
 

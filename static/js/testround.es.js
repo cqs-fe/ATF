@@ -27,54 +27,72 @@ var vBody = new Vue({
 		selectedSceneCases: [],
 		// Scenes in add-scene modal
 		selectedScene: [],					// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
-
+		exeImgs: {
+			waiting: '../static/images/waiting.png',
+			running: '../static/images/running.png',
+			success: '../static/images/success.png',
+			failed: '../static/images/failed.png'
+		}
 	},
 	created: function(){
 		var _this = this;
 		// get testphases
-		$.ajax({
-			url: address + 'testphaseController/selectAll',
-			data: '',
-			type: 'GET',
-			dataType: 'json',
-			success: function(data, statusTest){
-				if(data.success == true){
-					_this.testphases = data.obj;
-					if(_this.testphases[0]) {
-						_this.testphaseValue = _this.testphases[0].phasename
+		let getPhasePro = new Promise((resolve, reject) => {
+			$.ajax({
+				url: address + 'testphaseController/selectAll',
+				data: '',
+				type: 'GET',
+				dataType: 'json',
+				success: function(data, statusTest){
+					if(data.success == true){
+						_this.testphases = data.obj;
+						if(_this.testphases[0]) {
+							_this.testphaseValue = _this.testphases[0].phasename
+							resolve()
+						}
 					}
 				}
-			}
-		});
-		// get testrounds
-		$.ajax({
-			url: address + 'testroundController/selectAll',
-			data: '',
-			type: 'get',
-			dataType: 'json',
-			success: function(data, statusText){
-				if(data.success == true){
-					_this.testrounds = data.obj;
-					if(_this.testrounds[0]) {
-						_this.testroundValue = _this.testrounds[0].id
+			});
+		})
+		let getRoundPro = new Promise((resolve, reject) => {
+			$.ajax({
+				url: address + 'testroundController/selectAll',
+				data: '',
+				type: 'get',
+				dataType: 'json',
+				success: function(data, statusText){
+					if(data.success == true){
+						_this.testrounds = data.obj;
+						if(_this.testrounds[0]) {
+							_this.testroundValue = _this.testrounds[0].id
+							resolve()
+						}
+					}
+					console.log(_this.testrounds)
+				}
+			});
+		})
+		let getCaseId = new Promise((resolve, reject) => {
+			// get caselib id
+			$.ajax({
+				url: address+'testProjectController/selectAll',
+				type: 'GET',
+				data: null,
+				success: function(data) {
+					_this.caselibIds = data.obj;
+					if(_this.caselibIds[0]) {
+						_this.caselibId = _this.caselibIds[0].caselibId
+						resolve()
 					}
 				}
-				console.log(_this.testrounds)
-			}
-		});
-
-		$.ajax({
-	        url: address+'testProjectController/selectAll',
-	        type: 'GET',
-	        data: null,
-	        success: function(data) {
-	            _this.caselibIds = data.obj;
-	            if(_this.caselibIds[0]) {
-					_this.caselibId = _this.caselibIds[0].caselibId
-				}
-	        }
-	    });
-
+			});
+		})
+		
+		Promise.all([getPhasePro, getRoundPro, getCaseId])
+			.then(() => {
+				_this.getCases()
+			})
+			.catch(() => { console.log("测试计划及测试轮次数据不全") })
 		// init the modal 
 		$('#add-modal').on('hidden.bs.modal', function (e) {
 			var scenes = _this.selectedScene;

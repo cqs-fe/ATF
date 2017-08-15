@@ -1,0 +1,34 @@
+{
+	"success":true,
+   "data": [
+   	{
+ 			"name":"test1", 
+ 		 	"open":true,
+ 		 	"children":[
+    			{
+            "name":"test1_3",
+            "open":true,
+            "children":[
+              {
+                "modelId":12,
+                "name":"child", 
+                "open":true
+              }
+            ]
+          },
+    			{
+          "name":"test1_2"
+          }
+    	]
+    },
+ 		{
+ 			"id":12,
+ 			"name":"test2",
+ 			"open":true,
+ 			"children":[
+    		{"name":"test2_1"},
+    		{"name":"test2_2"}
+    	]
+ 		}
+   ]
+}

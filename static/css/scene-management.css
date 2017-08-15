@@ -109,11 +109,18 @@ html, body {
     .editTrigger footer:first-child {
       margin-right: 20px; }
 
+.row {
+  marign: 0; }
+  .row .breadcrumb {
+    margin-bottom: 10px; }
+
 #main-content {
   position: relative;
   display: flex;
   flex-direction: column;
   padding-top: 60px; }
+  #main-content .check-all-case {
+    margin: 5px 0 20px 0; }
   #main-content .strench {
     flex: 1 1 auto;
     background-color: #fff; }
@@ -150,18 +157,21 @@ html, body {
         overflow: auto;
         background-color: #fff;
         padding: 10px 20px; }
+        #main-content .content-wrapper .main .main-content .check-all-case {
+          display: inline-block; }
         #main-content .content-wrapper .main .main-content .case-lib {
           margin-bottom: 20px;
           border: 1px dashed #ddd;
-          padding: 5px; }
+          padding: 5px;
+          background-color: #fafafa; }
           #main-content .content-wrapper .main .main-content .case-lib .checkbox-wrapper {
             display: inline-block;
             height: 100%;
-            width: 30px;
             vertical-align: top;
-            padding: 5px 8px; }
+            padding: 0px 0px 0px 8px; }
             #main-content .content-wrapper .main .main-content .case-lib .checkbox-wrapper input {
-              float: left; }
+              float: left;
+              margin: 0; }
           #main-content .content-wrapper .main .main-content .case-lib .case-wrapper {
             display: inline-block;
             width: calc(100% - 40px); }
@@ -170,9 +180,10 @@ html, body {
         #main-content .content-wrapper .main .main-content .case {
           flex: 1 0 auto;
           display: inline-block;
-          margin-bottom: 10px;
-          margin-left: 10px;
-          border: 1px solid #ccc;
+          margin-bottom: 0px;
+          margin-left: 20px;
+          min-width: 50px;
+          border: 1px solid #ddd5d5;
           border-radius: 5px; }
           #main-content .content-wrapper .main .main-content .case .case-header {
             height: 30px;
@@ -186,13 +197,11 @@ html, body {
               margin: 0px 0 0 0px; }
           #main-content .content-wrapper .main .main-content .case .case-footer {
             font-size: 16px; }
-            #main-content .content-wrapper .main .main-content .case .case-footer i {
-              float: right; }
-            #main-content .content-wrapper .main .main-content .case .case-footer i.icon-remove {
-              color: #FF6C60;
-              color: red !important; }
-            #main-content .content-wrapper .main .main-content .case .case-footer i.icon-ok {
-              color: #66F60C; }
+            #main-content .content-wrapper .main .main-content .case .case-footer img {
+              display: block;
+              width: 20px;
+              height: 20px;
+              margin: 0 auto; }
         #main-content .content-wrapper .main .main-content table#testphase-table td, #main-content .content-wrapper .main .main-content table#testphase-table th {
           text-align: center; }
         #main-content .content-wrapper .main .main-content table#testphase-table tr :first-child {

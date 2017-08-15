@@ -330,6 +330,8 @@ $(document).ready(function(){
 				}
 				var sendData = sendDataArray.join(';')
 				console.log(sendData)
+				Vac.alert('这是生成的脚本代码:\n' + sendData)
+				// UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
 			},
 			// 显示UI和元素 、函数集
 			showUiAndElement: function(event, type) {

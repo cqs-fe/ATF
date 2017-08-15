@@ -17,7 +17,7 @@
     </style>
 </head>
 
-<body id="v-body">
+<body id="v-body" v-cloak>
     <!--header start-->
     <link rel="import" href="./common/header-guide.html?__inline">
     <!--header end-->
@@ -117,7 +117,7 @@
                                             <p>{{caseWrapper.caseCompositeType}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <!-- <i class="icon-remove success-flag"></i> -->
+                                            <img src="../static/images/waiting.png">
                                         </footer>
                                     </div>
                                 </template>
@@ -137,7 +137,7 @@
                                           <p>{{node.flowNodeCode}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <!-- <i class="icon-remove success-flag"></i> -->
+                                            <img src="../static/images/running.gif">
                                         </footer>
                                     </div>
                                   </div>
@@ -163,7 +163,7 @@
                                             <p>{{caseWrapper.caseId}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <!-- <i class="icon-remove success-flag"></i> -->
+                                            <img src="../static/images/running.gif">
                                         </footer>
                                     </div>
                                 </template>
@@ -181,7 +181,7 @@
                                             <p>{{node.flowNodeCode}}</p>
                                         </div>
                                         <footer class="case-footer">
-                                            <!-- <i class="icon-remove success-flag"></i> -->
+                                            <img src="../static/images/waiting.png">
                                         </footer>
                                     </div>
                                 </template>
@@ -234,19 +234,6 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <!-- 提示框 -->
-    <div class="alert" :class="{ show:alertShow, hide:!alertShow }" id="alert" >
-        <header class="alert-header bg-info">
-            <span>提示信息</span>
-            <button type="button" class="close" ><i class="icon-remove" @click="hideAlert()"></i></button>
-        </header>
-        <main class="alert-main">
-            <p class="">{{ tooltipMessage }}</p>
-        </main>
-        <footer class="alert-footer">
-            <button type="button" class="btn btn-primary" @click="hideAlert()">确定</button>
-        </footer>
-    </div>
     <link rel="import" href="./common-vac/alert.html?__inline">
     <link rel="import" href="./common-vac/confirm.html?__inline">
     <script src="../static/js/config.js"></script>
