@@ -23,12 +23,13 @@ var app = new Vue({
     methods: {
         //获取autid autname
         getAutId() {
-            var thisURL = document.URL,
-                getval = thisURL.split('?')[1],
-                keyval = getval.split('&');
-            this.autId = keyval[0].split('=')[1];
-            this.autName = decodeURI(keyval[1].split('=')[1]);
-            console.log(this.autId)
+            // var thisURL = document.URL,
+            //     getval = thisURL.split('?')[1],
+            //     keyval = getval.split('&');
+            // this.autId = keyval[0].split('=')[1];
+            // this.autName = decodeURI(keyval[1].split('=')[1]);
+            this.autId=sessionStorage.getItem("autId");
+            this.autName=sessionStorage.getItem("autName");
         },
         getautdata() {
             $.ajax({
@@ -175,12 +176,14 @@ var app = new Vue({
 
 //获取autid autname
 function getAutId() {
-    var thisURL = document.URL,
-        getval = thisURL.split('?')[1],
-        keyval = getval.split('&');
-    app.autId = keyval[0].split('=')[1];
-    app.autName = keyval[1].split('=')[1];
-    console.log(app.autId)
+    // var thisURL = document.URL,
+    //     getval = thisURL.split('?')[1],
+    //     keyval = getval.split('&');
+    // app.autId = keyval[0].split('=')[1];
+    // app.autName = keyval[1].split('=')[1];
+    // console.log(app.autId)
+    app.autId=sessionStorage.getItem("autId");
+    app.autName=sessionStorage.getItem("autName");
 }
 
 function getautdata() {

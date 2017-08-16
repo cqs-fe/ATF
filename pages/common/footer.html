@@ -15,3 +15,11 @@
 <script type="text/javascript" src="../../static/js/constant.js"></script>
 <script type="text/javascript" src="../../lib/form-component.js"></script>
 <script type="text/javascript" src="../../static/js/config.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var loginStatus=sessionStorage.getItem("isLogin");
+		if(loginStatus===null || loginStatus===''){
+			window.location.href="Login.html";
+		}
+	});
+</script>
