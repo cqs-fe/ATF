@@ -1,0 +1,116 @@
+{
+    "success": true,
+    "msg": "",
+    "obj": {
+        "id": 29,
+        "caselibid": 1,
+        "scenename": "测试登录场景",
+        "description": "对进货系统的测试登录流程进行顺次测试",
+        "exeStrategy1Status": 2,
+        "exeStrategy2Start": 1,
+        "exeStrategy2Order": null,
+        "exeStrategy2Status": 1,
+        "exeStrategy3Start": 1,
+        "exeStrategy3Order": null,
+        "exeStrategy3Status": 1,
+        "exeStrategyErr": 2,
+        "caseDtos": [
+            {
+                "id": 251,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 42,
+                        "casecode": 127
+                    },
+                    {
+                        "id": 34,
+                        "casecode": 126
+                    },
+                    {
+                        "id": 53,
+                        "casecode": 125
+                    }
+                ]
+            },
+            {
+                "id": 269,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 268,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 273,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 270,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 272,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 110,
+                        "casecode": 123
+                    },
+                    {
+                        "id": 111,
+                        "casecode": 123
+                    }
+                ]
+            },
+            {
+                "id": 271,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 12,
+                        "casecode": 123
+                    },
+                    {
+                        "id": 14,
+                        "casecode": 123
+                    },
+                    {
+                        "id": 13,
+                        "casecode": 123
+                    }
+                ]
+            },
+            {
+                "id": 265,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 22,
+                        "casecode": 124
+                    },
+                    {
+                        "id": 23,
+                        "casecode": 125
+                    },
+                    {
+                        "id": 24,
+                        "casecode": 126
+                    }
+                ]
+            }
+        ]
+    }
+}

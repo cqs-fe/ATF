@@ -1,6 +1,3 @@
-[v-cloak] {
-	display: none;
-}
 
 .modal {
 	.modal-body {
@@ -132,7 +129,7 @@ html, body{
 }
 .editData {
 	position: absolute;
-	display: block;
+	// display: block;
 	left: 50%;
 	top: 50%;
 	overflow: auto;
@@ -574,4 +571,7 @@ html, body{
 	.copy-right{
 		flex: 0 0 50px;
 	}
+}
+[v-cloak] {
+	display: none;
 }

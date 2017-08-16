@@ -91,15 +91,15 @@
                      <label>前置操作</label>
                      <div>
                          <button class="btn btn-white" @click="removeRow($event, 1)">
-                             <i class="icon-remove"></i>
+                             <i class=" icon-trash"></i>
                              删除
                          </button>
                          <button class="btn btn-white" @click="moveUp($event, 1)">
-                             <i class="icon-angle-up"></i>
+                             <i class="icon-double-angle-up"></i>
                              上移
                          </button>
                          <button class="btn btn-white" @click="moveDown($event, 1)">
-                             <i class="icon-angle-down"></i>
+                             <i class="icon-double-angle-down"></i>
                              下移
                          </button>
                          <button class="btn btn-white" @click="saveOperation($event, 1)">
@@ -132,11 +132,11 @@
                                <td class="index">{{index + 1}}</td>
                                <td class="operations">
                                    <div>
-                                       <label>元素</label>
+                                       <label>UI</label>
                                        <input type="text" class="operation-element" readonly="true" name="" value={{row.operation.element}}>
                                    </div>
                                     <div>
-                                       <label>UI</label>
+                                       <label>元素</label>
                                        <input type="text" readonly="true" class="operation-ui" name="" value={{row.operation.ui}}>
                                    </div>
                                    <i class="icon-edit" @click="showUiAndElement($event, 1)"></i>
@@ -175,15 +175,15 @@
                       <label>后置操作</label>
                      <div>
                          <button class="btn btn-white" @click="removeRow($event, 1)">
-                             <i class="icon-remove"></i>
+                             <i class=" icon-trash"></i>
                              删除
                          </button>
                          <button class="btn btn-white" @click="moveUp($event, 2)">
-                             <i class="icon-angle-up"></i>
+                             <i class="icon-double-angle-up"></i>
                              上移
                          </button>
                          <button class="btn btn-white"  @click="moveDown($event, 2)">
-                             <i class="icon-angle-down"></i>
+                             <i class="icon-double-angle-down"></i>
                              下移
                          </button>
                          <button class="btn btn-white"  >
@@ -380,8 +380,10 @@
                         代码查看</button>
                         <button class="btn btn-white"><i class="icon-wrench"></i>
                         调试</button>
-                        <button class="btn btn-white" id="saveAll"><i class="icon-wrench"></i>
+                        <button class="btn btn-white" id="saveAll"><i class="icon-save"></i>
                         保存</button>
+                        <button class="btn btn-white" id="enparameter"><i class="icon-wrench"></i>
+                        参数化</button>
                     </div>
                     <div class="dataTable-wrapper">
 
@@ -395,15 +397,6 @@
                       <button type="button" class="close" id="btn-closetooltip" @click="toggle">
                       <i :class="{'icon-resize-full':flag,'icon-resize-small':!flag}"></i></button></div>
                       <div class="panel-body">
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
-                        举头望明月，低头思故乡</br>
-                        窗前明月光，疑是地上霜</br>
                         举头望明月，低头思故乡</br>
                         窗前明月光，疑是地上霜</br>
                         举头望明月，低头思故乡</br>
@@ -423,13 +416,15 @@
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title">选择UI与元素</h4>
+                        <h4 class="modal-title">模板脚本操作项</h4>
                     </div>
                     <div class="modal-body">
                         <div class="ui-element">
+                            <h5>UI与元素</h5>
                             <ul id="ui-element-ul" class="ztree"></ul>
                         </div>
                         <div class="function-div">
+                            <h5>公共函数集</h5>
                             <ul id="functions-ul" class="ztree"></ul>
                         </div>
                     </div>
@@ -471,7 +466,8 @@
 
     </div>
     <!--content end -->
-
+    <link rel="import" href="./common-vac/alert.html?__inline">
+    <link rel="import" href="./common-vac/confirm.html?__inline">
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
     <script src="../static/js/datatable.es.js"></script>
@@ -480,20 +476,7 @@
     <script type="text/javascript" src="../lib/jquery-ui.js"></script> 
     <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
     <script type="text/javascript">
-    (function(){
-        
-        var tooltipwindow = new Vue({
-          el: '#tooltipwindow',
-          data: {
-            flag: true
-          },
-          methods: {
-            toggle: function(){
-              this.flag = !this.flag;
-            }
-          }
-        });
-    })();
+    
     </script>
 </body>
 

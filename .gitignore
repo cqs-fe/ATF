@@ -1,4 +1,5 @@
 .vscode/
-static/css/*.css.map
 debug.log
-
+dist/
+public/
+dist/

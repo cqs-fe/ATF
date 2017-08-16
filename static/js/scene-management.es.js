@@ -1,3 +1,4 @@
+  __inline('./scene-management/checked.js');
 var vBody = new Vue({
 	el: '#v-body',
 	data: {
@@ -11,6 +12,9 @@ var vBody = new Vue({
 		tooltipMessage: '',
 
 		sceneInfo: null,
+		caseIds: [],
+		flowNodeIds: new Map(),
+
 		triggers: null,
 		triggerInfo: {
 			selectedTrigger: [],
@@ -40,9 +44,11 @@ var vBody = new Vue({
 			exe_strategy_err: ''
 		},
 
+		checkall: false,
 		// save the selected cases
 		selectedCases: [],
-
+		// save the checked flow nodes
+		checkedFlowNodes: [],
 		// 执行时间设置的相关参数
 		executeTime: null,
 		executeDateFlag: null,
@@ -62,8 +68,15 @@ var vBody = new Vue({
 		poolDatas: null,
 
 		//场景id和名称
+		url: '',
 		sceneid: '',
-		scenename: '场景名称'
+		scenename: '场景名称',
+		exeImgs: {
+			waiting: '../static/images/waiting.png',
+			running: '../static/images/running.png',
+			success: '../static/images/success.png',
+			failed: '../static/images/failed.png'
+		}
 	},
 	ready:function(){
 		this.setVal();
@@ -86,12 +99,48 @@ var vBody = new Vue({
 	created: function(){
 		
 	},
+	watch: {
+		"selectedCases": function(newValue, oldValue) {
+			console.log('heheh')
+			this.checkall = (newValue.length === this.caseIds.length)
+			this.setBackground()
+		},
+		"checkedFlowNodes": function(newValue, oldValue) {
+			// this.setBackground()
+			console.log(this.flowNodeIds)
+			for(let key of this.flowNodeIds.keys()) {
+				let flag = this.flowNodeIds.get(key).every((flowNodeId) => {
+					return this.checkedFlowNodes.includes(flowNodeId)
+							? true : false 
+				})
+				if(flag) {
+					this.pushNoRepeat(this.selectedCases, +key)
+				} else {
+					let set = new Set(this.selectedCases);
+					set.delete(+key);
+					this.selectedCases = [...set]
+				}
+			}
+		}
+	},
 	methods: {
+		setBackground: checkFunction.setBackground,
 		//获取上级页面选中的场景id和名称
 		setVal:function(){
-			var thisURL = document.URL,
-                getval = thisURL.split('?')[1],
-                keyval = getval.split('&');
+			var thisURL = document.URL;
+            var getval = thisURL.split('?')[1];
+            if (!getval) {
+            	var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "请从场景管理页面进入！");
+            	promise.then(() => {
+            		location.href = "scene.html"
+            	}, () => {
+            		location.href = "scene.html"
+            	})
+            	
+            }
+            var keyval = getval.split('&');
+            this.url = document.URL;
+            
             this.sceneid = keyval[0].split('=')[1],
             this.scenename = decodeURI(keyval[1].split('=')[1]);
 		},
@@ -101,13 +150,36 @@ var vBody = new Vue({
 		getCases: function(){
 			var _this = this;
 			$.ajax({
-				url: address + 'sceneController/selectByPrimaryKey',
+				// url: address + 'sceneController/selectByPrimaryKey',
+				url: '/api/getcaseinscene',
 				data: 'id='+_this.sceneid,
-				type: 'post',
+				type: 'get',
 				dataType: 'json',
 				success: function(data, statusText){
 					if(data.success == true){
 						_this.sceneInfo = data.obj;
+						({
+							exeStrategy1Status: _this.exe_strategy.exe_strategy1_status,
+							exeStrategy2Start:_this.exe_strategy.exe_strategy2_start,
+							exeStrategy2Order: _this.exe_strategy.exe_strategy2_order,
+							exeStrategy2Status: _this.exe_strategy.exe_strategy2_status,
+							exeStrategy3Start: _this.exe_strategy.exe_strategy3_start,
+							exeStrategy3Order: _this.exe_strategy.exe_strategy3_order,
+							exeStrategy3Status: _this.exe_strategy.exe_strategy3_status,
+							exeStrategyErr: _this.exe_strategy.exe_strategy_err
+						} = data.obj);
+
+						for (var i = data.obj.caseDtos.length - 1; i >= 0; i--) {
+							_this.caseIds.includes(data.obj.caseDtos[i].id) ? 1 : (_this.caseIds.push(data.obj.caseDtos[i].id))
+							if(data.obj.caseDtos[i].caseCompositeType == 2) {
+								let arr = []
+								for (var j = data.obj.caseDtos[i].flowNodeDtos.length - 1; j >= 0; j--) {
+									arr.push(data.obj.caseDtos[i].id+'-'+data.obj.caseDtos[i].flowNodeDtos[j].id)
+								}
+								_this.flowNodeIds.set(+data.obj.caseDtos[i].id, arr)
+							}
+						}
+
 					}
 				}
 			});
@@ -126,159 +198,63 @@ var vBody = new Vue({
 				}
 			});
 		},
-		setSelect: function(event){
-			var target  = event.target;
-			if(!target.classList.contains('main-content')) {
-				return
-			}
-			var fileNodes = document.querySelectorAll(".case input[type='checkbox']");
-			var startX = event.offsetX;
-			var startY = event.offsetY;
-			var moveBeforeX = event.pageX;
-			var moveBeforeY = event.pageY;
-			var selDiv = document.createElement('div');
-			selDiv.style.cssText = 
-			`position:absolute;width:0px;height:0px;
-			font-size:0px;margin:0px;padding:0px;border:1px dashed #0099FF;
-			background-color:#C3D5ED;z-index:1000;filter:alpha(opacity:60);
-			opacity:0.6;display:none;`;
-			selDiv.id = 'selectDiv';
-			document.querySelector('.main-content').appendChild(selDiv);
-			selDiv.style.left = startX + "px";
-			selDiv.style.top = startY + 'px';
-			var _x = null;
-			var _y = null;
-			var moveAfterX = null;
-			var moveAfterY = null;
-			event.stopPropagation();
-			event.preventDefault();
-			var selectedRange = [];
-			target.addEventListener('mousemove', mouseMoveFunction, false);
-			target.addEventListener('mouseup', (event) => {
-				this.isSelect = true;
-				if (selDiv){
-					document.querySelector('.main-content').removeChild(selDiv);
-				}
-				target.removeEventListener('mousemove', mouseMoveFunction, false);
-				selDiv = null;
-				var caseLib = document.querySelectorAll('.case-lib');
-				for(var i=0; i<caseLib.length; i++){
-					var inputs = Array.from(caseLib[i].getElementsByClassName('check-case'));
-					if(inputs.every(function(value){
-						if(value.checked===true)
-							{return true;} 
-						return false;
-					})){
-						caseLib[i].getElementsByClassName('checkall')[0].checked = true;
-					} else {
-						caseLib[i].getElementsByClassName('checkall')[0].checked = false;
-					}
-				}
-			}, false);
-
-
-			function mouseMoveFunction(event){
-				if(selDiv.style.display == 'none'){
-					selDiv.style.display = "block";
-				}
-				moveAfterX = event.pageX;
-				moveAfterY = event.pageY;
-				// 获取鼠标移动后的位置
-				_x = startX - moveBeforeX + moveAfterX;
-				_y = startY - moveBeforeY + moveAfterY;
-				// console.log("_X:" + _x + "-- _Y:" + _y);
-				selDiv.style.left = Math.min(_x, startX) + "px";
-				selDiv.style.top = Math.min(_y, startY) + "px";
-				// console.log("Left:" + selDiv.style.left + "-- Top:" + selDiv.style.top);
-				selDiv.style.width = Math.abs(_x - startX) + "px";
-				selDiv.style.height  = Math.abs(_y - startY) + "px";
-
-				var _l = selDiv.offsetLeft, _t = selDiv.offsetTop;
-				var _w = selDiv.offsetWidth, _h = selDiv.offsetHeight;
-				
-				for(var i=0; i < fileNodes.length; i++){
-					var inputRight = fileNodes[i].offsetLeft + fileNodes[i].offsetWidth;
-					var inputBottom = fileNodes[i].offsetTop + fileNodes[i].offsetHeight;
-					if( inputRight > _l && inputBottom > _t && fileNodes[i].offsetLeft < _l + _w && fileNodes[i].offsetTop < _t + _h) {
-						if(!selectedRange.includes(fileNodes[i])){
-							selectedRange.push(fileNodes[i]);
-						}
-					}
-				}
-				for(var i=0; i<selectedRange.length; i++){
-					var inputRight = selectedRange[i].offsetLeft + selectedRange[i].offsetWidth;
-					var inputBottom = selectedRange[i].offsetTop + selectedRange[i].offsetHeight;
-					if( inputRight > _l && inputBottom > _t && selectedRange[i].offsetLeft < _l + _w && selectedRange[i].offsetTop < _t + _h) {
-						selectedRange[i].checked = true;
-					} else {
-						selectedRange[i].checked = false;
-					}
-				}
-				event.stopPropagation();
-				event.preventDefault();
-			};
-		},
+		setSelect: checkFunction.setSelect,
+		pushNoRepeat: checkFunction.pushNoRepeat,
 		setSelectListener: function(){
 			document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
 			// 防止点击用例框时也进行选取
 		},
 		// 点击checkbox
-		checkChanged: function(){
-			// var inputs = Array.from(event.target.parentNode.parentNode.parentNode.querySelectorAll('.check-case'))
-			// if(inputs.every((value) => {
-			// 	return value.checked === true 
-			// })) {
-			// 	event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = true;
-			// } else {
-			// 	event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.checkall').checked = false;
-			// }
+		checkChanged: function(event){
+			var parent = event.target.parentNode.parentNode.parentNode
+			var checkallId = +parent.parentNode.querySelector('.checkall').value
+			var inputs = Array.from(parent.querySelectorAll('.check-case'))
+			if(inputs.every((value) => {
+				return value.checked === true 
+			})) {
+				this.selectedCases.push(checkallId)
+			} else {
+				let set = new Set(this.selectedCases)
+				set.delete(checkallId)
+				this.selectedCases = [...set]
+			}
 		},
 		// 全选case-lib中的case
 		checkallToggle: function(event){
-			// console.log(event.target)
-			// var flag = event.target.checked;
-			// console.log(flag)
-			// var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
-			// if(flag) {
-			// 	for(var i=0; i<inputs.length; i++) {
-			// 		if (!this.selectedCases.includes(+inputs[i].value)) {
-			// 			this.selectedCases.push(+inputs[i].value)
-			// 		}
-			// 	}
-			// } else {
-			// 	for (var input of inputs) {
-			// 		if(this.selectedCases.includes(input.value)) {
-
-			// 		}else {
-			// 			continue
-			// 		}
-			// 	}
-			// }
-			// console.log(this.selectedCases);
+			var flag = event.target.checked;
+			var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
+			if(flag) {
+				for(var input of inputs) {
+					(!this.checkedFlowNodes.includes(input.value))
+					? (this.checkedFlowNodes.push(input.value))
+					: 1 
+				}
+			} else {
+				for (var input of inputs) {
+					let set = new Set(this.checkedFlowNodes)
+					let value = input.value
+					if(set.has(input.value)) {
+						set.delete(input.value)
+					}
+					this.checkedFlowNodes = [...set]
+				}
+			}
 		},
-		checkall: function(event){
-			// console.log(event.target)
-			// var checkboxs = Array.from(document.querySelectorAll('.case-lib .check-case'));
-			// var checkalls = Array.from(document.querySelectorAll('.case-lib .checkall'))
-
-			// var flag = event.target.checked
-			// for (var checkall of checkalls) {
-			// 	checkall.checked = flag;
-			// }
-			// if(flag) {
-			// 	for (var checkbox of checkboxs) {
-			// 		if (this.selectedCases.includes(+checkbox.value)) {
-			// 			continue
-			// 		} else {
-			// 			this.selectedCases.push(+checkbox.value)
-			// 		}
-			// 	}
-			// } else {
-			// 	for (var i=0,m=this.selectedCases.length; i < m;i++) {
-			// 		this.selectedCases.pop()
-			// 	}
-			// }
-			// console.log(this.selectedCases)
+		checkallBox: function(event){
+			console.log(this.checkall)
+			if(this.checkall === true) {
+				this.caseIds.forEach((value) => {
+						this.selectedCases.includes(value) ? 1 : (this.selectedCases.push(value))
+						this.flowNodeIds.has(+value)
+							? (
+								this.checkedFlowNodes = [...this.checkedFlowNodes,...this.flowNodeIds.get(+value)]
+							)
+							: 1
+					})
+			} else {
+				this.selectedCases = []
+				this.checkedFlowNodes = [];
+			}
 		},
 		toggleTooltip: function(event){
 			this.tooltipFlag = !this.tooltipFlag;
@@ -292,7 +268,13 @@ var vBody = new Vue({
 				this.getTriggers();
 			}else if(type === 4){
 				this.getDataPool();
+			} else if (type === 3) {
+				this.getExecuteStrategy();
 			}
+		},
+		// 获取执行策略
+		getExecuteStrategy: function(){
+
 		},
 		// 打开关闭触发器设置的弹出框
 		closeTrigger: function(){
@@ -343,9 +325,9 @@ var vBody = new Vue({
 								var length = conditions.length;
 								for(var i=0;i<length;i++){
 									var tr = $(`<tr><td><select class="objectname"><option value="1" selected>用例编号</option>
-                                    <option value="2">优先级</option>
-                                    <option value="3">用例类型</option>
-                                    <option value="4">执行结果</option></select> </td><td><select class="matchtype"><option value="1">
+                                    <option value="2">测试系统名称</option>
+                                    <option value="3">功能点名称</option>
+                                    </select> </td><td><select class="matchtype"><option value="1">
 										等于</option><option value="2">大于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
                             			</td><td><button class="btn btn-default">删除</button>
                             			</td></tr>`);
@@ -404,6 +386,7 @@ var vBody = new Vue({
 						success: function(data, statusText){
 							if(data.success === true) {
 								Vac.alert(data.msg);
+								_this.getTriggers();
 							}else {
 								Vac.alert('删除失败' + data.msg);
 							}
@@ -420,10 +403,9 @@ var vBody = new Vue({
 
 			var _this = this;
 			var tr = $(`<tr><td><select class="objectname"><option value="1">用例编号</option>
-                                    <option value="2">优先级</option>
-                                    <option value="3">用例类型</option>
-                                    <option value="4">执行结果</option></select> </td><td><select class="matchtype"><option value="1">
-										等于</option><option value="2">大于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
+                                    <option value="2">测试系统名称</option>
+                                    <option value="3">功能点名称</option></select> </td><td><select class="matchtype"><option value="1">
+										等于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
                             			</td><td><button class="btn btn-default">删除</button>
                             			</td></tr>`);
 			$('.btn-default', tr).click(_this.removeTriggerCondition);
@@ -442,7 +424,7 @@ var vBody = new Vue({
 			var div = $(`
 					<div class="action-item-wrapper"><button class="btn-removeaction"><span style="z-index:-1;" class="icon-remove"></span></button>
 					<div class="item-row"><label>选择操作</label><select class="actionname">
-					<option value="1">发送邮件</option><option value="2">打开网页</option></select></div><div class="item-row"><label>脚本类型</label>
+					<option value="1">执行脚本</option><option value="2">groovy类型</option></select></div><div class="item-row"><label>脚本类型</label>
 					<select class="actiontype"> <option value="2">groovy</option><option value="1">2</option>
 					</select></div><div class="item-row"><label>脚本内容</label><textarea rows="5" class="scriptcontent" cols=""></textarea>
 					</div></div>
@@ -487,6 +469,8 @@ var vBody = new Vue({
 						if(data.success){
 							Vac.alert(data.msg);
 							this.triggerShow = false;
+							_this.getTriggers();
+							_this.triggerShow = false
 						} else {
 							Vac.alert(data.msg);
 						}
@@ -524,6 +508,8 @@ var vBody = new Vue({
 						if(data.success){
 							Vac.alert(data.msg);
 							this.triggerShow = false;
+							_this.getTriggers();
+							_this.triggerShow = false
 						}else {
 							Vac.alert(data.msg);
 						}
@@ -565,13 +551,14 @@ var vBody = new Vue({
 			}
 		},
 		saveTriggerState: function() {
+			var _this = this;
 			var trs = document.querySelectorAll('#triggers tr')
 			var dataArray = [];
 			for(var i=0;i<trs.length;i++){
 				var item = {};
 				item.id = trs[i].querySelector('input').value;
 				// console.log(item.id)
-				item.id = trs[i].querySelector('select').value;
+				item.state = trs[i].querySelector('select').value;
 				dataArray.push(JSON.stringify(item))
 			}
 			$.ajax({
@@ -582,6 +569,9 @@ var vBody = new Vue({
 				success: function(data, statusText) {
 					if(data.success === true) {
 						Vac.alert('保存成功！')
+						_this.getTriggers()
+					} else {
+						Vac.alert('保存失败')
 					}
 				}
 			})
@@ -597,6 +587,7 @@ var vBody = new Vue({
 				type: 'post',
 				success: function(data){
 					Vac.alert(data.msg);
+					_this.getCases();
 				}
 			});
 		},
@@ -605,6 +596,7 @@ var vBody = new Vue({
 		},
 		removeCases: function(){
 			console.log(this.selectedCases.toString())
+			var _this = this;
 			var data = {
 				sceneid: this.sceneid,
 				caseidList: '[' + this.selectedCases.toString() + ']'
@@ -617,6 +609,7 @@ var vBody = new Vue({
 				success: function(data, statusText){
 					if(data.success === true){
 						Vac.alert("删除成功！");
+						_this.selectedCases = [];
 						_this.getCases()
 					}else {
 						Vac.alert('删除失败！');
@@ -625,6 +618,9 @@ var vBody = new Vue({
 			});
 		},
 		// 执行时间规划
+		getExecuteTime: function(){
+
+		},
 		saveExecuteTime: function(){
 			var data = {
 				sceneid: this.sceneid,

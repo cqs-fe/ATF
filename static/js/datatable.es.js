@@ -1,7 +1,21 @@
 $(document).ready(function(){
-	var submenuHeight = document.querySelector('#submenu').offsetHeight;
-			// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
-			// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
+	// var submenuHeight = document.querySelector('#submenu').offsetHeight;
+	// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
+	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
+	(function(){
+        
+        var tooltipwindow = new Vue({
+          el: '#tooltipwindow',
+          data: {
+            flag: true
+          },
+          methods: {
+            toggle: function(){
+              this.flag = !this.flag;
+            }
+          }
+        });
+    })();
 	(function(){
 		var editDataVue = new Vue({
 			el: '#editData',
@@ -318,9 +332,15 @@ $(document).ready(function(){
 							console.log('success')
 						})
 					} else {
-						// $('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
+						// 清空functions数组并新添加选中的公共方法
+						operationRows[index].functions = [];
 						operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
-						console.log()
+						// 清空操作项
+						operationRows[index].operation = {
+							ui: '',
+							element: ''
+						};
+						// 更新参数
 						operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
 						_this.updateRow(operationRows, index)
 					}
@@ -417,7 +437,13 @@ $(document).ready(function(){
                 selectItems: [],
                 // checkedItems: [{value: 1,name: '登陆'},{value: 2,name: '注册'}],
                 checkedItems: [],
-                checkedArray:[]
+                // 保存点击后的复选框
+                checkedArray:[],
+                systemInfo: {
+                	executor: 63,
+                	caseLib_id: 1,
+                	testpoints: '',
+                }
             },
             created: function(){
 
@@ -435,8 +461,29 @@ $(document).ready(function(){
 			        }
 			    ];
 				_this.selectItems = data;
+				_this.getInfo();
             },
             methods: {
+            	getInfo: function() {
+            		var userId = sessionStorage.getItem('userId')
+            		var caseLib_id = sessionStorage.getItem('caselibid')
+            		if(userId == null || userId == '') {
+            			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '您尚未登陆，请登陆！').then(function(){
+							window.location.href = 'Login.html'
+						}, function(){
+							return;
+						})
+            		}
+            		if(caseLib_id == null || caseLib_id == '') {
+            			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '请先选择测试项目！').then(function(){
+							window.location.href = 'testProject.html'
+						}, function(){
+							return;
+						})
+            		}
+            		this.systemInfo.executor = userId
+            		this.systemInfo.caseLib_id = caseLib_id
+            	},
                 toggle: function(){
                     this.flag = !this.flag;
                     document.querySelector('.wtHolder') && (document.querySelector('.wtHolder').style.width = 'auto');
@@ -445,9 +492,13 @@ $(document).ready(function(){
                     var _this = this;
                     // console.log('hello');
                     if(event.target.value == 1){
+                    	var data = {
+                    		executor: _this.systemInfo.executor,
+                    		caseLib_id: _this.systemInfo.caseLib_id
+                    	}
                         $.ajax({
                             url: address + "TestcaseController/selectTestPointByCondition",
-                            data: "executor=6&caseLib_id=6",
+                            data: data,
                             type: 'post',
                             dataType: "json",
                             success: function(data,textStatus){
@@ -460,15 +511,22 @@ $(document).ready(function(){
                                 });
                             }
                         });
+                    } else {
+                    	_this.checkedItems = [];
+                    	_this.checkedArray = []
                     }
                 },
                 changeChecked: function(event){
                     var _this = this;
+                    console.log(JSON.stringify(_this.checkedArray))
+                    console.log('[' + _this.checkedArray.toString() + ']')
+                    _this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
+                    // _this.systemInfo.testpoints = '[' + _this.checkedArray.toString() + ']';
                     $.ajax({
                         url: address + "autController/selectTestCaseByCondition",
                         type: "post",
                         dataType: "json",
-                        data: "testpoints=["+_this.checkedArray+"]&executor=6&caseLib_id=6",
+                        data: _this.systemInfo,
                         success: function(data, textStatus){
                             var treeData = [];
                             data.o.forEach((value) => {
@@ -655,15 +713,14 @@ $(document).ready(function(){
 			return dataKey;
 		};
 		function zTreeOnDblClick(event, treeId, treeNode){
-			console.log(treeNode.getParentNode());
 			if(treeNode && !treeNode.isParent){
 				var autId = treeNode.getParentNode().getParentNode().id;
 				var transId = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
 				var data = {
-					testpoint: 6,
-					executor: 6,
-					caseLib_id: 6,
+					testpoint: sub.systemInfo.test,
+					executor: sub.systemInfo.executor,
+					caseLib_id: sub.systemInfo.caseLib_id,
 					autId:autId,
 					transId:transId,
 					scriptId:scriptId
@@ -783,7 +840,6 @@ $(document).ready(function(){
 					}
 				}); //aj
 			}
-
 		}
 
 		Handsontable.Dom.addEvent(tableContainer, 'mousedown', function (event) {
@@ -932,7 +988,7 @@ $(document).ready(function(){
 				type: 'post',
 				success: function(data,textStatus){
 					if(data.success === true){
-						alert("hello");
+						Vac.alert('保存成功')
 					}
 				}
 			});

@@ -69,7 +69,7 @@ $(document).ready(function(){
             // initial Form
             function initialForm(userid, username){
                 $('#addModal').modal('show');
-                $('#createUser').val(userid);
+                $('#createUser').val("");
             };// initial Form end
 
         });

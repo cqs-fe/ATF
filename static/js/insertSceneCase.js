@@ -36,7 +36,8 @@ var app = new Vue({
         //场景
         sceneList:[],
         sceneid: '',
-        scenename: '场景名称'
+        scenename: '场景名称',
+        url_parameter: ''
     },
     ready: function() {
         this.setVal();
@@ -50,6 +51,7 @@ var app = new Vue({
             var thisURL = document.URL,
                 getval = thisURL.split('?')[1],
                 keyval = getval.split('&');
+            this.url_parameter = 'SceneManagement.html?' + getval;
             this.sceneid = keyval[0].split('=')[1],
             this.scenename = decodeURI(keyval[1].split('=')[1]);
         },

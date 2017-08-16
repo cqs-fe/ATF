@@ -55,7 +55,7 @@ var vBody = new Vue({
 				Vac.alert('请选择要删除的项目')
 				return
 			}
-			Vac.confirm('#vac-confirm', '.okConfirm', 'cancelConfirm').then(function(){
+			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm').then(function(){
 				$.ajax({
 					url: address + "testphaseController/delete",
 					data: 'id='+_this.selectedRows[0],

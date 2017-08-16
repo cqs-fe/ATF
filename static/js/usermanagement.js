@@ -20,7 +20,7 @@ var sendData = {
 $(document).ready(function() {
       // 获取服务器数据
     (function(){
-        $("#showRows").val("3");
+        $("#showRows").val("5");
         showRows = $("#showRows").val();
         var i = 0;
         for(i = 0;i < maxPage; i++){

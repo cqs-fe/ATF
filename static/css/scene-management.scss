@@ -147,12 +147,20 @@ $okGreen: #66F60C;
 		}
 	}
 }
-
+.row {
+	marign:0;
+	.breadcrumb {
+		margin-bottom: 10px;
+	}
+}
 #main-content{
 	position: relative;
 	display:flex;
 	flex-direction: column;
 	padding-top:60px;
+	.check-all-case {
+		margin: 5px 0 20px 0;
+	}
 	.strench {
 		flex: 1 1 auto;
 		background-color: #fff;
@@ -194,19 +202,23 @@ $okGreen: #66F60C;
 				overflow: auto;
 				background-color: #fff;
 				padding: 10px 20px;
+				.check-all-case {
+					display: inline-block;
+				}
 				.case-lib {
 					margin-bottom: 20px;
 					border: 1px dashed #ddd;
 					padding: 5px;
-
+					background-color: #fafafa;
 					.checkbox-wrapper {
 						display: inline-block;
 						height: 100%;
-						width: 30px;
+						// width: 30px;
 						vertical-align: top;
-						padding: 5px 8px;
+						padding: 0px 0px 0px 8px;
 						input {
 							float: left;
+							margin: 0;
 						}
 					}
 					.case-wrapper {
@@ -220,9 +232,10 @@ $okGreen: #66F60C;
 				.case {
 					flex: 1 0 auto;
 					display: inline-block;
-					margin-bottom: 5px;
-					margin-left: 5px;
-					border: 1px solid #ccc;
+					margin-bottom: 0px;
+					margin-left: 20px;
+					min-width: 50px;
+					border: 1px solid #ddd5d5;
 					border-radius: 5px;
 					$caseHeaderheight: 30px;
 					.case-header {
@@ -236,21 +249,16 @@ $okGreen: #66F60C;
 							line-height: $caseHeaderheight;
 							margin: 0px 0 0 0px;
 						}
-						input {
-							// vertical-align: middle;
+						input:checked {
 						}
 					}
 					.case-footer {
 						font-size: 16px;
-						i {
-							float: right;
-						}
-						i.icon-remove {
-							color: $globleRed;
-							color: red !important;
-						}
-						i.icon-ok {
-							color: $okGreen;
+						img {
+							display: block;
+							width: 20px;
+							height: 20px;
+							margin: 0 auto;
 						}
 					}
 				}
@@ -445,10 +453,12 @@ $okGreen: #66F60C;
 				// display: flex;
 				flex: 1 1 auto;
 				border: 1px dashed #ddd;
+				padding: 10px;
 				.case-item {
 					display: inline-block;
 					flex: 1 1 auto;
-					margin: 10px;
+					margin: 10px 10px 0 0;
+
 				}
 			}
 		}

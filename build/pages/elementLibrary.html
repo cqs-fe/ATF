@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta content="telephone=no" name="format-detection"/>
+<meta content="email=no" name="format-detection"/>
+
+
+    <!-- css for this page only -->
+    <title>element library</title>
+
+    <link rel="stylesheet" type="text/css" href="/public/static/css/base_4357fb6.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/index_b033547.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/elementLibrary_4d610bb.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/metroStyle_430bba1.css" />
+    <style type="text/css">
+	.copy-right {
+		height: 50px;
+	}
+</style>
+</head>
+
+<body id="elementLibrary" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <header class="header white-bg">
+    <div class="sidebar-toggle-box">
+        <div data-original-title="点击折叠" data-placement="right" class="icon-reorder tooltips"></div>
+    </div>
+    <!--logo start-->
+    <a href="#" class="logo"><span>ATF</span></a>
+    <!--logo end-->
+
+    <div class="top-nav ">
+        <!--user info start-->
+        <ul class="nav pull-right top-menu">
+            <!-- user login dropdown start-->
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <img alt="" src="/public/static/images/avatar1_small_64c14fd.jpg">
+                    <span class="username">李唤</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <div class="log-arrow-up"></div>
+                    <li><a href="#"><i class=" icon-suitcase"></i>个人中心</a></li>
+                    <li><a href="#"><i class="icon-cog"></i> 设置</a></li>
+                    <li><a href="#"><i class="icon-bell-alt"></i> 通知</a></li>
+                    <li><a href="Login.html"><i class="icon-key"></i> 注销</a></li>
+                </ul>
+            </li>
+            <!-- user login dropdown end -->
+        </ul>
+        <!--search & user info end-->
+    </div>
+</header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+    <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu">
+            <li class="sub-menu">
+                <a href="testProject.html" class="">
+                    <i class="icon-book"></i>
+                    <span>测试项目</span>
+                    <!-- <span class="arrow"></span> -->
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="testitems.html" class="">
+                    <i class="icon-bookmark"></i>
+                    <span>测试任务</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-th"></i>
+                    <span>系统管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li class="sub-menu">
+                        <a class="" href="architecture.html">
+                            <span>开发架构</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="aut.html">
+                            <span>测试系统</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-th"></i>
+                    <span>用例管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li class="sub-menu">
+                        <a class="" href="caseManagement.html">
+                            <span>案例管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="datatable.html">
+                            <span>数据中心</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="scene.html">
+                            <span>场景管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-th"></i>
+                    <span>测试管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li class="sub-menu">
+                        <a class="" href="testphase.html">
+                            <span>测试阶段</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="testroundManage.html">
+                            <span>测试轮次</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="" href="testround.html">
+                            <span>测试计划与执行</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu">
+                <a href="testRecord.html">
+                    <i class="icon-tasks"></i>
+                    <span>记录单管理</span>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="usermanagement.html">
+                    <i class=" icon-male"></i>
+                    <span>用户管理</span>
+                </a>
+            </li>
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>
+
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- breadcrumb start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="breadcrumb">
+                            <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
+                            <li><a href="transact.html">功能点</a></li>
+                            <li class="active">元素库</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- breadcrumb end -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <section class="panel panel-pad">
+                            <!-- select start -->
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label">所属被测系统</label>
+                                    <div class="col-lg-2">
+                                        <select class="form-control" id="autSelect">
+                                        </select>
+                                    </div>
+                                    <label class="col-lg-2 control-label">所属功能点</label>
+                                    <div class="col-lg-2">
+                                        <select class="form-control" id="transactSelect" v-model="transid">
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- select end -->
+                        </section>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <section class="panel tree-panel">
+                            <header class="panel-heading">
+                                元素库
+                            </header>
+                            <div id="menuContent" class="menuContent treeMenu">
+                                <div class="form-group panel-pad form-horizontal">
+                                    <div class="col-lg-6">
+                                        <input type="text" name="" id="keyword" value="" class="form-control empty input-sm">
+                                    </div>
+                                    <a class="btn btn-info btn-sm" id="search-btn">搜索</a>
+                                </div>
+                                <div class="form-group form-horizontal">
+                                    <div class="col-lg-12">
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" href="#addUIModal">添加UI</a>
+                                        <a class="btn btn-info btn-sm" @click="delUI">删除UI</a>
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" href="#addElementModal">添加元素</a>
+                                        <a class="btn btn-info btn-sm" @click="delElement">删除元素</a>
+                                    </div>
+                                </div>
+                                <ul id="elementtree" class="ztree tree"></ul>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-lg-8">
+                        <section class="panel" id="UI">
+                            <header class="panel-heading">
+                                {{UIName}}
+                            </header>
+                            <div class="elementContent">
+                                <form class="form-horizontal panel-pad" id="UIForm">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">UI名称：</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="UIName" class="form-control" value="{{UIName}}" id="RUIName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">关联对象库中对象：</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" id="UILinkedInput" class="form-control" value="{{UILinked}}" disabled>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a class="btn btn-info" data-toggle="modal" href="#UILinkedModal">关联对象</a>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a class="btn btn-info" onclick="removeUILinked()">解除关联</a>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a class="btn btn-info" @click="updateUI">保存</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </section>
+                        <section class="panel" id="ele" style="display: none;">
+                            <header class="panel-heading">
+                                {{eleName}}
+                            </header>
+                            <div class="elementContent">
+                                <form class="form-horizontal panel-pad" id="eleForm">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">元素名称</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="" class="form-control" value="{{eleName}}" id="rEleName">
+                                        </div>
+                                        <label for="" class="col-lg-2 control-label">类型</label>
+                                        <div class="col-lg-3">
+                                            <select class="form-control" id="classtypeSelect">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">对象库中父对象</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="" id="eleParentInput" class="form-control" value="{{eleParent}}" disabled>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a class="btn btn-info" data-toggle="modal" href="#eleParentModal">设置父对象</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">对象库中关联对象</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="" id="eleLinkedInput" class="form-control" value="{{eleLinked}}" disabled>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a class="btn btn-info" data-toggle="modal" href="#eleLinkedModal">设置关联对象</a>
+                                        </div>
+                                    </div>
+                                </form>
+                                <section class="panel small-panel">
+                                    <header class="panel-heading">属性</header>
+                                    <div class="property">
+                                        主属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th>属性名</th>
+                                                    <th>属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="mainTbody">
+                                                <tr v-for="item in mainList">
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.value}}</td>
+                                                </tr>
+                                                <tr v-show="mainListLength==0" class="text-center">
+                                                    <td colspan="3">暂无数据</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="property">
+                                        附加属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th>属性名</th>
+                                                    <th>属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="addiTbody">
+                                                <tr v-for="item in addiList">
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.value}}</td>
+                                                </tr>
+                                                <tr v-show="addiListLength==0" class="text-center">
+                                                    <td colspan="3">暂无数据</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="property">
+                                        辅助属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th>属性名</th>
+                                                    <th>属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="assiTbody">
+                                                <tr v-for="item in assiList">
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.value}}</td>
+                                                </tr>
+                                                <tr v-show="assiListLength==0" class="text-center">
+                                                    <td colspan="3">暂无数据</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </section>
+                                <section class="panel elelink-panel">
+                                    <header class="panel-heading">关联元素</header>
+                                    <div class="linked">
+                                        <div class="linked-left">
+                                            <div class="property">
+                                                关联元素
+                                                <a class="btn btn-white btn-sm pull-right" @click="addLinked($event)"><i class="icon-plus"></i></a>
+                                                <a class="btn btn-white btn-sm pull-right" @click="delLinked($event)"><i class="icon-minus"></i></a>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:5%"></th>
+                                                        <th>关联元素</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="relateNameTbody">
+                                                    <tr v-for="item in relateElementList">
+                                                        <td>
+                                                            <input type="radio" name="chk_list" />
+                                                        </td>
+                                                        <td contenteditable="true">{{item.name}}</td>
+                                                    </tr>
+                                                    <tr v-show="relateElementListLength==0" class="text-center">
+                                                        <td colspan="3">暂无数据</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="linked-right">
+                                            <div class="property">
+                                                属性
+                                                <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                                                <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:5%"></th>
+                                                        <th>属性名</th>
+                                                        <th>属性值</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="relatePropTbody">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox" name="chk_list" />
+                                                        </td>
+                                                        <td contenteditable="true"></td>
+                                                        <td contenteditable="true"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </section>
+                                <a class="btn btn-info" @click="updateElement">保存</a>
+                            </div>
+                        </section>
+                        <!-- successModal start -->
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作成功</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作成功！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- successModal end -->
+                        <!-- failModal start -->
+                        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作失败！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- failModal end -->
+                        <!-- addUIModal start -->
+                        <div class="modal fade" id="addUIModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加UI</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="addUIForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">UI名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="UIName" id="addUIName">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label">relateIdentifyObjectId</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="relateIdentifyObjectId" id="addRelateIdentifyObjectId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label"> relateParentIdentifyObjectId</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="relateParentIdentifyObjectId" id="addRelateParentIdentifyObjectId">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" @click="addUI">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- addUIModal end -->
+                        <!-- addElementModal start -->
+                        <div class="modal fade" id="addElementModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加元素</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="addElementForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">元素名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="ElementName" id="addElementName">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label">ClassType</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="ClassType" id="addEleClassType">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label"> relateIdentifyObjectId</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name=" relateIdentifyObjectId" id="addEleRelateIdentifyObjectId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label"> relateParentIdentifyObjectId</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="  relateParentIdentifyObjectId" id="addEleRelateParentIdentifyObjectId">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElement">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- addElementModal end -->
+                    </div>
+                </div>
+            </section>
+            <div class="copy-right text-center">
+    <span class="color-96">Copyright &copy; 1998－2017 BUPT All Rights Reserved <br>北京邮电大学物流工程实验室 版权所有</span> 
+</div>
+
+        </section>
+        <!--main content end-->
+        <!-- <div class="footer">
+            <link rel="import" href="./common/copy-right.html?__inline">
+        </div> -->
+    </div>
+    <!--UILinked objectmodal start -->
+    <div class="modal fade" id="UILinkedModal" tabindex="-1" role="dialog" aria-labelledby="objectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">对象库</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="menuContent" class="menuContent treeMenu">
+                        <ul id="UILinkedTree" class="ztree tree"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                    <button data-dismiss="modal" class="btn btn-success" onclick="setUILinked()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--UILinked objectmodal end -->
+    <!--eleParent objectmodal start -->
+    <div class="modal fade" id="eleParentModal" tabindex="-1" role="dialog" aria-labelledby="objectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">对象库</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="menuContent" class="menuContent treeMenu">
+                        <ul id="eleParentTree" class="ztree tree"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                    <button data-dismiss="modal" class="btn btn-success" onclick="setEleParent()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--eleParent objectmodal end -->
+    <!--eleLinked objectmodal start -->
+    <div class="modal fade" id="eleLinkedModal" tabindex="-1" role="dialog" aria-labelledby="objectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">对象库</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="menuContent" class="menuContent treeMenu">
+                        <ul id="eleLinkedTree" class="ztree tree"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                    <button data-dismiss="modal" class="btn btn-success" onclick="setEleLinked()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--eleLinked objectmodal end -->
+
+<script type="text/javascript" src="/public/lib/mod_d05ce2e.js"></script>
+<script>/*resourcemap*/
+</script>
+<script src="/public/lib/jquery_9d91e40.js"></script>
+<script src="/public/lib/jquery-1.8.3.min_76b718f.js"></script>
+<script src="/public/lib/bootstrap.min_6d91d60.js"></script>
+<script src="/public/lib/jquery.scrollTo.min_e300145.js"></script>
+<script type="text/javascript" src="/public/lib/jquery.nicescroll_b183fad.js"></script>
+<script type="text/javascript" src="/public/lib/jquery.sparkline_bdcbe87.js"></script>
+<script src="/public/lib/jquery.easy-pie-chart_c5c3733.js"></script>
+<script src="/public/lib/owl.carousel_9bc6f1e.js"></script>
+<script src="/public/lib/jquery.customSelect.min_4c50f61.js"></script>
+<script src="/public/lib/common-scripts_de7c4e5.js"></script>
+<script type="text/javascript" src="/public/lib/vue_1a55fd3.js"></script>
+<script type="text/javascript" src="/public/static/js/constant_ccf38ad.js"></script>
+<script type="text/javascript" src="/public/lib/form-component_23784f4.js"></script>
+<script type="text/javascript" src="/public/static/js/config_c802f56.js"></script>
+<script type="text/javascript" src="/public/static/js/elementLibrary_dd33e4a.js"></script>
+<script type="text/javascript" src="/public/lib/jquery.ztree.all.min_64d5036.js"></script>
+</body>
+
+</html>
+
+<!--common script for all pages-->
+<!--script for this page only-->
+<!-- ztree -->

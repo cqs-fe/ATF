@@ -1,10 +1,168 @@
 $(document).ready(function(){
+	var mainVue = new Vue({
+		el: '#main',
+		data: {
+			autId: 22,
+			autIds: [],
+			transId: 57,
+			transIds: [],
+			templateList: [],
+			checkedTemplate: [],
+			// 新增模板绑定数据
+			newTemplate: {
+				name: '',
+				description: ''
+			}
+		},
+		ready: function() {
+			var _this = this;
+		    _this.getAuts();
+		    _this.getTrans();
+		    _this.getScriptTemplate();
+		    $('#addtemplateModal').on('hidden.bs.modal', function (e) {
+		    	_this.newTemplate = {
+		    		name: '',
+					description: ''
+		    	}
+		    })
+		},
+		computed: {
+		},
+		methods: {
+			getTrans: function() {
+				var _this = this;
+				$.ajax({
+			        url: address + 'transactController/showalltransact',
+			        data: {'autlistselect': _this.autId},
+			        type: "POST",
+			        success: function (data) {
+			            _this.transIds = data.o;
+			            if(_this.transIds[0]) {
+			            	_this.transId = _this.transIds[0].id
+			            }
+			        }
+
+			    });
+			},
+			getAuts: function() {
+				var _this = this;
+				$.ajax({
+			        url: address + "autController/selectAll",
+			        type: "GET",
+			        success: function(data) {
+			            _this.autIds = data.obj;
+			            if(_this.autIds[0]) {
+			            	_this.autId = _this.autIds[0].id
+			            }
+			        }
+			    });
+			},
+			getScriptTemplate: function() {
+				var _this = this;
+				$.ajax({
+			        url: address + 'scripttemplateController/showallscripttemplate',
+			        data: {'transactid': _this.transId},
+			        type: "POST",
+			        success: function (data) {
+			            _this.templateList = data.o;
+			        }
+			    });
+			},
+			change: function() {
+				var _this = this;
+				var length = this.checkedTemplate.length
+				if( length > 0) {
+					var templateId = this.checkedTemplate[length - 1]
+					// return 
+					console.log( _this.templateList[templateId].id)
+					var data = {
+						aut_id: _this.autId,
+						script_id: _this.templateList[templateId].id
+					}
+					$.ajax({
+						url: address + 'scripttemplateController/showScripttemplateTable',
+						data: data,
+						type: 'post',
+						dataType: 'json',
+						success: function(data) {
+							if (data.success === true) {
+								console.log(data.o.data)
+								// {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name:'', Value: ''}]}}
+								for(var operationRow of data.o.data) {
+									let row = {
+										id: null,
+										functions: [],
+										operation: {
+											element: '',
+											ui: ''
+										},
+										parameters: []
+									}
+									row.id = Symbol()
+									row.functions.push({mname: operationRow.function})
+									row.operation.element = operationRow.operator[0]
+									row.operation.ui = operationRow.operator[1]
+									for(let para of operationRow.arguments) {
+										row.parameters.push({
+											Name: para.value,
+											Value: ''
+										})
+									}
+									// 插入到operationRows中
+									editDataVue.operationRows.push(row)
+								}
+							}
+						}
+					})
+				}
+			},
+			saveTemplate: function() {
+				_this.newTemplate.transId = _this.transId
+				$.ajax({
+					url: address + 'scripttemplateController/insert',
+					data: _this.newTemplate,
+					type: 'post',
+					dataType: 'json',
+					success: function(data) {
+						Vac.alert('添加成功！')
+						$('#addtemplateModal').modal('hide')
+					},
+					error: function() {
+						Vac.alert('添加失败！')
+					}
+				})
+			},
+			deleteTemplate: function() {
+				var _this = this;
+				if(!_this.checkedTemplate.length) {	
+					Vac.alert('请选择要删除的模板！')
+					return
+				}
+				$.ajax({
+					url: address + 'scripttemplateController/delete',
+					data: 'id=' + _this.checkedTemplate[_this.checkedTemplate.length - 1],
+					type: 'post',
+					dataType: 'json',
+					success: function(data) {
+						if (data) {
+							Vac.alert('删除成功！')
+							_this.checkedTemplate.pop()
+						}
+					},
+					error: function () {
+						Vac.alert('删除失败！')
+					}
+				})
+			}
+		}
+	})
+
 	var editDataVue = new Vue({
 		el:'#table2',
 		data: {
 			// 保存table中每一行的数据 [{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
-			operationRows: [{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],		
-			parameterVue: null,
+			operationRows: [],		
+			// parameterVue: null,
 			// ztree的设置项
 			zTreeSettings: {
 				uiAndElement: {
@@ -35,6 +193,45 @@ $(document).ready(function(){
 				    }
 				}
 			},
+			zTreeSettings2: {
+				uiAndElement: {
+					callback: {
+					},
+					data: {
+						simpleData: {
+							enable: true,
+							idKey: 'id',
+							pIdKey: 'parentid',
+							rootPId: 0
+						}
+					},
+					check: {
+						enable: true,
+						chkStyle: "checkbox",
+						chkboxType: { "Y": "ps", "N": "ps" }
+					}
+				},
+				functions: {
+					callback: {
+					},
+					data: {
+				        key:{
+				            name:"mname",
+				        },
+				        simpleData: {
+				            enable: true,
+				            idKey: 'classid', 
+				            pIdKey: 'parentid', 
+				            rootPId: 0
+				        }
+				    },
+				    check: {
+						enable: true,
+						chkStyle: "checkbox",
+						chkboxType: { "Y": "ps", "N": "ps" }
+					}
+				}
+			},
 			uiOrFunctions: {
 				changed: false,  	// 模态框出现后是否点击过，如果点击过，在模态框点击保存时才会进行更改
 				type: 'ui',			// 保存最后点击的是UI还是函数集，据此来确定不同的后续执行行为
@@ -42,7 +239,8 @@ $(document).ready(function(){
 				element: '',		// 保存点击的元素
 				function: '',		// 保存点击的函数集中的项
 				target: null,		// 保存点击编辑的target，据此可以获得parent tr
-			},
+				index: 0			// 保存每一行的index
+			}
 		},
 		ready: function() {
 				var _this = this;
@@ -69,6 +267,9 @@ $(document).ready(function(){
 		            });
 		            $( "#sortable" ).disableSelection();
 		        } );
+		        $('#edit-parameter-modal').on('hidden.bs.modal', function() {
+
+		        })
 		},
 		methods: {
 			addRow: function() {
@@ -108,6 +309,30 @@ $(document).ready(function(){
 					operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
 				}
 			},
+			tableSave: function() {
+				//UI("denglu").webedit("username").set(1,"123");
+				var sendDataArray = [];
+				var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
+				for(var tr of trs) {
+					// 
+					var UI = tr.querySelector('.operation-element').value
+					var webedit = tr.querySelector('.operation-ui').value
+					var method = tr.querySelector('.functions-select').value
+					// 获取参数列表
+					var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
+					var paramValues = []
+					for(var paramTr of paramTrs) {
+						paramValues.push(`"${paramTr.innerHTML}"`)
+					}
+					var parameterString = paramValues.toString()
+					var string = `UI("${UI}").webedit("${webedit}").${method}(${paramValues})`
+					sendDataArray.push(string)
+				}
+				var sendData = sendDataArray.join(';')
+				console.log(sendData)
+				Vac.alert('这是生成的脚本代码:\n' + sendData)
+				// UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
+			},
 			// 显示UI和元素 、函数集
 			showUiAndElement: function(event, type) {
 				var _this = this;
@@ -116,7 +341,7 @@ $(document).ready(function(){
 				// 请求Ui和Elment
 				$.ajax({
 					url: address + 'elementlibraryController/showUIandElement',
-					data: 'transid=1',
+					data: 'transid='+mainVue.transId,
 					type: 'post',
 					dataType: 'json',
 					success: (data, statusText) => {
@@ -128,7 +353,7 @@ $(document).ready(function(){
 				// 请求函数集
 				$.ajax({
 					url: address + 'autController/selectFunctionSet',
-					data: 'id=2',
+					data: 'id=22',
 					type: 'post',
 					dataType: 'json',
 					success: (data, statusText) => {
@@ -139,6 +364,34 @@ $(document).ready(function(){
 				})
 
 				$('#ui-ele-modal').modal('show')
+			},
+			showUIModal: function() {
+				var _this = this;
+				$.ajax({
+					url: address + 'elementlibraryController/showUIandElement',
+					data: 'transid='+mainVue.transId,
+					type: 'post',
+					dataType: 'json',
+					success: (data, statusText) => {
+						if(data && data.success === true && (data.obj instanceof Array)) {
+							$.fn.zTree.init($('#ui-element-ul2'),_this.zTreeSettings2.uiAndElement, data.obj);
+						}
+					}
+				})
+				// 请求函数集
+				$.ajax({
+					url: address + 'autController/selectFunctionSet',
+					data: 'id=2',
+					type: 'post',
+					dataType: 'json',
+					success: (data, statusText) => {
+						if(data.ommethod) {
+							$.fn.zTree.init($('#functions-ul2'),_this.zTreeSettings2.functions, data.ommethod);
+						}	
+					}
+				})
+
+				$('#ui-ele-modal2').modal('show')
 			},
 			// 确定ztree的点击事件
 			zTreeOnClick: function(event, treeId, treeNode) {
@@ -166,33 +419,42 @@ $(document).ready(function(){
 			editParameter: function(event, type) {
 				var _this = this
 				// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
+				_this.uiOrFunctions.target = event.target
 				var parentRow = $(event.target).parents('tr')
-				var index = parentRow.attr('data-index');
-				var operationRows = _this.operationRows;
+				_this.uiOrFunctions.index = parentRow.attr('data-index');
 
-				_this.parameterVue = new Vue({
-					el: '#edit-parameter-modal',
-					data: {
-						parameters: null
-					},
-					methods: {
-						okParameter: function(event) {
-							var inputs = $('#edit-parameter-modal input')
-							console.log(inputs)
-							for(var i=0;i<operationRows[index].parameters.length;i++) {
-								operationRows[index].parameters[i].Value = inputs[i].value
-							}
-							modalVue.updateRow(operationRows, index)
-							console.log(operationRows)
-							$('#edit-parameter-modal').modal('hide')
-						}
-					}
-				})
-				_this.parameterVue.parameters = operationRows[index].parameters;
+				parameterVue.parameters = _this.operationRows[_this.uiOrFunctions.index].parameters;
 				$('#edit-parameter-modal').modal('show')
 			},
 		}
 	})
+	var parameterVue = new Vue({
+		el: '#edit-parameter-modal',
+		data: {
+			parameters: null
+		},
+		ready: function() {
+			// console.log(editDataVue.uiOrFunctions.index)
+			// console.log(editDataVue.operationRows[editDataVue.uiOrFunctions.index].parameters)
+			// this.parameters = editDataVue.operationRows[editDataVue.uiOrFunctions.index].parameters;
+		},
+		methods: {
+			okParameter: function(event) {
+				var inputs = $('#edit-parameter-modal input')
+
+				var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
+				var operationRows = editDataVue.operationRows
+				var index = editDataVue.uiOrFunctions.index
+				for(var i=0;i<operationRows[index].parameters.length;i++) {
+					operationRows[index].parameters[i].Value = inputs[i].value
+				}
+				modalVue.updateRow(operationRows, index)
+				// console.log(operationRows)
+				$('#edit-parameter-modal').modal('hide')
+			}
+		}
+	})
+
 	var modalVue = new Vue({
 		el: '#ui-ele-modal',
 		data: {},
@@ -206,6 +468,7 @@ $(document).ready(function(){
 				// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
 				var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
 				var index = parentRow.attr('data-index');
+				console.log(index)
 				var operationRows =  editDataVue.operationRows;
 
 				if (editDataVue.uiOrFunctions.type === 'ui') {
@@ -220,7 +483,7 @@ $(document).ready(function(){
 
 					// 发送ajax请求函数的数据
 					var data = {
-						id: 8,		// autid
+						id: mainVue.autId,		// autid
 						classname: editDataVue.uiOrFunctions.ui,		// classname
 					}
 
@@ -243,7 +506,7 @@ $(document).ready(function(){
 						// var mname = $('.functions-select', parentRow).val()
 						var mname = operationRows[index].functions[0].mname
 						var data = {
-							autid: 8,	
+							autid: mainVue.autId,	
 							className: editDataVue.uiOrFunctions.ui,
 							methodName: mname
 						}
@@ -277,6 +540,70 @@ $(document).ready(function(){
 				var cache = rows[index]
 				cache.id = Symbol()
 				rows.splice(index, 1, cache)
+			}
+		}
+	})
+	var modalVue2 = new Vue({
+		el: '#ui-ele-modal2',
+		data: {},
+		methods: {
+			// 在模态框中点击了保存按钮
+			editRowMultiple: function () {
+				console.log(uiNodes)
+				var uiTree =  $.fn.zTree.getZTreeObj("ui-element-ul2");
+				var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
+				var uiNodes = uiTree.getCheckedNodes(true);
+
+				var functionNodes = functionTree.getCheckedNodes(true)
+				console.log(functionNodes)
+
+				for ( var node of uiNodes) {
+					if (node.isParent) {
+						continue;
+					}
+					let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}
+					newRow.id = Symbol()
+					newRow.operation = {
+						element: node.getParentNode().name,
+						ui: node.name
+					}
+					newRow.functions = []
+					$.ajax({
+						url: address + 'autController/selectMethod',
+						data: {id: mainVue.autId, classname: newRow.operation.ui},
+						type: 'post',
+						dataType: 'json',
+						success: function(data, statusText) {
+							for (var method of data.ommethod) {
+								newRow.functions.push(method)
+							}
+							// data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
+							// 把第一个function的参数取出来，放入
+							data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
+							editDataVue.operationRows.push(newRow)
+						}
+					})
+				}
+				for (var node of functionNodes) {
+					console.log(node)
+					let newRow = {}
+					newRow.id = Symbol()
+					newRow.operation = {
+						element: '',
+						ui: ''
+					},
+					newRow.functions = []
+					newRow.functions.push(node)
+					newRow.parameters = JSON.parse(node.arguments)
+					editDataVue.operationRows.push(newRow)
+				}
+				$('#ui-ele-modal2').modal('hide')
+			},
+			updateRow: function(rows, index) {
+				// 使用splice方法，通过改变数组项的id更新绑定的数组，
+				// var cache = rows[index]
+				// cache.id = Symbol()
+				// rows.splice(index, 1, cache)
 			}
 		}
 	})
