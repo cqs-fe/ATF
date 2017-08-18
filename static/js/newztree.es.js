@@ -8,6 +8,7 @@ $(document).ready(function(){
 			transIds: [],
 			templateList: [],
 			checkedTemplate: [],
+			script_id: '',
 			// 新增模板绑定数据
 			newTemplate: {
 				name: '',
@@ -74,7 +75,8 @@ $(document).ready(function(){
 				if( length > 0) {
 					var templateId = this.checkedTemplate[length - 1]
 					// return 
-					console.log( _this.templateList[templateId].id)
+					this.script_id=_this.templateList[templateId].id;
+					console.log(this.script_id);
 					var data = {
 						aut_id: _this.autId,
 						script_id: _this.templateList[templateId].id
@@ -291,8 +293,8 @@ $(document).ready(function(){
 			moveUp: function(event) {
 				console.log('moveUp')
 				var _this = this;
-				var operationRows = this.operationRows
-				var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
+				var operationRows = this.operationRows;
+				var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr');
 				$.each(trs, (index, row) => {
 					var originIndex = row.getAttribute('data-index')
 					originIndex >= 1 &&
@@ -309,6 +311,7 @@ $(document).ready(function(){
 					operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
 				}
 			},
+			//保存 
 			tableSave: function() {
 				//UI("denglu").webedit("username").set(1,"123");
 				var sendDataArray = [];
@@ -330,8 +333,48 @@ $(document).ready(function(){
 				}
 				var sendData = sendDataArray.join(';')
 				console.log(sendData)
-				Vac.alert('这是生成的脚本代码:\n' + sendData)
+				// Vac.alert('这是生成的脚本代码:\n' + sendData)
 				// UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
+				$.ajax({
+					url: address+'scripttemplateController/showscripttemplateTableSave',
+					type:'post',
+					data:{
+						'autId': mainVue.autId,
+						'script_id': mainVue.script_id,
+						'originscript':sendData
+					},
+					success: function(data){
+						if(data.success){
+							$('#success').modal();
+						}else{
+							$('#fail').modal();
+						}
+					},
+					error: function(){
+						$('#fail').modal();
+					}
+				})
+			},
+			//参数化
+			para: function(){
+				var script_id;
+				$.ajax({
+					url: address+'scripttemplateController/ScripttemplateTableHead',
+					type:'post',
+					data:{
+						'script_id':script_id
+					},
+					success:function(data){
+						if(data.success){
+
+						}else{
+							$('#fail').modal();
+						}
+					},
+					fail: function(){
+						$('#fail').modal();
+					}
+				})
 			},
 			// 显示UI和元素 、函数集
 			showUiAndElement: function(event, type) {
