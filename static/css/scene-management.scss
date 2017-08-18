@@ -181,6 +181,7 @@ $okGreen: #66F60C;
 			flex-direction: column;
 			flex: 1 1 auto;
 			overflow: auto;
+			background-color: #fff;
 			.route-position {
 				flex: 0 0 auto;
 				padding: 5px 20px;
@@ -194,7 +195,24 @@ $okGreen: #66F60C;
 			.top-bar{
 				flex: 0 0 auto;
 				width: 100%;
-				padding: 5px 20px;
+				background-color: #f1f2f7;
+			}
+			.form-input {
+				margin: 10px 0 5px 0;
+				padding: 10px 20px;
+				background-color: #f1f2f7;
+				&>div {
+					float: left;
+					margin: 0 20px 0 0;
+				}
+				label {
+					font-weight: normal;
+				}
+				input[type=number], .exe-scope{
+					border-radius: 5px;
+    				border: 1px solid #ddd;
+    				padding: 5px 10px;
+				}
 			}
 			.main-content {
 				position: relative;

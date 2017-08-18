@@ -467,13 +467,13 @@ $(document).ready(function(){
             	getInfo: function() {
             		var userId = sessionStorage.getItem('userId')
             		var caseLib_id = sessionStorage.getItem('caselibid')
-            		if(userId == null || userId == '') {
-            			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '您尚未登陆，请登陆！').then(function(){
-							window.location.href = 'Login.html'
-						}, function(){
-							return;
-						})
-            		}
+      //       		if(userId == null || userId == '') {
+      //       			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '您尚未登陆，请登陆！').then(function(){
+						// 	window.location.href = 'Login.html'
+						// }, function(){
+						// 	return;
+						// })
+      //       		}
             		if(caseLib_id == null || caseLib_id == '') {
             			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '请先选择测试项目！').then(function(){
 							window.location.href = 'testProject.html'

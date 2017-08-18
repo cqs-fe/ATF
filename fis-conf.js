@@ -1,11 +1,11 @@
 fis.hook('commonjs');
 
-fis.match('*.{js,scss,png,jpg,css,gif,PNG}', {
+fis.match('**.{js,scss,png,jpg,map,css,gif,PNG}', {
 	useHash: true,
 	release: '/public/$0'
 });
 
-fis.match('*.{eot,svg,ttf,woff,woff2,eot@,wd3}', {
+fis.match('**.{eot,svg,ttf,woff,woff2,eot@,wd3,WD3}', {
 	release: '/public/$0'
 });
 
@@ -16,10 +16,10 @@ fis.match('*.scss', {
     optimizer: fis.plugin('clean-css')
 });
 
-// 压缩js
-fis.match('/static/*.js', {
-	optimizer: fis.plugin('uglify-js')
-});
+// // 压缩js
+// fis.match('/static/*.js', {
+// 	optimizer: fis.plugin('uglify-js')
+// });
 
 fis.match('::package', {
     // npm install [-g] fis3-postpackager-loader

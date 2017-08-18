@@ -1,13 +1,15 @@
 var checkFunction = {
 	setBackground () {
 		let caseCbs = $('input.check-case')
-		$.each(caseCbs, function(index, ele) {
-			if(ele.checked) {
-				$(ele).parents('.case').css({"border-color": "#ff6c60"})
-			}else {
-				$(ele).parents('.case').css({"border-color": "#ddd5d5"})
-			}
-		})
+		this.$nextTick(function () {
+        	$.each(caseCbs, function(index, ele) {
+				if(ele.checked) {
+					$(ele).parents('.case').css({"border-color": "#ff6c60"})
+				}else {
+					$(ele).parents('.case').css({"border-color": "#ddd5d5"})
+				}
+			})
+      	})
 	},
 	setSelect (event){
 		var _this = this;
@@ -97,7 +99,7 @@ var checkFunction = {
 					if ($(selectedRange[i]).hasClass('single-case')) {
 						_this.pushNoRepeat(_this.selectedCases, +value)
 					} else {
-						_this.pushNoRepeat(_this.checkedFlowNodes, value)
+						_this.pushNoRepeat(_this.checkedFlowNodes, +value)
 					}
 				} else {
 					if ($(selectedRange[i]).hasClass('single-case')) {
@@ -106,7 +108,7 @@ var checkFunction = {
 						_this.selectedCases = [...set]
 					} else {
 						let set = new Set(_this.checkedFlowNodes)
-						set.delete(value)
+						set.delete(+value)
 						_this.checkedFlowNodes = [...set]
 					}
 				}
@@ -119,5 +121,62 @@ var checkFunction = {
 		array.includes(value)
 			? 1
 			: array.push(value)
-	}
+	},
+	// 点击checkbox
+	checkChanged (event) {
+		var parent = event.target.parentNode.parentNode.parentNode
+		var checkallId = +parent.parentNode.querySelector('.checkall').value
+		var inputs = Array.from(parent.querySelectorAll('.check-case'))
+		if(inputs.every((value) => {
+			return value.checked === true 
+		})) {
+			this.selectedCases.push(checkallId)
+		} else {
+			let set = new Set(this.selectedCases)
+			set.delete(checkallId)
+			this.selectedCases = [...set]
+		}
+		this.setBackground()
+	},
+	checkallToggle (event){
+		var flag = event.target.checked;
+		// console.log(flag)
+		var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
+		let inputValue = []
+		if(flag) {
+			for(var input of inputs) {
+				(!this.checkedFlowNodes.includes(+input.value))
+				? (this.checkedFlowNodes.push(+input.value))
+				: 1 
+			}
+			 // = [...this.checkedFlowNodes, ...inputValue]
+		} else {
+			for (var input of inputs) {
+				let set = new Set(this.checkedFlowNodes)
+				let value = +input.value
+				if(set.has(value)) {
+					set.delete(value)
+				}
+				this.checkedFlowNodes = [...set]
+			}
+		}
+		this.setBackground()
+	},
+	checkallBox (event){
+		// console.log(this.checkall)
+		if(this.checkall === true) {
+			this.caseIds.forEach((value) => {
+				this.selectedCases.includes(value) ? 1 : (this.selectedCases.push(value))
+				this.flowNodeIds.has(+value)
+					? (
+						this.checkedFlowNodes = [...this.checkedFlowNodes,...this.flowNodeIds.get(+value)]
+					)
+					: 1
+			})
+		} else {
+			this.selectedCases = []
+			this.checkedFlowNodes = [];
+		}
+		this.setBackground()
+	},
 }

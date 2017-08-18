@@ -19,18 +19,22 @@
                 "id": 251,
                 "caseCompositeType": "2",
                 "casecode": null,
+                "state": 0,
                 "flowNodeDtos": [
                     {
                         "id": 42,
-                        "casecode": 127
+                        "casecode": 127,
+                        "state": 3
                     },
                     {
                         "id": 34,
-                        "casecode": 126
+                        "casecode": 126,
+                        "state": 1
                     },
                     {
                         "id": 53,
-                        "casecode": 125
+                        "casecode": 125,
+                        "state": 2
                     }
                 ]
             },
@@ -38,38 +42,45 @@
                 "id": 269,
                 "caseCompositeType": "1",
                 "casecode": null,
+                "state": 0,
                 "flowNodeDtos": null
             },
             {
                 "id": 268,
                 "caseCompositeType": "1",
                 "casecode": null,
+                "state": 1,
                 "flowNodeDtos": null
             },
             {
                 "id": 273,
                 "caseCompositeType": "1",
                 "casecode": null,
+                "state": 2,
                 "flowNodeDtos": null
             },
             {
                 "id": 270,
                 "caseCompositeType": "1",
                 "casecode": null,
+                "state": 1,
                 "flowNodeDtos": null
             },
             {
                 "id": 272,
                 "caseCompositeType": "2",
                 "casecode": null,
+                "state": 3,
                 "flowNodeDtos": [
                     {
                         "id": 110,
-                        "casecode": 123
+                        "casecode": 123,
+                        "state": 2
                     },
                     {
                         "id": 111,
-                        "casecode": 123
+                        "casecode": 123,
+                        "state": 3
                     }
                 ]
             },
@@ -77,18 +88,22 @@
                 "id": 271,
                 "caseCompositeType": "2",
                 "casecode": null,
+                "state": 0,
                 "flowNodeDtos": [
                     {
                         "id": 12,
-                        "casecode": 123
+                        "casecode": 123,
+                        "state": 3
                     },
                     {
                         "id": 14,
-                        "casecode": 123
+                        "casecode": 123,
+                        "state": 1
                     },
                     {
                         "id": 13,
-                        "casecode": 123
+                        "casecode": 123,
+                        "state": 2
                     }
                 ]
             },
@@ -99,15 +114,18 @@
                 "flowNodeDtos": [
                     {
                         "id": 22,
-                        "casecode": 124
+                        "casecode": 124,
+                        "state": 3
                     },
                     {
                         "id": 23,
-                        "casecode": 125
+                        "casecode": 125,
+                        "state": 1
                     },
                     {
                         "id": 24,
-                        "casecode": 126
+                        "casecode": 126,
+                        "state": 0
                     }
                 ]
             }
