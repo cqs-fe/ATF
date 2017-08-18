@@ -19,10 +19,10 @@ var app = new Vue({
     methods: {
         //获取autid
         getAutId() {
-            var thisUrl = document.URL,
-                getVal = thisUrl.split('?')[1],
-                autId = getVal.split('&')[0].split('=')[1];
-            this.autId = autId;
+            // var thisUrl = document.URL,
+            //     getVal = thisUrl.split('?')[1],
+            //     autId = getVal.split('&')[0].split('=')[1];
+            this.autId = sessionStorage.getItem("autId");
         },
         //添加控件类型
         addClass: function() {
@@ -247,11 +247,12 @@ var app = new Vue({
 
 //获取当前被测系统的控件类型
 function getClass() {
-    var thisUrl = document.URL,
-        getVal = thisUrl.split('?')[1],
-        para = getVal.split('&'),
-        autId = para[0].split('=')[1];
-    var autName = decodeURI(para[1].split('=')[1]);
+    // var thisUrl = document.URL,
+    //     getVal = thisUrl.split('?')[1],
+    //     para = getVal.split('&'),
+    //     autId = para[0].split('=')[1];
+    // var autName = decodeURI(para[1].split('=')[1]);
+    var autName=sessionStorage.getItem("autName");
     $('.autName').html(autName);
     $.ajax({
         url: address + 'autController/selectClass',

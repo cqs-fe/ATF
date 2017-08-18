@@ -140,6 +140,35 @@
                                             <input type="text" name="description" class="form-control" value="">
                                         </div>
                                     </div>
+                                     <div class="property">
+                                        参数列表
+                                        <a class="btn btn-white btn-sm pull-right" @click="addPara($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delPara($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered" id="pTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th id="name">参数名称</th>
+                                                    <th id="type">值类型</th>
+                                                    <th id="parameterizeColumn">参数化列</th>
+                                                    <th id="desc">描述</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="methodPara">
+                                                <tr v-for="item in paraList">
+                                                    <td>
+                                                        <input type="checkbox" name="chk_list" />
+                                                    </td>
+                                                    <td contenteditable="true">{{item.name}}</td>
+                                                    <td contenteditable="true">{{item.type}}</td>
+                                                    <td contenteditable="true">{{item.parameterizeColumn}}</td>
+                                                    <td contenteditable="true">{{item.desc}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <div class="form-group">
                                         <label class="col-lg-2 control-label">执行时间</label>
                                         <div class="col-lg-3">
@@ -181,35 +210,7 @@
                                             </select>
                                         </div>
                                     </div> -->
-                                    <div class="property">
-                                        参数列表
-                                        <a class="btn btn-white btn-sm pull-right" @click="addPara($event)"><i class="icon-plus"></i></a>
-                                        <a class="btn btn-white btn-sm pull-right" @click="delPara($event)"><i class="icon-minus"></i></a>
-                                    </div>
-                                    <div class="property">
-                                        <table class="table table-bordered" id="pTable">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width:5%"></th>
-                                                    <th id="name">参数名称</th>
-                                                    <th id="type">值类型</th>
-                                                    <th id="parameterizeColumn">参数化列</th>
-                                                    <th id="desc">描述</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="methodPara">
-                                                <tr v-for="item in paraList">
-                                                    <td>
-                                                        <input type="checkbox" name="chk_list" />
-                                                    </td>
-                                                    <td contenteditable="true">{{item.name}}</td>
-                                                    <td contenteditable="true">{{item.type}}</td>
-                                                    <td contenteditable="true">{{item.parameterizeColumn}}</td>
-                                                    <td contenteditable="true">{{item.desc}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                   
                                     <!-- <div class="form-group">
                                         <label class="col-lg-2 control-label">等待时间</label>
                                         <div class="col-lg-3">

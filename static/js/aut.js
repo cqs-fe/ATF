@@ -175,7 +175,10 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 var selectedId = selectedInput.attr('id');
-                location.href = "transact.html?selectedId=" + selectedId;
+                var selectedName=selectedInput.parent().next().next().html();
+                sessionStorage.setItem("autId", selectedId);
+                sessionStorage.setItem("autName", selectedName); 
+                location.href = "transact.html";
             }
         },
         //传递当前页选中测试系统id到自动化构件维护页面
@@ -186,7 +189,9 @@ var app = new Vue({
             } else {
                 var selectedId = selectedInput.attr('id');
                 var selectedName=selectedInput.parent().next().next().html();
-                location.href = "component.html?selectedId=" + selectedId+"&selectedName="+selectedName;
+                sessionStorage.setItem("autId", selectedId);
+                sessionStorage.setItem("autName", selectedName); 
+                location.href = "component.html";
             }
         },
         //传递当前页选中测试系统id和名称到配置系统数据页面
@@ -197,7 +202,9 @@ var app = new Vue({
             } else {
                 var selectedId = selectedInput.attr('id');
                 var selectedName=selectedInput.parent().next().next().html();
-                location.href = "autdata.html?selectedId=" + selectedId+"&selectedName="+selectedName;
+                sessionStorage.setItem("autId", selectedId);
+                sessionStorage.setItem("autName", selectedName); 
+                location.href = "autdata.html";
             }
         },
         //传递当前页选中测试系统id和名称到执行代码管理页面
@@ -208,7 +215,9 @@ var app = new Vue({
             } else {
                 var selectedId = selectedInput.attr('id');
                 var selectedName=selectedInput.parent().next().next().html();
-                location.href = "execcode.html?autId=" + selectedId+"&autName="+selectedName;
+                sessionStorage.setItem("autId", selectedId);
+                sessionStorage.setItem("autName", selectedName); 
+                location.href = "execcode.html";
             }
         },
 

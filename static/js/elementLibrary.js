@@ -100,45 +100,46 @@ var app = new Vue({
         },
         //设置所属测试系统和所属功能点为上级页面选中的值
         setval: function() {
-            var thisURL = document.URL;
-            if (thisURL.indexOf('?') >= 0) {
-                var getval = thisURL.split('?')[1],
-                    keyval = getval.split('&');
-                this.autId = keyval[0].split('=')[1],
-                    this.transactId = keyval[1].split('=')[1];
-                $("#autSelect").val(this.autId);
-                $("#transactSelect").val(this.transactId);
-                $.ajax({
-                    url: address + 'transactController/transactqueryByPage',
-                    type: 'GET',
-                    async: false,
-                    data: {
-                        'page': 1,
-                        'rows': 10,
-                        'order': 'id',
-                        'sort': 'asc',
-                        'id': this.transactId,
-                        'transcode': '',
-                        'transname': '',
-                        'autctgId': '',
-                        'descript': '',
-                        'maintainer': '',
-                        'autId': '',
-                        'useStatus': ''
-                    },
-                    success: function(data) {
-                        var transactList = data.o.rows;
-                        // console.log(transactList)
-                        var str = "";
-                        for (var i = 0; i < transactList.length; i++) {
+            // var thisURL = document.URL;
+            // var getval = thisURL.split('?')[1],
+            //     keyval = getval.split('&');
+            //     this.autId = keyval[0].split('=')[1],
+            //     this.transactId = keyval[1].split('=')[1];
+            this.autId=sessionStorage.getItem("autId");
+            this.transactId=sessionStorage.getItem("transactId");
+            $("#autSelect").val(this.autId);
+            $("#transactSelect").val(this.transactId);
+            $.ajax({
+                url: address + 'transactController/transactqueryByPage',
+                type: 'GET',
+                async: false,
+                data: {
+                    'page': 1,
+                    'rows': 10,
+                    'order': 'id',
+                    'sort': 'asc',
+                    'id': this.transactId,
+                    'transcode': '',
+                    'transname': '',
+                    'autctgId': '',
+                    'descript': '',
+                    'maintainer': '',
+                    'autId': '',
+                    'useStatus': ''
+                },
+                success: function(data) {
+                    var transactList = data.o.rows;
+                    // console.log(transactList)
+                    var str = "";
+                    for (var i = 0; i < transactList.length; i++) {
 
-                            str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
-                        }
-                        $('#transactSelect').html(str);
-
+                        str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                     }
-                });
-            }
+                    $('#transactSelect').html(str);
+
+                }
+            });
+
         },
         addUI: function() {
             var UIName = $("#addUIName").val(),
