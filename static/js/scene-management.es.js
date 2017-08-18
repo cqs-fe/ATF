@@ -1,4 +1,5 @@
   __inline('./scene-management/checked.js');
+  __inline('./scene-management/debug.js')
 var vBody = new Vue({
 	el: '#v-body',
 	data: {
@@ -72,11 +73,14 @@ var vBody = new Vue({
 		sceneid: '',
 		scenename: '场景名称',
 		exeImgs: {
-			waiting: '../static/images/waiting.png',
-			running: '../static/images/running.png',
-			success: '../static/images/success.png',
-			failed: '../static/images/failed.png'
-		}
+			0: __uri('../static/images/waiting.png'),
+			1: __uri('../static/images/running.gif'),
+			2: __uri('../static/images/success.png'),
+			3: __uri('../static/images/failed.png')
+		},
+		// 调试轮次
+		debugRound: '',
+		exeScope: ''
 	},
 	ready:function(){
 		this.setVal();
@@ -100,24 +104,24 @@ var vBody = new Vue({
 		
 	},
 	watch: {
-		"selectedCases": function(newValue, oldValue) {
-			console.log('heheh')
-			this.checkall = (newValue.length === this.caseIds.length)
+		"selectedCases": function(value, oldVal) {
+			this.checkall = (value.length === this.caseIds.length)
 			this.setBackground()
 		},
-		"checkedFlowNodes": function(newValue, oldValue) {
-			// this.setBackground()
-			console.log(this.flowNodeIds)
+		"checkedFlowNodes": function(value, oldVal) {
+			// console.log(this.flowNodeIds)
 			for(let key of this.flowNodeIds.keys()) {
-				let flag = this.flowNodeIds.get(key).every((flowNodeId) => {
-					return this.checkedFlowNodes.includes(flowNodeId)
-							? true : false 
-				})
-				if(flag) {
+				if(this.flowNodeIds.get(key).every((value) => {
+					return this.checkedFlowNodes.includes(value)
+				}))
+				{
 					this.pushNoRepeat(this.selectedCases, +key)
-				} else {
-					let set = new Set(this.selectedCases);
-					set.delete(+key);
+				} else if(this.flowNodeIds.get(key).every((value) => {
+					return !this.checkedFlowNodes.includes(+value)
+				}))
+				{
+					let set = new Set(this.selectedCases)
+					set.delete(+key)
 					this.selectedCases = [...set]
 				}
 			}
@@ -174,7 +178,7 @@ var vBody = new Vue({
 							if(data.obj.caseDtos[i].caseCompositeType == 2) {
 								let arr = []
 								for (var j = data.obj.caseDtos[i].flowNodeDtos.length - 1; j >= 0; j--) {
-									arr.push(data.obj.caseDtos[i].id+'-'+data.obj.caseDtos[i].flowNodeDtos[j].id)
+									arr.push(data.obj.caseDtos[i].flowNodeDtos[j].id)
 								}
 								_this.flowNodeIds.set(+data.obj.caseDtos[i].id, arr)
 							}
@@ -205,57 +209,10 @@ var vBody = new Vue({
 			// 防止点击用例框时也进行选取
 		},
 		// 点击checkbox
-		checkChanged: function(event){
-			var parent = event.target.parentNode.parentNode.parentNode
-			var checkallId = +parent.parentNode.querySelector('.checkall').value
-			var inputs = Array.from(parent.querySelectorAll('.check-case'))
-			if(inputs.every((value) => {
-				return value.checked === true 
-			})) {
-				this.selectedCases.push(checkallId)
-			} else {
-				let set = new Set(this.selectedCases)
-				set.delete(checkallId)
-				this.selectedCases = [...set]
-			}
-		},
+		checkChanged: checkFunction.checkChanged,
 		// 全选case-lib中的case
-		checkallToggle: function(event){
-			var flag = event.target.checked;
-			var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
-			if(flag) {
-				for(var input of inputs) {
-					(!this.checkedFlowNodes.includes(input.value))
-					? (this.checkedFlowNodes.push(input.value))
-					: 1 
-				}
-			} else {
-				for (var input of inputs) {
-					let set = new Set(this.checkedFlowNodes)
-					let value = input.value
-					if(set.has(input.value)) {
-						set.delete(input.value)
-					}
-					this.checkedFlowNodes = [...set]
-				}
-			}
-		},
-		checkallBox: function(event){
-			console.log(this.checkall)
-			if(this.checkall === true) {
-				this.caseIds.forEach((value) => {
-						this.selectedCases.includes(value) ? 1 : (this.selectedCases.push(value))
-						this.flowNodeIds.has(+value)
-							? (
-								this.checkedFlowNodes = [...this.checkedFlowNodes,...this.flowNodeIds.get(+value)]
-							)
-							: 1
-					})
-			} else {
-				this.selectedCases = []
-				this.checkedFlowNodes = [];
-			}
-		},
+		checkallToggle: checkFunction.checkallToggle,
+		checkallBox: checkFunction.checkallBox,
 		toggleTooltip: function(event){
 			this.tooltipFlag = !this.tooltipFlag;
 		},
@@ -771,6 +728,7 @@ var vBody = new Vue({
 			}else {
 				Vac.alert('请选择要删除的数据！');
 			}
-		}
+		},
+		debug: debugFunction.debug
 	}
 });

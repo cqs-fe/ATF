@@ -200,58 +200,71 @@
               执行过程控制</button>
               <button class="btn btn-white" @click="operationType(4);"><i class="icon-cogs"></i>
               数据资源池配置</button>
-              <button class="btn btn-white" @click="operationType(5);"><i class="icon-wrench"></i>
+              <button class="btn btn-white" @click="debug();"><i class="icon-wrench"></i>
               调试</button>
               <!--  <button class="btn btn-white"><i class="icon-file"></i>
               生成报告</button> -->
             </div>
+            <div class="form-input">
+                <div>
+                  <label for="" class="">请输入调试轮次：</label>
+                  <input type="number" class="" id="" placeholder="调试轮次" v-model="debugRound"> 
+                </div>
+                <div>
+                  <label for="" class="">请选择执行范围：</label>
+                  <select v-model="exeScope" class="exe-scope">
+                    <option value="1">全部执行</option>
+                    <option value="2">执行选中的案例</option>
+                  </select> 
+                </div>
+            </div>
             <div class="main-content">
-              <div class="check-all-case">全部选取 
+              <div class="check-all-case">全部选取
                 <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">
               </div>
               <div class="case-lib" v-for="case_wrapper in sceneInfo.caseDtos">
                 <template v-if="case_wrapper.caseCompositeType == '1'">
-                  <div class="checkbox-wrapper">
-                    <!-- <label>全选</label> -->
-                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
-                  </div>
-                  <div class="case-wrapper">
-                    <div class="case" >
-                      <div class="case-header">
-                        <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
-                        <p>{{case_wrapper.id}}</p>
-                      </div>
-                      <div class="case-main">
-                        <p>{{case_wrapper.casecode}}</p>
-                        <span></span>
-                      </div>
-                      <footer class="case-footer">
-                        <img src="../static/images/waiting.png">
-                      </footer>
+                <div class="checkbox-wrapper">
+                  <!-- <label>全选</label> -->
+                  <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
+                </div>
+                <div class="case-wrapper">
+                  <div class="case" >
+                    <div class="case-header">
+                      <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
+                      <p>{{case_wrapper.id}}</p>
                     </div>
+                    <div class="case-main">
+                      <p>{{case_wrapper.casecode}}</p>
+                      <span></span>
+                    </div>
+                    <footer class="case-footer">
+                      <img :src="exeImgs[case_wrapper.state]">
+                    </footer>
                   </div>
+                </div>
                 </template>
                 <template v-else>
-                  <div class="checkbox-wrapper">
-                    <!-- <label>全选</label> -->
-                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
-                     @change="checkallToggle($event)">
-                  </div>
-                  <div class="case-wrapper">
-                    <div class="case" v-for="item in case_wrapper.flowNodeDtos">
-                      <div class="case-header">
-                        <input type="checkbox" v-bind:value="case_wrapper.id+'-'+item.id"
-                        class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                        <p>{{item.id}}</p>
-                      </div>
-                      <div class="case-main">
-                        <p>{{item.casecode}}</p>
-                      </div>
-                      <footer class="case-footer">
-                        <img src="../static/images/running.gif">
-                      </footer>
+                <div class="checkbox-wrapper">
+                  <!-- <label>全选</label> -->
+                  <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
+                  @change="checkallToggle($event)">
+                </div>
+                <div class="case-wrapper">
+                  <div class="case" v-for="item in case_wrapper.flowNodeDtos">
+                    <div class="case-header">
+                      <input type="checkbox" v-bind:value="item.id"
+                      class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
+                      <p>{{item.id}}</p>
                     </div>
+                    <div class="case-main">
+                      <p>{{item.casecode}}</p>
+                    </div>
+                    <footer class="case-footer">
+                      <img :src="exeImgs[item.state]">
+                    </footer>
                   </div>
+                </div>
                 </template>
               </div>
             </div>
@@ -477,32 +490,32 @@
           </div>
         </div>
         <link rel="import" href="./common/copy-right.html?__inline">
-        </section>
-        <!--main content end-->
-      </div>
-      <!--content end -->
-      <link rel="import" href="./common-vac/alert.html?__inline">
-      <link rel="import" href="./common-vac/confirm.html?__inline">
-      <script src="../static/js/config.js"></script>
-      <script src="../static/js/vac-functions.es.js"></script>
-      <script src="../static/js/scene-management.es.js"></script>
-      <script src="../../lib/common-scripts.js"></script>
-      <script type="text/javascript">
-      document.querySelector('.sidebar-toggle-box').addEventListener('click', function() {
-      if (document.body.offsetWidth <= 768) {
-      return;
-      }
-      document.querySelector('.panel').style.width = document.querySelector('#sidebar').style.marginLeft === "-180px" ? "100%" : "calc(100% - 180px)";
-      document.querySelector('.copy-right').style.width = document.querySelector('#sidebar').style.marginLeft === "-180px" ? "100%" : "calc(100% - 180px)";
-      }, false);
-      window.addEventListener('resize', function() {
-      document.querySelector('.panel').style.width =
-      (document.body.offsetWidth <= 768 ||
-      document.querySelector('#sidebar').style.marginLeft === "-180px") ? "100%" : "calc(100% - 180px)";
-      document.querySelector('.copy-right').style.width =
-      (document.body.offsetWidth <= 768 ||
-      document.querySelector('#sidebar').style.marginLeft === "-180px") ? "100%" : "calc(100% - 180px)";
-      }, false);
-      </script>
-    </body>
-  </html>
+      </section>
+      <!--main content end-->
+    </div>
+    <!--content end -->
+    <link rel="import" href="./common-vac/alert.html?__inline">
+    <link rel="import" href="./common-vac/confirm.html?__inline">
+    <script src="../static/js/config.js"></script>
+    <script src="../static/js/vac-functions.es.js"></script>
+    <script src="../static/js/scene-management.es.js"></script>
+    <script src="../../lib/common-scripts.js"></script>
+    <script type="text/javascript">
+    document.querySelector('.sidebar-toggle-box').addEventListener('click', function() {
+    if (document.body.offsetWidth <= 768) {
+    return;
+    }
+    document.querySelector('.panel').style.width = document.querySelector('#sidebar').style.marginLeft === "-180px" ? "100%" : "calc(100% - 180px)";
+    document.querySelector('.copy-right').style.width = document.querySelector('#sidebar').style.marginLeft === "-180px" ? "100%" : "calc(100% - 180px)";
+    }, false);
+    window.addEventListener('resize', function() {
+    document.querySelector('.panel').style.width =
+    (document.body.offsetWidth <= 768 ||
+    document.querySelector('#sidebar').style.marginLeft === "-180px") ? "100%" : "calc(100% - 180px)";
+    document.querySelector('.copy-right').style.width =
+    (document.body.offsetWidth <= 768 ||
+    document.querySelector('#sidebar').style.marginLeft === "-180px") ? "100%" : "calc(100% - 180px)";
+    }, false);
+    </script>
+  </body>
+</html>
