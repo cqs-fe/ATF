@@ -133,3 +133,118 @@ Vac.startDrag = function (triggerElement, targetElement) {
     } // mouseUp end
   }, false)
 }
+
+/**
+ * 发送ajax
+ * @param { Object } option 发送ajax的设置项
+ */
+Vac.ajax = function({url, async = true,type = 'get', data = '', dataType = 'json', success}) {
+  if(!url) {
+    console.log('Error in Vac.ajax: no available url.')
+    return
+  }
+  if(!success) {
+    console.log('Error in Vac.ajax: no available success function.')
+    return
+  }
+  let request = null
+  if (window.XMLHttpRequest) {
+    //Firefox, Opera, IE7, and other browsers will use the native object
+    request = new XMLHttpRequest();
+  } else {
+    //IE 5 and 6 will use the ActiveX control
+    request = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+  request.onreadystatechange = function () { // 状态发生变化时，函数被回调
+    if (request.readyState === 4) { // 成功完成
+        // 判断响应结果:
+        if (request.status === 200) {
+            // 成功，通过responseText拿到响应的文本:
+            success(JSON.parse(request.responseText), request.status);
+        } else {
+            console.log(request.status)
+        }
+    } else {
+        // HTTP请求还在继续...
+    }
+  }
+
+  // 发送请求:
+  request.open(type, url, async);
+  request.send(data);
+}
+
+/**
+ * 以不重复的方式向数组中插入数据
+ * @param { Array } array 添加数据的数组
+ * @param { string|number } value 要添加的数据，只支持两种类型
+ * @returns { boolean } if pushed successfully, return true, otherwise return false
+ */
+Vac.pushNoRepeat = function(array, value){
+  if (array.includes(value)) {
+    return false
+  } else {
+    array.push(value)
+    return true
+  }
+}
+
+/**
+ * 判断两个Element是否具有包含关系，比如某个Element是另一个Element的父辈或祖辈
+ * @param { HTMLElement } ancestor
+ * @param { HTMLElement } child
+ * @returns { boolean } if the first element is an ancestor of the second element
+ *           return true, otherwise return false
+ */
+ Vac.isAncestorOf = function(ancestor, child) {
+  if(!(ancestor instanceof HTMLElement)) {
+    console.error(new Error("Error: the first parameter is not a HTMLElement"))
+    return false
+  }
+  if(!(child instanceof HTMLElement)) {
+    console.error(new Error("Error: the second parameter is not a HTMLElement"))
+    return false
+  }
+  let parentEle = child.parentElement
+  while(parentEle){
+    if(parentEle === ancestor) {
+      return true
+    }
+    parentEle = parentEle.parentElement
+  }
+  return false
+ }
+
+ /**
+  * 获取元素相对于某一级祖先元素的offset
+  * @param { HTMLElement } 要获取位置的子元素
+  * @param { HTMLElement } 子元素获取相对位置的祖先元素
+  * @returns { Object } 包含相对位置的对象
+  *         offsetLeft: 两个元素左边框之间的距离
+  *         offsetHeight: 两个元素上边框之间的距离
+  */
+  Vac.getOffsetTo = function(child, ancestor) {
+    if(!this.isAncestorOf(ancestor, child)) {
+      console.error(new Error('传入的元素不具有父辈与子辈关系！'))
+      return 
+    }
+    if(window.getComputedStyle(ancestor).position == 'static') {
+       console.error(new Error('请更改父辈元素的定位方式！'))
+      return
+    }
+    let offsetLeft = child.offsetLeft
+    let offsetTop = child.offsetTop
+    let current = child.offsetParent
+    while(current !== ancestor) {
+      offsetTop = offsetTop + current.offsetTop 
+        + parseFloat(window.getComputedStyle(current).borderTopWidth)
+      offsetLeft = offsetLeft + current.offsetLeft 
+        + parseFloat(window.getComputedStyle(current).borderLeftWidth)
+      current = current.offsetParent
+    }
+    current = null
+    return { offsetLeft, offsetTop }
+  }
+
+

@@ -117,6 +117,10 @@ var checkFunction = {
 			event.preventDefault();
 		};
 	},
+	setSelectListener (){
+		document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
+		// 防止点击用例框时也进行选取
+	},
 	pushNoRepeat (array, value) {
 		array.includes(value)
 			? 1

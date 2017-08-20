@@ -7,11 +7,7 @@
 	window.addEventListener('load', function(){
 		var userId = sessionStorage.getItem('userId')
 		if(userId == null || userId == "") {
-			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '您尚未登陆，请登陆！').then(function(){
-				window.location.href = 'Login.html'
-			}, function(){
-				return;
-			})
+			window.location.href = 'Login.html'
 		}
 	})
 </script>

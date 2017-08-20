@@ -1,3 +1,4 @@
+__inline('./testexecution/check.js')
 var vBody = new Vue({
 	el: '#v-body',
 	data: {
@@ -19,19 +20,41 @@ var vBody = new Vue({
 		// the cases and scenes obtained from back end
 		testCaseList: [],
 		testSceneList:[],
+		// save the value of input in the scene list
+		checkallSceneIds: [],
+		sceneIds: [],	// save all sceneids		[2,3,4]
+		sceneCaseMap: new Map(),	// save the cases and flownodes in scene { sceneId: [caseid, flownodeid...]}
+		sceneCaseIds: [],			// only save the caseids in the form of 'sceneid-caseid' in scene ["29-27"]
+		flowNodesMap: new Map(), 	// save the nodes in flowCase { caseId: [flownode, flownode...]}
+
+
 		// get all the scenes when user click addScene
 		allscenes: null,
+
+		/***************** save data in scene list ************************/
 		// selected Scene which is checked
 		selectedScenes: [],
-		selectedCases: [],
 		selectedSceneCases: [],
+		// selectedFlowNodes: [],
+
+		/***************** save data in case list ************************/
+		checkall: false,
+		// save the selected cases in caselist
+		selectedCases: [],
+		// save the checked flow nodes in caselist
+		checkedFlowNodes: [],
+		// save the all case ids in caselist
+		caseIds: [],
+		// save the all flowNode ids in caselist
+		flowNodeIds: new Map(),
+
 		// Scenes in add-scene modal
-		selectedScene: [],					// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
+		selectedScene: [],	// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
 		exeImgs: {
-			waiting: '../static/images/waiting.png',
-			running: '../static/images/running.png',
-			success: '../static/images/success.png',
-			failed: '../static/images/failed.png'
+			0: __uri('../static/images/waiting.png'),
+			1: __uri('../static/images/running.gif'),
+			2: __uri('../static/images/success.png'),
+			3: __uri('../static/images/failed.png')
 		}
 	},
 	created: function(){
@@ -100,6 +123,33 @@ var vBody = new Vue({
 				scenes.shift();
 			}
 		})
+		this.setSelectListener()
+		// let result = Vac.isAncestor(document.querySelector('html'), document.querySelector('body'))
+		// console.log(result)
+	},
+	watch: {
+		"selectedCases": function(value, oldVal) {
+			this.checkall = (value.length === this.caseIds.length)
+			this.setBackground()
+		},
+		"checkedFlowNodes": function(value, oldVal) {
+			// console.log(this.flowNodeIds)
+			for(let key of this.flowNodeIds.keys()) {
+				if(this.flowNodeIds.get(key).every((value) => {
+					return this.checkedFlowNodes.includes(value)
+				}))
+				{
+					Vac.pushNoRepeat(this.selectedCases, +key)
+				} else if(this.flowNodeIds.get(key).every((value) => {
+					return !this.checkedFlowNodes.includes(+value)
+				}))
+				{
+					let set = new Set(this.selectedCases)
+					set.delete(+key)
+					this.selectedCases = [...set]
+				}
+			}
+		}
 	},
 	methods: {
 		hideAlert: function(){
@@ -196,7 +246,6 @@ var vBody = new Vue({
 				scopeFlag: 1
 			};
 			var _this = this;
-
 			$.ajax({
 				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
 				type: 'post',
@@ -205,8 +254,112 @@ var vBody = new Vue({
 				success: function(data, statusText){
 					_this.testCaseList = data.testCaseList;
 					_this.testSceneList = data.testSceneList;
+
+					_this.caseIds.length = 0
+					_this.flowNodeIds.clear()
+					_this.testCaseList.forEach((value) => {
+						Vac.pushNoRepeat(_this.caseIds, value.caseId)
+						if(value.caseCompositeType == 2) {
+							let arr = []
+							for (let flowNode of value.flowNodes) {
+								arr.push(+flowNode.flowNodeId)
+							}
+							_this.flowNodeIds.set(+value.caseId, arr)
+						}
+					})
+
+					_this.sceneIds.length = []
+					_this.sceneCaseMap.clear()
+					_this.flowNodesMap.clear()
+					for (var j = 0; j<_this.testSceneList.length;j++) {
+						var scene = _this.testSceneList[j]
+
+						_this.sceneIds.push(scene.sceneId)
+						var caselist = []
+						for(var i = 0;i<scene.testCaseList.length;i++){
+							var c = scene.testCaseList[i]
+							caselist.push(scene.sceneId + '-' + c.caseId);
+
+							if(c.caseCompositeType == 2) {
+								_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
+								let flowNodes = []
+								for (let flowNode of c.flowNodes) {
+									caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+									flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+								}
+								_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
+							}
+						}
+						_this.sceneCaseMap.set(scene.sceneId, caselist)
+						
+					}
+			// 		console.log(_this.sceneIds)
+			// 		console.log(_this.sceneCaseMap)
+			// 		console.log(_this.flowNodesMap)
 				}
 			});
-		}
+			// Vac.ajax({
+			// 	url: '/api/getcaseandscene',
+			// 	type: 'post',
+			// 	data: data,
+			// 	dataType: 'json',
+			// 	success: function(data, statusText) {
+			// 		_this.testCaseList = data.testCaseList
+			// 		_this.testSceneList = data.testSceneList;
+
+			// 		_this.caseIds.length = 0
+			// 		_this.flowNodeIds.clear()
+			// 		_this.testCaseList.forEach((value) => {
+			// 			Vac.pushNoRepeat(_this.caseIds, value.caseId)
+			// 			if(value.caseCompositeType == 2) {
+			// 				let arr = []
+			// 				for (let flowNode of value.flowNodes) {
+			// 					arr.push(+flowNode.flowNodeId)
+			// 				}
+			// 				_this.flowNodeIds.set(+value.caseId, arr)
+			// 			}
+			// 		})
+
+			// 		_this.sceneIds.length = []
+			// 		_this.sceneCaseMap.clear()
+			// 		_this.flowNodesMap.clear()
+			// 		for (var j = 0; j<_this.testSceneList.length;j++) {
+			// 			var scene = _this.testSceneList[j]
+
+			// 			_this.sceneIds.push(scene.sceneId)
+			// 			var caselist = []
+			// 			for(var i = 0;i<scene.testCaseList.length;i++){
+			// 				var c = scene.testCaseList[i]
+			// 				caselist.push(scene.sceneId + '-' + c.caseId);
+
+			// 				if(c.caseCompositeType == 2) {
+			// 					_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
+			// 					let flowNodes = []
+			// 					for (let flowNode of c.flowNodes) {
+			// 						caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+			// 						flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+			// 					}
+			// 					_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
+			// 				}
+			// 			}
+			// 			_this.sceneCaseMap.set(scene.sceneId, caselist)
+						
+			// 		}
+			// 		console.log(_this.sceneIds)
+			// 		console.log(_this.sceneCaseMap)
+			// 		console.log(_this.flowNodesMap)
+			// 	}
+			// })
+		},
+		setBackground: checkFunction.setBackground,
+		checkChanged: checkFunction.checkChanged,
+		checkallToggle: checkFunction.checkallToggle,
+		checkallBox: checkFunction.checkallBox,
+
+		checkAllInScene: checkFunction.checkAllInScene,
+		checkAllFlowNodes: checkFunction.checkAllFlowNodes,
+		checkFlowNode: checkFunction.checkFlowNode,
+		setSelect: checkFunction.setSelect,
+		setSelectListener: checkFunction.setSelectListener
 	}
 });

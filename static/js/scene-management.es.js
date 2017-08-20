@@ -79,8 +79,8 @@ var vBody = new Vue({
 			3: __uri('../static/images/failed.png')
 		},
 		// 调试轮次
-		debugRound: '',
-		exeScope: ''
+		debugRound: null,
+		exeScope: null
 	},
 	ready:function(){
 		this.setVal();
@@ -154,10 +154,10 @@ var vBody = new Vue({
 		getCases: function(){
 			var _this = this;
 			$.ajax({
-				// url: address + 'sceneController/selectByPrimaryKey',
-				url: '/api/getcaseinscene',
+				url: address + 'sceneController/selectByPrimaryKey',
+				// url: '/api/getcaseinscene',
 				data: 'id='+_this.sceneid,
-				type: 'get',
+				type: 'post',
 				dataType: 'json',
 				success: function(data, statusText){
 					if(data.success == true){
@@ -204,10 +204,7 @@ var vBody = new Vue({
 		},
 		setSelect: checkFunction.setSelect,
 		pushNoRepeat: checkFunction.pushNoRepeat,
-		setSelectListener: function(){
-			document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
-			// 防止点击用例框时也进行选取
-		},
+		setSelectListener: checkFunction.setSelectListener,
 		// 点击checkbox
 		checkChanged: checkFunction.checkChanged,
 		// 全选case-lib中的case

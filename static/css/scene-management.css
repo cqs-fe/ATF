@@ -222,6 +222,8 @@ html, body {
           width: 50px; }
         #main-content .content-wrapper .main .main-content table#testphase-table tr :nth-of-type(2) {
           width: 30%; }
+      #main-content .content-wrapper .main .main-content2 {
+        position: relative; }
   #main-content .bigMarginBottom {
     margin-bottom: 250px; }
   #main-content .smallMarginBottom {
