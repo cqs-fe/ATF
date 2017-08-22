@@ -10,8 +10,8 @@ var app = new Vue({
     },
     ready: function() {
         this.autSelect();
+        this.transactSelect();
         this.setval();
-        this.classtypeSelect();
         getObjTree();
         $('#autSelect').change(function() {
             app.transactSelect();
@@ -21,6 +21,7 @@ var app = new Vue({
             app.transactId = $('#transactSelect').val();
             updateObjTree();
         });
+        this.classtypeSelect();
     },
     methods: {
         //获取测试系统
@@ -36,7 +37,9 @@ var app = new Vue({
 
                         str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
                     }
+
                     $('#autSelect').html(str);
+
                 }
             });
         },
@@ -44,6 +47,7 @@ var app = new Vue({
         transactSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
+                async: false,
                 url: address + 'transactController/showalltransact',
                 data: { 'autlistselect': val },
                 type: "POST",
@@ -51,10 +55,10 @@ var app = new Vue({
                     var transactList = data.o;
                     var str = "";
                     for (var i = 0; i < transactList.length; i++) {
+
                         str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                     }
                     $('#transactSelect').html(str);
-
                 }
 
             });
@@ -74,12 +78,7 @@ var app = new Vue({
             });
         },
         //设置所属测试系统和所属功能点为上级页面选中的值
-        setval: function() {
-            // const thisURL = document.URL;
-            // const getval = thisURL.split('?')[1];
-            // const keyval = getval.split('&');
-            // this.autId = keyval[0].split('=')[1];
-            // this.transactId = keyval[1].split('=')[1];
+         setval: function() {
             this.autId=sessionStorage.getItem("autId");
             this.transactId=sessionStorage.getItem("transactId");
             $("#autSelect").val(this.autId);
@@ -114,7 +113,6 @@ var app = new Vue({
 
                 }
             });
-
         },
         addObj: function() {
             var objName = $("#addObjName").val(),
@@ -137,7 +135,7 @@ var app = new Vue({
                     "parentElementId": parentid
                 },
                 success: function(data) {
-                    console.info(data);
+                    // console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
                         getObjTree();

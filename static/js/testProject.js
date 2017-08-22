@@ -69,7 +69,6 @@ var app = new Vue({
             getTestProject(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
 
-
         //添加测试项目
         insert: function() {
             $.ajax({
