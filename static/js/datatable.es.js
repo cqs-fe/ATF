@@ -497,13 +497,14 @@ $(document).ready(function(){
                     		executor: _this.systemInfo.executor,
                     		caseLib_id: _this.systemInfo.caseLib_id
                     	}
+                    	// 假数据，为了能取到数据配置的
                     	var mockdata = {
                     		executor: 63,
                     		caseLib_id: 1
                     	}
                         $.ajax({
                             url: address + "TestcaseController/selectTestPointByCondition",
-                            data: mockdata,
+                            data: data,
                             type: 'post',
                             dataType: "json",
                             success: function(data,textStatus){
@@ -524,11 +525,11 @@ $(document).ready(function(){
                 // 使用了mock
                 changeChecked: function(event){
                     var _this = this;
-                    console.log(JSON.stringify(_this.checkedArray))
-                    console.log('[' + _this.checkedArray.toString() + ']')
+                    // console.log(JSON.stringify(_this.checkedArray))
+                    // console.log('[' + _this.checkedArray.toString() + ']')
+                    // _this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
                     _this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
-                    // _this.systemInfo.testpoints = '[' + _this.checkedArray.toString() + ']';
-
+                    // 假数据
                     var dataMock =  {
 	                	executor: 63,
 	                	caseLib_id: 1,
@@ -538,8 +539,8 @@ $(document).ready(function(){
                         url: address + "autController/selectTestCaseByCondition",
                         type: "post",
                         dataType: "json",
-                        // data: _this.systemInfo,
-                        data: dataMock,
+                        data: _this.systemInfo,
+                        // data: dataMock,
                         success: function(data, textStatus){
                             var treeData = [];
                             data.o.forEach((value) => {
@@ -570,6 +571,7 @@ $(document).ready(function(){
                                } = value);
                                treeData.push(item);
                             });
+                            console.log(treeData)
                             zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
                         }
                     });
@@ -730,22 +732,23 @@ $(document).ready(function(){
 				var autId = treeNode.getParentNode().getParentNode().id;
 				var transId = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
-				// var data = {
-				// 	testpoint: sub.systemInfo.test,
-				// 	executor: sub.systemInfo.executor,
-				// 	caseLib_id: sub.systemInfo.caseLib_id,
-				// 	autId:autId,
-				// 	transId:transId,
-				// 	scriptId:scriptId
-				// };
+				console.log(sub.systemInfo.testpoints)
 				var data = {
-						testpoint: "登录",
-						executor: 63,
-						caseLib_id: 1,
-						autId:22,
-						transId:57,
-						scriptId:1167
-				}
+					testpoint: sub.systemInfo.testpoints,
+					executor: sub.systemInfo.executor,
+					caseLib_id: sub.systemInfo.caseLib_id,
+					autId:autId,
+					transId:transId,
+					scriptId:scriptId
+				};
+				// var data = {
+				// 		testpoint: "登录",
+				// 		executor: 63,
+				// 		caseLib_id: 1,
+				// 		autId:22,
+				// 		transId:57,
+				// 		scriptId:1167
+				// }
 				// 使用了mock
 				$.ajax({
 					url: address + "scripttemplateController/searchScripttemplateInf",
