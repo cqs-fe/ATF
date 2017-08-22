@@ -64,6 +64,7 @@ var app = new Vue({
         transactSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
+                async: false,
                 url: address + 'transactController/showalltransact',
                 data: { 'autlistselect': val },
                 type: "POST",

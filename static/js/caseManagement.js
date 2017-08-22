@@ -27,7 +27,7 @@ var app = new Vue({
         totalPage: 1, //总页数
         listnum: 10, //页面大小
         order: 'id',
-        sort: 'desc',
+        sort: 'asc',
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
@@ -152,7 +152,7 @@ var app = new Vue({
                     console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                        this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -168,8 +168,8 @@ var app = new Vue({
                 listnum = $(this).children('option:selected').val();
                 $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
                 app.currentPage = 1;
-                getCase(1, listnum, 'id', 'asc');
-            })
+                app.getCase(1, listnum, 'id', 'asc');
+            });
         },
         //导出
         // export () {
@@ -209,7 +209,7 @@ var app = new Vue({
                 success: function(data) {
                     if (data.success) {
                         $('#successModal').modal();
-                        getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                        this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -313,7 +313,7 @@ var app = new Vue({
                         console.info(data.msg);
                         if (data.msg == "完成") {
                             $('#successModal').modal();
-                            getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                            this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -354,7 +354,7 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
-                            getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                            this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -399,8 +399,8 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-            getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
-            // queryCase();
+            this.getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
+            // ts.queryCase();
         },
         // 流程案例添加节点案例
         addCaseNode: function() {
@@ -819,7 +819,7 @@ function transid() {
             console.info(data);
             if (data.success) {
                 $('#successModal').modal();
-                getCase(app.currentPage, app.pageSize, app.order, app.sort);
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
             } else {
                 $('#failModal').modal();
             }
@@ -872,7 +872,7 @@ function resort(target) {
         target.setAttribute("data-sort", "desc");
     }
     app.order = target.getAttribute("data-order");
-    getCase(1, 10, app.order, app.sort);
+    app.getCase(1, 10, app.order, app.sort);
 }
 //重新排序 结束
 
