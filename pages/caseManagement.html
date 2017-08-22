@@ -77,6 +77,9 @@
                                                                 <label class="col-lg-2 control-label">任务编号</label>
                                                                 <div class="col-lg-4">
                                                                     <input type="text" class="form-control" name="submissionid">
+                                                                     <!-- <select type="text" class="form-control" name="submissionid">
+                                                                        <option v-for="item in missionList" value="item.id">{{item.missionCode}}</option>
+                                                                    </select> -->
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -691,7 +694,7 @@
                                                 <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号" name="casecode" v-model="casecode">
                                             </div>
                                             <div class="col-lg-1">
-                                                <a class="btn btn-white" onclick="queryCase()">搜索</a>
+                                                <a class="btn btn-white" @click="queryCase()">搜索</a>
                                             </div>
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
@@ -777,7 +780,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><a class="btn btn-primary" onclick="queryCase()">筛选</a></td>
+                                                        <td><a class="btn btn-primary" @click="queryCase()">筛选</a></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

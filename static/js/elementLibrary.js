@@ -23,6 +23,7 @@ var app = new Vue({
     },
     ready: function() {
         this.autSelect();
+        this.transactSelect();
         this.setval();
         $('#autSelect').change(function() {
             app.transactSelect();
@@ -74,7 +75,6 @@ var app = new Vue({
                         str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                     }
                     $('#transactSelect').html(str);
-
                 }
 
             });
@@ -100,11 +100,6 @@ var app = new Vue({
         },
         //设置所属测试系统和所属功能点为上级页面选中的值
         setval: function() {
-            // var thisURL = document.URL;
-            // var getval = thisURL.split('?')[1],
-            //     keyval = getval.split('&');
-            //     this.autId = keyval[0].split('=')[1],
-            //     this.transactId = keyval[1].split('=')[1];
             this.autId=sessionStorage.getItem("autId");
             this.transactId=sessionStorage.getItem("transactId");
             $("#autSelect").val(this.autId);
@@ -198,11 +193,12 @@ var app = new Vue({
                 nodes = treeObj.getSelectedNodes(),
                 UIName = nodes[0].name,
                 RUIName = $('#RUIName').val(),
-                LtreeObj = $.fn.zTree.getZTreeObj("UILinkedTree"),
-                Lnodes = LtreeObj.getSelectedNodes(),
+                LtreeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
+            var Lnodes,
                 relateIdentifyObjectId,
                 relateParentIdentifyObjectId;
-            if (Lnodes.length !== 0) {
+            if (LtreeObj) {
+                Lnodes = LtreeObj.getSelectedNodes();
                 relateIdentifyObjectId = Lnodes[0].id;
                 relateParentIdentifyObjectId = Lnodes[0].parentid;
             } else {
@@ -299,12 +295,20 @@ var app = new Vue({
                 UIName = nodes[0].getParentNode().name,
                 eleName = nodes[0].name,
                 rEleName = $('#rEleName').val(),
-                LtreeObj = $.fn.zTree.getZTreeObj("eleLinkedTree"),
-                Lnodes = LtreeObj.getSelectedNodes(),
-                relateIdentifyObjectId = Lnodes[0].id,
-                PtreeObj = $.fn.zTree.getZTreeObj("eleParentTree"),
-                Pnodes = PtreeObj.getSelectedNodes(),
-                relateParentIdentifyObjectId = Pnodes[0].id;
+                LtreeObj = $.fn.zTree.getZTreeObj("eleLinkedTree");
+                var Lnodes, relateIdentifyObjectId;
+                if(LtreeObj){
+                    Lnodes = LtreeObj.getSelectedNodes();
+                    relateIdentifyObjectId = Lnodes[0].id;
+                }else{
+                    relateIdentifyObjectId='';
+                }
+                var PtreeObj = $.fn.zTree.getZTreeObj("eleParentTree");
+                var Pnodes, relateParentIdentifyObjectId;
+                if(PtreeObj){
+                    Pnodes = PtreeObj.getSelectedNodes();
+                    relateParentIdentifyObjectId = Pnodes[0].id;
+                }
             //主属性
             var mainTd,
                 mainName = [],

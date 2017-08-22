@@ -61,10 +61,9 @@ var app = new Vue({
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
-                    console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        queryTransact();
                     } else {
                         $('#failModal').modal();
                     }
