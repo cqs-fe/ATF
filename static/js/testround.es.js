@@ -55,7 +55,11 @@ var vBody = new Vue({
 			1: __uri('../static/images/running.gif'),
 			2: __uri('../static/images/success.png'),
 			3: __uri('../static/images/failed.png')
-		}
+		},
+
+		// save the string : 展开 and 收起
+		expandString: '展开',
+		unexpandString: '收起'
 	},
 	created: function(){
 		var _this = this;
@@ -210,6 +214,7 @@ var vBody = new Vue({
 			// send data and display the modal 
 			$.ajax({
 				url: address + 'testexecutioninstanceController/insert',
+				// url: 'api/testexecution.json',
 				data: data,
 				type: 'post',
 				dataType: 'json',
@@ -247,7 +252,8 @@ var vBody = new Vue({
 			};
 			var _this = this;
 			$.ajax({
-				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
+				// url: address + 'testexecutioninstanceController/textexecutioninstancequery',
+				url: '/api/getcaseandscene',
 				type: 'post',
 				data: data,
 				dataType: 'json',
@@ -298,58 +304,29 @@ var vBody = new Vue({
 			// 		console.log(_this.flowNodesMap)
 				}
 			});
-			// Vac.ajax({
-			// 	url: '/api/getcaseandscene',
-			// 	type: 'post',
-			// 	data: data,
-			// 	dataType: 'json',
-			// 	success: function(data, statusText) {
-			// 		_this.testCaseList = data.testCaseList
-			// 		_this.testSceneList = data.testSceneList;
-
-			// 		_this.caseIds.length = 0
-			// 		_this.flowNodeIds.clear()
-			// 		_this.testCaseList.forEach((value) => {
-			// 			Vac.pushNoRepeat(_this.caseIds, value.caseId)
-			// 			if(value.caseCompositeType == 2) {
-			// 				let arr = []
-			// 				for (let flowNode of value.flowNodes) {
-			// 					arr.push(+flowNode.flowNodeId)
-			// 				}
-			// 				_this.flowNodeIds.set(+value.caseId, arr)
-			// 			}
-			// 		})
-
-			// 		_this.sceneIds.length = []
-			// 		_this.sceneCaseMap.clear()
-			// 		_this.flowNodesMap.clear()
-			// 		for (var j = 0; j<_this.testSceneList.length;j++) {
-			// 			var scene = _this.testSceneList[j]
-
-			// 			_this.sceneIds.push(scene.sceneId)
-			// 			var caselist = []
-			// 			for(var i = 0;i<scene.testCaseList.length;i++){
-			// 				var c = scene.testCaseList[i]
-			// 				caselist.push(scene.sceneId + '-' + c.caseId);
-
-			// 				if(c.caseCompositeType == 2) {
-			// 					_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
-			// 					let flowNodes = []
-			// 					for (let flowNode of c.flowNodes) {
-			// 						caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
-			// 						flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
-			// 					}
-			// 					_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
-			// 				}
-			// 			}
-			// 			_this.sceneCaseMap.set(scene.sceneId, caselist)
-						
-			// 		}
-			// 		console.log(_this.sceneIds)
-			// 		console.log(_this.sceneCaseMap)
-			// 		console.log(_this.flowNodesMap)
-			// 	}
-			// })
+		},
+		hideCaseList: function(event){
+			var _this = this
+			var el = $('.case-list', $(event.target).parent())[0]
+			var curHeight = el.offsetHeight;
+			el.style.height = curHeight + 'px';
+			// var autoHeight = el.offsetHeight
+			// console.log(autoHeight)
+			if(event.target.innerHTML == _this.unexpandString){  // unexpandString 收起
+				// window.requestAnimationFrame(function() {
+					el.style.height = '0px'
+				// })
+				event.target.innerHTML = _this.expandString
+			} else {		
+				el.style.height = 'auto';
+				var curHeight = el.offsetHeight; 	// 展开
+				el.style.height = '0px';
+				window.requestAnimationFrame(function() {
+					el.style.height = curHeight+ 'px'
+				})
+				event.target.innerHTML = _this.unexpandString
+			}
+			event.stopPropagation()
 		},
 		setBackground: checkFunction.setBackground,
 		checkChanged: checkFunction.checkChanged,

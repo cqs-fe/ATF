@@ -472,9 +472,13 @@ $okGreen: #66F60C;
 			}
 			.case-list, .scene-list {
 				// display: flex;
-				flex: 1 1 auto;
+				height: auto;
+				// flex: 0 0 auto;
 				border: 1px dashed #ddd;
-				padding: 10px;
+				// padding: 10px;
+				overflow: hidden;
+				box-sizing: border-box;
+				transition: height 500ms;
 				.case-item {
 					display: inline-block;
 					flex: 1 1 auto;

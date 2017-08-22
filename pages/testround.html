@@ -98,8 +98,9 @@
             <div class="main-content2">
               <div class="case-list-wrapper list-wrapper">
                 <span class="case-list-title list-title">用例列表</span>
+                <span class="hide-case-list" @click="hideCaseList($event)" @mousedown.stop="1">收起</span>
                 <div class="case-list">
-                  <div class="check-all-case">全部选取
+                  <div class="check-all-case" v-if="testCaseList.length">全部选取
                     <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">
                   </div>
                   <div class="case-lib" v-for="case_wrapper in testCaseList">
@@ -155,7 +156,7 @@
                 <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
                 <!-- <div class="case-list"> -->
                   <div class="case-list">
-                    <div class="check-all-case">全部选取
+                    <div class="check-all-case" v-if="scene.testCaseList.length">全部选取
                       <input type="checkbox"  @change="checkAllInScene($event)" class="checkall-inscene" 
                         :value="scene.sceneId" v-model="checkallSceneIds">
                     </div>

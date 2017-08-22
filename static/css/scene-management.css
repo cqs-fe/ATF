@@ -327,9 +327,11 @@ html, body {
       vertical-align: top;
       margin-right: 10px; }
     #main-content #testround-main .list-wrapper .case-list, #main-content #testround-main .list-wrapper .scene-list {
-      flex: 1 1 auto;
+      height: auto;
       border: 1px dashed #ddd;
-      padding: 10px; }
+      overflow: hidden;
+      box-sizing: border-box;
+      transition: height 500ms; }
       #main-content #testround-main .list-wrapper .case-list .case-item, #main-content #testround-main .list-wrapper .scene-list .case-item {
         display: inline-block;
         flex: 1 1 auto;

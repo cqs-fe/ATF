@@ -216,7 +216,7 @@ var checkFunction = {
 				}
 			}
 			for (let caseId of _this.sceneCaseIds) {
-				console.log(caseId)
+				// console.log(caseId)
 				if(_this.flowNodesMap.get(caseId).every((value) => {
 					return _this.selectedSceneCases.includes(value)
 				})) {

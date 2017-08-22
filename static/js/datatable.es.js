@@ -488,6 +488,7 @@ $(document).ready(function(){
                     this.flag = !this.flag;
                     document.querySelector('.wtHolder') && (document.querySelector('.wtHolder').style.width = 'auto');
                 },
+                // 使用了mock
                 changeSelect: function(event){
                     var _this = this;
                     // console.log('hello');
@@ -496,9 +497,13 @@ $(document).ready(function(){
                     		executor: _this.systemInfo.executor,
                     		caseLib_id: _this.systemInfo.caseLib_id
                     	}
+                    	var mockdata = {
+                    		executor: 63,
+                    		caseLib_id: 1
+                    	}
                         $.ajax({
                             url: address + "TestcaseController/selectTestPointByCondition",
-                            data: data,
+                            data: mockdata,
                             type: 'post',
                             dataType: "json",
                             success: function(data,textStatus){
@@ -516,17 +521,25 @@ $(document).ready(function(){
                     	_this.checkedArray = []
                     }
                 },
+                // 使用了mock
                 changeChecked: function(event){
                     var _this = this;
                     console.log(JSON.stringify(_this.checkedArray))
                     console.log('[' + _this.checkedArray.toString() + ']')
                     _this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
                     // _this.systemInfo.testpoints = '[' + _this.checkedArray.toString() + ']';
+
+                    var dataMock =  {
+	                	executor: 63,
+	                	caseLib_id: 1,
+	                	testpoints: JSON.stringify(["登录"]),
+	                }
                     $.ajax({
                         url: address + "autController/selectTestCaseByCondition",
                         type: "post",
                         dataType: "json",
-                        data: _this.systemInfo,
+                        // data: _this.systemInfo,
+                        data: dataMock,
                         success: function(data, textStatus){
                             var treeData = [];
                             data.o.forEach((value) => {
@@ -717,14 +730,23 @@ $(document).ready(function(){
 				var autId = treeNode.getParentNode().getParentNode().id;
 				var transId = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
+				// var data = {
+				// 	testpoint: sub.systemInfo.test,
+				// 	executor: sub.systemInfo.executor,
+				// 	caseLib_id: sub.systemInfo.caseLib_id,
+				// 	autId:autId,
+				// 	transId:transId,
+				// 	scriptId:scriptId
+				// };
 				var data = {
-					testpoint: sub.systemInfo.test,
-					executor: sub.systemInfo.executor,
-					caseLib_id: sub.systemInfo.caseLib_id,
-					autId:autId,
-					transId:transId,
-					scriptId:scriptId
-				};
+						testpoint: "登录",
+						executor: 63,
+						caseLib_id: 1,
+						autId:22,
+						transId:57,
+						scriptId:1167
+				}
+				// 使用了mock
 				$.ajax({
 					url: address + "scripttemplateController/searchScripttemplateInf",
 					data: data,
