@@ -240,7 +240,7 @@ var app = new Vue({
             var treeObj = $.fn.zTree.getZTreeObj("objectTree"),
                 nodes = treeObj.getSelectedNodes(true),
                 id = nodes[0].id,
-                name = nodes[0].name,
+                name = $('#objForm input[name="name"]').val(),
                 parentElementId = nodes[0].parentid,
                 classtype = $('#classtypeSelect').val();
             //主属性

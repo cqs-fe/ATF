@@ -53,6 +53,7 @@ $(document).ready(function() {
             transactSelect: function() {
                 var val = $('#autSelect').val();
                 $.ajax({
+                    async: false,
                     url: address + 'transactController/showalltransact',
                     data: { 'autlistselect': val },
                     type: "POST",
@@ -166,6 +167,7 @@ $(document).ready(function() {
                 }
             },
             saveTemplate: function() {
+                var _this=this;
                 _this.newTemplate.transId = _this.transId
                 $.ajax({
                     url: address + 'scripttemplateController/insert',
@@ -175,6 +177,7 @@ $(document).ready(function() {
                     success: function(data) {
                         Vac.alert('添加成功！')
                         $('#addtemplateModal').modal('hide')
+                        _this.getScriptTemplate();
                     },
                     error: function() {
                         Vac.alert('添加失败！')
@@ -196,6 +199,7 @@ $(document).ready(function() {
                         if (data) {
                             Vac.alert('删除成功！')
                             _this.checkedTemplate.pop()
+                            _this.getScriptTemplate();
                         }
                     },
                     error: function() {
