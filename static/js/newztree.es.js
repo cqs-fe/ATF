@@ -9,6 +9,7 @@ $(document).ready(function() {
             templateList: [],
             checkedTemplate: [],
             script_id: '',
+            ids: '',
             // 新增模板绑定数据
             newTemplate: {
                 name: '',
@@ -53,6 +54,7 @@ $(document).ready(function() {
             transactSelect: function() {
                 var val = $('#autSelect').val();
                 $.ajax({
+                    async: false,
                     url: address + 'transactController/showalltransact',
                     data: { 'autlistselect': val },
                     type: "POST",
@@ -105,6 +107,15 @@ $(document).ready(function() {
 	                }
 	            });
 	        },
+              //获取选中的id
+            getIds: function() {
+                var id_array = new Array();
+                $('input[name="chk_list"]:checked').each(function() {
+                    id_array.push($(this).attr('id'));
+                });
+                this.ids = id_array.join(',');
+                // $('input[name="id"]').val(id_array.join(','));
+            },
             getScriptTemplate: function() {
                 var _this = this;
                 $.ajax({
@@ -166,6 +177,7 @@ $(document).ready(function() {
                 }
             },
             saveTemplate: function() {
+                var _this=this;
                 _this.newTemplate.transId = _this.transId
                 $.ajax({
                     url: address + 'scripttemplateController/insert',
@@ -175,6 +187,7 @@ $(document).ready(function() {
                     success: function(data) {
                         Vac.alert('添加成功！')
                         $('#addtemplateModal').modal('hide')
+                        _this.getScriptTemplate();
                     },
                     error: function() {
                         Vac.alert('添加失败！')
@@ -183,19 +196,21 @@ $(document).ready(function() {
             },
             deleteTemplate: function() {
                 var _this = this;
+                _this.getIds();
                 if (!_this.checkedTemplate.length) {
                     Vac.alert('请选择要删除的模板！')
                     return
                 }
                 $.ajax({
                     url: address + 'scripttemplateController/delete',
-                    data: 'id=' + _this.checkedTemplate[_this.checkedTemplate.length - 1],
+                    data: {'id': _this.ids},
                     type: 'post',
                     dataType: 'json',
                     success: function(data) {
                         if (data) {
                             Vac.alert('删除成功！')
-                            _this.checkedTemplate.pop()
+                            // _this.checkedTemplate.pop()
+                            _this.getScriptTemplate();
                         }
                     },
                     error: function() {

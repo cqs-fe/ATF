@@ -253,6 +253,7 @@ function getClass() {
     //     autId = para[0].split('=')[1];
     // var autName = decodeURI(para[1].split('=')[1]);
     var autName=sessionStorage.getItem("autName");
+    var autId=sessionStorage.getItem("autId");
     $('.autName').html(autName);
     $.ajax({
         url: address + 'autController/selectClass',

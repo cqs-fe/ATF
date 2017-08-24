@@ -97,7 +97,8 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        queryTransact();
                     } else {
                         $('#failModal').modal();
                     }
@@ -128,7 +129,8 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        queryTransact();
                     } else {
                         $('#failModal').modal();
                     }

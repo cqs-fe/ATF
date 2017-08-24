@@ -63,7 +63,7 @@
                             <tbody>
                                 <tr v-for="(index,template) in templateList">
                                     <td class="index">
-                                        <input type="checkbox" name="radio" :value="index" @change="change()" v-model="checkedTemplate">
+                                        <input type="checkbox" name="chk_list" :value="index" @change="change()" v-model="checkedTemplate" id="{{template.id}}">
                                     </td>
                                     <td class="number">{{template.name}}</td>
                                     <td>{{template.description}}</td>
