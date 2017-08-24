@@ -38,7 +38,7 @@ var app = new Vue({
         this.getCase(this.currentPage, this.pageSize, this.order, this.sort);
         this.changeListNum();
         this.getUsers();
-        // this.getMission(); //获取案例添加表单任务编号下拉列表
+        this.getMission(); //获取案例添加表单任务编号下拉列表
         $(".myFileUpload").change(function() {
             var arrs = $(this).val().split('\\');
             var filename = arrs[arrs.length - 1];
@@ -152,7 +152,7 @@ var app = new Vue({
                     console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                        self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -310,10 +310,10 @@ var app = new Vue({
                     type: 'post',
                     data: $("#executorForm").serializeArray(),
                     success: function(data) {
-                        console.info(data.msg);
+                        console.info(data);
                         if (data.msg == "完成") {
                             $('#successModal').modal();
-                            this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                            self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -354,7 +354,7 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
-                            this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                            self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -471,16 +471,16 @@ var app = new Vue({
             });
         },
         //获取添加案例任务编号下拉列表
-        // getMission: function(){
-        //     $.ajax({
-        //         url: address+"missionController/selectAll",
-        //         type: 'GET',
-        //         success:function(data){
-        //             console.log(data)
-        //             this.missionList=data.obj;
-        //         }
-        //     });
-        // },
+        getMission: function(){
+            $.ajax({
+                url: address+"missionController/selectAll",
+                type: 'GET',
+                success:function(data){
+                    console.log(data)
+                    app.missionList=data.obj;
+                }
+            });
+        },
     },
 
 });
@@ -814,7 +814,13 @@ function transid() {
     $.ajax({
         url: address + 'TestcaseController/trans_id',
         type: 'post',
-        data: $("#transidForm").serializeArray(),
+        // data: $("#transidForm").serializeArray(),
+        data:{
+            'ids':$("#transidForm input[name='ids']").val(),
+            'autid':$("#transidForm select[name='autid']").val(),
+            'transid':$("#transidForm select[name='transid']").val(),
+            'scriptmodeflag':$("#transidForm select[name='scriptmodeflag']").val(),
+        },
         success: function(data) {
             console.info(data);
             if (data.success) {
@@ -844,6 +850,7 @@ function executor() {
             console.info(data.msg);
             if (data.msg == "完成") {
                 $('#successModal').modal();
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
             } else {
                 $('#failModal').modal();
             }
