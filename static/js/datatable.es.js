@@ -443,7 +443,9 @@ $(document).ready(function(){
                 	executor: 63,
                 	caseLib_id: 1,
                 	testpoints: '',
-                }
+                },
+                testpointsMap: new Map(),
+                testpointLength: 0
             },
             created: function(){
 
@@ -463,17 +465,91 @@ $(document).ready(function(){
 				_this.selectItems = data;
 				_this.getInfo();
             },
+            watch: {
+            	checkedArray (newVal, oldVal) {
+            		var _this = this;
+            		if(newVal.length > 1){
+            			newVal.shift()
+            		}
+            		 
+                    // console.log(JSON.stringify(_this.checkedArray))
+                    // console.log('[' + _this.checkedArray.toString() + ']')
+                    // _this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
+                    _this.systemInfo.testpoints = JSON.stringify(newVal)
+                    // 假数据
+                    var dataMock =  {
+	                	executor: 63,
+	                	caseLib_id: 1,
+	                	testpoints: JSON.stringify(["登录"]),
+	                }
+                    $.ajax({
+                        url: address + "autController/selectTestCaseByCondition",
+                        type: "post",
+                        dataType: "json",
+                        data: _this.systemInfo,
+                        // data: dataMock,
+                        success: function(data, textStatus){
+                            var treeData = [];
+                            data.o.forEach((value) => {
+                            	// var testpointMapVal = ''+value.id;
+                               var item = {};  //解构第一层
+                               item.open = true;
+                               item.children = [];
+                               value.children.forEach((value1) => {
+                                   var subData = {};  //解构第二层
+                                   subData.children = [];
+                                   subData.open = true;
+                                   ({
+                                       transactid: subData.id,
+                                       name: subData.name,
+                                   } = value1);
+                                   value1.children.forEach((value2 => {
+                                        var ssubData = {};		 //解构第二层
+                                        ({
+                                            scriptid: ssubData.id,
+                                            name: ssubData.name
+                                        } = value2);
+                                        subData.children.push(ssubData);
+                                        console.log(newVal.length + "-" + _this.testpointLength)
+                                        if(newVal.length > _this.testpointLength) {
+                                        	var testpointMapVal = `${value.autid}-${value1.transactid}-${value2.scriptid}`
+                                        	// testpointsMap的格式：
+                                        	// {
+                                        	// 	"登录": {"22-57-1167"}
+                                        	// }
+                                        	// 注： 键名是其所属的testpoint,键值是set，
+                                        	// 	set中的数据格式： "autid-transid-scriptid"
+     										if(_this.testpointsMap.has(newVal[newVal.length-1])){
+     											_this.testpointsMap.get(newVal[newVal.length-1]).add(testpointMapVal)
+     										} else {
+     											_this.testpointsMap.set(newVal[newVal.length-1], new Set())
+     											_this.testpointsMap.get(newVal[newVal.length-1]).add(testpointMapVal)
+     										}
+     										console.log(_this.testpointsMap)
+                                        }
+                                        // 生成关于testpoint的Map
+
+                                   }));
+                                   item.children.push(subData);
+                               });
+                               ({
+                                   autid: item.id,
+                                   name: item.name,
+                               } = value);
+                               treeData.push(item);
+                            });
+                            console.log(treeData)
+                            zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+                            _this.testpointLength = newVal.length
+                        }
+                    });
+                    
+            	}
+            },
             methods: {
             	getInfo: function() {
             		var userId = sessionStorage.getItem('userId')
             		var caseLib_id = sessionStorage.getItem('caselibid')
-      //       		if(userId == null || userId == '') {
-      //       			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '您尚未登陆，请登陆！').then(function(){
-						// 	window.location.href = 'Login.html'
-						// }, function(){
-						// 	return;
-						// })
-      //       		}
             		if(caseLib_id == null || caseLib_id == '') {
             			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '请先选择测试项目！').then(function(){
 							window.location.href = 'testProject.html'
@@ -732,9 +808,20 @@ $(document).ready(function(){
 				var autId = treeNode.getParentNode().getParentNode().id;
 				var transId = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
+				// var testpoint = ''
+				// 将autid transId以及scriptid拼接起来，去testpointsMap中寻找testpoint
+				// var string = `${autId}-${transId}-${scriptId}`
+				// for (let key of sub.testpointsMap.keys()){
+				// 	let set = sub.testpointsMap.get(key)
+				// 	if(set.has(string)) {
+				// 		testpoint = key
+				// 		break
+				// 	}
+				// }
 				console.log(sub.systemInfo.testpoints)
 				var data = {
-					testpoint: sub.systemInfo.testpoints,
+					testpoint: sub.checkedArray[0],
+					// testpoint: testpoint,
 					executor: sub.systemInfo.executor,
 					caseLib_id: sub.systemInfo.caseLib_id,
 					autId:autId,
@@ -784,7 +871,7 @@ $(document).ready(function(){
 						}
 						// console.log(destrutData);
 						dataSource = destrutData;
-						console.log(dataSource)
+						// console.log(dataSource)
 						rowSelectFlags.length = dataSource.length;
 						getTotalColHeaders(data.o.tableHead);
 						console.log(totalColumnsHeaders);

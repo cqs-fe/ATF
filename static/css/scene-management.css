@@ -48,10 +48,11 @@ html, body {
       .editTrigger main .trigger-item-wrapper > div {
         display: inline-block;
         width: calc(100% - 95px); }
-    .editTrigger main .trigger-time-wrapper .checkbox-wrapper .checkbox-item {
-      margin-right: 10px;
-      font-weight: 100;
-      color: #000; }
+    .editTrigger main .trigger-time-wrapper .checkbox-wrapper {
+      padding: 10px; }
+      .editTrigger main .trigger-time-wrapper .checkbox-wrapper .checkbox-item {
+        font-weight: 100;
+        color: #000; }
     .editTrigger main .trigger-condition-wrapper .radio-item {
       margin-right: 10px;
       color: #000;
@@ -182,7 +183,7 @@ html, body {
             display: inline-block;
             height: 100%;
             vertical-align: top;
-            padding: 0px 0px 0px 8px; }
+            padding: 10px; }
             #main-content .content-wrapper .main .main-content .case-lib .checkbox-wrapper input {
               float: left;
               margin: 0; }

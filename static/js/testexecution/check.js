@@ -166,7 +166,7 @@ var checkFunction = {
 	setSelect (event){
 		var _this = this;
 		var target  = event.target;
-
+		console.log(target)
 		// if(!target.classList.contains('main-content2')) {
 		// 	return
 		// }
@@ -296,5 +296,15 @@ var checkFunction = {
 	setSelectListener (){
 		document.querySelector('.main-content2').addEventListener('mousedown',this.setSelect,false);
 		// 防止点击用例框时也进行选取
+		
+		// var caseLibs = Array.from(document.querySelectorAll('.case-lib'))
+		// console.log(caseLibs)
+		// for(let caseLib of caseLibs) {
+		// 	console.log(caseLib)
+		// 	caseLib.addEventListener('mousedown', function(event){
+		// 		console.log(event.target)
+				
+		// 	})
+		// }
 	}
 }

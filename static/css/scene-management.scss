@@ -61,8 +61,9 @@ $okGreen: #66F60C;
 		}
 		.trigger-time-wrapper {
 			.checkbox-wrapper {
+				padding: 10px;
 				.checkbox-item {
-					margin-right: 10px;
+					// margin-right: 10px;
 					font-weight: 100;
 					color: #000;
 				}
@@ -233,7 +234,8 @@ $okGreen: #66F60C;
 						height: 100%;
 						// width: 30px;
 						vertical-align: top;
-						padding: 0px 0px 0px 8px;
+						// padding: 0px 0px 0px 8px;
+						padding: 10px;
 						input {
 							float: left;
 							margin: 0;

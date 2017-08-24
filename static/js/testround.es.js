@@ -127,10 +127,17 @@ var vBody = new Vue({
 				scenes.shift();
 			}
 		})
-		this.setSelectListener()
 		// let result = Vac.isAncestor(document.querySelector('html'), document.querySelector('body'))
 		// console.log(result)
 	},
+	ready: function(){
+		// console.log("ready")
+		this.setSelectListener()
+	},
+	// updated: function(){
+	// 	console.log("updated")
+	// 	this.setSelectListener()
+	// },
 	watch: {
 		"selectedCases": function(value, oldVal) {
 			this.checkall = (value.length === this.caseIds.length)
@@ -178,7 +185,12 @@ var vBody = new Vue({
 				success: function(data, statusText) {
 					if (data.success === true) {
 						Vac.alert('执行成功！')
+					}else {
+						Vac.alert('执行失败！')
 					}
+				},
+				error: function(){
+					Vac.alert('执行失败！')
 				}
 			})
 			// 2,2,3,q,2,1,''
@@ -252,8 +264,8 @@ var vBody = new Vue({
 			};
 			var _this = this;
 			$.ajax({
-				// url: address + 'testexecutioninstanceController/textexecutioninstancequery',
-				url: '/api/getcaseandscene',
+				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
+				// url: '/api/getcaseandscene',
 				type: 'post',
 				data: data,
 				dataType: 'json',

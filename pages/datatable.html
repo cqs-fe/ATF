@@ -350,7 +350,7 @@
                         </div>
                         <div>
                             <label v-for="(index,item) in checkedItems" class="checkedItem"  track-by="$index">
-                            <input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" @change="changeChecked($event)">
+                            <input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray">
                             {{item.name}}
                             </label>
                         </div>
