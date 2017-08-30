@@ -7,6 +7,7 @@
         用户注册
     </title>
     <link href="../static/css/Register.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../static/js/config.js"></script>
 </head>
 
 <body>
@@ -134,16 +135,14 @@
     <script src="../lib/Validate.js">
     </script>
     <script type="text/javascript">
-    var baseurl = "http://10.108.226.152:8080/ATFCloud/";
-    //var baseurl = "http://127.0.0.1:8080/ATFCloud/";
     var authcode = false;
 
     function chageCode() {
-        $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+        $('#codeImage').attr('src', address + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
         //获取sessionId并将其存放在sessionstorage之中
         $.ajax({
             type: 'post',
-            url: baseurl + "userController/getSessionId", //
+            url: address + "userController/getSessionId", //
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
@@ -156,10 +155,10 @@
 
     }
     $(document).ready(function() {
-        $('#codeImage').attr('src', baseurl + 'userController/authCode?abc=' + Math.random());
+        $('#codeImage').attr('src', address + 'userController/authCode?abc=' + Math.random());
         $.ajax({
             type: 'post',
-            url: baseurl + "userController/getSessionId",
+            url: address + "userController/getSessionId",
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
@@ -168,7 +167,7 @@
         $('#authCode').blur(function() {
             $.ajax({
                 type: 'post',
-                url: baseurl + "userController/checkauthcode",
+                url: address + "userController/checkauthcode",
                 data: { "authCode": $("#authCode").val(), "sessionId": sessionStorage.getItem('sessionId') },
                 dataType: "json",
                 success: function(data) {
@@ -190,7 +189,7 @@
             if ($("#form").valid() && authcode) {
                 $.ajax({
                     type: 'post',
-                    url: baseurl + "userController/register",
+                    url: address + "userController/register",
                     data: $("#form").serialize() + "&sessionId=" + sessionStorage.getItem('sessionId'),
                     dataType: "json",
                     success: function(data) {

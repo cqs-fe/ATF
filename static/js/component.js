@@ -247,33 +247,28 @@ var app = new Vue({
 
 //获取当前被测系统的控件类型
 function getClass() {
-    // var thisUrl = document.URL,
-    //     getVal = thisUrl.split('?')[1],
-    //     para = getVal.split('&'),
-    //     autId = para[0].split('=')[1];
-    // var autName = decodeURI(para[1].split('=')[1]);
     var autName=sessionStorage.getItem("autName");
     var autId=sessionStorage.getItem("autId");
     $('.autName').html(autName);
     $.ajax({
-        url: address + 'autController/selectClass',
+        url: address + 'omclassController/selectClassMethodByAutId',
         type: 'post',
         data: { 'id': autId },
-        success: function(data) {
-            $('#classProp').children().remove();
-            var classList = data;
-            for (var i = 0; i < classList.length; i++) {
-                var classTr = $('<tr></tr>'),
-                    classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
-                    classNameTd = $('<td ></td>'),
-                    classDescriptionTd = $('<td ></td>');
-                classTr.attr('id', classList[i].classId);
-                classNameTd.html(classList[i].className);
-                classDescriptionTd.html(classList[i].classDesc);
-                classTr.append(classCheckTd, classNameTd, classDescriptionTd);
-                $('#classProp').append(classTr);
-            }
-        },
+        // success: function(data) {
+        //     $('#classProp').children().remove();
+        //     var classList = data;
+        //     for (var i = 0; i < classList.length; i++) {
+        //         var classTr = $('<tr></tr>'),
+        //             classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
+        //             classNameTd = $('<td ></td>'),
+        //             classDescriptionTd = $('<td ></td>');
+        //         classTr.attr('id', classList[i].classId);
+        //         classNameTd.html(classList[i].className);
+        //         classDescriptionTd.html(classList[i].classDesc);
+        //         classTr.append(classCheckTd, classNameTd, classDescriptionTd);
+        //         $('#classProp').append(classTr);
+        //     }
+        // },
         error: function() {
             $('#failModal').modal();
         }

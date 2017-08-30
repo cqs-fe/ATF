@@ -77,35 +77,6 @@ $(document).ready(function() {
 	            this.transId=sessionStorage.getItem("transactId");
 	            $("#autSelect").val(this.autId);
 	            $("#transactSelect").val(this.transId);
-	            $.ajax({
-	                url: address + 'transactController/transactqueryByPage',
-	                type: 'GET',
-	                async: false,
-	                data: {
-	                    'page': 1,
-	                    'rows': 10,
-	                    'order': 'id',
-	                    'sort': 'asc',
-	                    'id': this.transId,
-	                    'transcode': '',
-	                    'transname': '',
-	                    'autctgId': '',
-	                    'descript': '',
-	                    'maintainer': '',
-	                    'autId': '',
-	                    'useStatus': ''
-	                },
-	                success: function(data) {
-	                    var transactList = data.o.rows;
-	                    // console.log(transactList)
-	                    var str = "";
-	                    for (var i = 0; i < transactList.length; i++) {
-	                        str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
-	                    }
-	                    $('#transactSelect').html(str);
-
-	                }
-	            });
 	        },
               //获取选中的id
             getIds: function() {
@@ -173,7 +144,7 @@ $(document).ready(function() {
                                 }
                             }
                         }
-                    })
+                    });
                 }
             },
             saveTemplate: function() {
@@ -455,9 +426,11 @@ $(document).ready(function() {
                     }
                 })
                 // 请求函数集
+                var autId=$("#autSelect").val();
+                console.log(autId)
                 $.ajax({
                     url: address + 'autController/selectFunctionSet',
-                    data: 'id=22',
+                    data: {'id':autId},
                     type: 'post',
                     dataType: 'json',
                     success: (data, statusText) => {

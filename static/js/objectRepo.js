@@ -4,7 +4,7 @@ var app = new Vue({
         autId: '',
         transactId: '',
         objId: '',
-        objName: '对象名称',
+        objName: '',
         propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         classtypeList: []
     },
@@ -83,36 +83,6 @@ var app = new Vue({
             this.transactId=sessionStorage.getItem("transactId");
             $("#autSelect").val(this.autId);
             $("#transactSelect").val(this.transactId);
-            $.ajax({
-                url: address + 'transactController/transactqueryByPage',
-                type: 'GET',
-                async: false,
-                data: {
-                    'page': 1,
-                    'rows': 10,
-                    'order': 'id',
-                    'sort': 'asc',
-                    'id': this.transactId,
-                    'transcode': '',
-                    'transname': '',
-                    'autctgId': '',
-                    'descript': '',
-                    'maintainer': '',
-                    'autId': '',
-                    'useStatus': ''
-                },
-                success: function(data) {
-                    var transactList = data.o.rows;
-                    // console.log(transactList)
-                    var str = "";
-                    for (var i = 0; i < transactList.length; i++) {
-
-                        str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
-                    }
-                    $('#transactSelect').html(str);
-
-                }
-            });
         },
         addObj: function() {
             var objName = $("#addObjName").val(),
@@ -300,6 +270,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        updateObjTree();
                         // updateProp();
                     } else {
                         $('#failModal').modal();
@@ -365,8 +336,10 @@ var setting1 = {
                     "transid": app.transactId,
                 },
                 success: function(data) {
-                    console.log(data);
-                    $('#classtypeSelect').val(data.obj.classtype);
+                    // console.log(data);
+                    var classtype=data.obj[0].classtype;
+                    // console.log(classtype)
+                    $('#classtypeSelect').val(classtype);
                     //主属性
                     var mainList = data.obj[0].locatePropertyCollection.main_properties;
                     if (mainList.length !== 0) {

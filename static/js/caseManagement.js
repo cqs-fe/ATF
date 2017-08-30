@@ -81,7 +81,7 @@ var app = new Vue({
         insert: function() {
             var self = this;
             var casecompositetype = $('#insertSingleForm input[name="casecompositetype"]').val(),
-                caselibId = $('#insertSingleForm input[name="caselibId"]').val(),
+                caselibId=sessionStorage.getItem('caselibid'),
                 casecode = $('#insertSingleForm input[name="casecode"]').val(),
                 submissionid = $('#insertSingleForm select[name="submissionid"]').val(),
                 autid = $('#insertSingleForm select[name="autid"]').val(),
