@@ -247,4 +247,36 @@ Vac.pushNoRepeat = function(array, value){
     return { offsetLeft, offsetTop }
   }
 
+ /**
+  * debounce函数
+  * @param { Function } func The function to debounce.
+  * @param { Number } [wait=0] The number of milliseconds to delay.
+  * @returns { Function } Returns the new debounced function.
+  */
+  Vac.debounce = function(func, wait) {
+    var timeout = null
 
+    return function(){
+      var args = arguments
+
+      if(timeout === null) {
+        func(...args)
+        timeout = setTimeout(function(){
+          timeout = null
+        }, wait)
+      } else {
+        clearTimeout(timeout)
+        timeout = setTimeout(function(){
+          timeout = null
+          func(...args)
+        }, wait)
+      }
+    }
+  }
+
+/**
+  * throttle 函数
+  * @param { Function } func The function to throttle.
+  * @param { Number } [wait=0] The number of milliseconds to delay.
+  * @returns { Function } Returns the new throttled function.
+  */

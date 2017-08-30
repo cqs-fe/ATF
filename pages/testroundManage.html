@@ -51,9 +51,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">记录单管理方式</label>
+                                                    <label class="col-lg-4 control-label">记录单保存方式</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" name="recordmanagementflag" class="form-control">
+                                                        <!-- <input type="text" name="recordmanagementflag" class="form-control"> -->
+                                                        <select name="recordmanagementflag" class="form-control">
+                                                            <option value="1">仅保存一份</option>
+                                                            <option value="2">保存多份</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -126,9 +130,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-4 control-label">记录单管理方式</label>
+                                                    <label class="col-lg-4 control-label">记录单保存方式</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" name="recordmanagementflag" class="form-control">
+                                                        <!-- <input type="text" name="recordmanagementflag" class="form-control"> -->
+                                                        <select name="recordmanagementflag" class="form-control">
+                                                            <option value="1">仅保存一份</option>
+                                                            <option value="2">保存多份</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -246,7 +254,7 @@
                                         </th>
                                         <th class="hidden-phone text-center" data-order="id" data-sort="asc" onclick="resort(this)">名称 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center">描述</th>
-                                        <th class="text-center">记录单管理方式</th>
+                                        <th class="text-center">记录单保存方式</th>
                                         <th class="hidden-phone text-center">定时执行设置</th>
                                     </tr>
                                 </thead>
@@ -257,7 +265,7 @@
                                         </td>
                                         <td class="center hidden-phone" width="20%">{{ testround.roundname }}</td>
                                         <td width="35%">{{ testround.rounddesc }}</td>
-                                        <td width="">{{ testround.recordmanagementflag }}</td>
+                                        <td width="" :data-value="testround.recordmanagementflag">{{ +testround.recordmanagementflag === 1 ? '仅保存一份' : '保存多份' }}</td>
                                         <td width="">{{ testround.timeexecutesetting }}</td>
                                     </tr>
                                 </tbody>

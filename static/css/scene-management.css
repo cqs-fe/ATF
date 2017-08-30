@@ -9,11 +9,11 @@ html, body {
   position: absolute;
   display: block;
   width: 750px;
-  height: 600px;
+  height: 500px;
   left: 50%;
   top: 50%;
   margin-left: -375px;
-  margin-top: -300px;
+  margin-top: -240px;
   background-color: #fff;
   border: 1px solid #888;
   overflow: auto; }

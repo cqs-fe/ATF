@@ -490,6 +490,9 @@ $(document).ready(function(){
                         // data: dataMock,
                         success: function(data, textStatus){
                             var treeData = [];
+                            if(data.o.length == 0) {
+                            	Vac.alert('返回结果为空！')
+                            }
                             data.o.forEach((value) => {
                             	// var testpointMapVal = ''+value.id;
                                var item = {};  //解构第一层
@@ -541,6 +544,9 @@ $(document).ready(function(){
                             console.log(treeData)
                             zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
                             _this.testpointLength = newVal.length
+                        },
+                        error: function(){
+                        	Vac.alert('查询数据失败！')
                         }
                     });
                     
@@ -585,12 +591,26 @@ $(document).ready(function(){
                             dataType: "json",
                             success: function(data,textStatus){
                             	 _this.checkedItems = []
-                                data.o.forEach(function(value,index){
-                                    var arrayItem = {};
-                                    ({testpoint:arrayItem.value} = value);
-                                    arrayItem.name = arrayItem.value;
-                                    _this.checkedItems.push(arrayItem);
-                                });
+                            	 if(data.o.length == 0) {
+                            	 	Vac.alert('未查询到相关测试点！')
+                            	 }
+                            	 for (let value of data.o) {
+                            	 	 var arrayItem = {};
+                            	 	 if (value != null) {
+                            	 	 	({testpoint:arrayItem.value} = value);
+                                    	arrayItem.name = arrayItem.value;
+                                    	_this.checkedItems.push(arrayItem);
+                            	 	 }
+                            	 }
+                                // data.o.forEach(function(value,index){
+                                //     var arrayItem = {};
+                                //     ({testpoint:arrayItem.value} = value);
+                                //     arrayItem.name = arrayItem.value;
+                                //     _this.checkedItems.push(arrayItem);
+                                // });
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown){
+                            	Vac.alert('查询测试点失败，失败信息：'+ textStatus)
                             }
                         });
                     } else {
@@ -619,6 +639,9 @@ $(document).ready(function(){
                         // data: dataMock,
                         success: function(data, textStatus){
                             var treeData = [];
+                            if(data.o.length == 0) {
+                            	Vac.alert('该测试点下未查询到相关数据！')
+                            }
                             data.o.forEach((value) => {
                                 var item = {};  //解构第一层
                                item.open = true;
@@ -686,7 +709,14 @@ $(document).ready(function(){
 		        	name: '剪切',
       				callback: cutCallback,
     				disabled:function(){return false;},
-    				hidden: function(){return false;}
+    				hidden: function(){
+		        		// [startRow, startCol, endRow, endCol]
+		        		var selection = handsontable.getSelected();
+		        		if(selection && selection[1] >= 7 && selection[0] == selection[2] && selection[1] == selection[3]){
+		        			return false;
+		        		}
+		        		return true;
+		        	}
 		        },
 		        "col_left": {
 		          name: '粘贴',
@@ -694,26 +724,40 @@ $(document).ready(function(){
     				disabled:function(){
     					return clipBoard.length === 0 ? true : false;
     				},
-    				hidden: function(){return false;}
+    				hidden: function(){
+		        		// [startRow, startCol, endRow, endCol]
+		        		var selection = handsontable.getSelected();
+		        		if(selection && selection[1] >= 7 && selection[0] == selection[2] && selection[1] == selection[3]){
+		        			return false;
+		        		}
+		        		return true;
+		        	}
 		        },
 		        "col_right": {
 		        	name: '清除',
       				callback: clearCallback,
     				disabled:function(){return false;},
-    				hidden: function(){return false;}
+    				hidden: function(){
+		        		// [startRow, startCol, endRow, endCol]
+		        		var selection = handsontable.getSelected();
+		        		if(selection && selection[1] >= 7 && selection[0] == selection[2] && selection[1] == selection[3]){
+		        			return false;
+		        		}
+		        		return true;
+		        	}
 		        },
 		        "remove_row":{
-		        	name: '搜索',
+		        	name: '查找与替换',
 		        	callback:searchCallback,
 		        	disabled: function(){return false},
 		        	hidden: function(){return false}
 		        },
-		        "remove_col":{
-		        	name: '替换',
-		        	callback: replaceCallback,
-		        	disabled: function(){return false;},
-		        	hidden: function(){return false;}
-		        },
+		        // "remove_col":{
+		        // 	name: '替换',
+		        // 	callback: replaceCallback,
+		        // 	disabled: function(){return false;},
+		        // 	hidden: function(){return false;}
+		        // },
 		        "make_read_only":{
 		        	name: '编辑数据',
 		        	callback: editCellData,
@@ -721,7 +765,7 @@ $(document).ready(function(){
 		        	hidden: function(){
 		        		// [startRow, startCol, endRow, endCol]
 		        		var selection = handsontable.getSelected();
-		        		if(selection && selection[1] >= 8 && selection[0] == selection[2] && selection[1] == selection[3]){
+		        		if(selection && selection[1] >= 7 && selection[0] == selection[2] && selection[1] == selection[3]){
 		        			return false;
 		        		}
 		        		return true;
@@ -729,8 +773,9 @@ $(document).ready(function(){
 		        }
       		}
 		};
+		/// 2017-08-25 删除行号这一列
 		const columnsHeaders = [
-			"<input type='checkbox' class='header-checker' "+ (selectAllFlag?"checked='checked'":"")+">","行号",
+			"<input type='checkbox' class='header-checker' "+ (selectAllFlag?"checked='checked'":"")+">",  // "行号",
 			"案例编号","测试点","测试意图","测试步骤","预期结果","检查点"
 		];
 		const columnsOptions = [
@@ -742,19 +787,19 @@ $(document).ready(function(){
 				},
 				readOnly: true
 			},
-			{	data:"",
-				renderer: function(instance, td, row, col, prop, value, cellProperties){
-					td.innerHTML = parseInt(row) + 1;
-		 			return td;
-				},
-				readOnly: true
-			},
-			{	data: "casecode",readOnly: false},
-			{	data: "testpoint",readOnly: false},
-			{	data: "testdesign",readOnly: false},
-			{	data: 'teststep',readOnly: false},
-			{	data: 'expectresult',readOnly: false},
-			{	data: 'checkpoint',readOnly: false}
+			// {	data:"",
+			// 	renderer: function(instance, td, row, col, prop, value, cellProperties){
+			// 		td.innerHTML = parseInt(row) + 1;
+		 // 			return td;
+			// 	},
+			// 	readOnly: true
+			// },
+			{	data: "casecode",readOnly: true},
+			{	data: "testpoint",readOnly: true},
+			{	data: "testdesign",readOnly: true},
+			{	data: 'teststep',readOnly: true},
+			{	data: 'expectresult',readOnly: true},
+			{	data: 'checkpoint',readOnly: true}
 		];
 		var totalColumnsHeaders = [];
 		var getColumnsOptions = function(tableHead){
@@ -782,7 +827,7 @@ $(document).ready(function(){
 			if(data && data.length){
 				data.forEach((value) => {
 					if(value.length > 0){
-						var header = value.join('%');
+						var header = value.join('<br>');
 						totalColumnsHeaders.push(header);
 						// console.log("every"+ totalColumnsHeaders);
 					}
@@ -818,7 +863,7 @@ $(document).ready(function(){
 				// 		break
 				// 	}
 				// }
-				console.log(sub.systemInfo.testpoints)
+				// console.log(sub.systemInfo.testpoints)
 				var data = {
 					testpoint: sub.checkedArray[0],
 					// testpoint: testpoint,
@@ -839,6 +884,7 @@ $(document).ready(function(){
 				// 使用了mock
 				$.ajax({
 					url: address + "scripttemplateController/searchScripttemplateInf",
+					// url: '/api/handson',
 					data: data,
 					type:"post",
 					dataType: "json",
@@ -851,6 +897,9 @@ $(document).ready(function(){
 						}
 						var destrutData = [];
 						if(data.o.tableDatas){
+							if(data.o.tableDatas.length == 0) {
+								Vac.alert('该脚本下未查询到相关数据！')
+							}
 							data.o.tableDatas.forEach((value) => {
 							var data = {};
 							({
@@ -874,8 +923,9 @@ $(document).ready(function(){
 						// console.log(dataSource)
 						rowSelectFlags.length = dataSource.length;
 						getTotalColHeaders(data.o.tableHead);
-						console.log(totalColumnsHeaders);
+						// console.log(totalColumnsHeaders);
 						var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
+						// handsontable 配置与生成
 						if(handsontable === null){
 							handsontable = new Handsontable(tableContainer,{
 								data: dataSource,
@@ -883,14 +933,19 @@ $(document).ready(function(){
 							      columns: [2,3],
 							      indicators: false
 							    },
+							    // 配置列表头
 								columns: totalColumnsOptions,
 							  	colHeaders: colHeadersRenderer,
+							  	rowHeaders: true,
 							  	cells: function (row, col, prop) {
 								    var cellProperties = {};
 								    return cellProperties;
 								},
+								// 配置可以改变行的大小
+								manualRowResize: true,
 								multiSelect: true,
 								outsideClickDeselects: true,
+								// 配置contextMenu
 								contextMenu: contextMenuObj,
 								undo: true,
 								copyPaste: true,
@@ -916,6 +971,7 @@ $(document).ready(function(){
 								},
 								afterChange: function(changes,source){
 									if(changes){
+										// console.log(changes)
 										changes.forEach((value) => {
 											var data = {};
 											// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
@@ -949,6 +1005,9 @@ $(document).ready(function(){
 							});
 							handsontable.render();
 						}
+					},
+					error: function(){
+						Vac.alert('获取数据失败，请确认该脚本中含有数据！')
 					}
 				}); //aj
 			}
@@ -1121,9 +1180,9 @@ $(document).ready(function(){
 		//渲染平常列
 		function renderNormalCol(instance, td, row, col, prop, value, cellProperties){
 			if(row%2){
-				td.style.backgroundColor = "#eeee11";
+				// td.style.backgroundColor = "#eeee11";
 			}else{
-				td.style.backgroundColor = "#ffff00";
+				// td.style.backgroundColor = "#ffff00";
 			}
 			if(rowSelectFlags[row] === true){
 				td.style.backgroundColor = "#1ABDE6";
@@ -1166,6 +1225,7 @@ $(document).ready(function(){
 		//复制功能函数 end
 		//粘贴功能函数
 		// the data of the clipboard : [[row,col,value],[row,col,value]]
+		// the data of selection: { start: { col: 1, row: 3 }, end: { col: 2, row: 4 }}
 		function pasteCallback(key, selection){
 			if(clipBoard.length > 0){
 				var cols = selection.end.col - selection.start.col + 1;
@@ -1322,4 +1382,5 @@ $(document).ready(function(){
 	var editDiv = document.querySelector('#editData')
 	var header = document.querySelector('#editData>header')
 	Vac.startDrag(header, editDiv)
+	Vac.startDrag(document.querySelector('#searchBox>header'), document.querySelector('#searchBox'))
 });

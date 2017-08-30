@@ -131,6 +131,7 @@ $(document).ready(function() {
                 var _this = this;
                 var length = this.checkedTemplate.length;
                 if (length > 0) {
+                    // this.checkedTemplate.splice(0, 1)
                     var templateId = this.checkedTemplate[length - 1];
                     // return 
                     this.script_id = _this.templateList[templateId].id;
@@ -170,6 +171,7 @@ $(document).ready(function() {
                                     }
                                     // 插入到operationRows中
                                     editDataVue.operationRows.push(row)
+                                    // editDataVue.operationRows = [row]
                                 }
                             }
                         }
