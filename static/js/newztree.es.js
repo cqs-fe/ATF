@@ -468,7 +468,7 @@ $(document).ready(function(){
 				// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
 				var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
 				var index = parentRow.attr('data-index');
-				console.log(index)
+				// console.log(index)
 				var operationRows =  editDataVue.operationRows;
 
 				if (editDataVue.uiOrFunctions.type === 'ui') {
