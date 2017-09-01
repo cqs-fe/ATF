@@ -1,3 +1,5 @@
+ // 20170829 更改：
+ // 暂时注释了html文件的copy-right 和 js 文件的请从场景管理进入的提示，稍后需要更改回来。
   __inline('./scene-management/checked.js');
   __inline('./scene-management/debug.js')
 var vBody = new Vue({
@@ -98,7 +100,7 @@ var vBody = new Vue({
 			_this.poolData.datadesc = '';
 			// _this.selectedPool = [];
 		});
-		console.log('ready')
+		// Vac.startDrag(document.querySelector('#editTrigger-header'), document.querySelector('#editTrigger'))
 	},
 	created: function(){
 		
@@ -240,6 +242,7 @@ var vBody = new Vue({
 			$('#conditionsBody').empty();
 			$('.action-item-wrapper').remove();
 		},
+		// 打开编辑触发器的弹框
 		openTrigger: function(type){
 			var _this = this;
 			this.saveTriggerType = type;
@@ -248,6 +251,7 @@ var vBody = new Vue({
 				this.triggerShow = true;
 			}else{
 				if(this.triggerInfo.selectedTrigger.length == 0){
+					Vac.alert('请选择要编辑的触发器！')
 					return;
 				}
 				this.triggerInfo.editTriggerType = "编辑";
@@ -275,19 +279,19 @@ var vBody = new Vue({
 							var actionWrapper = $('.trigger-action-wrapper');
 							var actions = data.obj.actions;
 
-							if(conditions && conditions.length){
-								var length = conditions.length;
-								for(var i=0;i<length;i++){
-									var tr = $(`<tr><td><select class="objectname"><option value="1" selected>用例编号</option>
-                                    <option value="2">测试系统名称</option>
-                                    <option value="3">功能点名称</option>
-                                    </select> </td><td><select class="matchtype"><option value="1">
-										等于</option><option value="2">大于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
-                            			</td><td><button class="btn btn-default">删除</button>
-                            			</td></tr>`);
-									tbody.append(tr);
-								}
-							}
+							// if(conditions && conditions.length){
+							// 	var length = conditions.length;
+							// 	for(var i=0;i<length;i++){
+							// 		var tr = $(`<tr><td><select class="objectname"><option value="1" selected>用例编号</option>
+       //                              <option value="2">测试系统名称</option>
+       //                              <option value="3">功能点名称</option>
+       //                              </select> </td><td><select class="matchtype"><option value="1">
+							// 			等于</option><option value="2">大于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
+       //                      			</td><td><button class="btn btn-default">删除</button>
+       //                      			</td></tr>`);
+							// 		tbody.append(tr);
+							// 	}
+							// }
 							var trs = $('#conditionsBody tr');
 							console.log(trs)
 							for(var i=0; i<trs.length;i++){
@@ -298,20 +302,20 @@ var vBody = new Vue({
 								$('.btn-default', trs[i]).click(_this.removeTriggerCondition);
 							}
 							
-							if(actions && actions.length){
-								var length = actions.length;
-								for(var i=0; i<length; i++){
-									var div = $(`<div class="action-item-wrapper">
-					                    <button class="btn-removeaction"><span class="icon-remove"></span></button>
-					                    <span class="id"></span><div class="item-row"> <label>选择操作</label><select class="actionname">
-					                            <option value="1">发送邮件</option><option value="2">打开网页</option></select></div><div class="item-row"><label>脚本类型</label>
-					                        <select class="actiontype"> <option value="2">groovy</option><option value="1">2</option>
-					                        </select></div> <div class="item-row"><label>脚本内容</label><textarea rows="5" class="scriptcontent"></textarea>
-					                    </div>
-					                </div>`);
-									actionWrapper.append(div);
-								}
-							}
+							// if(actions && actions.length){
+							// 	var length = actions.length;
+							// 	for(var i=0; i<length; i++){
+							// 		var div = $(`<div class="action-item-wrapper">
+					  //                   <button class="btn-removeaction"><span class="icon-remove"></span></button>
+					  //                   <span class="id"></span><div class="item-row"> <label>选择操作</label><select class="actionname">
+					  //                           <option value="1">发送邮件</option><option value="2">打开网页</option></select></div><div class="item-row"><label>脚本类型</label>
+					  //                       <select class="actiontype"> <option value="2">groovy</option><option value="1">2</option>
+					  //                       </select></div> <div class="item-row"><label>脚本内容</label><textarea rows="5" class="scriptcontent"></textarea>
+					  //                   </div>
+					  //               </div>`);
+							// 		actionWrapper.append(div);
+							// 	}
+							// }
 							var divs = $('.action-item-wrapper');
 							for(var i=0; i<divs.length;i++){
 								$('.id', divs[i]).prop('data-actionid',actions[i].id);
@@ -326,6 +330,7 @@ var vBody = new Vue({
 				this.triggerShow = true;
 			}
 		},
+
 		deleteTrigger: function() {
 			var _this = this;
 			if(this.triggerInfo.selectedTrigger.length > 0){
@@ -530,6 +535,12 @@ var vBody = new Vue({
 				}
 			})
 		},
+		// 点击触发器的checkbox调用方法控制只能选择一个
+		changeSelectedTrigger: function(){
+			if(this.triggerInfo.selectedTrigger.length > 1) {
+				this.triggerInfo.selectedTrigger.shift()
+			}
+		},
 		saveStrategy: function(){
 			console.log('he');
 			var _this = this;
@@ -542,6 +553,9 @@ var vBody = new Vue({
 				success: function(data){
 					Vac.alert(data.msg);
 					_this.getCases();
+				},
+				error: function(){
+					Vac.alert('设置失败！')
 				}
 			});
 		},
@@ -568,6 +582,9 @@ var vBody = new Vue({
 					}else {
 						Vac.alert('删除失败！');
 					}
+				},
+				error: function(){
+					Vac.alert('移除失败，请重新尝试！')
 				}
 			});
 		},
@@ -592,8 +609,13 @@ var vBody = new Vue({
 				dataType: 'json',
 				success: function(data, statusText){
 					if(data.success === true){
-						Vac.alert('保存成功！');
+						Vac.alert('保存成功！' + data.msg);
+					} else {
+						Vac.alert('保存失败！')
 					}
+				},
+				error: function(){
+					Vac.alert('保存失败！')
 				}
 			});
 		},
@@ -626,11 +648,19 @@ var vBody = new Vue({
 							} = data.obj[0]);
 							_this.selectedPoolId = data.obj[0].id;
 						}
+					},
+					error: function(){
+						Vac.alert('获取场景数据池失败！')
 					}
 				});
 			}else{
 				_this.editPoolType = 1;
 				_this.dataPoolTitle = '新增';
+				_this.poolData.poolname = '';
+				_this.poolData.poolobjid = ''
+				_this.poolData.dataname = ''
+				_this.poolData.datavalue = ''
+				_this.poolData.datadesc = ''
 			}
 			$('#editDataPool').modal('show');
 		},
@@ -650,6 +680,9 @@ var vBody = new Vue({
 					if(data.obj instanceof Array){
 						_this.poolDatas = data.obj;
 					}
+				},
+				error: function(){
+					Vac.alert('获取场景数据池失败！')
 				}
 			});
 		},
@@ -673,7 +706,14 @@ var vBody = new Vue({
 				type: 'post',
 				dataType: 'json',
 				success: function(data, statusText){
+					if(data.success === true) {
+						$('#editDataPool').modal('hide');
+					}
 					Vac.alert(data.msg)
+					_this.getDataPool();
+				},
+				error: function(){
+					Vac.alert('保存失败，请重新尝试！')
 				}
 			});
 		},
@@ -713,6 +753,9 @@ var vBody = new Vue({
 										Vac.alert(data.msg);
 										_this.getDataPool();
 										_this.selectedPool.shift();
+									},
+									error: function(){
+										Vac.alert('移除数据池数据失败！')
 									}
 								});
 							}, () => {

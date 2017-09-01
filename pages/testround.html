@@ -91,6 +91,7 @@
               </div> -->
             </form>
             <div class="test-control container">
+            <div style="font-size: 12px;color:#999;">点击批量执行前，请输入执行轮次，选择相应的测试轮次，执行范围</div>
               <button class="btn btn-info" @click="executeAll()">批量执行</button>
               <button class="btn btn-info" @click="getCases()">查询</button>
               <button class="btn btn-info" @click="addScene();">添加场景</button>
@@ -98,11 +99,12 @@
             <div class="main-content2">
               <div class="case-list-wrapper list-wrapper">
                 <span class="case-list-title list-title">用例列表</span>
+                <!-- <span class="hide-case-list" @click="hideCaseList($event)" @mousedown.stop="1">收起</span> -->
                 <div class="case-list">
-                  <div class="check-all-case">全部选取
+                  <div class="check-all-case" v-if="testCaseList.length">全部选取
                     <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">
                   </div>
-                  <div class="case-lib" v-for="case_wrapper in testCaseList">
+                  <div class="case-lib" v-for="case_wrapper in testCaseList" @mousedown.stop="1">
                     <template v-if="case_wrapper.caseCompositeType == '1'">
                     <div class="checkbox-wrapper">
                       <input type="checkbox" :value="case_wrapper.caseId" @change="checkallToggle($event)" class="checkall" v-model="selectedCases">
@@ -155,11 +157,11 @@
                 <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
                 <!-- <div class="case-list"> -->
                   <div class="case-list">
-                    <div class="check-all-case">全部选取
+                    <div class="check-all-case" v-if="scene.testCaseList.length">全部选取
                       <input type="checkbox"  @change="checkAllInScene($event)" class="checkall-inscene" 
                         :value="scene.sceneId" v-model="checkallSceneIds">
                     </div>
-                    <div class="case-lib" v-for="case_wrapper in scene.testCaseList">
+                    <div class="case-lib" v-for="case_wrapper in scene.testCaseList" @mousedown.stop="1">
                       <template v-if="case_wrapper.caseCompositeType == '1'">
                       <div class="checkbox-wrapper">
                         <input type="checkbox" :value="scene.sceneId+'-'+case_wrapper.caseId" class="check-flownodes" v-model="selectedSceneCases" @change="checkAllFlowNodes($event)">

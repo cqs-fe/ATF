@@ -11,11 +11,11 @@ $okGreen: #66F60C;
 	position: absolute;
 	display: block;
 	width: 750px;
-	height: 600px;
+	height: 500px;
 	left: 50%;
 	top: 50%;
 	margin-left: -375px;
-	margin-top: -300px;
+	margin-top: -240px;
 	background-color: #fff;
 	border: 1px solid #888;
 	overflow: auto;
@@ -61,8 +61,9 @@ $okGreen: #66F60C;
 		}
 		.trigger-time-wrapper {
 			.checkbox-wrapper {
+				padding: 10px;
 				.checkbox-item {
-					margin-right: 10px;
+					// margin-right: 10px;
 					font-weight: 100;
 					color: #000;
 				}
@@ -233,7 +234,8 @@ $okGreen: #66F60C;
 						height: 100%;
 						// width: 30px;
 						vertical-align: top;
-						padding: 0px 0px 0px 8px;
+						// padding: 0px 0px 0px 8px;
+						padding: 10px;
 						input {
 							float: left;
 							margin: 0;
@@ -472,9 +474,13 @@ $okGreen: #66F60C;
 			}
 			.case-list, .scene-list {
 				// display: flex;
-				flex: 1 1 auto;
+				height: auto;
+				// flex: 0 0 auto;
 				border: 1px dashed #ddd;
-				padding: 10px;
+				// padding: 10px;
+				overflow: hidden;
+				box-sizing: border-box;
+				transition: height 500ms;
 				.case-item {
 					display: inline-block;
 					flex: 1 1 auto;

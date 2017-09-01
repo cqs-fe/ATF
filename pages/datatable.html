@@ -23,7 +23,8 @@
 
 <body id="v-body">
     <div id="searchBox" v-show="isShow" class="searchBox" v-cloak>
-            <header class="searchBox-header" draggable="true" ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'searchBox');" ondrag="dragController.searchBoxDrag(event,'searchBox')">
+            <header class="searchBox-header" draggable="true" >
+            <!-- ondragstart="dragController.searchBoxDragStart(event);" ondragend="dragController.searchBoxDragEnd(event,'searchBox');" ondrag="dragController.searchBoxDrag(event,'searchBox')" -->
                 <span class="searchBox-title">查找与替换</span>
                 <span class="icon-remove" @click="hide();"></span>
             </header>
@@ -84,9 +85,10 @@
                     <input type="text" id="input1" class="form-control" name="">
                 </div>
                 <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
-                <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
+                <!-- <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button> -->
             </form>
-            <div class="operation-wrapper">
+            <!-- 前置操作暂时隐藏 -->
+            <!-- <div class="operation-wrapper">
                 <div class="sticky-top">
                      <label>前置操作</label>
                      <div>
@@ -255,7 +257,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> -->
         </main>
         <footer class="editData-footer">
             <button class="btn btn-white btn-cancel" @click="hide();">取消</button>
@@ -290,8 +292,7 @@
                 <div class="label"></div>
                 <div class="right-div">
                     <label><input type="radio" v-model="dataWritable" value="writable" checked>可读可写</label>
-                    <label><input type="radio" v-model="dataWritable" value="readable">只读</label>
-                    
+                    <label><input type="radio" v-model="dataWritable" value="readable">只读</label>    
                 </div>
             </div>
             <div class="contentDiv">
@@ -350,7 +351,7 @@
                         </div>
                         <div>
                             <label v-for="(index,item) in checkedItems" class="checkedItem"  track-by="$index">
-                            <input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" @change="changeChecked($event)">
+                            <input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray">
                             {{item.name}}
                             </label>
                         </div>
