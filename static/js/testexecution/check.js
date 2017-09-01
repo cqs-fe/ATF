@@ -164,6 +164,7 @@ var checkFunction = {
 		this.setBackground()
 	},
 	setSelect (event){
+		
 		var _this = this;
 		var target  = event.target;
 		console.log(target)
@@ -193,13 +194,15 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		container.addEventListener('mousemove', mouseMoveFunction, false);
+		// 函数节流
+		var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		container.addEventListener('mousemove', moveFunction, false);
 		container.addEventListener('mouseup', (event) => {
 			// this.isSelect = true;
 			if (selDiv){
 				container.removeChild(selDiv);
 			}
-			container.removeEventListener('mousemove', mouseMoveFunction, false);
+			container.removeEventListener('mousemove', moveFunction, false);
 			selDiv = null;
 			
 			for(let sceneid of _this.sceneIds) {
@@ -233,6 +236,7 @@ var checkFunction = {
 		
 
 		function mouseMoveFunction(event){
+			console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}
@@ -294,7 +298,8 @@ var checkFunction = {
 		}
 	},
 	setSelectListener (){
-		document.querySelector('.main-content2').addEventListener('mousedown',this.setSelect,false);
+		// document.querySelector('.main-content2').addEventListener('mousedown',Vac.throttle(this.setSelect, 1000, this),false);
+		document.querySelector('.main-content2').addEventListener('mousedown',this.setSelect, false);
 		// 防止点击用例框时也进行选取
 		
 		// var caseLibs = Array.from(document.querySelectorAll('.case-lib'))

@@ -280,3 +280,15 @@ Vac.pushNoRepeat = function(array, value){
   * @param { Number } [wait=0] The number of milliseconds to delay.
   * @returns { Function } Returns the new throttled function.
   */
+  Vac.throttle = function(func, wait, context) {
+    var timeout = null
+
+    return function() {
+      if(timeout === null) {
+        func.apply(context, [...arguments])
+        timeout = setTimeout(() => {
+          timeout = null
+        }, wait)
+      }
+    }
+  }

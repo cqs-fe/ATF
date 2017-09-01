@@ -12,6 +12,7 @@ var checkFunction = {
       	})
 	},
 	setSelect (event){
+		
 		var _this = this;
 		var target  = event.target;
 		if(!target.classList.contains('main-content')) {
@@ -39,13 +40,16 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		target.addEventListener('mousemove', mouseMoveFunction, false);
+		// 函数节流
+		var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		target.addEventListener('mousemove', moveFunction, false);
 		target.addEventListener('mouseup', (event) => {
-			this.isSelect = true;
+			// this.isSelect = true;
 			if (selDiv){
 				document.querySelector('.main-content').removeChild(selDiv);
 			}
-			target.removeEventListener('mousemove', mouseMoveFunction, false);
+
+			target.removeEventListener('mousemove', moveFunction, false);
 			selDiv = null;
 			// var caseLib = document.querySelectorAll('.case-lib');
 			// for(var i=0; i<caseLib.length; i++){
@@ -64,6 +68,7 @@ var checkFunction = {
 
 
 		function mouseMoveFunction(event){
+			console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}
@@ -118,7 +123,7 @@ var checkFunction = {
 		};
 	},
 	setSelectListener (){
-		document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
+		document.querySelector('.main-content').addEventListener('mousedown',this.setSelect, false);
 		// 防止点击用例框时也进行选取
 	},
 	pushNoRepeat (array, value) {

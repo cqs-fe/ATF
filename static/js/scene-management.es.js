@@ -175,6 +175,9 @@ var vBody = new Vue({
 							exeStrategyErr: _this.exe_strategy.exe_strategy_err
 						} = data.obj);
 
+						if(!(data.obj.caseDtos && data.obj.caseDtos.length)) {
+							Vac.alert('未查询到相关的用例信息')
+						}
 						for (var i = data.obj.caseDtos.length - 1; i >= 0; i--) {
 							_this.caseIds.includes(data.obj.caseDtos[i].id) ? 1 : (_this.caseIds.push(data.obj.caseDtos[i].id))
 							if(data.obj.caseDtos[i].caseCompositeType == 2) {

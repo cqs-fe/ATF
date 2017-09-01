@@ -273,6 +273,12 @@ var vBody = new Vue({
 					_this.testCaseList = data.testCaseList;
 					_this.testSceneList = data.testSceneList;
 
+					if(!(data.testCaseList && data.testCaseList.length)) {
+						Vac.alert('未查询到相关的用例信息！')
+					}
+					if(!(data.testSceneList && data.testSceneList.length)) {
+						Vac.alert('未查询到相关的场景信息！')
+					}
 					_this.caseIds.length = 0
 					_this.flowNodeIds.clear()
 					_this.testCaseList.forEach((value) => {

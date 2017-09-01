@@ -489,6 +489,7 @@ $(document).ready(function() {
                 } else {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
+                    console.log(treeNode)
                     this.uiOrFunctions.function = treeNode;
                     // console.log(treeNode)
                 }
@@ -609,6 +610,7 @@ $(document).ready(function() {
                     // $('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
                     operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
                     console.log()
+                    // 插入函数集
                     operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
                     _this.updateRow(operationRows, index)
                 }
