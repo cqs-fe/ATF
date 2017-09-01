@@ -18,10 +18,7 @@ $(document).ready(function() {
         },
         ready: function() {
             var _this = this;
-            _this.autSelect();
-            _this.transactSelect();
-            _this.setval();
-            _this.getScriptTemplate();
+            _this.getAutandTrans();
             $('#addtemplateModal').on('hidden.bs.modal', function(e) {
                 _this.newTemplate = {
                     name: '',
@@ -31,6 +28,44 @@ $(document).ready(function() {
         },
         computed: {},
         methods: {
+            //初始化获取测试系统和功能点
+            getAutandTrans: function() {
+                $.ajax({
+                    // async: false,
+                    url: address + "autController/selectAll",
+                    type: "POST",
+                    success: function(data) {
+                        var autList = data.obj;
+                        var str = "";
+                        for (var i = 0; i < autList.length; i++) {
+
+                            str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                        }
+
+                        $('#autSelect').html(str);
+                        mainVue.autId = sessionStorage.getItem("autId");
+                        $("#autSelect").val(mainVue.autId);
+                        $.ajax({
+                            url: address + 'transactController/showalltransact',
+                            data: { 'autlistselect': mainVue.autId },
+                            type: "POST",
+                            success: function(data) {
+                                var transactList = data.o;
+                                var str = "";
+                                for (var i = 0; i < transactList.length; i++) {
+
+                                    str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                                }
+                                $('#transactSelect').html(str);
+                                mainVue.transId = sessionStorage.getItem("transactId");
+                                $("#transactSelect").val(mainVue.transId);
+                                mainVue.getScriptTemplate();
+                            }
+
+                        });
+                    }
+                });
+            },
             //获取测试系统
             autSelect: function() {
                 $.ajax({
@@ -53,12 +88,15 @@ $(document).ready(function() {
             //功能点
             transactSelect: function() {
                 var val = $('#autSelect').val();
+                // var val = sessionStorage.getItem('autId');
+                // console.log(this.autId);
                 $.ajax({
                     async: false,
                     url: address + 'transactController/showalltransact',
                     data: { 'autlistselect': val },
                     type: "POST",
                     success: function(data) {
+                        // console.log(data.o)
                         var transactList = data.o;
                         var str = "";
                         for (var i = 0; i < transactList.length; i++) {
@@ -69,16 +107,16 @@ $(document).ready(function() {
                     }
 
                 });
-                this.transId=$('#transactSelect').val();
+                this.transId = $('#transactSelect').val();
             },
             //设置所属测试系统和所属功能点为上级页面选中的值
-	        setval: function() {
-	            this.autId=sessionStorage.getItem("autId");
-	            this.transId=sessionStorage.getItem("transactId");
-	            $("#autSelect").val(this.autId);
-	            $("#transactSelect").val(this.transId);
-	        },
-              //获取选中的id
+            setval: function() {
+                this.autId = sessionStorage.getItem("autId");
+                this.transId = sessionStorage.getItem("transactId");
+                $("#autSelect").val(this.autId);
+                $("#transactSelect").val(this.transId);
+            },
+            //获取选中的id
             getIds: function() {
                 var id_array = new Array();
                 $('input[name="chk_list"]:checked').each(function() {
@@ -148,7 +186,7 @@ $(document).ready(function() {
                 }
             },
             saveTemplate: function() {
-                var _this=this;
+                var _this = this;
                 _this.newTemplate.transId = _this.transId
                 $.ajax({
                     url: address + 'scripttemplateController/insert',
@@ -174,7 +212,7 @@ $(document).ready(function() {
                 }
                 $.ajax({
                     url: address + 'scripttemplateController/delete',
-                    data: {'id': _this.ids},
+                    data: { 'id': _this.ids },
                     type: 'post',
                     dataType: 'json',
                     success: function(data) {
@@ -215,11 +253,11 @@ $(document).ready(function() {
                     callback: {},
                     data: {
                         key: {
-                            name: "mname",
+                            name: "methodname",
                         },
                         simpleData: {
                             enable: true,
-                            idKey: 'classid',
+                            idKey: 'arcclassid',
                             pIdKey: 'parentid',
                             rootPId: 0
                         }
@@ -247,11 +285,11 @@ $(document).ready(function() {
                     callback: {},
                     data: {
                         key: {
-                            name: "mname",
+                            name: "methodname",
                         },
                         simpleData: {
                             enable: true,
-                            idKey: 'classid',
+                            idKey: 'arcclassid',
                             pIdKey: 'parentid',
                             rootPId: 0
                         }
@@ -393,11 +431,11 @@ $(document).ready(function() {
                         'script_id': mainVue.script_id
                     },
                     success: function(data) {
-                    	 console.log(data);
+                        console.log(data);
                         if (data.success) {
-                            var param_tds=[...$('.param-value')];//$('.param-value')取到的是类数组，不能使用forEach方法，所以使用es6的rest方法将其转换为数组
-                            param_tds.forEach(function(item,index){
-                            	item.innerHTML=data.o[index];
+                            var param_tds = [...$('.param-value')]; //$('.param-value')取到的是类数组，不能使用forEach方法，所以使用es6的rest方法将其转换为数组
+                            param_tds.forEach(function(item, index) {
+                                item.innerHTML = data.o[index];
                             })
                         } else {
                             $('#fail').modal();
@@ -426,16 +464,16 @@ $(document).ready(function() {
                     }
                 })
                 // 请求函数集
-                var autId=$("#autSelect").val();
+                var autId = $("#autSelect").val();
                 console.log(autId)
                 $.ajax({
                     url: address + 'autController/selectFunctionSet',
-                    data: {'id':autId},
+                    data: { 'id': mainVue.autId },
                     type: 'post',
                     dataType: 'json',
                     success: (data, statusText) => {
-                        if (data.ommethod) {
-                            $.fn.zTree.init($('#functions-ul'), _this.zTreeSettings.functions, data.ommethod);
+                        if (data.arcmethod) {
+                            $.fn.zTree.init($('#functions-ul'), _this.zTreeSettings.functions, data.arcmethod);
                         }
                     }
                 })
@@ -458,12 +496,12 @@ $(document).ready(function() {
                 // 请求函数集
                 $.ajax({
                     url: address + 'autController/selectFunctionSet',
-                    data: 'id=2',
+                    data: { 'id': mainVue.autId },
                     type: 'post',
                     dataType: 'json',
                     success: (data, statusText) => {
-                        if (data.ommethod) {
-                            $.fn.zTree.init($('#functions-ul2'), _this.zTreeSettings2.functions, data.ommethod);
+                        if (data.arcmethod) {
+                            $.fn.zTree.init($('#functions-ul2'), _this.zTreeSettings2.functions, data.arcmethod);
                         }
                     }
                 })
@@ -671,7 +709,7 @@ $(document).ready(function() {
                         },
                         newRow.functions = []
                     newRow.functions.push(node)
-                    newRow.parameters = JSON.parse(node.arguments)
+                    newRow.parameters = JSON.parse(node.parameterlist)
                     editDataVue.operationRows.push(newRow)
                 }
                 $('#ui-ele-modal2').modal('hide')
