@@ -9,21 +9,60 @@ var app = new Vue({
         classtypeList: []
     },
     ready: function() {
-        this.autSelect();
-        this.transactSelect();
-        this.setval();
-        getObjTree();
+        this.getAutandTrans();
         $('#autSelect').change(function() {
             app.transactSelect();
             app.autId = $('#autSelect').val();
+            app.transactId = $('#transactSelect').val();
+            updateObjTree();
         });
         $('#transactSelect').change(() => {
             app.transactId = $('#transactSelect').val();
             updateObjTree();
         });
-        this.classtypeSelect();
     },
     methods: {
+        //初始化获取测试系统和功能点
+        getAutandTrans: function() {
+            $.ajax({
+                url: address + "autController/selectAll",
+                type: "POST",
+                success: function(data) {
+                    var autList = data.obj;
+                    var str = "";
+                    for (var i = 0; i < autList.length; i++) {
+
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                    }
+
+                    $('#autSelect').html(str);
+                    app.autId = sessionStorage.getItem("autId");
+                    $("#autSelect").val(app.autId);
+                    $.ajax({
+                        url: address + 'transactController/showalltransact',
+                        data: { 'autlistselect': app.autId },
+                        type: "POST",
+                        success: function(data) {
+                            var transactList = data.o;
+                            var str = "";
+                            for (var i = 0; i < transactList.length; i++) {
+
+                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                            }
+                            $('#transactSelect').html(str);
+                            app.transactId = sessionStorage.getItem("transactId");
+                            $("#transactSelect").val(app.transactId);
+                            // 获取对象树
+                            getObjTree();
+
+                        }
+
+                    });
+                    // 获取classtype
+                    app.classtypeSelect();
+                }
+            });
+        },
         //获取测试系统
         autSelect: function() {
             $.ajax({
@@ -72,9 +111,7 @@ var app = new Vue({
                 type: "POST",
                 success: function(data) {
                     app.classtypeList = data;
-
                 }
-
             });
         },
         //设置所属测试系统和所属功能点为上级页面选中的值
@@ -86,14 +123,16 @@ var app = new Vue({
         },
         addObj: function() {
             var objName = $("#addObjName").val(),
-                treeObj = $.fn.zTree.getZTreeObj("objectTree"),
-                nodes = treeObj.getSelectedNodes(true),
-                parentid;
-            if (nodes.length === 0) {
-                parentid = "0";
-            } else {
-                parentid = nodes[0].id;
-            }
+                treeObj = $.fn.zTree.getZTreeObj("objectTree");
+            var parentid=0,nodes;
+            if(treeObj){
+                nodes = treeObj.getSelectedNodes(true);
+                if (nodes.length === 0) {
+                    parentid = "0";
+                } else {
+                    parentid = nodes[0].id;
+                }
+            } 
             $.ajax({
                 url: address + 'object_repoController/insertObject_repo',
                 type: 'post',

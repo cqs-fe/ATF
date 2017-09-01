@@ -206,8 +206,8 @@ var app = new Vue({
                 paraList += r;
             }
             paraList = paraList.substring(0, paraList.length - 1);
-            paraList += "]";
-
+            paraList += ']';
+            console.log(paraList)
             $.ajax({
                 url: address + 'ommethodController/update',
                 type: 'post',
@@ -220,7 +220,7 @@ var app = new Vue({
                     "argsCount": '',
                     "labelArgument": '',
                     "author": '',
-                    "maintainTime": maintainTime,
+                    "maintaintime": maintainTime,
                     "outputvaluedesc":'',
                     "autId":  this.autId,
                     "inputargdesc":'',
@@ -251,24 +251,25 @@ function getClass() {
     var autId=sessionStorage.getItem("autId");
     $('.autName').html(autName);
     $.ajax({
-        url: address + 'omclassController/selectClassMethodByAutId',
+        url: address + 'omclassController/selectByAutId',
         type: 'post',
-        data: { 'id': autId },
-        // success: function(data) {
-        //     $('#classProp').children().remove();
-        //     var classList = data;
-        //     for (var i = 0; i < classList.length; i++) {
-        //         var classTr = $('<tr></tr>'),
-        //             classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
-        //             classNameTd = $('<td ></td>'),
-        //             classDescriptionTd = $('<td ></td>');
-        //         classTr.attr('id', classList[i].classId);
-        //         classNameTd.html(classList[i].className);
-        //         classDescriptionTd.html(classList[i].classDesc);
-        //         classTr.append(classCheckTd, classNameTd, classDescriptionTd);
-        //         $('#classProp').append(classTr);
-        //     }
-        // },
+        data: { 'autId': autId },
+        success: function(data) {
+            // console.log(data)
+            $('#classProp').children().remove();
+            var classList = data;
+            for (var i = 0; i < classList.length; i++) {
+                var classTr = $('<tr></tr>'),
+                    classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
+                    classNameTd = $('<td ></td>'),
+                    classDescriptionTd = $('<td ></td>');
+                classTr.attr('id', classList[i].classid);
+                classNameTd.html(classList[i].classname);
+                classDescriptionTd.html(classList[i].descname);
+                classTr.append(classCheckTd, classNameTd, classDescriptionTd);
+                $('#classProp').append(classTr);
+            }
+        },
         error: function() {
             $('#failModal').modal();
         }
