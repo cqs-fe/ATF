@@ -11,6 +11,7 @@ var app = new Vue({
         executeMethod: [], // 执行方式
         caseCompositeType: [], // 案例组成类型
         useStatus: [], // 案例状态
+        missionList: [], //测试任务
         testpoint: '', // 测试点
         author: '', //编写者
         executor: '', //执行者
@@ -26,18 +27,18 @@ var app = new Vue({
         totalPage: 1, //总页数
         listnum: 10, //页面大小
         order: 'id',
-        sort: 'desc',
+        sort: 'asc',
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
         subCaseList: [], //流程节点
-        caselibid: '',//案例库id
-
+        caselibid: '', //案例库id
     },
     ready: function() {
-        getCase(this.currentPage, this.pageSize, this.order, this.sort);
-        changeListNum();
-        getUsers();
+        this.getCase(this.currentPage, this.pageSize, this.order, this.sort);
+        this.changeListNum();
+        this.getUsers();
+        this.getMission(); //获取案例添加表单任务编号下拉列表
         $(".myFileUpload").change(function() {
             var arrs = $(this).val().split('\\');
             var filename = arrs[arrs.length - 1];
@@ -45,14 +46,44 @@ var app = new Vue({
         });
     },
     methods: {
-
+        //获取案例
+        getCase:function(currentPage, listnum, order, sort) {
+            $.ajax({
+                url: address + 'TestcaseController/selectAllByPage',
+                type: 'GET',
+                data: {
+                    'page': currentPage,
+                    'rows': listnum,
+                    'order': order,
+                    'sort': sort
+                },
+                success: function(data) {
+                    // console.info(data);
+                    // console.info(data.o.rows);
+                    app.caseList = data.o.rows;
+                    app.tt = data.o.total;
+                    app.totalPage = Math.ceil(app.tt / listnum);
+                    app.pageSize = listnum;
+                }
+            });
+        },
+        //获取用户
+        getUsers:function() {
+            $.ajax({
+                url: address + 'userController/selectAll',
+                type: 'GET',
+                success: function(data) {
+                    app.users = data.obj;
+                }
+            });
+        },
         //添加单案例
         insert: function() {
             var self = this;
             var casecompositetype = $('#insertSingleForm input[name="casecompositetype"]').val(),
-                caselibId = $('#insertSingleForm input[name="caselibId"]').val(),
+                caselibId=sessionStorage.getItem('caselibid'),
                 casecode = $('#insertSingleForm input[name="casecode"]').val(),
-                submissionid = $('#insertSingleForm input[name="submissionid"]').val(),
+                submissionid = $('#insertSingleForm select[name="submissionid"]').val(),
                 autid = $('#insertSingleForm select[name="autid"]').val(),
                 versioncode = $('#insertSingleForm input[name="versioncode"]').val(),
                 transid = $('#insertSingleForm select[name="transid"]').val(),
@@ -121,7 +152,7 @@ var app = new Vue({
                     console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                        self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -129,6 +160,15 @@ var app = new Vue({
                 error: function() {
                     $('#failModal').modal();
                 }
+            });
+        },
+        //改变页面大小
+        changeListNum:function() {
+            $('#mySelect').change(function() {
+                listnum = $(this).children('option:selected').val();
+                $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+                app.currentPage = 1;
+                app.getCase(1, listnum, 'id', 'asc');
             });
         },
         //导出
@@ -152,24 +192,24 @@ var app = new Vue({
             var caselibid = sessionStorage.getItem('caselibid');
             console.log(caselibid);
             $('#caselibid').val(caselibid);
-            this.caselibid=caselibid;
+            this.caselibid = caselibid;
         },
         //导入
-        import:function(){
-            var self=this;
-            var formData= new FormData($('#importForm')[0]);
+        import: function() {
+            var self = this;
+            var formData = new FormData($('#importForm')[0]);
             $.ajax({
-                url: address+'TestcaseController/importexcel',
-                type:'post',
-                data:formData,
-                async: false,  
-                cache: false, 
+                url: address + 'TestcaseController/importexcel',
+                type: 'post',
+                data: formData,
+                async: false,
+                cache: false,
                 contentType: false,
                 processData: false,
                 success: function(data) {
                     if (data.success) {
                         $('#successModal').modal();
-                        getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                        this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
                         $('#failModal').modal();
                     }
@@ -222,8 +262,6 @@ var app = new Vue({
                 $(".subShow").css("display", "none");
                 $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
             }
-
-
         },
 
         //获取选中的id
@@ -272,10 +310,10 @@ var app = new Vue({
                     type: 'post',
                     data: $("#executorForm").serializeArray(),
                     success: function(data) {
-                        console.info(data.msg);
+                        console.info(data);
                         if (data.msg == "完成") {
                             $('#successModal').modal();
-                            getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                            self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -316,7 +354,7 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
-                            getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                            self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
                             $('#failModal').modal();
                         }
@@ -361,8 +399,8 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-            // getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
-            queryCase();
+            this.getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
+            // ts.queryCase();
         },
         // 流程案例添加节点案例
         addCaseNode: function() {
@@ -392,90 +430,140 @@ var app = new Vue({
                     this.$data.caseList = data.o;
                 }
             });
-        }
+        },
+        //筛选查询案例
+        queryCase:function() {
+
+            $.ajax({
+                url: address + 'TestcaseController/testcasequeryByPage',
+                type: 'POST',
+                data: {
+                    'page': app.currentPage,
+                    'rows': app.listnum,
+                    'order': app.order,
+                    'sort': app.sort,
+                    'caselibid': app.caselibid,
+                    'caseCompositeType': app.caseCompositeType.join(","),
+                    'priority': app.priority.join(","),
+                    'executemethod': app.executeMethod.join(","),
+                    'usestatus': app.useStatus.join(","),
+                    'casecode': app.casecode,
+                    'informationtype': 'testcase',
+                    'testpoint': app.testpoint,
+                    'author': app.author,
+                    'executor': app.executor,
+                    'testdesign': app.testdesign,
+                    'autid': app.autid,
+                    'transid': app.transid,
+                    'scriptmodeflag': app.scriptmodeflag,
+
+                },
+                success: function(data) {
+                    app.caseList = data.o.rows;
+                    app.tt = data.o.total;
+                    app.totalPage = Math.ceil(app.tt / app.listnum);
+                    app.listnum = app.pageSize;
+                    app.currentPage = 1;
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        },
+        //获取添加案例任务编号下拉列表
+        getMission: function(){
+            $.ajax({
+                url: address+"missionController/selectAll",
+                type: 'GET',
+                success:function(data){
+                    console.log(data)
+                    app.missionList=data.obj;
+                }
+            });
+        },
     },
 
 });
 //获取案例
-function getCase(currentPage, listnum, order, sort) {
-    $.ajax({
-        url: address + 'TestcaseController/selectAllByPage',
-        type: 'GET',
-        data: {
-            'page': currentPage,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
-        success: function(data) {
-            // console.info(data);
-            // console.info(data.o.rows);
-            app.caseList = data.o.rows;
-            app.tt = data.o.total;
-            app.totalPage = Math.ceil(app.tt / listnum);
-            app.pageSize = listnum;
-        }
-    });
-}
+// function getCase(currentPage, listnum, order, sort) {
+//     $.ajax({
+//         url: address + 'TestcaseController/selectAllByPage',
+//         type: 'GET',
+//         data: {
+//             'page': currentPage,
+//             'rows': listnum,
+//             'order': order,
+//             'sort': sort
+//         },
+//         success: function(data) {
+//             // console.info(data);
+//             // console.info(data.o.rows);
+//             app.caseList = data.o.rows;
+//             app.tt = data.o.total;
+//             app.totalPage = Math.ceil(app.tt / listnum);
+//             app.pageSize = listnum;
+//         }
+//     });
+// }
 //获取用户
-function getUsers() {
-    $.ajax({
-        url: address + 'userController/selectAll',
-        type: 'GET',
-        success: function(data) {
-            app.users = data.obj;
-        }
-    });
-}
+// function getUsers() {
+//     $.ajax({
+//         url: address + 'userController/selectAll',
+//         type: 'GET',
+//         success: function(data) {
+//             app.users = data.obj;
+//         }
+//     });
+// }
 //筛选查询案例
-function queryCase() {
+// function queryCase() {
 
-    $.ajax({
-        url: address + 'TestcaseController/testcasequeryByPage',
-        type: 'POST',
-        data: {
-            'page': app.currentPage,
-            'rows': app.listnum,
-            'order': app.order,
-            'sort': app.sort,
-            'caselibid':app.caselibid,
-            'caseCompositeType': app.caseCompositeType.join(","),
-            'priority': app.priority.join(","),
-            'executemethod': app.executeMethod.join(","),
-            'usestatus': app.useStatus.join(","),
-            'casecode': app.casecode,
-            'informationtype': 'testcase',
-            'testpoint': app.testpoint,
-            'author': app.author,
-            'executor': app.executor,
-            'testdesign': app.testdesign,
-            'autid': app.autid,
-            'transid': app.transid,
-            'scriptmodeflag': app.scriptmodeflag,
+//     $.ajax({
+//         url: address + 'TestcaseController/testcasequeryByPage',
+//         type: 'POST',
+//         data: {
+//             'page': app.currentPage,
+//             'rows': app.listnum,
+//             'order': app.order,
+//             'sort': app.sort,
+//             'caselibid': app.caselibid,
+//             'caseCompositeType': app.caseCompositeType.join(","),
+//             'priority': app.priority.join(","),
+//             'executemethod': app.executeMethod.join(","),
+//             'usestatus': app.useStatus.join(","),
+//             'casecode': app.casecode,
+//             'informationtype': 'testcase',
+//             'testpoint': app.testpoint,
+//             'author': app.author,
+//             'executor': app.executor,
+//             'testdesign': app.testdesign,
+//             'autid': app.autid,
+//             'transid': app.transid,
+//             'scriptmodeflag': app.scriptmodeflag,
 
-        },
-        success: function(data) {
-            app.caseList = data.o.rows;
-            app.tt = data.o.total;
-            app.totalPage = Math.ceil(app.tt / app.listnum);
-            app.listnum = app.pageSize;
-            app.currentPage=1;
-        },
-        error: function() {
-            $('#failModal').modal();
-        }
-    });
-}
+//         },
+//         success: function(data) {
+//             app.caseList = data.o.rows;
+//             app.tt = data.o.total;
+//             app.totalPage = Math.ceil(app.tt / app.listnum);
+//             app.listnum = app.pageSize;
+//             app.currentPage = 1;
+//         },
+//         error: function() {
+//             $('#failModal').modal();
+//         }
+//     });
+// }
 
 //改变页面大小
-function changeListNum() {
-    $('#mySelect').change(function() {
-        listnum = $(this).children('option:selected').val();
-        $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-        app.currentPage=1;
-        getCase(1, listnum, 'id', 'asc');
-    })
-}
+// function changeListNum() {
+//     $('#mySelect').change(function() {
+//         listnum = $(this).children('option:selected').val();
+//         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+//         app.currentPage = 1;
+//         getCase(1, listnum, 'id', 'asc');
+//     })
+// }
 
 //全选反选
 $("#chk_all").click(function() {　　
@@ -726,12 +814,18 @@ function transid() {
     $.ajax({
         url: address + 'TestcaseController/trans_id',
         type: 'post',
-        data: $("#transidForm").serializeArray(),
+        // data: $("#transidForm").serializeArray(),
+        data:{
+            'ids':$("#transidForm input[name='ids']").val(),
+            'autid':$("#transidForm select[name='autid']").val(),
+            'transid':$("#transidForm select[name='transid']").val(),
+            'scriptmodeflag':$("#transidForm select[name='scriptmodeflag']").val(),
+        },
         success: function(data) {
             console.info(data);
             if (data.success) {
                 $('#successModal').modal();
-                getCase(app.currentPage, app.pageSize, app.order, app.sort);
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
             } else {
                 $('#failModal').modal();
             }
@@ -756,6 +850,7 @@ function executor() {
             console.info(data.msg);
             if (data.msg == "完成") {
                 $('#successModal').modal();
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
             } else {
                 $('#failModal').modal();
             }
@@ -784,7 +879,7 @@ function resort(target) {
         target.setAttribute("data-sort", "desc");
     }
     app.order = target.getAttribute("data-order");
-    getCase(1, 10, app.order, app.sort);
+    app.getCase(1, 10, app.order, app.sort);
 }
 //重新排序 结束
 

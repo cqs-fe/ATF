@@ -14,7 +14,7 @@ var app = new Vue({
         checkboxModel: [],
         checked: "",
         queryTestProject: '',
-        ids:'',
+        ids: '',
         //当前选中行
         selectedId: '',
         selectedTestProjectCode: '',
@@ -66,14 +66,13 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-             getTestProject(ts.currentPage, ts.pageSize, 'id', 'asc');
+            getTestProject(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-
 
         //添加测试项目
         insert: function() {
             $.ajax({
-                url: address+'testProjectController/insert',
+                url: address + 'testProjectController/insert',
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
@@ -95,7 +94,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: address+'testProjectController/delete',
+                url: address + 'testProjectController/delete',
                 type: 'post',
                 data: {
                     'ids': app.ids
@@ -103,7 +102,7 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
-                       getTestProject(1, app.pageSize, 'id', 'asc');
+                        getTestProject(1, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -117,7 +116,7 @@ var app = new Vue({
         //修改测试项目
         update: function() {
             $.ajax({
-                url: address+'testProjectController/update',
+                url: address + 'testProjectController/update',
                 type: 'post',
                 data: $("#updateForm").serializeArray(),
                 success: function(data) {
@@ -146,10 +145,14 @@ var app = new Vue({
         //进入
         to: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
-            var caselibId = selectedInput.parent().next().next().next().next().html();
-            //存储测试项目id到sessionstorage
-            sessionStorage.setItem("caselibid",caselibId);
-            location.href = "caseManagement.html";
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                var caselibId = selectedInput.parent().next().next().next().next().html();
+                //存储测试项目id到sessionstorage
+                sessionStorage.setItem("caselibid", caselibId);
+                location.href = "caseManagement.html";
+            }
         }
 
     },
@@ -162,7 +165,7 @@ function getTestProject(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address+'testProjectController/selectAllByPage',
+        url: address + 'testProjectController/selectAllByPage',
         type: 'GET',
         data: {
             'page': page,
@@ -187,7 +190,7 @@ function changeListNum() {
     $('#mySelect').change(function() {
         listnum = $(this).children('option:selected').val();
         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-         app.currentPage=1;
+        app.currentPage = 1;
         getTestProject('1', listnum, 'id', 'asc');
     })
 }
@@ -222,7 +225,7 @@ function resort(target) {
 //搜索系统
 function queryTestProject() {
     $.ajax({
-        url: address+'testProjectController/selectAllByPage',
+        url: address + 'testProjectController/selectAllByPage',
         type: 'POST',
         data: {
             'page': app.currentPage,

@@ -3,6 +3,7 @@ var app = new Vue({
     data: {
         autId:'',
         autName:'',
+        execodeId:''
     },
     ready: function() {
         this.setval();
@@ -10,10 +11,12 @@ var app = new Vue({
     },
     methods: {
         setval (){
-            var thisURL = document.URL;
-            var params = thisURL.split('?')[1];
-            this.autId = params.split('&')[0].split('=')[1];
-            this.autName = decodeURI(params.split('&')[1].split('=')[1]);
+            // var thisURL = document.URL;
+            // var params = thisURL.split('?')[1];
+            // this.autId = params.split('&')[0].split('=')[1];
+            // this.autName = decodeURI(params.split('&')[1].split('=')[1]);
+            this.autId=sessionStorage.getItem("autId");
+            this.autName=sessionStorage.getItem("autName");
         },
         getCode (){
             $.ajax({
@@ -23,8 +26,12 @@ var app = new Vue({
                     'autid':this.autId
                 },
                 success:function(data){
-                    $('textarea[name="maincodeBegin"]').val(data.obj.maincodeBegin);
-                    $('textarea[name="maincodeEnd"]').val(data.obj.maincodeEnd);
+                    console.log(data);
+                    if(data){
+                        app.execodeId=data.obj.id;
+                        $('textarea[name="maincodeBegin"]').val(data.obj.maincodeBegin);
+                        $('textarea[name="maincodeEnd"]').val(data.obj.maincodeEnd);
+                    }
                 }
 
             });
@@ -36,7 +43,7 @@ var app = new Vue({
                 url:address+'toolController/update',
                 type:'post',
                 data:{
-                    'id':'12',
+                    'id':app.execodeId,
                     'toolname': 'groovy',
                     'autId':this.autId,
                     'maincodeBegin':maincodeBegin,

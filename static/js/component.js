@@ -19,10 +19,10 @@ var app = new Vue({
     methods: {
         //获取autid
         getAutId() {
-            var thisUrl = document.URL,
-                getVal = thisUrl.split('?')[1],
-                autId = getVal.split('&')[0].split('=')[1];
-            this.autId = autId;
+            // var thisUrl = document.URL,
+            //     getVal = thisUrl.split('?')[1],
+            //     autId = getVal.split('&')[0].split('=')[1];
+            this.autId = sessionStorage.getItem("autId");
         },
         //添加控件类型
         addClass: function() {
@@ -206,8 +206,8 @@ var app = new Vue({
                 paraList += r;
             }
             paraList = paraList.substring(0, paraList.length - 1);
-            paraList += "]";
-
+            paraList += ']';
+            console.log(paraList)
             $.ajax({
                 url: address + 'ommethodController/update',
                 type: 'post',
@@ -220,7 +220,7 @@ var app = new Vue({
                     "argsCount": '',
                     "labelArgument": '',
                     "author": '',
-                    "maintainTime": maintainTime,
+                    "maintaintime": maintainTime,
                     "outputvaluedesc":'',
                     "autId":  this.autId,
                     "inputargdesc":'',
@@ -247,17 +247,15 @@ var app = new Vue({
 
 //获取当前被测系统的控件类型
 function getClass() {
-    var thisUrl = document.URL,
-        getVal = thisUrl.split('?')[1],
-        para = getVal.split('&'),
-        autId = para[0].split('=')[1];
-    var autName = decodeURI(para[1].split('=')[1]);
+    var autName=sessionStorage.getItem("autName");
+    var autId=sessionStorage.getItem("autId");
     $('.autName').html(autName);
     $.ajax({
-        url: address + 'autController/selectClass',
+        url: address + 'omclassController/selectByAutId',
         type: 'post',
-        data: { 'id': autId },
+        data: { 'autId': autId },
         success: function(data) {
+            // console.log(data)
             $('#classProp').children().remove();
             var classList = data;
             for (var i = 0; i < classList.length; i++) {
@@ -265,9 +263,9 @@ function getClass() {
                     classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
                     classNameTd = $('<td ></td>'),
                     classDescriptionTd = $('<td ></td>');
-                classTr.attr('id', classList[i].classId);
-                classNameTd.html(classList[i].className);
-                classDescriptionTd.html(classList[i].classDesc);
+                classTr.attr('id', classList[i].classid);
+                classNameTd.html(classList[i].classname);
+                classDescriptionTd.html(classList[i].descname);
                 classTr.append(classCheckTd, classNameTd, classDescriptionTd);
                 $('#classProp').append(classTr);
             }

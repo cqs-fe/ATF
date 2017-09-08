@@ -66,17 +66,17 @@
                                                                 <div class="col-lg-4 hidden">
                                                                     <input type="text" class="form-control" name="casecompositetype" value="1">
                                                                 </div>
-                                                                <label class="col-lg-2 control-label hidden">案例库</label>
-                                                                <div class="col-lg-4 hidden">
-                                                                    <input type="text" class="form-control" name="caselibId" value="1">
-                                                                </div>
+                                                               
                                                                 <label class="col-lg-2 control-label">案例编号</label>
                                                                 <div class="col-lg-4">
                                                                     <input type="text" class="form-control" name="casecode">
                                                                 </div>
-                                                                <label class="col-lg-2 control-label">任务编号</label>
+                                                                <label class="col-lg-2 control-label">测试任务</label>
                                                                 <div class="col-lg-4">
-                                                                    <input type="text" class="form-control" name="submissionid">
+                                                                    <!-- <input type="text" class="form-control" name="submissionid"> -->
+                                                                     <select type="text" class="form-control" name="submissionid">
+                                                                        <option v-for="item in missionList" value="{{item.id}}">{{item.missionName}}</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -549,8 +549,8 @@
                                                 <label class="col-lg-2 control-label">执行方式</label>
                                                 <div class="col-lg-3">
                                                     <select size="1" aria-controls="" class="form-control" name="executemethord">
-                                                        <option value="1">自动化</option>
-                                                        <option value="2">手工</option>
+                                                        <option value="1">手工</option>
+                                                        <option value="2">自动化</option>
                                                         <option value="3">配合</option>
                                                     </select>
                                                 </div>
@@ -691,7 +691,7 @@
                                                 <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号" name="casecode" v-model="casecode">
                                             </div>
                                             <div class="col-lg-1">
-                                                <a class="btn btn-white" onclick="queryCase()">搜索</a>
+                                                <a class="btn btn-white" @click="queryCase()">搜索</a>
                                             </div>
                                             <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
@@ -702,7 +702,7 @@
                                                     <option value="50">50</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-1"><a class="btn btn-white" onclick="getCase(1, {{pageSize}}, 'id', 'desc')">刷新</a></div>
+                                            <div class="col-lg-1"><a class="btn btn-white" @click="getCase(1, {{pageSize}}, 'id', 'desc')">刷新</a></div>
                                         </div>
                                         <div class="form-group">
                                         </div>
@@ -777,7 +777,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><a class="btn btn-primary" onclick="queryCase()">筛选</a></td>
+                                                        <td><a class="btn btn-primary" @click="queryCase()">筛选</a></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -838,13 +838,13 @@
                                             </li>
                                             <li class="active"><a href="javascript:;" @click="turnToPage(currentPage)" v-text="currentPage">3</a></li>
                                             <li>
-                                                <a href="javascript:;" @click="turnToPage(currentPage+1)" v-text="currentPage+1" v-if="currentPage+1<totalPage"></a>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+1)" v-text="currentPage+1" v-if="currentPage+1<=totalPage"></a>
                                             </li>
                                             <li>
-                                                <a href="javascript:;" @click="turnToPage(currentPage+2)" v-text="currentPage+2" v-if="currentPage+2<totalPage"></a>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+2)" v-text="currentPage+2" v-if="currentPage+2<=totalPage"></a>
                                             </li>
                                             <li>
-                                                <a href="javascript:;" @click="turnToPage(currentPage+3)" v-text="currentPage+3" v-if="currentPage+3<totalPage"></a>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+3)" v-text="currentPage+3" v-if="currentPage+3<=totalPage"></a>
                                             </li>
                                             <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(currentPage+1)">下一页</a></li>
                                             <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(totalPage)">尾页</a></li>
@@ -890,7 +890,7 @@
             if(data.success){
                 $('#importModal').modal('hide');
                 $('#successModal').modal();
-                getCase(app.currentPage, app.pageSize, 'id', 'desc');
+                app.getCase(app.currentPage, app.pageSize, 'id', 'asc');
             }
         },
         error: function(xhr, status, msg) {

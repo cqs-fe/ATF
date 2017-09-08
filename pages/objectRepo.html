@@ -92,7 +92,8 @@
                                         <label for="" class="col-lg-2 control-label">类型</label>
                                         <div class="col-lg-3">
                                             <select class="form-control" id="classtypeSelect">
-                                                <option v-for="item in classtypeList" value="">{{item.className}}</option>
+                                                <option value="">--选择控件类型--</option>
+                                                <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
                                             </select>
                                         </div>
                                     </div>

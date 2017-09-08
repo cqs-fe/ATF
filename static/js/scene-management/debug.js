@@ -33,8 +33,23 @@ var debugFunction = {
 			}
 			sendData.push(obj)
 		}
+		var _this = this
+		console.log(typeof _this.exeScope)
+		var data = {
+			debuground: _this.debugRound,
+			sceneId: _this.sceneid,
+			exeScope: _this.exeScope, 
+			selectState: +_this.exeScope === 1 ? "" : JSON.stringify(sendData)
+		}
+
 		$.ajax({
-			url: address + 'executeController/scenedubug',
+			url: address + 'executeController/scenedubug2',
+			data: data,
+			type: 'post',
+			dataType: 'json',
+			success: function(data, textStatux) {
+
+			}
 		})
 	}
 }

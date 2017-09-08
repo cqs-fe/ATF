@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
     <link rel="import" href="./common/header.html?__inline">
     <link rel="import" href="./noLoginAlert.html?__inline">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
@@ -15,9 +15,8 @@
     <title>Testphase Manager</title>
     <style>
     </style>
-</head>
-
-<body id="v-body" v-cloak>
+  </head>
+  <body id="v-body" v-cloak>
     <!--header start-->
     <link rel="import" href="./common/header-guide.html?__inline">
     <!--header end-->
@@ -25,221 +24,236 @@
     <link rel="import" href="./common/aside-guide.html?__inline">
     <!--sidebar end-->
     <div class="content">
-        <!--main content start-->
-        <section id="main-content" >
-            <section class="content-wrapper" style="margin-bottom: 50px;">
-                <main class="main">
-                     <!-- breadcrumb start -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <ul class="breadcrumb">
-                                <li><a href="testround.html"><i class="icon-home"></i> 测试计划及执行</a></li>
-                                <!-- <li class="active"> 对象库</li> -->
-                            </ul>
-                        </div>
+      <!--main content start-->
+      <section id="main-content" >
+        <section class="content-wrapper" style="margin-bottom: 50px;">
+          <main class="main">
+            <!-- breadcrumb start -->
+            <div class="">
+              <div class="col-lg-12">
+                <ul class="breadcrumb">
+                  <li><a href="testround.html"><i class="icon-home"></i> 测试计划及执行</a></li>
+                  <!-- <li class="active"> 对象库</li> -->
+                </ul>
+              </div>
+            </div>
+            <div class="main-content" id="testround-main">
+              <form id="test-options" class=" form-horizontal form-inline">
+                <div class="form-group col-sm-6">
+                  <label class="option-name control-label col-sm-3">测试阶段</label>
+                  <div class="col-sm-9">
+                    <select class="testphase form-control" v-model="testphaseValue">
+                      <option v-for="(index,item) in testphases" v-bind:value="item.phasename">{{item.phasename}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group col-sm-6">
+                  <label class="option-name control-label col-sm-3">
+                    测试轮次
+                  </label>
+                  <div class="col-sm-9">
+                    <select class="testround form-control" v-model="testroundValue">
+                      <option v-for="item in testrounds" v-bind:value="item.id">{{item.roundname}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group col-sm-6">
+                  <label class="option-name col-sm-3 control-label">
+                    执行轮次
+                  </label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="" v-model="executionround">
+                  </select>
+                </div>
+                
+              </div>
+              <div class="form-group col-sm-6">
+                <label class="option-name col-sm-3 control-label">
+                  执行范围
+                </label>
+                <div class="col-sm-9">
+                  <select class="execute-range form-control" v-model="exeScope">
+                    <option value="1" selected>所有</option>
+                    <!-- <option value="2">已选择</option> -->
+                  </select>
+                </div>
+              </div>
+              <!-- <div class="form-group col-sm-6">
+                <label class="option-name col-sm-3 control-label">
+                  caseLibId
+                </label>
+                <div class="col-sm-9">
+                  <select class="execute-range form-control" v-model="caselibId">
+                    <option v-for="caselibId in caselibIds" :value="caselibId.caselibId">{{caselibId.caselibId}}</option>
+                  </select>
+                </div>
+              </div> -->
+            </form>
+            <div class="test-control container">
+            <div style="font-size: 12px;color:#999;">点击批量执行前，请输入执行轮次，选择相应的测试轮次，执行范围</div>
+              <button class="btn btn-info" @click="executeAll()">批量执行</button>
+              <button class="btn btn-info" @click="getCases()">查询</button>
+              <button class="btn btn-info" @click="addScene();">添加场景</button>
+            </div>
+            <div class="main-content2">
+              <div class="case-list-wrapper list-wrapper">
+                <span class="case-list-title list-title">用例列表</span>
+                <!-- <span class="hide-case-list" @click="hideCaseList($event)" @mousedown.stop="1">收起</span> -->
+                <div class="case-list">
+                  <div class="check-all-case" v-if="testCaseList.length">全部选取
+                    <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">
+                  </div>
+                  <div class="case-lib" v-for="case_wrapper in testCaseList" @mousedown.stop="1">
+                    <template v-if="case_wrapper.caseCompositeType == '1'">
+                    <div class="checkbox-wrapper">
+                      <input type="checkbox" :value="case_wrapper.caseId" @change="checkallToggle($event)" class="checkall" v-model="selectedCases">
                     </div>
-                    <div class="main-content" id="testround-main">
-                       <form id="test-options" class=" form-horizontal form-inline">
-                           <div class="form-group col-sm-6">
-                               <label class="option-name control-label col-sm-3">测试阶段</label>
-                                <div class="col-sm-9">
-                                    <select class="testphase form-control" v-model="testphaseValue">
-                                        <option v-for="(index,item) in testphases" v-bind:value="item.phasename">{{item.phasename}}</option>
-                                    </select>
-                                </div>
-                                <span>点击查询，选q</span>
-                           </div>
-                           <div class="form-group col-sm-6">
-                               <label class="option-name control-label col-sm-3">
-                                   测试轮次
-                               </label>
-                               <div class="col-sm-9">
-                                   <select class="testround form-control" v-model="testroundValue">
-                                   <option v-for="item in testrounds" v-bind:value="item.id">{{item.roundname}}
-                                   </option>
-                               </select>
-                               </div>
-                               <span>点击查询， 选2</span>
-                           </div>
-                           <div class="form-group col-sm-6">
-                               <label class="option-name col-sm-3 control-label">
-                                   执行轮次
-                               </label>
-                               <div class="col-sm-9">
-                                   <input type="text" class="form-control" name="" v-model="executionround">
-                               </select>
-                               </div>
-                               
-                           </div>
-                            <div class="form-group col-sm-6">
-                               <label class="option-name col-sm-3 control-label">
-                                   执行范围
-                               </label>
-                               <div class="col-sm-9">
-                                  <select class="execute-range form-control" v-model="exeScope">
-                                    <option value="1" selected>所有</option>
-                                    <!-- <option value="2">已选择</option> -->
-                                  </select>
-                               </div>
-                           </div>
-                           <div class="form-group col-sm-6">
-                               <label class="option-name col-sm-3 control-label">
-                                   caseLibId
-                               </label>
-                               <div class="col-sm-9">
-                                  <select class="execute-range form-control" v-model="caselibId">
-                                    <option v-for="caselibId in caselibIds" :value="caselibId.caselibId">{{caselibId.caselibId}}</option>
-                                  </select>
-                               </div>
-                               <span>因为数据问题，暂时添加该下拉框，用于选取caseLiId, 选3可以查出数据</span>
-                           </div>
-                       </form>
-                       <div class="test-control container">
-                           <button class="btn btn-info" @click="executeAll()">批量执行</button>
-                           <button class="btn btn-info" @click="getCases()">查询</button>
-                            <button class="btn btn-info" @click="addScene();">添加场景</button>
-                       </div>
-                       <div class="case-list-wrapper list-wrapper">
-                           <span class="case-list-title list-title">用例列表</span>
-                           <div class="case-list">
-                                <div v-for="caseWrapper in testCaseList">
-                                 <template v-if="caseWrapper.caseCompositeType == 1">
-                                    <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
-                                        <input type="checkbox" :value="caseWrapper.caseId" class="checkall" v-model="selectedCases">
-                                    </div>
-                                    <div class="case" >
-                                        <div class="case-header">
-                                            <!-- <input type="checkbox" v-bind:value="caseWrapper.caseId" class="check-case" v-model="selectedCases"> -->
-                                            <p>{{caseWrapper.caseId}}</p>
-                                        </div>
-                                        <div class="case-main">
-                                            <p>单用例</p>
-                                            <p>{{caseWrapper.caseCompositeType}}</p>
-                                        </div>
-                                        <footer class="case-footer">
-                                            <img src="../static/images/waiting.png">
-                                        </footer>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                  <div>
-                                    <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
-                                        <span>流程用例</span>
-                                        <input type="checkbox" :value="caseWrapper.caseId" class="checkall" v-model="selectedCases">
-                                    </div>
-                                    <div class="case" v-for="node in caseWrapper.flowNodes">
-                                        <div class="case-header">
-                                            <!-- <input type="checkbox" v-bind:value="node.flowNodeId" class="check-case" v-model="selectedCases"> -->
-                                            <p>{{node.flowNodeId}}</p>
-                                        </div>
-                                        <div class="case-main">
-                                          <p>单用例</p>
-                                          <p>{{node.flowNodeCode}}</p>
-                                        </div>
-                                        <footer class="case-footer">
-                                            <img src="../static/images/running.gif">
-                                        </footer>
-                                    </div>
-                                  </div>
-                                </template>
-                                </div>
-                           </div>
-                       </div>
-                        <div class="scene-list-wrapper list-wrapper" v-for="scene in testSceneList">
-                            <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
-                                  <input type="checkbox" :value="scene.sceneId" class="checkall" v-model="selectedScenes">
-                            </div>
-                            <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
-                            <div class="case-list">
-                                <div v-for="caseWrapper in scene.testCaseList" :class="{'case-item': caseWrapper.caseCompositeType==1}" >
-                                  <template v-if="caseWrapper.caseCompositeType == 1">
-
-                                    <div class="case" >
-                                        <div class="case-header">
-                                            <input type="checkbox" name="" value={{scene.sceneId}}+{{caseWrapper.caseId}} class="check-case" v-model="selectedSceneCases">
-                                            <p>{{caseWrapper.caseId}}</p>
-                                        </div>
-                                        <div class="case-main">
-                                            <p>{{caseWrapper.caseId}}</p>
-                                        </div>
-                                        <footer class="case-footer">
-                                            <img src="../static/images/running.gif">
-                                        </footer>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                  
-                                    <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
-                                      <input type="checkbox" value={{scene.sceneId}}+{{caseWrapper.caseId}}  class="checkall" v-model="selectedSceneCases">
-                                    </div>
-                                    <div class="case" v-for="node in caseWrapper.flowNodes">
-                                        <div class="case-header">
-                                            <input type="checkbox" name="" class="check-case">
-                                            <p>{{node.flowNodeId}}</p>
-                                        </div>
-                                        <div class="case-main">
-                                            <p>{{node.flowNodeCode}}</p>
-                                        </div>
-                                        <footer class="case-footer">
-                                            <img src="../static/images/waiting.png">
-                                        </footer>
-                                    </div>
-                                </template>
-
-                                </div>
-                           </div>
+                    <div class="case-wrapper">
+                      <div class="case" >
+                        <div class="case-header">
+                          <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
+                          <p>{{case_wrapper.caseId}}</p>
                         </div>
+                        <div class="case-main">
+                          <p>这是单案例</p>
+                          <span></span>
+                        </div>
+                        <footer class="case-footer">
+                          <img :src="exeImgs[0]">
+                        </footer>
+                      </div>
                     </div>
-                </main>
-            </section>
-
-            <link rel="import" href="./common/copy-right.html?__inline">
-        </section>
-        <!--main content end-->
-    </div>
-    <!--content end -->
-
-    <div class="modal fade" id="add-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">新增场景</h4>
+                    </template>
+                    <template v-else>
+                    <div class="checkbox-wrapper">
+                      <input type="checkbox" :value="case_wrapper.caseId" class="checkall" v-model="selectedCases"
+                      @change="checkallToggle($event)">
+                    </div>
+                    <div class="case-wrapper">
+                      <div class="case" v-for="item in case_wrapper.flowNodes">
+                        <div class="case-header">
+                          <input type="checkbox" v-bind:value="item.flowNodeId"
+                          class="check-case flow-node-incaselib" @change="checkChanged($event)" v-model="checkedFlowNodes">
+                          <p>{{item.flowNodeId}}</p>
+                        </div>
+                        <div class="case-main">
+                          <p>{{item.flowNodeId}}</p>
+                        </div>
+                        <footer class="case-footer">
+                          <img :src="exeImgs[1]">
+                        </footer>
+                      </div>
+                    </div>
+                    </template>
+                  </div>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="th">
-                                    <input type="checkbox" @change="selectAll($event);">全选
-                                </th>
-                                <th scope="col">场景名称</th>
-                                <th scope="col">场景描述</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="scene in allscenes">
-                                <td><input type="checkbox" v-model="selectedScene" v-bind:value="scene.sceneId"></td>
-                                <td>{{scene.sceneName}}</td>
-                                <td>{{scene.sceneDesc}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+              </div>
+              <!-- 场景列表 -->
+              <div class="scene-list-wrapper list-wrapper" v-for="scene in testSceneList">
+                <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
+                  <input type="checkbox" :value="scene.sceneId" class="checkscene" v-model="selectedScenes">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" @click="sendSceneData()">确认</button>
-                </div>
-            </div><!-- /.modal-content -->
+                <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
+                <!-- <div class="case-list"> -->
+                  <div class="case-list">
+                    <div class="check-all-case" v-if="scene.testCaseList.length">全部选取
+                      <input type="checkbox"  @change="checkAllInScene($event)" class="checkall-inscene" 
+                        :value="scene.sceneId" v-model="checkallSceneIds">
+                    </div>
+                    <div class="case-lib" v-for="case_wrapper in scene.testCaseList" @mousedown.stop="1">
+                      <template v-if="case_wrapper.caseCompositeType == '1'">
+                      <div class="checkbox-wrapper">
+                        <input type="checkbox" :value="scene.sceneId+'-'+case_wrapper.caseId" class="check-flownodes" v-model="selectedSceneCases" @change="checkAllFlowNodes($event)">
+                      </div>
+                      <div class="case-wrapper">
+                        <div class="case" >
+                          <div class="case-header">
+                            <input type="checkbox" v-bind:value="scene.sceneId+'-'+case_wrapper.caseId" class="check-case check-case-inscene" v-model="selectedSceneCases" @change="checkFlowNode($event)">
+                            <p>{{case_wrapper.caseId}}</p>
+                          </div>
+                          <div class="case-main">
+                            <p>这是单案例</p>
+                            <span></span>
+                          </div>
+                          <footer class="case-footer">
+                            <img :src="exeImgs[0]">
+                          </footer>
+                        </div>
+                      </div>
+                      </template>
+                      <template v-else>
+                      <div class="checkbox-wrapper">
+                        <input type="checkbox" :value="scene.sceneId+'-'+case_wrapper.caseId" class="check-flownodes" @change="checkAllFlowNodes($event)" v-model="selectedSceneCases">
+                      </div>
+                      <div class="case-wrapper">
+                        <div class="case" v-for="item in case_wrapper.flowNodes">
+                          <div class="case-header">
+                            <input type="checkbox" v-bind:value="scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId"
+                            class="check-case check-case-inscene" @change="checkFlowNode($event)" v-model="selectedSceneCases">
+                            <p>{{item.flowNodeId}}</p>
+                          </div>
+                          <div class="case-main">
+                            <p>{{item.flowNodeId}}</p>
+                          </div>
+                          <footer class="case-footer">
+                            <img :src="exeImgs[1]">
+                          </footer>
+                        </div>
+                      </div>
+                      </template>
+                    </div>
+                  </div>
+                <!-- </div> -->
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+      <link rel="import" href="./common/copy-right.html?__inline">
+    </section>
+    <!--main content end-->
+  </div>
+  <!--content end -->
+  <div class="modal fade" id="add-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">新增场景</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="th">
+                  <input type="checkbox" @change="selectAll($event);">全选
+                </th>
+                <th scope="col">场景名称</th>
+                <th scope="col">场景描述</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="scene in allscenes">
+                <td><input type="checkbox" v-model="selectedScene" v-bind:value="scene.sceneId"></td>
+                <td>{{scene.sceneName}}</td>
+                <td>{{scene.sceneDesc}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" @click="sendSceneData()">确认</button>
+        </div>
+        </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <link rel="import" href="./common-vac/alert.html?__inline">
-    <link rel="import" href="./common-vac/confirm.html?__inline">
-    <script src="../static/js/config.js"></script>
-    <script src="../static/js/vac-functions.es.js"></script>
-    <script src="../static/js/testround.es.js"></script>
-    <script src="../../lib/common-scripts.js"></script>
-</body>
-
-</html>
+        </div><!-- /.modal -->
+        <link rel="import" href="./common-vac/alert.html?__inline">
+        <link rel="import" href="./common-vac/confirm.html?__inline">
+        <script src="../static/js/config.js"></script>
+        <script src="../static/js/vac-functions.es.js"></script>
+        <script src="../static/js/testround.es.js"></script>
+        <script src="../../lib/common-scripts.js"></script>
+      </body>
+    </html>

@@ -79,6 +79,7 @@ var app = new Vue({
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
+                        getTestRound();
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -150,7 +151,7 @@ var app = new Vue({
             $('#updateForm input[name="id"]').val(selectedId);
             $('#updateForm input[name="roundname"]').val(selectedInput.parent().next().html());
             $('#updateForm textarea[name="rounddesc"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm input[name="recordmanagementflag"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm select[name="recordmanagementflag"]').val(selectedInput.parent().next().next().next().attr('data-value'));
             $('#updateForm input[name="timeexecutesetting"]').val(selectedInput.parent().next().next().next().next().html());
         },
 

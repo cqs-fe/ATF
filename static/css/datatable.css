@@ -398,10 +398,6 @@ html, body {
         box-sizing: content-box; }
         #main-content .content-wrapper .main .dataTable-wrapper .handsontable {
           margin: 0; }
-          #main-content .content-wrapper .main .dataTable-wrapper .handsontable tr:nth-of-type(2n+1) {
-            background-color: #eeee11; }
-          #main-content .content-wrapper .main .dataTable-wrapper .handsontable tr:nth-of-type(2n) {
-            background-color: #eeffff; }
           #main-content .content-wrapper .main .dataTable-wrapper .handsontable tr.selected {
             background-color: #1ABDE6; }
           #main-content .content-wrapper .main .dataTable-wrapper .handsontable tr td {
@@ -418,7 +414,7 @@ html, body {
       #main-content .content-wrapper .main .panel {
         position: relative;
         flex: 0 0 auto;
-        height: 200px;
+        height: 43px;
         border-radius: 5px;
         margin-left: 5px;
         margin-right: 5px;

@@ -6,7 +6,7 @@ var app = new Vue({
         classId: '',
         methodId: '',
         methodName: '方法',
-        propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td ></td><td ></td></tr>',
+        propTr: '<tr><td><input type="radio" name="chk_list"/></td><td ></td><td ></td></tr>',
         paraTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         archiList:[],
         methodList:[],
@@ -431,7 +431,7 @@ var setting1 = {
                         $('#classProp').children().remove();
                         for (var i = 0; i < classList.length; i++) {
                             var classTr = $('<tr></tr>'),
-                                classCheckTd = $("<td><input type='checkbox' name='chk_list' onclick='classClick(event)'/></td>"),
+                                classCheckTd = $("<td><input type='radio' name='chk_list' onclick='classClick(event)'/></td>"),
                                 eclassNameTd = $('<td ></td>'),
                                 cclassNameTd = $('<td ></td>');
                             classTr.attr('id', classList[i].id);
@@ -557,21 +557,9 @@ var zNodes = [{
     pId: 0,
     name: "一级1",
 }, {
-    id: 11,
-    pId: 1,
-    name: "二级1"
-}, {
-    id: 12,
-    pId: 1,
-    name: "二级2"
-}, {
     id: 2,
     pId: 0,
     name: "一级2"
-}, {
-    id: 21,
-    pId: 2,
-    name: "二级3"
 }];
 // 页面初始化获取全局方法
 $(document).ready(function() {
@@ -600,7 +588,7 @@ function classClick(event) {
                 app.methodList=methodList;
                 for (var i = 0; i < methodList.length; i++) {
                     var methodTr = $('<tr></tr>'),
-                        methodCheckTd = $("<td><input type='checkbox' name='chk_list' onclick='methodClick(event)'/></td>"),
+                        methodCheckTd = $("<td><input type='radio' name='chk_list' onclick='methodClick(event)'/></td>"),
                         methodNameTd = $('<td ></td>'),
                         methodDescriptionTd = $('<td ></td>');
                     methodTr.attr('id', methodList[i].id);

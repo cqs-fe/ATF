@@ -124,6 +124,8 @@
                                         <label for="" class="col-lg-2 control-label">类型</label>
                                         <div class="col-lg-3">
                                             <select class="form-control" id="classtypeSelect">
+                                                <option value="">--选择控件类型--</option>
+                                                <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -250,9 +252,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="relateNameTbody">
-                                                    <tr v-for="item in relateElementList">
+                                                    <tr v-for="(index,item) in relateElementList">
                                                         <td>
-                                                            <input type="radio" name="chk_list" />
+                                                            <input type="radio" name="chk_list" @click="showLinkProp(index)"/>
                                                         </td>
                                                         <td contenteditable="true">{{item.name}}</td>
                                                     </tr>
@@ -277,12 +279,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="relatePropTbody">
-                                                    <tr>
+                                                    <tr v-for="item in relatePropList">
                                                         <td>
                                                             <input type="checkbox" name="chk_list" />
                                                         </td>
-                                                        <td contenteditable="true"></td>
-                                                        <td contenteditable="true"></td>
+                                                        <td contenteditable="true">{{item.name}}</td>
+                                                        <td contenteditable="true">{{item.value}}</td>
+                                                    </tr>
+                                                    <tr v-show="relatePropListLength==0" class="text-center">
+                                                        <td colspan="3">暂无数据</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

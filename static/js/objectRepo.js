@@ -4,18 +4,17 @@ var app = new Vue({
         autId: '',
         transactId: '',
         objId: '',
-        objName: '对象名称',
+        objName: '',
         propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         classtypeList: []
     },
     ready: function() {
-        this.autSelect();
-        this.setval();
-        this.classtypeSelect();
-        getObjTree();
+        this.getAutandTrans();
         $('#autSelect').change(function() {
             app.transactSelect();
             app.autId = $('#autSelect').val();
+            app.transactId = $('#transactSelect').val();
+            updateObjTree();
         });
         $('#transactSelect').change(() => {
             app.transactId = $('#transactSelect').val();
@@ -23,6 +22,47 @@ var app = new Vue({
         });
     },
     methods: {
+        //初始化获取测试系统和功能点
+        getAutandTrans: function() {
+            $.ajax({
+                url: address + "autController/selectAll",
+                type: "POST",
+                success: function(data) {
+                    var autList = data.obj;
+                    var str = "";
+                    for (var i = 0; i < autList.length; i++) {
+
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                    }
+
+                    $('#autSelect').html(str);
+                    app.autId = sessionStorage.getItem("autId");
+                    $("#autSelect").val(app.autId);
+                    $.ajax({
+                        url: address + 'transactController/showalltransact',
+                        data: { 'autlistselect': app.autId },
+                        type: "POST",
+                        success: function(data) {
+                            var transactList = data.o;
+                            var str = "";
+                            for (var i = 0; i < transactList.length; i++) {
+
+                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                            }
+                            $('#transactSelect').html(str);
+                            app.transactId = sessionStorage.getItem("transactId");
+                            $("#transactSelect").val(app.transactId);
+                            // 获取对象树
+                            getObjTree();
+
+                        }
+
+                    });
+                    // 获取classtype
+                    app.classtypeSelect();
+                }
+            });
+        },
         //获取测试系统
         autSelect: function() {
             $.ajax({
@@ -36,7 +76,9 @@ var app = new Vue({
 
                         str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
                     }
+
                     $('#autSelect').html(str);
+
                 }
             });
         },
@@ -44,6 +86,7 @@ var app = new Vue({
         transactSelect: function() {
             var val = $('#autSelect').val();
             $.ajax({
+                async: false,
                 url: address + 'transactController/showalltransact',
                 data: { 'autlistselect': val },
                 type: "POST",
@@ -51,10 +94,10 @@ var app = new Vue({
                     var transactList = data.o;
                     var str = "";
                     for (var i = 0; i < transactList.length; i++) {
+
                         str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                     }
                     $('#transactSelect').html(str);
-
                 }
 
             });
@@ -68,63 +111,28 @@ var app = new Vue({
                 type: "POST",
                 success: function(data) {
                     app.classtypeList = data;
-
                 }
-
             });
         },
         //设置所属测试系统和所属功能点为上级页面选中的值
-        setval: function() {
-            const thisURL = document.URL;
-            if (thisURL.indexOf('?') >= 0) {
-                const getval = thisURL.split('?')[1];
-                const keyval = getval.split('&');
-                this.autId = keyval[0].split('=')[1],
-                    this.transactId = keyval[1].split('=')[1];
-                $("#autSelect").val(this.autId);
-                $("#transactSelect").val(this.transactId);
-                $.ajax({
-                    url: address + 'transactController/transactqueryByPage',
-                    type: 'GET',
-                    async: false,
-                    data: {
-                        'page': 1,
-                        'rows': 10,
-                        'order': 'id',
-                        'sort': 'asc',
-                        'id': this.transactId,
-                        'transcode': '',
-                        'transname': '',
-                        'autctgId': '',
-                        'descript': '',
-                        'maintainer': '',
-                        'autId': '',
-                        'useStatus': ''
-                    },
-                    success: function(data) {
-                        var transactList = data.o.rows;
-                        // console.log(transactList)
-                        var str = "";
-                        for (var i = 0; i < transactList.length; i++) {
-
-                            str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
-                        }
-                        $('#transactSelect').html(str);
-
-                    }
-                });
-            }
+         setval: function() {
+            this.autId=sessionStorage.getItem("autId");
+            this.transactId=sessionStorage.getItem("transactId");
+            $("#autSelect").val(this.autId);
+            $("#transactSelect").val(this.transactId);
         },
         addObj: function() {
             var objName = $("#addObjName").val(),
-                treeObj = $.fn.zTree.getZTreeObj("objectTree"),
-                nodes = treeObj.getSelectedNodes(true),
-                parentid;
-            if (nodes.length === 0) {
-                parentid = "0";
-            } else {
-                parentid = nodes[0].id;
-            }
+                treeObj = $.fn.zTree.getZTreeObj("objectTree");
+            var parentid=0,nodes;
+            if(treeObj){
+                nodes = treeObj.getSelectedNodes(true);
+                if (nodes.length === 0) {
+                    parentid = "0";
+                } else {
+                    parentid = nodes[0].id;
+                }
+            } 
             $.ajax({
                 url: address + 'object_repoController/insertObject_repo',
                 type: 'post',
@@ -136,7 +144,7 @@ var app = new Vue({
                     "parentElementId": parentid
                 },
                 success: function(data) {
-                    console.info(data);
+                    // console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
                         getObjTree();
@@ -241,7 +249,7 @@ var app = new Vue({
             var treeObj = $.fn.zTree.getZTreeObj("objectTree"),
                 nodes = treeObj.getSelectedNodes(true),
                 id = nodes[0].id,
-                name = nodes[0].name,
+                name = $('#objForm input[name="name"]').val(),
                 parentElementId = nodes[0].parentid,
                 classtype = $('#classtypeSelect').val();
             //主属性
@@ -301,6 +309,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
+                        updateObjTree();
                         // updateProp();
                     } else {
                         $('#failModal').modal();
@@ -366,8 +375,10 @@ var setting1 = {
                     "transid": app.transactId,
                 },
                 success: function(data) {
-                    console.log(data);
-                    $('#classtypeSelect').val(data.obj.classtype);
+                    // console.log(data);
+                    var classtype=data.obj[0].classtype;
+                    // console.log(classtype)
+                    $('#classtypeSelect').val(classtype);
                     //主属性
                     var mainList = data.obj[0].locatePropertyCollection.main_properties;
                     if (mainList.length !== 0) {

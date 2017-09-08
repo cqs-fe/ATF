@@ -61,10 +61,9 @@ var app = new Vue({
                 type: 'post',
                 data: $("#insertForm").serializeArray(),
                 success: function(data) {
-                    console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        queryTransact();
                     } else {
                         $('#failModal').modal();
                     }
@@ -98,7 +97,8 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        queryTransact();
                     } else {
                         $('#failModal').modal();
                     }
@@ -129,7 +129,8 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
+                        queryTransact();
                     } else {
                         $('#failModal').modal();
                     }
@@ -156,7 +157,9 @@ var app = new Vue({
             } else {
                 var transactId = selectedInput.attr('id');
                 var autId = $('#autSelect').val();
-                location.href = "elementLibrary.html?autId=" + autId + "&" + "transactId=" + transactId;
+                sessionStorage.setItem("transactId",transactId);
+                sessionStorage.setItem("autId",autId);
+                location.href = "elementLibrary.html";
             }
         },
         //传递当前页选中的测试系统id和功能点id到对象库页面
@@ -167,7 +170,9 @@ var app = new Vue({
             } else {
                 var transactId = selectedInput.attr('id');
                 var autId = $('#autSelect').val();
-                location.href = "objectRepo.html?autId=" + autId + "&" + "transactId=" + transactId;
+                sessionStorage.setItem("transactId",transactId);
+                sessionStorage.setItem("autId",autId);
+                location.href = "objectRepo.html";
             }
         },
         //传递当前页选中的测试系统id和功能点id到基础脚本
@@ -178,7 +183,9 @@ var app = new Vue({
             } else {
                 var transactId = selectedInput.attr('id');
                 var autId = $('#autSelect').val();
-                location.href = "script.html?autId=" + autId + "&" + "transactId=" + transactId;
+                sessionStorage.setItem("transactId",transactId);
+                sessionStorage.setItem("autId",autId);
+                location.href = "script.html";
             }
         },
 
@@ -271,10 +278,11 @@ function autSelect() {
 
 //设置所属被测系统select为aut页面选中的aut
 function setval() {
-    var thisURL = document.URL;
-    var getVal = thisURL.split('?')[1];
-    var oneVal = getVal.split('=')[1];
-    $("#autSelect").val(oneVal);
+    // var thisURL = document.URL;
+    // var getVal = thisURL.split('?')[1];
+    // var oneVal = getVal.split('=')[1];
+    var autId=sessionStorage.getItem("autId");
+    $("#autSelect").val(autId);
     $.ajax({
         url: address + 'transactController/transactqueryByPage',
         type: 'POST',

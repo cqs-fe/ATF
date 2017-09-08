@@ -15,8 +15,8 @@
     <title>Scene Manager</title>
   </head>
   <body id="v-body" v-cloak>
-    <div class="editTrigger" v-show="triggerShow" style="z-index: 1000;display: none;">
-      <header class="editTrigger-header">
+    <div class="editTrigger" id="editTrigger" v-show="triggerShow" style="z-index: 1000;display: none;">
+      <header class="editTrigger-header" id="editTrigger-header">
         <span class="editTrigger-title">{{triggerInfo.editTriggerType}}触发器</span>
         <span class="icon-remove" @click="closeTrigger();"></span>
       </header>
@@ -129,14 +129,20 @@
               <div class="form-group col-sm-12">
                 <label class="col-sm-4 control-label">数据池名称</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control " name="" v-model="poolData.poolname">
+                  <select class="form-control" v-model="poolData.poolname">
+                    <option value="场景数据池">场景数据池</option>
+                  </select>
+                  <!-- <input type="text" class="form-control " name="" v-model="poolData.poolname"> -->
                 </div>
                 
               </div>
               <div class="form-group col-sm-12">
                 <label class="col-sm-4 control-label">数据池对象Id</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control " name="" v-model="poolData.poolobjid">
+                  <select class="form-control" v-model="poolData.poolobjid">
+                    <option value="2">2</option>
+                  </select>
+                  <!-- <input type="text" class="form-control " name="" v-model="poolData.poolobjid"> -->
                 </div>
               </div>
               <div class="form-group col-sm-12">
@@ -208,7 +214,7 @@
             <div class="form-input">
                 <div>
                   <label for="" class="">请输入调试轮次：</label>
-                  <input type="number" class="" id="" placeholder="调试轮次" v-model="debugRound"> 
+                  <input type="number" min="1" class="" id="" placeholder="调试轮次" v-model="debugRound"> 
                 </div>
                 <div>
                   <label for="" class="">请选择执行范围：</label>
@@ -327,7 +333,7 @@
                   </thead>
                   <tbody id="triggers">
                     <tr v-for="item in triggers">
-                      <td><input type="checkbox" :value="item.id" v-model="triggerInfo.selectedTrigger" @change="test();"></td>
+                      <td><input type="checkbox" :value="item.id" v-model="triggerInfo.selectedTrigger" @change="changeSelectedTrigger()"></td>
                       <td>{{item.name}}</td>
                       <td>{{item.desc}}</td>
                       <td>
@@ -358,7 +364,7 @@
                     <div class="select-group">
                       <label>执行状态策略</label>
                       <select v-model="exe_strategy.exe_strategy1_status">
-                        <option value="0">保持原样不做处理</option>
+                        <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">全部重新执行</option>
                         <option value="2">跳过执行成功的案例</option>
                       </select>
@@ -371,7 +377,7 @@
                     <div class="select-group">
                       <label>起始节点策略</label>
                       <select v-model="exe_strategy.exe_strategy2_start">
-                        <option value="0">保持原样不做处理</option>
+                        <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">从第一个节点开始</option>
                         <option value="2">从第一个执行失败的节点开始</option>
                       </select>
@@ -379,7 +385,7 @@
                     <div class="select-group">
                       <label>执行顺序策略</label>
                       <select v-model="exe_strategy.exe_strategy2_order">
-                        <option value="0">保持原样不做处理</option>
+                        <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">顺序无关执行</option>
                         <option value="2">强制顺序执行</option>
                       </select>
@@ -387,7 +393,7 @@
                     <div class="select-group">
                       <label>执行状态策略</label>
                       <select v-model="exe_strategy.exe_strategy2_status">
-                        <option value="0">保持原样不做处理</option>
+                        <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">全部重新执行</option>
                         <option value="2">跳过执行成功的案例</option>
                       </select>
@@ -400,7 +406,7 @@
                     <div class="select-group">
                       <label>起始用例策略</label>
                       <select v-model="exe_strategy.exe_strategy3_start">
-                        <option value="0">保持原样不做处理</option>
+                        <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">从第一个节点开始</option>
                         <option value="2">从第一个执行失败的节点开始</option>
                       </select>
@@ -408,7 +414,7 @@
                     <div class="select-group">
                       <label>执行顺序策略</label>
                       <select v-model="exe_strategy.exe_strategy3_order">
-                        <option value="0">保持原样不做处理</option>
+                        <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">顺序无关执行</option>
                         <option value="2">强制顺序执行</option>
                       </select>
@@ -416,7 +422,7 @@
                     <div class="select-group">
                       <label>执行状态策略</label>
                       <select v-model="exe_strategy.exe_strategy3_status">
-                        <option value="0">保持原样不做处理</option>
+                        <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">全部重新执行</option>
                         <option value="2">跳过执行成功的案例</option>
                       </select>
@@ -430,7 +436,7 @@
                   <div class="select-group">
                     <label>出错操作</label>
                     <select v-model="exe_strategy.exe_strategy_err">
-                      <option value="0">保持原样不做处理</option>
+                      <!-- <option value="0">保持原样不做处理</option> -->
                       <option value="1">出错后终止</option>
                       <option value="2">出错后继续执行</option>
                       <option value="3">出错后由用户选择</option>
@@ -468,7 +474,7 @@
                       <th scope="col">数据描述</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody v-if="poolDatas.length>0">
                     <tr v-for="item in poolDatas">
                       <td>
                         <input type="checkbox" :value="item.dataname" v-model="selectedPool">
@@ -483,6 +489,9 @@
                         {{item.datadesc}}
                       </td>
                     </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <tr><td colspan="4">暂时没有数据</td></tr>
                   </tbody>
                 </table>
               </div>
