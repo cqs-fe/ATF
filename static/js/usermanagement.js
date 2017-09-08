@@ -78,7 +78,7 @@ $(document).ready(function() {
         data.dept = $('#alter-department').val();
         data.tel = $('#alter-phonenumber').val();
         data.phone = $('#alter-telephone').val();
-        data.email = $('#alter-email').val();
+        // data.email = $('#alter-email').val();
         data.status = $('#alter-state').val();
         $.ajax({
             url: address + 'userController/updateByPrimaryKey',

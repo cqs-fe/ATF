@@ -527,8 +527,9 @@ $(document).ready(function() {
                 } else {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
-                    console.log(treeNode)
-                    this.uiOrFunctions.function = treeNode;
+                    // treeNode:"id":45,"methodname":"click","methoddescription":"点击","arcclassid":27,"objectcode":"132","parameterlist":"[{\"name\":\"11\",\"valueclass\":\"11\",\"parameterizedcolumn\":\"\",\"defaultvalue\":\"\",\"description\":\"\"}
+                    // this.uiOrFunctions.function = {mname: treeNode.methodname};
+                    this.uiOrFunctions.function = {...treeNode, mname: treeNode.methodname }
                     // console.log(treeNode)
                 }
                 this.uiOrFunctions.changed = true; // 已经在模态框中点击了树节点
@@ -595,6 +596,8 @@ $(document).ready(function() {
                         ui: editDataVue.uiOrFunctions.ui,
                         element: editDataVue.uiOrFunctions.element
                     };
+                    operationRows[index].functions = []
+                    operationRows[index].parameters = []
 
                     // 使用splice方法，通过改变数组项的id更新绑定的数组，
                     _this.updateRow(operationRows, index);
@@ -622,6 +625,9 @@ $(document).ready(function() {
                     getFunctions.then(() => {
                         // 获取函数项的值
                         // var mname = $('.functions-select', parentRow).val()
+                        if(!operationRows[index].functions.length) {
+                            return
+                        }
                         var mname = operationRows[index].functions[0].mname
                         var data = {
                             autid: mainVue.autId,
@@ -647,9 +653,23 @@ $(document).ready(function() {
                 } else {
                     // $('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
                     operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
-                    console.log()
                     // 插入函数集
-                    operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
+                    // 20170901 更改
+                    // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
+                    // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].parameterlist)
+
+                    // parameters: [{"name":"11","valueclass":"11","parameterizedcolumn":"","defaultvalue":"","description":""}]
+                    var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
+
+                    operationRows[index].parameters = []
+                    for(let param of parametersArray) {
+                        operationRows[index].parameters.push({
+                            Name: param.name,
+                            Value: param.defaultvalue,
+                            ...param
+                        })
+                    }
+
                     _this.updateRow(operationRows, index)
                 }
                 $('#ui-ele-modal').modal('hide')
@@ -680,7 +700,7 @@ $(document).ready(function() {
                     if (node.isParent) {
                         continue;
                     }
-                    let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}
+                    let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name: '', Value: ''}]}}
                     newRow.id = Symbol()
                     newRow.operation = {
                         element: node.getParentNode().name,
@@ -708,12 +728,23 @@ $(document).ready(function() {
                     let newRow = {}
                     newRow.id = Symbol()
                     newRow.operation = {
-                            element: '',
-                            ui: ''
-                        },
-                        newRow.functions = []
-                    newRow.functions.push(node)
-                    newRow.parameters = JSON.parse(node.parameterlist)
+                        element: '',
+                        ui: ''
+                    }
+                    newRow.functions = []
+                    newRow.functions.push({ ...node, mname: node.methodname })
+
+                    newRow.parameters = []
+                    try{
+                        var parameters = JSON.parse(node.parameterlist)
+                        for(let param of parameters) {
+                            newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+                        }
+                    } catch(e) {
+                        console.log(e)
+                        newRow.parameters = []
+                    }
+                    
                     editDataVue.operationRows.push(newRow)
                 }
                 $('#ui-ele-modal2').modal('hide')
