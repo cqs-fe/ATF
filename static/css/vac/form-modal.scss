@@ -1,0 +1,32 @@
+.modal .modal-dialog {
+	width: 600px;
+	.form-group {
+		margin-bottom: 10px;
+	}
+	.tip {
+		font-size: 12px;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
+	.error {
+		color: #b94a48;
+	}
+	.correct {
+		color: #468847;
+	}
+	.show {
+		display: block;
+	}
+	.hide {
+		display: none;
+	}
+	span[class*="icon-"], span[class^="icon-"] {
+		line-height: 32px;
+	}
+	.input-tip {
+		color: #b94a48;
+		display: inline-block;
+		margin-top: 4px;
+		margin-bottom: 4px;
+	}
+}
