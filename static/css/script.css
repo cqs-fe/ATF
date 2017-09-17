@@ -141,7 +141,7 @@ td {
 }
 #top_table{
     border:1px solid #bfc2cd;
-    width:1075px;
+    width:960px;
 }
 .index{
     width:30px;
@@ -154,9 +154,7 @@ td {
 .number{
     width:30px;
 }
-.index{
-    width:50px;
-}
+
 
 #1{
     width:30px;
@@ -174,9 +172,6 @@ td {
 }
 .addtemplate{
     width: 100px;
-}
-.index{
-    width:10%;
 }
 input{
     width:120px;
@@ -236,3 +231,14 @@ label.alignRight{
 
 .modal-footer {
   padding: 10px 15px; }
+
+#top_table td.index, #top_table th.index{
+    width: 50px;
+}
+#top_table .number {
+    width: 200px;
+}
+#top_table th {
+    font-weight: normal;
+    font-size: 14px;
+}

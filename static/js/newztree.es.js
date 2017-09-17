@@ -236,7 +236,7 @@ $(document).ready(function() {
         el: '#table2',
         data: {
             // 保存table中每一行的数据 [{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
-            operationRows: [],
+            operationRows: [{id:Symbol(), functions: [], operation: {element:'1', ui: '2', parameters: [{Name: 'name1', Value: ''}]}}],
             // parameterVue: null,
             // ztree的设置项
             zTreeSettings: {
@@ -336,7 +336,7 @@ $(document).ready(function() {
                         }
                     }
                 });
-                $("#sortable").disableSelection();
+                // $("#sortable").disableSelection();
             });
             $('#edit-parameter-modal').on('hidden.bs.modal', function() {
 
@@ -344,8 +344,11 @@ $(document).ready(function() {
         },
         methods: {
             addRow: function() {
-                let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [] }
+                let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] }
                 this.operationRows.push(s)
+            },
+            insertRow: function(index) {
+               this.operationRows.splice(+index+1, 0, { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [] })
             },
             deleteRow: function(index) {
                 this.operationRows.splice(index, 1)
@@ -542,9 +545,63 @@ $(document).ready(function() {
                 var parentRow = $(event.target).parents('tr')
                 _this.uiOrFunctions.index = parentRow.attr('data-index');
 
-                parameterVue.parameters = _this.operationRows[_this.uiOrFunctions.index].parameters;
-                $('#edit-parameter-modal').modal('show')
+                var paramTable = event.target.nextElementSibling
+                var td_values = Array.from(paramTable.querySelectorAll('.param-value'))
+                for(let td of td_values) {
+                    td.setAttribute('contenteditable', 'true')
+                    td.style.backgroundColor = '#eed3d7'
+                }
+                var bottomRow = paramTable.querySelector('.bottom-row')
+                bottomRow.style.display = 'table-row'
+                // parameterVue.parameters = _this.operationRows[_this.uiOrFunctions.index].parameters;
+                // $('#edit-parameter-modal').modal('show')
             },
+            cancelEditParam: function(event) {
+                var tbody = $(event.target).parents('tbody')
+                var index = tbody.parents('tr').attr('data-index')
+                var tds = [...$('.param-row td', tbody)]
+                for (let td of tds) {
+                    td.setAttribute('contenteditable', 'false')
+                     td.style.backgroundColor = '#fff'
+                }
+                var bottomRow = $('.param-row', tbody)[0]
+                bottomRow.style.display = 'none'
+                this.updateRow(this.operationRows, index)
+            },
+            saveParam: function(event) {
+                var tbody = $(event.target).parents('tbody')
+                var trs = [...$('.param-row', tbody)]
+                var parentRow = $(event.target).parents('table').parents('tr')
+                this.operationRows[parentRow.attr('data-index')].parameters.length = 0
+                for (let row of trs) {
+                    // parameters:[{Name:'', Value: ''}]
+                    var data = {}
+                    data.Name = row.querySelector('.param-name').innerHTML
+                    data.Value = row.querySelector('.param-value').innerHTML
+                    this.operationRows[parentRow.attr('data-index')].parameters.push(data)
+                }
+
+                this.cancelEditParam(event)
+            },
+            toggleRow: function(event) {
+                var target = event.target
+                if(Vac.isHasClass(target, 'icon-chevron-down')) {
+                    target.className = 'icon-chevron-right'
+                    $('.param-table tbody', $(target.parentNode.parentNode)).css({display: 'none'})
+                    $('.parameters .icon-edit', $(target.parentNode.parentNode)).css({display: 'none'})
+                } else {
+                    target.className = 'icon-chevron-down'
+                    $('.param-table tbody', $(target.parentNode.parentNode)).css({display: 'table-row-group'})
+                    $('.parameters .icon-edit', $(target.parentNode.parentNode)).css({display: 'inline-block'})
+                }
+                
+            },
+            updateRow: function(rows, index) {
+                // 使用splice方法，通过改变数组项的id更新绑定的数组，
+                var cache = rows[index]
+                cache.id = Symbol()
+                rows.splice(index, 1, cache)
+            }
         }
     })
     var parameterVue = new Vue({

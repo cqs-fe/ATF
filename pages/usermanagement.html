@@ -66,7 +66,7 @@
 											<div class="form-group">
 												<label class="col-xs-2 col-sm-offset-2 control-label" for="name">姓名</label>
 												<div class="col-xs-6 ">
-													<input type="text" id="name" required class="form-control" v-model="reallyname">
+													<input type="text" id="name" required class="form-control" v-model="reallyname" @blur="formBlur($event)">
 												</div>
 												<span class="icon-warning-sign" id="add-feedback-name" style="color: #b94a48;"></span>
 												<p class="tip text-danger col-xs-10 col-md-10 col-sm-offset-2 "></p>
@@ -74,7 +74,7 @@
 											<div class="form-group">
 												<label class="col-xs-2 col-sm-offset-2 control-label" for="password">密码</label>
 												<div class="col-xs-6 ">
-													<input type="password" id="password" required class="form-control" v-model="password">
+													<input type="password" id="password" required class="form-control" v-model="password" @blur="formBlur($event)">
 												</div>
 												<span class="icon-warning-sign" id="add-feedback-password" style="color: #b94a48;"></span>
 												<p class="tip text-danger col-xs-10 col-md-10 col-sm-offset-2"></p>
