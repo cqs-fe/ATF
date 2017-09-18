@@ -495,26 +495,46 @@ function search(){
 
 }
 // 点击搜索按钮结束
-
-$("#addModal").on("shown.bs.modal",function(e){
-    var addModalVue = new Vue({
-        el: '#addModal',
-        data: {
-            username: '',
-            reallyname: '',
-            password: '',
-            repassword: '',
-            role: '03',
-            dept: '',
-            tel: '',
-            phone: '',
-            email: '',
-            status: '01'
-        },
-        methods: {
-            formBlur: function() {
-                alert('he')
-            }
+// var addModalVue
+var addModalVue = new Vue({
+    el: '#addModal',
+    data: {
+        username: '',
+        reallyname: '',
+        password: '',
+        repassword: '',
+        role: '',
+        dept: '',
+        tel: '',
+        phone: '',
+        email: '',
+        status: '',
+        iconHide: true,
+        toolHide: true,
+        // 
+        formValidation: null
+    },
+    ready: function() {
+        this.formValidation = new Vac.formValidation()
+        console.log('he')
+        this.formValidation.setValidation('username', 'add-icon-username', 'add-tip-username', { required: {message: '用户名不能为空'} })
+    },
+    methods: {
+        addUser: function() {
+            console.log(this.formValidation.validAll())
         }
-    })
+    }
+})
+$("#addModal").on("hidden.bs.modal",function(e){
+    addModalVue.username = ''
+    addModalVue.reallyname = ''
+    addModalVue.password = ''
+    addModalVue.repassword = ''
+    addModalVue.role = ''
+    addModalVue.status = ''
+    addModalVue.dept = ''
+    addModalVue.phone = ''
+    addModalVue.email = ''
+    addModalVue.tel = ''
+    $('.valid').addClass('hide').removeClass('show')
 })
