@@ -4,6 +4,9 @@ body{
 .breadcrumb {
 	margin: 0 0 5px 0;
 }
+.wrapper {
+	// display: flex;
+}
 .top-form {
 	margin-bottom: 5px;
 	margin-left: 20px;
@@ -49,10 +52,10 @@ body{
 	margin-top: 10px;
 	text-align: center;
 	width: 800px;
-	font-size: 13px;
+	font-size: 12px;
 	th {
 		text-align: center;
-		font-size: 14px;
+		font-size: 13px;
 		font-weight: normal;
 	}
 	tbody {
@@ -71,7 +74,7 @@ body{
 		text-align: center;
 	}
 	.check {
-		width: 50px;
+		width: 40px;
 		span {
 			display: inline-block;
 			height: 20px;
@@ -87,9 +90,10 @@ body{
 	}
 	.index {
 		width: 40px;
+		text-align: center;
 	}
 	.operations {
-		width: 250px;
+		width: 220px;
 		i {
 			display: inline-block;
 			width: 20px;
@@ -102,12 +106,15 @@ body{
 		}
 	}
 	.parameters {
-		span {
+		&>span {
+			vertical-align: center;
 			display: inline-block;
 			width: 20px;
 			height: 20px;
 			font-size: 18px;
+			float: right;
 		}
+
 		.param-table {
 			td {
 				padding: 0;
@@ -125,7 +132,10 @@ body{
 				overflow-wrap: break-word;
 			}
 			.bottom-row {
-				display: none;
+				// display: none;
+			}
+			.param-name {
+				background-color: #ccc;
 			}
 		}
 	}

@@ -21,11 +21,13 @@ $(document).ready(function(){
 			el: '#editData',
 			data: {
 				dataType:4,
-				isShow: false,
+				isShow: true,
 				insertTitle:null,
 				insertType: null,
 				isInsertDivShow:true, //
 				selection: null,
+				autId: null,
+				transactId: null,
 				beforeOperationRows: [],//[{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
 				afterOperationRows: [],
 				parameterVue: null,
@@ -48,15 +50,52 @@ $(document).ready(function(){
 						},
 						data: {
 					        key:{
-					            name:"mname",
+					            name:"methodname",
 					        },
 					        simpleData: {
 					            enable: true,
-					            idKey: 'classid', 
+					            idKey: 'arcclassid', 
 					            pIdKey: 'parentid', 
 					            rootPId: 0
 					        }
 					    }
+					}
+				},
+				zTreeSettings2: {
+					uiAndElement: {
+						callback: {},
+						data: {
+							simpleData: {
+								enable: true,
+								idKey: 'id',
+								pIdKey: 'parentid',
+								rootPId: 0
+							}
+						},
+						check: {
+							enable: true,
+							hkStyle: "checkbox",
+							chkboxType: { "Y": "ps", "N": "ps" }
+						}
+					},
+					functions: {
+						callback: {},
+						data: {
+							key: {
+								name: "methodname",
+							},
+							simpleData: {
+								enable: true,
+								idKey: 'arcclassid',
+								pIdKey: 'parentid',
+								rootPId: 0
+							}
+						},
+						check: {
+							enable: true,
+							hkStyle: "checkbox",
+							chkboxType: { "Y": "ps", "N": "ps" }
+						}
 					}
 				},
 				uiOrFunctions: {
@@ -64,6 +103,7 @@ $(document).ready(function(){
 					type: 'ui',			// 保存最后点击的是UI还是函数集，据此来确定不同的后续执行行为
 					ui: '',				// 保存点击的ui
 					element: '',		// 保存点击的元素
+					classType: '',		// 保存点击的元素类型
 					function: '',		// 保存点击的函数集中的项
 					target: null,		// 保存点击编辑的target，据此可以获得parent tr
 					table: 1			// 保存当前操作的是前置操作还是后置操作
@@ -71,6 +111,8 @@ $(document).ready(function(){
 			},
 			created: function(){},
 			ready: function() {
+				this.autId = sessionStorage.getItem('autId')
+				this.transactId = sessionStorage.getItem('transactId')
 				var _this = this;
 				this.zTreeSettings.uiAndElement.callback.onClick = this.zTreeOnClick;
 				this.zTreeSettings.functions.callback.onClick = this.zTreeOnClick;
@@ -118,21 +160,31 @@ $(document).ready(function(){
 				show: function(selection){
 					this.selection = selection;
 					this.isShow = true;
+					this.beforeOperationRows = []
+					this.afterOperationRows = []
+					document.getElementById("input1").value = ''
+					document.getElementById("input4").value = ''
 				},
 				insert: function(type, title){
 					insertDivVue.show(type,title);
 				},
 				saveEditData: function(){
 					var inputValue = document.getElementById("input"+this.dataType).value;
-					console.log(inputValue);
+					// console.log(inputValue);
 					handsontable.setDataAtCell(this.selection.start.row,this.selection.start.col,inputValue);
 					handsontable.render();
 				},
 				addRow: function(type){
-					let s = {id: Symbol(), operation: {element:'', ui:''}, functions:[], parameters: []}
+					let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] }
 					type === 1 ? 
 						(this.beforeOperationRows.push(s)) : 
 						(this.afterOperationRows.push(s))
+				},
+				insertRow:function(index,type){
+					let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] }
+					type === 1 ?
+						(this.beforeOperationRows.splice(+index+1, 0, s)) :
+						(this.afterOperationRows.splice(+index+1, 0, s))
 				},
 				deleteRow: function(index, type) {
 					type === 1 
@@ -146,32 +198,68 @@ $(document).ready(function(){
 					this.uiOrFunctions.changed = false;
 					this.uiOrFunctions.table = type;
 					// 请求Ui和Elment
-					$.ajax({
-						url: address + 'elementlibraryController/showUIandElement',
-						data: 'transid=1',
-						type: 'post',
-						dataType: 'json',
-						success: (data, statusText) => {
-							if(data && data.success === true && (data.obj instanceof Array)) {
-								$.fn.zTree.init($('#ui-element-ul'),_this.zTreeSettings.uiAndElement, data.obj);
-							}
-						}
-					})
-					// 请求函数集
-					$.ajax({
-						url: address + 'autController/selectFunctionSet',
-						data: 'id=2',
-						type: 'post',
-						dataType: 'json',
-						success: (data, statusText) => {
-							if(data.ommethod) {
-								$.fn.zTree.init($('#functions-ul'),_this.zTreeSettings.functions, data.ommethod);
-							}	
-						}
-					})
+					this.getUIAndFunctions(1)
+					// $.ajax({
+					// 	url: address + 'elementlibraryController/showUIandElement',
+					// 	data: 'transid=1',
+					// 	type: 'post',
+					// 	dataType: 'json',
+					// 	success: (data, statusText) => {
+					// 		if(data && data.success === true && (data.obj instanceof Array)) {
+					// 			$.fn.zTree.init($('#ui-element-ul'),_this.zTreeSettings.uiAndElement, data.obj);
+					// 		}
+					// 	}
+					// })
+					// // 请求函数集
+					// $.ajax({
+					// 	url: address + 'autController/selectFunctionSet',
+					// 	data: 'id=2',
+					// 	type: 'post',
+					// 	dataType: 'json',
+					// 	success: (data, statusText) => {
+					// 		if(data.ommethod) {
+					// 			$.fn.zTree.init($('#functions-ul'),_this.zTreeSettings.functions, data.ommethod);
+					// 		}	
+					// 	}
+					// })
 
 					$('#ui-ele-modal').modal('show')
 				},
+				showUiAndElement2: function(event, type){
+					this.uiOrFunctions.table = type;
+					this.getUIAndFunctions(2)
+                	$('#ui-ele-modal2').modal('show')
+				},
+				getUIAndFunctions: function(type){
+	                var str = +type === 1 ? '' : 2
+	                var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
+	                $.ajax({
+	                    url: address + 'elementlibraryController/showUIandElementforScript',
+	                    data: 'transid=' + sessionStorage.getItem('transactId'),
+	                    type: 'post',
+	                    dataType: 'json',
+	                    success: (data, statusText) => {
+	                        if (data && data.success === true && (data.obj instanceof Array)) {
+	                            // $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+	                            var da = [{"id":1,"parentid":0,"name":"ui-chai"},{"id":2,"parentid":1,"name":"ele-chai", "classType": 'webedit'}]
+	                            $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, da);
+	                        }
+	                    }
+	                })
+	                // 请求函数集
+	                // var autId = $("#autSelect").val();
+	                $.ajax({
+	                    url: address + 'autController/selectFunctionSet',
+	                    data: { 'id': sessionStorage.getItem('autId') },
+	                    type: 'post',
+	                    dataType: 'json',
+	                    success: (data, statusText) => {
+	                        if (data.arcmethod) {
+	                            $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.arcmethod);
+	                        }
+	                    }
+	                })
+	            },
 				// 确定ztree的点击事件
 				zTreeOnClick: function(event, treeId, treeNode) {
 					if(treeNode.isParent){
@@ -186,43 +274,66 @@ $(document).ready(function(){
 						this.uiOrFunctions.type = 'ui'
 						this.uiOrFunctions.ui = treeNode.name
 						this.uiOrFunctions.element = parent.name;
+						this.uiOrFunctions.classType = treeNode.classType
 					} else {
 						this.uiOrFunctions.type = 'function'
 						// 获取节点的全部内容
-						this.uiOrFunctions.function = treeNode;
-						// console.log(treeNode)
+						this.uiOrFunctions.function = {...treeNode, mname: treeNode.methodname }
 					}
 					this.uiOrFunctions.changed = true;			// 已经在模态框中点击了树节点
 				},
 				// 编辑参数方法，出现模态框，进行函数的编辑
 				editParameter: function(event, type) {
+					// var _this = this
+					// // 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
+					// var parentRow = $(event.target).parents('tr')
+					// var index = parentRow.attr('data-index');
+					// var operationRows = type === 1 ? _this.beforeOperationRows : _this.afterOperationRows;
 					var _this = this
-					// 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
-					var parentRow = $(event.target).parents('tr')
-					var index = parentRow.attr('data-index');
-					var operationRows = type === 1 ? _this.beforeOperationRows : _this.afterOperationRows;
-
-					_this.parameterVue = new Vue({
-						el: '#edit-parameter-modal',
-						data: {
-							parameters: null
-						},
-						methods: {
-							okParameter: function(event) {
-								var inputs = $('#edit-parameter-modal input')
-								console.log(inputs)
-								for(var i=0;i<operationRows[index].parameters.length;i++) {
-									operationRows[index].parameters[i].Value = inputs[i].value
-								}
-								modalVue.updateRow(operationRows, index)
-								console.log(operationRows)
-								$('#edit-parameter-modal').modal('hide')
-							}
-						}
-					})
-					_this.parameterVue.parameters = operationRows[index].parameters;
-					$('#edit-parameter-modal').modal('show')
+	                // 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
+	                var target = event.target
+	                target.style.visibility = 'hidden'
+	                var parent = $(target).parent()[0]
+	                $('.param-table', parent).css({'display': 'table'})
+	                $('.param-show', parent).css({'display': 'none'})
+	                var paramV = $('.param-value', parent)[0]
+	                paramV.focus()
+	                var range = document.createRange()
+	                var sel = window.getSelection()
+	                range.setStart(paramV.childNodes[0], paramV.innerHTML.length)
+	                range.collapse(true)
+	                sel.removeAllRanges()
+	                sel.addRange(range)
 				},
+				cancelEditParam: function(event, type) {
+					var operationRows = type === 1 ? this.beforeOperationRows : this.afterOperationRows
+	                var table = $(event.target).parents('.param-table')
+	                var index = table.parents('tr').attr('data-index')
+	                $('.edit-param', table.parents('tr')).css({'visibility': 'visible'})
+	                // $('.param-show', table.parents('tr')).css({'display': 'block'})
+	                // $('.param-table', table.parents('tr')).css({'display': 'none'})
+	                // Vue.set(editDataVue.beforeOperationRows, index, operationRows[index])
+	                // console.log('dd')
+	               	this.updateRow(operationRows, index)
+	            },
+	            saveParam: function(event, type) {
+	                // var tbody = $(event.target).parent().parent().parent()
+	                var operationRows = type === 1 ? this.beforeOperationRows : this.afterOperationRows
+	                var tbody = $(event.target).parents('tbody')
+	                console.log(tbody)
+	                var trs = [...$('.param-row', tbody)]
+	                var parentRow = $(event.target).parents('table').parents('tr')
+	                operationRows[parentRow.attr('data-index')].parameters.length = 0
+	                for (let row of trs) {
+	                    // parameters:[{Name:'', Value: ''}]
+	                    console.log(row.querySelector('.param-value').innerHTML)
+	                    var data = {}
+	                    data.Name = row.querySelector('.param-name').innerHTML
+	                    data.Value = row.querySelector('.param-value').innerHTML
+	                    operationRows[parentRow.attr('data-index')].parameters.push(data)
+	                }
+	                this.cancelEditParam(event, type)
+	            },
 				// remove the row who is checked when 
 				removeRow: function(event, type) {
 					var parent = $(event.target).closest('.operation-wrapper')
@@ -258,6 +369,12 @@ $(document).ready(function(){
 					var a3 = this.beforeOperationRows.splice(3,1)
 					console.log(a3)
 					this.beforeOperationRows.splice(1, 0, a3[0])
+				},
+				updateRow: function(rows, index) {
+					// 使用splice方法，通过改变数组项的id更新绑定的数组，
+					var cache = rows[index]
+					cache.id = Symbol()
+					rows.splice(index, 1, cache)
 				}
 			},
 		});
@@ -312,7 +429,7 @@ $(document).ready(function(){
 							var mname = operationRows[index].functions[0].mname
 							var data = {
 								autid: 8,	
-								className: editDataVue.uiOrFunctions.ui,
+								className: editDataVue.uiOrFunctions.classType,
 								methodName: mname
 							}
 							return new Promise((resolve, reject) => {
@@ -333,16 +450,19 @@ $(document).ready(function(){
 						})
 					} else {
 						// 清空functions数组并新添加选中的公共方法
-						operationRows[index].functions = [];
-						operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
-						// 清空操作项
-						operationRows[index].operation = {
-							ui: '',
-							element: ''
-						};
-						// 更新参数
-						operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
-						_this.updateRow(operationRows, index)
+						// operationRows[index].functions = [];
+						// operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
+						 operationRows[index].functions = [editDataVue.uiOrFunctions.function]
+						 console.log(operationRows[index].functions)
+						 var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
+						 operationRows[index].parameters = []
+						 for(let param of parametersArray) {
+						 	operationRows[index].parameters.push({
+						 		Name: param.name,
+						 		Value: param.defaultvalue,
+						 		...param
+						 	})
+						 }
 					}
 					$('#ui-ele-modal').modal('hide')
 				},
@@ -354,6 +474,77 @@ $(document).ready(function(){
 				}
 			}
 		})
+		var modalVue2 = new Vue({
+			el: '#ui-ele-modal2',
+			data: {},
+			methods: {
+	            // 在模态框中点击了保存按钮
+	            editRowMultiple: function() {
+	                
+	                var uiTree = $.fn.zTree.getZTreeObj("ui-element-ul2");
+	                var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
+	                var uiNodes = uiTree.getCheckedNodes(true);
+	                var operationRows = editDataVue.uiOrFunctions.table === 1 ? editDataVue.beforeOperationRows : editDataVue.afterOperationRows;
+	                var functionNodes = functionTree.getCheckedNodes(true)
+	                console.log(functionNodes)
+	                for (var node of uiNodes) {
+	                	if (node.isParent) {
+	                		continue;
+	                	}
+	                    let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name: '', Value: ''}]}}
+	                    newRow.id = Symbol()
+	                    newRow.operation = {
+	                    	element: node.getParentNode().name,
+	                    	ui: node.name,
+	                    	classType: node.classType
+	                    }
+	                    newRow.functions = []
+	                    $.ajax({
+	                    	url: address + 'autController/selectMethod',
+	                    	data: { id: editDataVue.autId, classname: newRow.operation.classType },
+	                    	type: 'post',
+	                    	dataType: 'json',
+	                    	success: function(data, statusText) {
+	                    		for (var method of data.ommethod) {
+	                    			newRow.functions.push(method)
+	                    		}
+	                            // data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
+	                            // 把第一个function的参数取出来，放入
+	                            data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
+	                            operationRows.push(newRow)
+	                        }
+	                    })
+	                }
+	                for (var node of functionNodes) {
+	                	console.log(node)
+	                	let newRow = {}
+	                	newRow.id = Symbol()
+	                	newRow.operation = {
+	                		element: '',
+	                		ui: '',
+	                		classType: ''
+	                	}
+	                	newRow.functions = []
+	                	newRow.functions.push({ ...node, mname: node.methodname })
+
+	                	newRow.parameters = []
+	                	try{
+	                		var parameters = JSON.parse(node.parameterlist)
+	                		for(let param of parameters) {
+	                			newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+	                		}
+	                	} catch(e) {
+	                		newRow.parameters = []
+	                	}
+
+	                	operationRows.push(newRow)
+	                }
+	                $('#ui-ele-modal2').modal('hide')
+	            },
+	            updateRow: function(rows, index) {
+	            }
+	        }
+    	})
 		var insertDivVue = new Vue({
 			el: '#insertDiv',
 			data: {
@@ -968,7 +1159,7 @@ $(document).ready(function(){
 
 										})
 									}
-									document.querySelectorAll("table th")[0].style.display = "none";
+									document.querySelectorAll(".handsontable table th")[0].style.display = "none";
 								},
 								afterChange: function(changes,source){
 									if(changes){
@@ -1100,7 +1291,7 @@ $(document).ready(function(){
 
 										})
 									}
-									document.querySelectorAll("table th")[0].style.display = "none";
+									document.querySelectorAll(".handsontable table th")[0].style.display = "none";
 								},
 								afterChange: function(changes,source){
 									if(changes){
@@ -1482,19 +1673,11 @@ $(document).ready(function(){
 		function editCellData(key,selection){
 			var header = handsontable.getColHeader(selection.start.col);
 			var testcaseId = dataSource[selection.start.row].testcaseId;
-			$.ajax({
-				url: address + '',
-				type: 'post',
-				data: null,
-				dataType: 'json',
-				success: function(data,textStatus){
-					
-				}
-			});
 			editDataVue.show(selection);
 		}
 		// 编辑单元格数据
 		// 设置单元格数据，保证设置的数据不超过最大行，最大列
+
 		// parameter: [[row,col,value],[row,col,value]]
 		function setCellsData(arrayData){
 			var maxCol = handsontable.countCols() - 1;
