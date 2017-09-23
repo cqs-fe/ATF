@@ -2,11 +2,28 @@
     <div id="sidebar" class="nav-collapse ">
         <!-- sidebar menu start-->
         <ul class="sidebar-menu">
-            <li class="sub-menu">
+            <li :class="compareWithSessionStorageSidebarTag(itemIndex)===0?'open sub-menu':'sub-menu'" v-for="(itemIndex, item) in map">
+                <a :href="item.item_child_list.length===0?item.item_address:'javascript:;'">
+                    <i :class="item.item_icon"></i>
+                    <span v-on:click="clickEvent(itemIndex)" :id="'item'+itemIndex">{{item.item_name}}</span>
+                    <span :class="compareWithSessionStorageSidebarTag(itemIndex)===0?'open arrow':'arrow'" v-if="item.item_child_list.length>0"></span>
+                    </span>
+                </a>
+                <ul class="sub" v-if="item.item_child_list.length>0" :style="compareWithSessionStorageSidebarTag(itemIndex)===0?'display:block':'display:none'">
+                    <li class="sub-menu" v-for="(subItemIndex,subItem) in item.item_child_list">
+                        <a :href="subItem.item_child_address">
+                            <span v-on:click="clickEvent(itemIndex,subItemIndex)" :id="'subItem'+subItemIndex">
+                                {{subItem.item_child_name}}
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                
+            </li>
+            <!-- <li class="sub-menu">
                 <a href="testProject.html" class="">
                     <i class="icon-book"></i>
                     <span>测试项目</span>
-                    <!-- <span class="arrow"></span> -->
                 </a>
             </li>
             <li class="sub-menu">
@@ -93,8 +110,100 @@
                     <i class=" icon-male"></i>
                     <span>用户管理</span>
                 </a>
-            </li>
+            </li> -->
         </ul>
         <!-- sidebar menu end-->
     </div>
 </aside>
+
+<script src="../../lib/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../lib/vue.js"></script>
+
+<script>
+    var dropdown = function () {
+
+//    sidebar dropdown menu
+
+    jQuery('#sidebar .sub-menu > a').click(function () {
+        var last = jQuery('.sub-menu.open', $('#sidebar'));
+        last.removeClass("open");
+        jQuery('.arrow', last).removeClass("open");
+        jQuery('.sub', last).slideUp(200);
+        var sub = jQuery(this).next();
+        if (sub.is(":visible")) {
+            jQuery('.arrow', jQuery(this)).removeClass("open");
+            jQuery(this).parent().removeClass("open");
+            sub.slideUp(200);
+        } else {
+            jQuery('.arrow', jQuery(this)).addClass("open");
+            jQuery(this).parent().addClass("open");
+            sub.slideDown(200);
+        }
+        var o = ($(this).offset());
+        diff = 200 - o.top;
+        if(diff>0)
+            $("#sidebar").scrollTo("-="+Math.abs(diff),500);
+        else
+            $("#sidebar").scrollTo("+="+Math.abs(diff),500);
+    });
+}
+
+
+
+</script>
+<script>
+    var asidebarVue = new Vue({
+
+        el:'#sidebar',
+        data:{
+            map:null
+        },
+        methods:{
+
+            clickEvent: function (itemTag,subItemTag) {
+                alert('1');
+                sessionStorage.setItem("sidebarTag",itemTag);
+                sessionStorage.setItem("sidebarSubTag",subItemTag);
+                alert("2");
+                // let tmpStr;
+                // if(subItemTag===undefined){
+                //     tmpStr=sessionStorage.getItem("sidebarTag");
+                //     alert('clicked! Tag:' + tmpStr);
+                // }
+                // else{
+                //     tmpStr=sessionStorage.getItem("sidebarTag")+' ; '+sessionStorage.getItem("sidebarSubTag");
+                //     alert('clicked! Tag:' + tmpStr);
+                // }
+          
+            },
+
+            compareWithSessionStorageSidebarTag: function (itemNum){
+
+                let tmp = sessionStorage.getItem("sidebarTag");
+                tmp=parseInt(tmp);
+                if(itemNum===tmp){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }
+
+        },
+        ready: function(){
+            var _this = this;
+            $.ajax({
+                url:'/api/getasidebar',
+                type:'get',
+                success:function(data,statusText){
+                    _this.map = data.items_list;
+                    Vue.nextTick(dropdown);
+                },
+                error:function(data,statusText){
+
+                }
+
+            });
+        }
+    }) 
+</script>
