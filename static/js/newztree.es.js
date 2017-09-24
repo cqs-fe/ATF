@@ -368,13 +368,13 @@ $(document).ready(function() {
                 mainVue.scriptIsChanged = true
             },
             addRow: function() {
-                let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: ['sss'], parameters: [{Name:'value1', Value: ''}] }
+                let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: ['sss'], parameters: [{Name:'value1', Value: ''}] }
                 this.operationRows.push(s)
                 this.setChanged()
             },
             insertRow: function(index) {
                this.setChanged()
-                this.operationRows.splice(+index+1, 0, { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] })
+               this.operationRows.splice(+index+1, 0, { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] })
             },
             deleteRow: function(index) {
                 this.setChanged()
@@ -421,9 +421,13 @@ $(document).ready(function() {
                 var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
                 for (var tr of trs) {
                     // 
-                    var UI = tr.querySelector('.operation-element').value
-                    var webedit = tr.querySelector('.operation-ui').value
+                    var UI = tr.querySelector('.operation-ui').innerHTML
+                    var element = tr.querySelector('.operation-element').innerHTML
+                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
                     var method = tr.querySelector('.functions-select').value
+                    if (!UI && !method) {
+                        continue
+                    }
                     // 获取参数列表
                     var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
                     var paramValues = []
@@ -431,13 +435,14 @@ $(document).ready(function() {
                         paramValues.push(`"${paramTr.innerHTML}"`)
                     }
                     var parameterString = paramValues.toString()
-                    var string = `UI("${UI}").webedit("${webedit}").${method}(${paramValues})`
+                    var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
                     sendDataArray.push(string)
                 }
                 var sendData = sendDataArray.join(';')
                 console.log(sendData)
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
+                // return
                 $.ajax({
                     url: address + 'scripttemplateController/scripttemplateSave',
                     type: 'post',
@@ -505,9 +510,9 @@ $(document).ready(function() {
                     dataType: 'json',
                     success: (data, statusText) => {
                         if (data && data.success === true && (data.obj instanceof Array)) {
-                            // $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
-                            var da = [{"id":1,"parentid":0,"name":"ui-chai"},{"id":2,"parentid":1,"name":"ele-chai", "classType": 'webedit'}]
-                            $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, da);
+                            $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+                            // var da = [{"id":1,"parentid":0,"name":"ui-chai"},{"id":2,"parentid":1,"name":"ele-chai", "classType": 'webedit'}]
+                            // $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, da);
                         }
                     }
                 })
@@ -537,9 +542,9 @@ $(document).ready(function() {
                         return // 没有父元素，则返回
                     }
                     this.uiOrFunctions.type = 'ui'
-                    this.uiOrFunctions.ui = treeNode.name
-                    this.uiOrFunctions.element = parent.name;
-                    console.log(treeNode.classType)
+                    this.uiOrFunctions.element = treeNode.name
+                    this.uiOrFunctions.ui = parent.name;
+                    this.uiOrFunctions.classType = treeNode.classType
                 } else {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
@@ -570,25 +575,30 @@ $(document).ready(function() {
             },
             cancelEditParam: function(event) {
                 var table = $(event.target).parents('.param-table')
-                var index = table.parents('tr').attr('data-index')
-                $('.edit-param', table.parents('tr')).css({'visibility': 'show'})
-                this.updateRow(this.operationRows, index)
+                // var index = table.parents('tr').attr('data-index')
+                $('.edit-param', table.parents('tr')).css({'visibility': 'visible'})
+                table.css({display: 'none'})
+                $('.param-show', table.parents('tr')).css({'display': 'block'})
+                // this.updateRow(this.operationRows, index)
             },
             saveParam: function(event) {
                 // var tbody = $(event.target).parent().parent().parent()
-                var tbody = $(event.target).parents('tbody')
-                console.log(tbody)
+                var target = $(event.target)
+                var tbody = target.parents('.param-table')
                 var trs = [...$('.param-row', tbody)]
-                var parentRow = $(event.target).parents('table').parents('tr')
+                var parentRow = target.parents('table').parents('tr')
+                var valueShows = $('.param-value-show', parentRow)
+                console.log(valueShows)
                 this.operationRows[parentRow.attr('data-index')].parameters.length = 0
-                for (let row of trs) {
+                trs.forEach((row, index) => {
                     // parameters:[{Name:'', Value: ''}]
-                    console.log(row.querySelector('.param-value').innerHTML)
+                    // console.log(row.querySelector('.param-value').innerHTML)
                     var data = {}
                     data.Name = row.querySelector('.param-name').innerHTML
                     data.Value = row.querySelector('.param-value').innerHTML
+                    valueShows[index].innerHTML = data.Value
                     this.operationRows[parentRow.attr('data-index')].parameters.push(data)
-                }
+                })
                 this.cancelEditParam(event)
                 // 已经修改过
                 mainVue.scriptIsChanged = true
@@ -624,7 +634,8 @@ $(document).ready(function() {
                     // 点击了ui 与 元素后, 更新operation
                     operationRows[index].operation = {
                         ui: editDataVue.uiOrFunctions.ui,
-                        element: editDataVue.uiOrFunctions.element
+                        element: editDataVue.uiOrFunctions.element,
+                        classType: editDataVue.uiOrFunctions.classType
                     };
                     operationRows[index].functions = []
                     operationRows[index].parameters = []
@@ -635,7 +646,7 @@ $(document).ready(function() {
                     // 发送ajax请求函数的数据
                     var data = {
                         id: mainVue.autId, // autid
-                        classname: editDataVue.uiOrFunctions.ui, // classname
+                        classname: editDataVue.uiOrFunctions.classType, // classname
                     }
 
                     var getFunctions = new Promise((resolve, reject) => {
@@ -727,7 +738,6 @@ $(document).ready(function() {
                 var uiNodes = uiTree.getCheckedNodes(true);
 
                 var functionNodes = functionTree.getCheckedNodes(true)
-                console.log(functionNodes)
                 for (var node of uiNodes) {
                     if (node.isParent) {
                         continue;
@@ -735,8 +745,8 @@ $(document).ready(function() {
                     let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name: '', Value: ''}]}}
                     newRow.id = Symbol()
                     newRow.operation = {
-                        element: node.getParentNode().name,
-                        ui: node.name,
+                        ui: node.getParentNode().name,
+                        element: node.name,
                         classType: node.classType
                     }
                     newRow.functions = []

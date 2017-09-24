@@ -266,24 +266,24 @@
                     <td class="operations" @mousedown.stop="1">
                       <i class="icon-edit" @click="showUiAndElement($event)" style="color: #ff6c60;"></i>
                       <label>UI:</label>
-                      <span class="operation-element">{{row.operation.element}}</span>
+                      <span class="operation-ui">{{row.operation.ui}}</span>
                       <!-- <input type="text" class="operation-element" readonly="true" value={{row.operation.element}}> -->
                       <label>元素:</label>
-                      <span class="operation-element">{{row.operation.ui}}</span>
+                      <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
                       <!-- <input type="text" readonly="true" class="operation-ui" value={{row.operation.ui}}> -->
                     </td>
                     <td class="functions" @mousedown.stop="1">
                       <select class="functions-select form-control" style="width: 90%;">
                         <option v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
-                        <option>lajkj </option>
-                        <option>akjla</option>
+                        <!-- <option>lajkj </option>
+                        <option>akjla</option> -->
                       </select>
                     </td>
                     <td class="parameters" @mousedown.stop="1">
                       <span class="icon-edit edit-param" style="color: #ff6c60" @click="editParameter($event)"></span>
                       <div>
                         <div class="param-show">
-                          <span v-for="parameter in row.parameters">{{parameter.Name}}: <b>{{parameter.Value}}</b>;&nbsp;&nbsp;</span>
+                          <span v-for="parameter in row.parameters" class="param-name-show">{{parameter.Name}}: <b class="param-value-show">{{parameter.Value}}</b>;&nbsp;&nbsp;</span>
                           <!-- <span>参数1:<b> 1223 </b>;&nbsp;&nbsp;</span> -->
                         </div>
                         <table class="param-table table table-condensed table-bordered" style="display: none;">
@@ -295,7 +295,7 @@
                           </thead>
                               <!-- <tbody>
                             </tbody> -->
-                            <tbody>
+                            <tbody class="">
                               <tr v-for="parameter in row.parameters" class="param-row">
                                 <td class="param-name">{{parameter.Name}}</td>
                                 <td class="param-value" contenteditable="true">{{parameter.Value}}</td>

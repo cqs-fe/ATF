@@ -126,7 +126,7 @@
                   <th class="functions">方法</th>
                   <th class="parameters">参数</th>
                   <th class="add-row">
-                    <i class="icon-plus" @click="addRow(1)"></i>
+                    <i class="icon-plus" @click="addRow(1)" style="font-size: 18px"></i>
                   </th>
                 </tr>
               </thead>
@@ -140,10 +140,10 @@
                   <td class="operations" @mousedown.stop="1">
                     <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
                     <label>UI:</label>
-                    <span class="operation-element">{{row.operation.element}}</span>
+                    <span class="operation-ui">{{row.operation.ui}}</span>
                     <!-- <input type="text" class="operation-element" readonly="true" value={{row.operation.element}}> -->
                     <label>元素:</label>
-                    <span class="operation-element">{{row.operation.ui}}</span>
+                    <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
                   </td>
                   <td class="functions" @mousedown.stop="1">
                     <select class="functions-select form-control" style="width: 90%;">
@@ -156,7 +156,7 @@
                     <span class="icon-edit edit-param" style="color: #ff6c60" @click="editParameter($event, 1)"></span>
                     <div>
                       <div class="param-show">
-                        <span v-for="parameter in row.parameters">{{parameter.Name}}: <b>{{parameter.Value}}</b>;&nbsp;&nbsp;</span>
+                        <span v-for="parameter in row.parameters" class="param-name-show">{{parameter.Name}}: <b class="param-value-show">{{parameter.Value}}</b>;&nbsp;&nbsp;</span>
                         <!-- <span>参数1:<b> 1223 </b>;&nbsp;&nbsp;</span> -->
                       </div>
                       <table class="param-table table table-condensed table-bordered" style="display: none;">
@@ -186,8 +186,8 @@
                     </div>
                   </td>
                   <td class="delete-row" @mousedown.stop="1">
-                    <i class="icon-plus" @click="insertRow(index, 1)"></i>
-                    <i class="icon-minus" @click="deleteRow(index, 1)"></i>
+                    <i class="icon-plus" @click="insertRow(index, 1)" style="font-size: 18px"></i>
+                    <i class="icon-minus" @click="deleteRow(index, 1)" style="font-size: 18px"></i>
                   </td>
                 </tr>
               </tbody>
@@ -232,7 +232,7 @@
                   <th class="functions">方法</th>
                   <th class="parameters">参数</th>
                   <th class="add-row">
-                    <i class="icon-plus add-row" @click="addRow(2)"></i>
+                    <i class="icon-plus add-row" @click="addRow(2)" style="font-size: 18px"></i>
                   </th>
                 </tr>
               </thead>
@@ -246,10 +246,10 @@
                   <td class="operations">
                     <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
                     <label>UI:</label>
-                    <span class="operation-element">{{row.operation.element}}</span>
+                    <span class="operation-ui">{{row.operation.ui}}</span>
                     <!-- <input type="text" class="operation-element" readonly="true" value={{row.operation.element}}> -->
                     <label>元素:</label>
-                    <span class="operation-element">{{row.operation.ui}}</span>
+                    <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
                   </td>
                   <td class="functions">
                     <select class="functions-select form-control" style="width: 90%;">
@@ -292,8 +292,8 @@
                     </div>
                   </td>
                   <td class="delete-row">
-                    <i class="icon-plus add-row" @click="insertRow(index, 2)"></i>
-                    <i class="icon-minus delete-row" @click="deleteRow(index, 2)"></i>
+                    <i class="icon-plus add-row" style="font-size: 18px" @click="insertRow(index, 2)"></i>
+                    <i class="icon-minus delete-row" style="font-size: 18px" @click="deleteRow(index, 2)"></i>
                   </td>
                 </tr>
               </tbody>

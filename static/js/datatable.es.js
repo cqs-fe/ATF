@@ -31,6 +31,8 @@ $(document).ready(function(){
 				beforeOperationRows: [],//[{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
 				afterOperationRows: [],
 				parameterVue: null,
+				beforeStr: '',
+				afterStr: '',
 				// ztree的设置项
 				zTreeSettings: {
 					uiAndElement: {
@@ -175,13 +177,13 @@ $(document).ready(function(){
 					handsontable.render();
 				},
 				addRow: function(type){
-					let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] }
+					let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] }
 					type === 1 ? 
 						(this.beforeOperationRows.push(s)) : 
 						(this.afterOperationRows.push(s))
 				},
 				insertRow:function(index,type){
-					let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] }
+					let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [{Name:'value1', Value: ''}] }
 					type === 1 ?
 						(this.beforeOperationRows.splice(+index+1, 0, s)) :
 						(this.afterOperationRows.splice(+index+1, 0, s))
@@ -199,29 +201,6 @@ $(document).ready(function(){
 					this.uiOrFunctions.table = type;
 					// 请求Ui和Elment
 					this.getUIAndFunctions(1)
-					// $.ajax({
-					// 	url: address + 'elementlibraryController/showUIandElement',
-					// 	data: 'transid=1',
-					// 	type: 'post',
-					// 	dataType: 'json',
-					// 	success: (data, statusText) => {
-					// 		if(data && data.success === true && (data.obj instanceof Array)) {
-					// 			$.fn.zTree.init($('#ui-element-ul'),_this.zTreeSettings.uiAndElement, data.obj);
-					// 		}
-					// 	}
-					// })
-					// // 请求函数集
-					// $.ajax({
-					// 	url: address + 'autController/selectFunctionSet',
-					// 	data: 'id=2',
-					// 	type: 'post',
-					// 	dataType: 'json',
-					// 	success: (data, statusText) => {
-					// 		if(data.ommethod) {
-					// 			$.fn.zTree.init($('#functions-ul'),_this.zTreeSettings.functions, data.ommethod);
-					// 		}	
-					// 	}
-					// })
 
 					$('#ui-ele-modal').modal('show')
 				},
@@ -272,8 +251,8 @@ $(document).ready(function(){
 							return			// 没有父元素，则返回
 						}
 						this.uiOrFunctions.type = 'ui'
-						this.uiOrFunctions.ui = treeNode.name
-						this.uiOrFunctions.element = parent.name;
+						this.uiOrFunctions.element = treeNode.name
+						this.uiOrFunctions.ui = parent.name;
 						this.uiOrFunctions.classType = treeNode.classType
 					} else {
 						this.uiOrFunctions.type = 'function'
@@ -297,6 +276,7 @@ $(document).ready(function(){
 	                $('.param-table', parent).css({'display': 'table'})
 	                $('.param-show', parent).css({'display': 'none'})
 	                var paramV = $('.param-value', parent)[0]
+	                if(!paramV) {return}
 	                paramV.focus()
 	                var range = document.createRange()
 	                var sel = window.getSelection()
@@ -308,30 +288,30 @@ $(document).ready(function(){
 				cancelEditParam: function(event, type) {
 					var operationRows = type === 1 ? this.beforeOperationRows : this.afterOperationRows
 	                var table = $(event.target).parents('.param-table')
-	                var index = table.parents('tr').attr('data-index')
+	                // var index = table.parents('tr').attr('data-index')
 	                $('.edit-param', table.parents('tr')).css({'visibility': 'visible'})
-	                // $('.param-show', table.parents('tr')).css({'display': 'block'})
-	                // $('.param-table', table.parents('tr')).css({'display': 'none'})
-	                // Vue.set(editDataVue.beforeOperationRows, index, operationRows[index])
-	                // console.log('dd')
-	               	this.updateRow(operationRows, index)
+	                $('.param-show', table.parents('tr')).css({'display': 'block'})
+	                table.css({display: 'none'})
+	               	// this.updateRow(operationRows, index)
 	            },
 	            saveParam: function(event, type) {
 	                // var tbody = $(event.target).parent().parent().parent()
 	                var operationRows = type === 1 ? this.beforeOperationRows : this.afterOperationRows
-	                var tbody = $(event.target).parents('tbody')
-	                console.log(tbody)
+	                var target = $(event.target)
+	                var tbody = target.parents('.param-table')
 	                var trs = [...$('.param-row', tbody)]
-	                var parentRow = $(event.target).parents('table').parents('tr')
+	                var parentRow = target.parents('table').parents('tr')
+	                 var valueShows = $('.param-value-show', parentRow)
 	                operationRows[parentRow.attr('data-index')].parameters.length = 0
-	                for (let row of trs) {
+	                trs.forEach((row, index) => {
 	                    // parameters:[{Name:'', Value: ''}]
-	                    console.log(row.querySelector('.param-value').innerHTML)
+	                    // console.log(row.querySelector('.param-value').innerHTML)
 	                    var data = {}
 	                    data.Name = row.querySelector('.param-name').innerHTML
 	                    data.Value = row.querySelector('.param-value').innerHTML
+	                    valueShows[index].innerHTML = data.Value
 	                    operationRows[parentRow.attr('data-index')].parameters.push(data)
-	                }
+	                })
 	                this.cancelEditParam(event, type)
 	            },
 				// remove the row who is checked when 
@@ -365,10 +345,31 @@ $(document).ready(function(){
 						operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
 					}
 				},
-				saveOperation: function(event) {
-					var a3 = this.beforeOperationRows.splice(3,1)
-					console.log(a3)
-					this.beforeOperationRows.splice(1, 0, a3[0])
+				saveOperation: function(event, type) {
+					var str = type === 1 ? 'before' : 'after'
+					var sendDataArray = [];
+					var trs = Array.from(document.querySelectorAll('#sortable tr.'+str+'-operation-row'))
+					for (var tr of trs) {
+	                    // 
+	                    var UI = tr.querySelector('.operation-ui').innerHTML
+	                    var element = tr.querySelector('.operation-element').innerHTML
+	                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
+	                    var method = tr.querySelector('.functions-select').value
+	                    if (!UI && !method) {
+	                        continue
+	                    }
+	                    // 获取参数列表
+	                    var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
+	                    var paramValues = []
+	                    for (var paramTr of paramTrs) {
+	                        paramValues.push(`"${paramTr.innerHTML}"`)
+	                    }
+	                    var parameterString = paramValues.toString()
+	                    var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
+	                    sendDataArray.push(string)
+	                }
+	                var sendData = sendDataArray.join(';')
+                	console.log(sendData)
 				},
 				updateRow: function(rows, index) {
 					// 使用splice方法，通过改变数组项的id更新绑定的数组，
@@ -397,7 +398,8 @@ $(document).ready(function(){
 						// 点击了ui 与 元素后, 更新operation
 						operationRows[index].operation = {
 							ui: editDataVue.uiOrFunctions.ui,
-							element: editDataVue.uiOrFunctions.element
+							element: editDataVue.uiOrFunctions.element,
+							classType: editDataVue.uiOrFunctions.classType
 						};
 
 						// 使用splice方法，通过改变数组项的id更新绑定的数组，
@@ -405,8 +407,8 @@ $(document).ready(function(){
 
 						// 发送ajax请求函数的数据
 						var data = {
-							id: 8,		// autid
-							classname: editDataVue.uiOrFunctions.ui,		// classname
+							id: this.autId,		// autid
+							classname: editDataVue.uiOrFunctions.classType,		// classname
 						}
 
 						var getFunctions = new Promise((resolve, reject) => {
@@ -1674,6 +1676,8 @@ $(document).ready(function(){
 			var header = handsontable.getColHeader(selection.start.col);
 			var testcaseId = dataSource[selection.start.row].testcaseId;
 			editDataVue.show(selection);
+			editDataVue.beforeStr = ''
+			editDataVue.afterStr = ''
 		}
 		// 编辑单元格数据
 		// 设置单元格数据，保证设置的数据不超过最大行，最大列
