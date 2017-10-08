@@ -14,12 +14,13 @@ var checkFunction = {
 	setSelect (event){
 		var _this = this;
 		var target  = event.target;
-		if(!target.classList.contains('main-content')) {
+		if(target.classList.contains('handle')) {
 			return
 		}
-		var fileNodes = document.querySelectorAll(".case input.check-case");
-		var startX = event.offsetX;
-		var startY = event.offsetY;
+		let container = document.querySelector('.main-content')
+		var fileNodes = document.querySelectorAll(".case .check-case");
+		var startX = event.offsetX + Vac.getOffsetTo(event.target, container).offsetLeft;
+		var startY = event.offsetY + Vac.getOffsetTo(event.target, container).offsetTop;
 		var moveBeforeX = event.pageX;
 		var moveBeforeY = event.pageY;
 		var selDiv = document.createElement('div');
@@ -39,13 +40,13 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		target.addEventListener('mousemove', mouseMoveFunction, false);
-		target.addEventListener('mouseup', (event) => {
+		container.addEventListener('mousemove', mouseMoveFunction, false);
+		container.addEventListener('mouseup', (event) => {
 			this.isSelect = true;
 			if (selDiv){
 				document.querySelector('.main-content').removeChild(selDiv);
 			}
-			target.removeEventListener('mousemove', mouseMoveFunction, false);
+			container.removeEventListener('mousemove', mouseMoveFunction, false);
 			selDiv = null;
 			// var caseLib = document.querySelectorAll('.case-lib');
 			// for(var i=0; i<caseLib.length; i++){
@@ -119,7 +120,6 @@ var checkFunction = {
 	},
 	setSelectListener (){
 		document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
-		// 防止点击用例框时也进行选取
 	},
 	pushNoRepeat (array, value) {
 		array.includes(value)

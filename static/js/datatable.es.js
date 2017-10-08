@@ -21,7 +21,7 @@ $(document).ready(function(){
 			el: '#editData',
 			data: {
 				dataType:4,
-				isShow: false,
+				isShow: true,
 				insertTitle:null,
 				insertType: null,
 				isInsertDivShow:true, //
@@ -452,7 +452,7 @@ $(document).ready(function(){
             },
             ready: function() {
             	var _this = this;
-                var data = [
+              var data = [
 			        {
 			            "name": "测试点",
 			            "value": 1
@@ -491,7 +491,8 @@ $(document).ready(function(){
                         success: function(data, textStatus){
                             var treeData = [];
                             if(data.o.length == 0) {
-                            	Vac.alert('返回结果为空！')
+															Vac.alert('返回结果为空！')
+															return
                             }
                             data.o.forEach((value) => {
                             	// var testpointMapVal = ''+value.id;
@@ -592,7 +593,8 @@ $(document).ready(function(){
                             success: function(data,textStatus){
                             	 _this.checkedItems = []
                             	 if(data.o.length == 0) {
-                            	 	Vac.alert('未查询到相关测试点！')
+																 Vac.alert('未查询到相关测试点！')
+																 return
                             	 }
                             	 for (let value of data.o) {
                             	 	 var arrayItem = {};
@@ -640,7 +642,8 @@ $(document).ready(function(){
                         success: function(data, textStatus){
                             var treeData = [];
                             if(data.o.length == 0) {
-                            	Vac.alert('该测试点下未查询到相关数据！')
+															Vac.alert('该测试点下未查询到相关数据！')
+															return
                             }
                             data.o.forEach((value) => {
                                 var item = {};  //解构第一层
@@ -883,8 +886,8 @@ $(document).ready(function(){
 				// }
 				// 使用了mock
 				$.ajax({
-					url: address + "scripttemplateController/searchScripttemplateInf",
-					// url: '/api/handson',
+					// url: address + "scripttemplateController/searchScripttemplateInf",
+					url: '/api/handson',
 					data: data,
 					type:"post",
 					dataType: "json",
@@ -1012,7 +1015,137 @@ $(document).ready(function(){
 				}); //aj
 			}
 		}
+		// mock
+		(function(){
+			$.ajax({
+				// url: address + "scripttemplateController/searchScripttemplateInf",
+				url: '/api/handson',
+				data: data,
+				type:"post",
+				dataType: "json",
+				success: function(data){
+					var dataKey = [];
+					if(data.o.tableHead){
+						// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
+						dataKey = getDataKey(data.o.tableHead);
+						console.log("dataKey:"+dataKey);
+					}
+					var destrutData = [];
+					if(data.o.tableDatas){
+						if(data.o.tableDatas.length == 0) {
+							Vac.alert('该脚本下未查询到相关数据！')
+						}
+						data.o.tableDatas.forEach((value) => {
+						var data = {};
+						({
+							id: data.testcaseId,
+							expectresult:data.expectresult,
+							testpoint: data.testpoint,
+							teststep: data.teststep,
+							checkpoint: data.checkpoint,
+							testdesign: data.testdesign,
+							casecode: data.casecode
+						} = value);
+						dataKey.forEach((key) => {
+							data[key] = value[key];
+						});
+						console.log(data)
+						destrutData.push(data);
+					});
+					}
+					// console.log(destrutData);
+					dataSource = destrutData;
+					// console.log(dataSource)
+					rowSelectFlags.length = dataSource.length;
+					getTotalColHeaders(data.o.tableHead);
+					// console.log(totalColumnsHeaders);
+					var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
+					// handsontable 配置与生成
+					if(handsontable === null){
+						handsontable = new Handsontable(tableContainer,{
+							data: dataSource,
+							hiddenColumns: {
+									columns: [2,3],
+									indicators: false
+								},
+								// 配置列表头
+							columns: totalColumnsOptions,
+								colHeaders: colHeadersRenderer,
+								rowHeaders: true,
+								cells: function (row, col, prop) {
+									var cellProperties = {};
+									return cellProperties;
+							},
+							// 配置可以改变行的大小
+							manualRowResize: true,
+							multiSelect: true,
+							outsideClickDeselects: true,
+							// 配置contextMenu
+							contextMenu: contextMenuObj,
+							undo: true,
+							copyPaste: true,
+							allowInsertRow: false,
+							allowInsertColumn: false,
+							search: {
+								searchResultClass: ''
+							},
+							afterRender: function(){
+								if(searchResults && searchResults.length){
+									var trs = document.querySelectorAll('#handsontable tbody tr');
+									searchResults.forEach((value,index) => {
+										var tds = trs[value.row].getElementsByTagName('td');
+										if(index === currentResult){
+											tds[value.col].style.backgroundColor="#f00";
+										}else{
+											tds[value.col].style.backgroundColor="#0f0";
+										}
 
+									})
+								}
+								document.querySelectorAll("table th")[0].style.display = "none";
+							},
+							afterChange: function(changes,source){
+								if(changes){
+									// console.log(changes)
+									changes.forEach((value) => {
+										var data = {};
+										// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
+										data.testcaseId = dataSource[value[0]].testcaseId;
+										data.tbHead = value[1];
+										data.value = value[3];
+										var changedIndex;
+										changedData.forEach((value,index) => {
+											if(value.testcaseId == data.testcaseId && value.tbHead == data.tbHead){
+												changedIndex = index;
+											}
+										});
+										if(changedIndex !== undefined){
+											changedData.splice(changedIndex,1,data);
+										}else{
+											changedData.push(data);
+										}
+									});
+									console.log(changedData.toString());
+								}
+							}
+
+						});
+						// handsontable.updateSettings(contextMenuObj);
+					}
+					else{
+						handsontable.updateSettings({
+							 data: dataSource,
+							 columns: totalColumnsOptions,
+							 colHeaders: colHeadersRenderer
+						});
+						handsontable.render();
+					}
+				},
+				error: function(){
+					Vac.alert('获取数据失败，请确认该脚本中含有数据！')
+				}
+			}); //aj
+		})()
 		Handsontable.Dom.addEvent(tableContainer, 'mousedown', function (event) {
     		if (event.target.nodeName == 'INPUT' && event.target.className == 'header-checker') {
       			selectAllFlag = !event.target.checked;
@@ -1383,4 +1516,5 @@ $(document).ready(function(){
 	var header = document.querySelector('#editData>header')
 	Vac.startDrag(header, editDiv)
 	Vac.startDrag(document.querySelector('#searchBox>header'), document.querySelector('#searchBox'))
+	Vac.startDrag(document.querySelector('#insertDiv>header'), document.querySelector('#insertDiv'))
 });

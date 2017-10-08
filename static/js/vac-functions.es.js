@@ -191,7 +191,7 @@ Vac.pushNoRepeat = function(array, value){
 }
 
 /**
- * 判断两个Element是否具有包含关系，比如某个Element是另一个Element的父辈或祖辈
+ * 判断两个Element是否具有包含关系，某个Element是另一个Element的父辈或祖辈
  * @param { HTMLElement } ancestor
  * @param { HTMLElement } child
  * @returns { boolean } if the first element is an ancestor of the second element
@@ -206,7 +206,7 @@ Vac.pushNoRepeat = function(array, value){
     console.error(new Error("Error: the second parameter is not a HTMLElement"))
     return false
   }
-  let parentEle = child.parentElement
+  let parentEle = child
   while(parentEle){
     if(parentEle === ancestor) {
       return true
@@ -232,6 +232,9 @@ Vac.pushNoRepeat = function(array, value){
     if(window.getComputedStyle(ancestor).position == 'static') {
        console.error(new Error('请更改父辈元素的定位方式！'))
       return
+    }
+    if　(child === ancestor) {
+      return { offsetLeft:0, offsetTop:0 }
     }
     let offsetLeft = child.offsetLeft
     let offsetTop = child.offsetTop

@@ -1,7 +1,6 @@
  // 20170829 更改：
  // 暂时注释了html文件的copy-right 和 js 文件的请从场景管理进入的提示，稍后需要更改回来。
-  __inline('./scene-management/checked.js');
-  __inline('./scene-management/debug.js')
+  __inline('./scene-management/checked.js')
 var vBody = new Vue({
 	el: '#v-body',
 	data: {
@@ -82,7 +81,8 @@ var vBody = new Vue({
 		},
 		// 调试轮次
 		debugRound: null,
-		exeScope: null
+		exeScope: null,
+		isDebugInfoShow: false
 	},
 	ready:function(){
 		this.setVal();
@@ -101,6 +101,10 @@ var vBody = new Vue({
 			// _this.selectedPool = [];
 		});
 		// Vac.startDrag(document.querySelector('#editTrigger-header'), document.querySelector('#editTrigger'))
+		$('#sortable').sortable({
+			handle: '.handle'
+		})
+		$( "#sortable" ).disableSelection();
 	},
 	created: function(){
 		
@@ -156,8 +160,8 @@ var vBody = new Vue({
 		getCases: function(){
 			var _this = this;
 			$.ajax({
-				url: address + 'sceneController/selectByPrimaryKey',
-				// url: '/api/getcaseinscene',
+				// url: address + 'sceneController/selectByPrimaryKey',
+				url: '/api/getcaseinscene',
 				data: 'id='+_this.sceneid,
 				type: 'post',
 				dataType: 'json',
@@ -769,6 +773,59 @@ var vBody = new Vue({
 				Vac.alert('请选择要删除的数据！');
 			}
 		},
-		debug: debugFunction.debug
+		debug: function() {
+			if(this.exeScope == '' || this.debugRound == '') {
+				Vac.alert('请输入调试轮次与执行范围！')
+				return
+			}
+			// 若选择部分执行，则需要选中实例
+			if(this.exeScope == 2 && this.selectedCases.length == 0 && this.checkedFlowNodes.length == 0) {
+				Vac.alert('请选择要执行的部分实例！')
+				return
+			}
+			this.isDebugInfoShow = true;
+			// 删除选中的案例中节点案例,并生成要发送的数据
+			let sendData = []
+			let flowCases = [...this.flowNodeIds.keys()]
+			console.log(flowCases)
+			let set = new Set(this.selectedCases)
+			for(let caseId of set) {
+				if(flowCases.includes(caseId)) {
+					set.delete(caseId)
+				} else {
+					let obj = {
+						id: caseId,
+						idtype: 1
+					}
+					sendData.push(obj)
+				}
+			}
+			// 把选中的节点id也放到sendData中
+			for(let flowId of this.checkedFlowNodes) {
+				let obj = {
+					id: flowId,
+					idtype: 2
+				}
+				sendData.push(obj)
+			}
+			var _this = this
+			console.log(typeof _this.exeScope)
+			var data = {
+				debuground: _this.debugRound,
+				sceneId: _this.sceneid,
+				exeScope: _this.exeScope, 
+				selectState: +_this.exeScope === 1 ? "" : JSON.stringify(sendData)
+			}
+		
+			$.ajax({
+				url: address + 'executeController/scenedubug2',
+				data: data,
+				type: 'post',
+				dataType: 'json',
+				success: function(data, textStatux) {
+		
+				}
+			})
+		}
 	}
 });
