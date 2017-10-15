@@ -1,29 +1,286 @@
-var app = new Vue({
-    el: '#objectRepo',
-    data: {
-        autId: '',
-        transactId: '',
-        objId: '',
-        objName: '',
-        propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
-        classtypeList: []
-    },
+var template = `
+<section id="main-content" style="min-height: 0;">
+<section class="wrapper" style="padding: 0 15px;">
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="breadcrumb">
+                <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
+                <li><a href="transact.html"> 功能点</a></li>
+                <li class="active"> 对象库</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel panel-pad">
+                <!-- select start -->
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">所属被测系统</label>
+                        <div class="col-lg-2">
+                            <select class="form-control" id="autSelect">
+                            </select>
+                        </div>
+                        <label class="col-lg-2 control-label">所属功能点</label>
+                        <div class="col-lg-2">
+                            <select class="form-control" id="transactSelect" v-model="transid">
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <!-- select end -->
+            </section>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <section class="panel tree-panel">
+                <header class="panel-heading">
+                    对象库
+                </header>
+                <div id="menuContent" class="menuContent treeMenu">
+                    <div class="form-group panel-pad form-horizontal">
+                        <div class="col-lg-6">
+                            <input type="text" name="" placeholder="请输入对象名称" value="" class="form-control empty input-sm"  id="keyword">
+                        </div>
+                        <a class="btn btn-info btn-sm" id="search-btn">搜索</a>
+                    </div>
+                    <div class="form-group form-horizontal">
+                        <div class="col-lg-12">
+                            <a class="btn btn-info btn-sm" data-toggle="modal" href="#addObjModal">添加对象</a>
+                            <a class="btn btn-info btn-sm" @click="delObj">删除对象</a>
+                        </div>
+                    </div>
+                    <ul id="objectTree" class="ztree tree"></ul>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-8">
+            <section class="panel" id="">
+                <header class="panel-heading">
+                    {{objName}}
+                </header>
+                <div class="elementContent">
+                    <form class="form-horizontal panel-pad" id="objForm">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">名称</label>
+                            <div class="col-lg-3">
+                                <input type="text" name="name" class="form-control" value="{{objName}}">
+                            </div>
+                            <label for="" class="col-lg-2 control-label">类型</label>
+                            <div class="col-lg-3">
+                                <select class="form-control" id="classtypeSelect">
+                                    <option value="">--选择控件类型--</option>
+                                    <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <section class="panel small-panel">
+                        <header class="panel-heading">属性</header>
+                        <div class="property">
+                            主属性
+                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                        </div>
+                        <div class="property">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%"></th>
+                                        <th>属性名</th>
+                                        <th>属性值</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mainProp">
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="chk_list" />
+                                        </td>
+                                        <td contenteditable="true"></td>
+                                        <td contenteditable="true"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="property">
+                            附加属性
+                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                        </div>
+                        <div class="property">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%"></th>
+                                        <th>属性名</th>
+                                        <th>属性值</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="addiProp">
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="chk_list" />
+                                        </td>
+                                        <td contenteditable="true"></td>
+                                        <td contenteditable="true"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="property">
+                            辅助属性
+                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                        </div>
+                        <div class="property">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%"></th>
+                                        <th>属性名</th>
+                                        <th>属性值</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assisProp">
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="chk_list" />
+                                        </td>
+                                        <td contenteditable="true"></td>
+                                        <td contenteditable="true"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <a class="btn btn-info" @click="updateObj">保存</a>
+                </div>
+            </section>
+            <!-- successModal start -->
+            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">操作成功</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>操作成功！</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- successModal end -->
+            <!-- failModal start -->
+            <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">操作失败</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>操作失败！</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- failModal end -->
+            <!-- addObjModal start -->
+            <div class="modal fade" id="addObjModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">添加对象</h4>
+                        </div>
+                        <div class="modal-body">
+                            <!-- modal-body start -->
+                            <section class="panel">
+                                <form id="addUIForm" class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">名称</label>
+                                        <div class="col-lg-5">
+                                            <input type="text" class="form-control" name="objName" id="addObjName">
+                                        </div>
+                                </form>
+                            </section>
+                            <!-- modal-body end -->
+                            </div>
+                            <div class="modal-footer">
+                                <button data-dismiss="modal" class="btn btn-default">取消</button>
+                                <button data-dismiss="modal" class="btn btn-success" @click="addObj">添加</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- addUIModal end -->
+            </div>
+        </div>
+</section>
+</section>
+`;
+
+// var app = new Vue({
+var objectRepo = Vue.component('object-repo', {
+    el: '#main-content',
+    template: template,
+    data: function(){ 
+        return {
+            autId: '',
+            transactId: '',
+            objId: '',
+            objName: '',
+            propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+            classtypeList: []
+    }},
     ready: function() {
+        var _this = this
         this.getAutandTrans();
         $('#autSelect').change(function() {
-            app.transactSelect();
-            app.autId = $('#autSelect').val();
-            app.transactId = $('#transactSelect').val();
-            updateObjTree();
+            _this.transactSelect();
+            _this.autId = $('#autSelect').val();
+            _this.transactId = $('#transactSelect').val();
+            _this.updateObjTree();
         });
         $('#transactSelect').change(() => {
-            app.transactId = $('#transactSelect').val();
-            updateObjTree();
+            _this.transactId = $('#transactSelect').val();
+            _this.updateObjTree();
+        });
+        // 搜索节点
+        $('#search-btn').click(() => {
+            var treeObj = $.fn.zTree.getZTreeObj("objectTree");
+            var keywords = $("#keyword").val();
+            var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);
+            if (nodes.length > 0) {
+                treeObj.selectNode(nodes[0]);
+            }
         });
     },
     methods: {
+        //获取classtype
+        classtypeSelect: function() {
+            var _this = this
+            const val = $('#autSelect').val();
+            $.ajax({
+                url: address + 'autController/selectClass',
+                data: { 'id': val },
+                type: "POST",
+                success: function(data) {
+                    _this.classtypeList = data;
+                }
+            });
+        },
         //初始化获取测试系统和功能点
         getAutandTrans: function() {
+            var _this = this
             $.ajax({
                 url: address + "autController/selectAll",
                 type: "POST",
@@ -36,11 +293,11 @@ var app = new Vue({
                     }
 
                     $('#autSelect').html(str);
-                    app.autId = sessionStorage.getItem("autId");
-                    $("#autSelect").val(app.autId);
+                    _this.autId = sessionStorage.getItem("autId");
+                    $("#autSelect").val(_this.autId);
                     $.ajax({
                         url: address + 'transactController/showalltransact',
-                        data: { 'autlistselect': app.autId },
+                        data: { 'autlistselect': _this.autId },
                         type: "POST",
                         success: function(data) {
                             var transactList = data.o;
@@ -50,8 +307,8 @@ var app = new Vue({
                                 str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                             }
                             $('#transactSelect').html(str);
-                            app.transactId = sessionStorage.getItem("transactId");
-                            $("#transactSelect").val(app.transactId);
+                            _this.transactId = sessionStorage.getItem("transactId");
+                            $("#transactSelect").val(_this.transactId);
                             // 获取对象树
                             getObjTree();
 
@@ -59,10 +316,11 @@ var app = new Vue({
 
                     });
                     // 获取classtype
-                    app.classtypeSelect();
+                    _this.classtypeSelect();
                 }
             });
-        },
+        }, 
+        
         //获取测试系统
         autSelect: function() {
             $.ajax({
@@ -102,20 +360,9 @@ var app = new Vue({
 
             });
         },
-        //获取classtype
-        classtypeSelect: () => {
-            const val = $('#autSelect').val();
-            $.ajax({
-                url: address + 'autController/selectClass',
-                data: { 'id': val },
-                type: "POST",
-                success: function(data) {
-                    app.classtypeList = data;
-                }
-            });
-        },
+       
         //设置所属测试系统和所属功能点为上级页面选中的值
-         setval: function() {
+        setval: function() {
             this.autId=sessionStorage.getItem("autId");
             this.transactId=sessionStorage.getItem("transactId");
             $("#autSelect").val(this.autId);
@@ -195,12 +442,12 @@ var app = new Vue({
         //         url: address + 'object_repoController/queryObject_repo',
         //         type: 'post',
         //         data: {
-        //             "id": app.objId,
-        //             "transid": app.transactId,
+        //             "id": objectRepo.objId,
+        //             "transid": objectRepo.transactId,
         //         },
         //         success: function(data) {
         //             console.log(data);
-        //             app.objName = data.obj.name;
+        //             objectRepo.objName = data.obj.name;
         //             $('#objForm input[name="name"]').val(data.obj.name);
         //             $('#classtypeSelect').val(data.obj.classtype);
         //             //主属性
@@ -246,6 +493,7 @@ var app = new Vue({
         //     });
         // },
         updateObj: function() {
+            var _this = this
             var treeObj = $.fn.zTree.getZTreeObj("objectTree"),
                 nodes = treeObj.getSelectedNodes(true),
                 id = nodes[0].id,
@@ -309,7 +557,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        updateObjTree();
+                        _this.updateObjTree();
                         // updateProp();
                     } else {
                         $('#failModal').modal();
@@ -328,7 +576,118 @@ var app = new Vue({
             var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
             selectedTr.remove();
         },
+        // 页面初始化获取对象库
+        getObjTree: function(){
+            var transid = $("#transactSelect").val();
+            $.ajax({
+                url: address + 'object_repoController/queryObject_repoAll',
+                type: 'post',
+                data: { "transid": transid },
+                success: function(data) {
+                    if (data !== null) {
+                        $.fn.zTree.init($("#objectTree"), setting1, data.obj);
+                    }
+                }
+            });
+        },
+        //刷新对象库
+        updateObjTree: function(){
+            var _this = this
+            $.ajax({
+                url: address + 'object_repoController/queryObject_repoAll',
+                type: 'post',
+                data: { "transid": _this.transactId },
+                success: function(data) {
+                    if (data !== null) {
+                        $.fn.zTree.init($("#objectTree"), setting1, data.obj);
+                    }
+                }
+            });
+        },
+        //禁止拖动
+       zTreeBeforeDrag : function (treeId, treeNodes) {
+            return false;
+        },
+        //点击保存按钮后更新属性
+        updateProp: function() {
+            var _this = this
+            const treeObj = $.fn.zTree.getZTreeObj("objectTree"),
+                nodes = treeObj.getSelectedNodes(true),
+                id = nodes[0].id,
+                classtype = $('#classtypeSelect').val();
+            $.ajax({
+                url: address + 'object_repoController/queryObject_repo',
+                type: 'post',
+                data: {
+                    "id": id,
+                    "transid": _this.transactId,
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#classtypeSelect').val(data.obj.classtype);
+                    //主属性
+                    var mainList = data.obj[0].locatePropertyCollection.main_properties;
+                    if (mainList.length !== 0) {
+                        $('#mainProp').children().remove();
+                        for (var i = 0; i < mainList.length; i++) {
+                            var mainTr = $('<tr></tr>'),
+                                mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                mainNameTd = $('<td contenteditable="true"></td>'),
+                                mainValTd = $('<td contenteditable="true"></td>');
+                            mainNameTd.html(mainList[i].name);
+                            mainValTd.html(mainList[i].value);
+                            mainTr.append(mainCheckTd, mainNameTd, mainValTd);
+                            $('#mainProp').append(mainTr);
+                        }
+                    } else {
+                        $('#mainProp').children().remove();
+                        $('#mainProp').append(_this.propTr);
+                    }
 
+                    //附加属性
+                    var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
+                    if (addiList.length !== 0) {
+                        $('#addiProp').children().remove();
+                        for (var j = 0; j < addiList.length; j++) {
+                            var addiTr = $('<tr></tr>'),
+                                addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                addiNameTd = $('<td contenteditable="true"></td>'),
+                                addiValTd = $('<td contenteditable="true"></td>');
+                            addiNameTd.html(addiList[j].name);
+                            addiValTd.html(addiList[j].value);
+                            addiTr.append(addiCheckTd, addiNameTd, addiValTd);
+                            $('#addiProp').append(addiTr);
+                        }
+                    } else {
+                        $('#addiProp').children().remove();
+                        $('#addiProp').append(_this.propTr);
+                    }
+
+                    //辅助属性
+                    var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
+                    if (assiList.length !== 0) {
+                        $('#assisProp').children().remove();
+                        for (var k = 0; k < assiList.length; k++) {
+                            var assiTr = $('<tr></tr>'),
+                                assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                assiNameTd = $('<td contenteditable="true"></td>'),
+                                assiValTd = $('<td contenteditable="true"></td>');
+                            assiNameTd.html(assiList[k].name);
+                            assiValTd.html(assiList[k].value);
+                            assiTr.append(assiCheckTd, assiNameTd, assiValTd);
+                            $('#assisProp').append(assiTr);
+                        }
+                    } else {
+                        $('#assisProp').children().remove();
+                        $('#assisProp').append(_this.propTr);
+                    }
+
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        }
 
     },
 });
@@ -361,18 +720,20 @@ var setting1 = {
     //回调函数
     callback: {
         // 禁止拖拽
-        beforeDrag: zTreeBeforeDrag,
+        beforeDrag: function(treeId, treeNodes) {
+            return false;
+        },
         onClick: function(event, treeId, treeNode, clickFlag) {
             $('classtypeSelect').val('');
-            app.objName = treeNode.name;
+            objectRepo.objName = treeNode.name;
             $('#objForm input[name="name"]').val(treeNode.name);
-            app.objId = treeNode.id;
+            objectRepo.objId = treeNode.id;
             $.ajax({
                 url: address + 'object_repoController/queryObject_repo',
                 type: 'post',
                 data: {
-                    "id": app.objId,
-                    "transid": app.transactId,
+                    "id": objectRepo.objId,
+                    "transid": objectRepo.transactId,
                 },
                 success: function(data) {
                     // console.log(data);
@@ -395,7 +756,7 @@ var setting1 = {
                         }
                     } else {
                         $('#mainProp').children().remove();
-                        $('#mainProp').append(app.propTr);
+                        $('#mainProp').append(objectRepo.propTr);
                     }
 
                     //附加属性
@@ -414,7 +775,7 @@ var setting1 = {
                         }
                     } else {
                         $('#addiProp').children().remove();
-                        $('#addiProp').append(app.propTr);
+                        $('#addiProp').append(objectRepo.propTr);
                     }
 
                     //辅助属性
@@ -433,7 +794,7 @@ var setting1 = {
                         }
                     } else {
                         $('#assisProp').children().remove();
-                        $('#assisProp').append(app.propTr);
+                        $('#assisProp').append(objectRepo.propTr);
                     }
 
                 },
@@ -447,15 +808,15 @@ var setting1 = {
         //     $('#mainProp').children().remove();
         //     $('#addiProp').children().remove();
         //     $('#assisProp').children().remove();
-        //     app.objName = treeNode.name;
+        //     objectRepo.objName = treeNode.name;
         //     $('#objForm input[name="name"]').val(treeNode.name);
-        //     app.objId = treeNode.id;
+        //     objectRepo.objId = treeNode.id;
         //     $.ajax({
         //         url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repo',
         //         type: 'post',
         //         data: {
-        //             "id": app.objId,
-        //             "transid": app.transactId,
+        //             "id": objectRepo.objId,
+        //             "transid": objectRepo.transactId,
         //         },
         //         success: function(data) {
         //             console.log(data);
@@ -502,7 +863,6 @@ var setting1 = {
         //         }
         //     });
         // },
-
     }
 };
 // 页面初始化获取对象库
@@ -521,10 +881,11 @@ function getObjTree() {
 }
 //刷新对象库
 function updateObjTree() {
+    var _this = this
     $.ajax({
         url: address + 'object_repoController/queryObject_repoAll',
         type: 'post',
-        data: { "transid": app.transactId },
+        data: { "transid": _this.transactId },
         success: function(data) {
             if (data !== null) {
                 $.fn.zTree.init($("#objectTree"), setting1, data.obj);
@@ -550,6 +911,7 @@ $('#search-btn').click(() => {
 
 //点击保存按钮后更新属性
 function updateProp() {
+    var _this = this
     const treeObj = $.fn.zTree.getZTreeObj("objectTree"),
         nodes = treeObj.getSelectedNodes(true),
         id = nodes[0].id,
@@ -559,7 +921,7 @@ function updateProp() {
         type: 'post',
         data: {
             "id": id,
-            "transid": app.transactId,
+            "transid": _this.transactId,
         },
         success: function(data) {
             console.log(data);
@@ -580,7 +942,7 @@ function updateProp() {
                 }
             } else {
                 $('#mainProp').children().remove();
-                $('#mainProp').append(app.propTr);
+                $('#mainProp').append(_this.propTr);
             }
 
             //附加属性
@@ -599,7 +961,7 @@ function updateProp() {
                 }
             } else {
                 $('#addiProp').children().remove();
-                $('#addiProp').append(app.propTr);
+                $('#addiProp').append(_this.propTr);
             }
 
             //辅助属性
@@ -618,7 +980,7 @@ function updateProp() {
                 }
             } else {
                 $('#assisProp').children().remove();
-                $('#assisProp').append(app.propTr);
+                $('#assisProp').append(_this.propTr);
             }
 
         },

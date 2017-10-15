@@ -1,4 +1,4 @@
-var app = new Vue({
+var elementLibrary = new Vue({
     el: '#elementLibrary',
     data: {
         autId: '',
@@ -26,15 +26,16 @@ var app = new Vue({
     },
     ready: function() {
         this.getAutandTrans();
+        var _this = this
         $('#autSelect').change(function() {
-            app.transactSelect();
-            app.autId = $('#autSelect').val();
-            app.transactId = $('#transactSelect').val();
+            elementLibrary.transactSelect();
+            elementLibrary.autId = $('#autSelect').val();
+            elementLibrary.transactId = $('#transactSelect').val();
             getElementTree();
-            app.classtypeSelect();
+            elementLibrary.classtypeSelect();
         });
         $('#transactSelect').change(function() {
-            app.transactId = $('#transactSelect').val();
+            elementLibrary.transactId = $('#transactSelect').val();
             getElementTree();
         });
     },
@@ -54,11 +55,11 @@ var app = new Vue({
                     }
 
                     $('#autSelect').html(str);
-                    app.autId = sessionStorage.getItem("autId");
-                    $("#autSelect").val(app.autId);
+                    elementLibrary.autId = sessionStorage.getItem("autId");
+                    $("#autSelect").val(elementLibrary.autId);
                     $.ajax({
                         url: address + 'transactController/showalltransact',
-                        data: { 'autlistselect': app.autId },
+                        data: { 'autlistselect': elementLibrary.autId },
                         type: "POST",
                         success: function(data) {
                             var transactList = data.o;
@@ -68,13 +69,13 @@ var app = new Vue({
                                 str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                             }
                             $('#transactSelect').html(str);
-                            app.transactId = sessionStorage.getItem("transactId");
-                            $("#transactSelect").val(app.transactId);
+                            elementLibrary.transactId = sessionStorage.getItem("transactId");
+                            $("#transactSelect").val(elementLibrary.transactId);
                             // 获取ui和element
                             $.ajax({
                                 url: address + 'elementlibraryController/showUIandElement',
                                 type: 'post',
-                                data: { "transid": app.transactId },
+                                data: { "transid": elementLibrary.transactId },
                                 success: function(data) {
                                     if (data !== null) {
                                         $.fn.zTree.init($("#elementtree"), setting1, data.obj);
@@ -84,10 +85,10 @@ var app = new Vue({
                             // 获取classtype
                             $.ajax({
                                 url: address + 'autController/selectClass',
-                                data: { 'id': app.autId },
+                                data: { 'id': elementLibrary.autId },
                                 type: "POST",
                                 success: function(data) {
-                                    app.classtypeList = data;
+                                    elementLibrary.classtypeList = data;
                                 }
 
                             });
@@ -144,10 +145,10 @@ var app = new Vue({
             // var val = $('#autSelect').val();
             $.ajax({
                 url: address + 'autController/selectClass',
-                data: { 'id': app.autId },
+                data: { 'id': elementLibrary.autId },
                 type: "POST",
                 success: function(data) {
-                    app.classtypeList = data;
+                    elementLibrary.classtypeList = data;
                 }
 
             });
@@ -505,7 +506,7 @@ var setting1 = {
             if (treeNode.parentid == '0') { //选择的是UI
                 $(':input', '#UIForm').val('');
                 getUILinkedObjectTree();
-                app.UIName = treeNode.name;
+                elementLibrary.UIName = treeNode.name;
                 $('#UIForm input[name="UIName"]').val(treeNode.name);
                 $('#UI').css('display', 'block');
                 $('#ele').css('display', 'none');
@@ -513,8 +514,8 @@ var setting1 = {
                     url: address + 'elementlibraryController/queryUI',
                     type: 'post',
                     data: {
-                        "transid": app.transactId,
-                        "UIName": app.UIName
+                        "transid": elementLibrary.transactId,
+                        "UIName": elementLibrary.UIName
                     },
                     success: function(data) {
                         var relateObjectId = data.obj.relateIdentifyObjectId;
@@ -535,18 +536,18 @@ var setting1 = {
                 getEleLinkedObjectTree();
                 var treeObj = $.fn.zTree.getZTreeObj("elementtree");
                 var nodes = treeObj.getSelectedNodes();
-                app.eleName = treeNode.name;
+                elementLibrary.eleName = treeNode.name;
                 var parentNode = nodes[0].getParentNode();
-                app.UIName = parentNode.name;
+                elementLibrary.UIName = parentNode.name;
                 $('#UI').css('display', 'none');
                 $('#ele').css('display', 'block');
                 $.ajax({
                     url: address + 'elementlibraryController/queryElement',
                     type: 'post',
                     data: {
-                        "transid": app.transactId,
-                        "UIName": app.UIName,
-                        "ElementName": app.eleName
+                        "transid": elementLibrary.transactId,
+                        "UIName": elementLibrary.UIName,
+                        "ElementName": elementLibrary.eleName
                     },
                     success: function(data) {
                         console.log(data)
@@ -572,21 +573,21 @@ var setting1 = {
                         }
 
                         //主属性
-                        app.mainList = data.obj.identifyElement.locatePropertyCollection.main_properties;
-                        app.mainListLength = app.mainList.length;
+                        elementLibrary.mainList = data.obj.identifyElement.locatePropertyCollection.main_properties;
+                        elementLibrary.mainListLength = elementLibrary.mainList.length;
 
                         //附加属性
-                        app.addiList = data.obj.identifyElement.locatePropertyCollection.addtional_properties;
-                        app.addiListLength = app.addiList.length;
+                        elementLibrary.addiList = data.obj.identifyElement.locatePropertyCollection.addtional_properties;
+                        elementLibrary.addiListLength = elementLibrary.addiList.length;
 
                         //辅助属性
-                        app.assiList = data.obj.identifyElement.locatePropertyCollection.assistant_properties;
-                        app.assiListLength = app.assiList.length;
+                        elementLibrary.assiList = data.obj.identifyElement.locatePropertyCollection.assistant_properties;
+                        elementLibrary.assiListLength = elementLibrary.assiList.length;
 
                         //关联元素
-                        app.relateElementList = data.obj.relateElementList;
-                        if(app.relateElementList){
-                             app.relateElementListLength = app.relateElementList.length;     
+                        elementLibrary.relateElementList = data.obj.relateElementList;
+                        if(elementLibrary.relateElementList){
+                             elementLibrary.relateElementListLength = elementLibrary.relateElementList.length;     
                         }
                        
                         //关联元素属性
@@ -664,7 +665,7 @@ var setting2 = {
         // 禁止拖拽
         beforeDrag: zTreeBeforeDrag,
         onClick: function(event, treeId, treeNode, clickFlag) {
-            app.UILinked = treeNode.name;
+            elementLibrary.UILinked = treeNode.name;
         },
 
     }
@@ -734,7 +735,7 @@ var setting3 = {
         // 禁止拖拽
         beforeDrag: zTreeBeforeDrag,
         onClick: function(event, treeId, treeNode, clickFlag) {
-            app.eleParent = treeNode.name;
+            elementLibrary.eleParent = treeNode.name;
         },
     }
 };
@@ -796,7 +797,7 @@ var setting4 = {
         // 禁止拖拽
         beforeDrag: zTreeBeforeDrag,
         onClick: function(event, treeId, treeNode, clickFlag) {
-            app.eleLinked = treeNode.name;
+            elementLibrary.eleLinked = treeNode.name;
         },
 
     }

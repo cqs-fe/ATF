@@ -189,7 +189,9 @@ var vBody = new Vue({
 								_this.flowNodeIds.set(+data.obj.caseDtos[i].id, arr)
 							}
 						}
-
+						Vue.nextTick(() => {
+							$('#sortable').width($('#sortable').width()+20)
+						})
 					}
 				}
 			});
@@ -211,6 +213,14 @@ var vBody = new Vue({
 		setSelect: checkFunction.setSelect,
 		pushNoRepeat: checkFunction.pushNoRepeat,
 		setSelectListener: checkFunction.setSelectListener,
+		changeCase: function(id, type) {
+			let arr = type === 1 ? this.selectedCases : this.checkedFlowNodes;
+			let index = arr.findIndex((value) => { return value === id })
+			index !== -1 ? arr.splice(index, 1) : arr.push(id)
+			console.log("index:" + index)
+			console.log("id:" + id)
+			console.log(this.checkedFlowNodes)
+		},
 		// 点击checkbox
 		checkChanged: checkFunction.checkChanged,
 		// 全选case-lib中的case

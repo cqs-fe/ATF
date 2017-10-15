@@ -241,15 +241,15 @@
                     <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
                   </div>
                   <div class="case-wrapper">
-                    <div class="case" >
+                    <div class="case"  @click="changeCase(case_wrapper.id, 1)"  @mousedown.stop="1">
                       <div class="case-header">
                         <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
                         <p>{{case_wrapper.id}}</p>
                       </div>
-                      <div class="case-main">
+                      <!-- <div class="case-main">
                         <p>{{case_wrapper.casecode}}</p>
                         <span></span>
-                      </div>
+                      </div> -->
                       <footer class="case-footer">
                         <img :src="exeImgs[case_wrapper.state]">
                       </footer>
@@ -263,15 +263,15 @@
                     @change="checkallToggle($event)">
                   </div>
                   <div class="case-wrapper">
-                    <div class="case" v-for="item in case_wrapper.flowNodeDtos">
+                    <div class="case" v-for="item in case_wrapper.flowNodeDtos" @mousedown.stop="1"  @click="changeCase(item.id, 2)">
                       <div class="case-header">
                         <input type="checkbox" v-bind:value="item.id"
                         class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                        <p>{{item.id}}</p>
+                        <p>这是六个字哦</p>
                       </div>
-                      <div class="case-main">
+                      <!-- <div class="case-main">
                         <p>{{item.casecode}}</p>
-                      </div>
+                      </div> -->
                       <footer class="case-footer">
                         <img :src="exeImgs[item.state]">
                       </footer>
