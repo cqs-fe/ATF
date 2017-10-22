@@ -1,7 +1,6 @@
-var template = `
-<section id="main-content" style="min-height: 0;">
-<section class="wrapper" style="padding: 0 15px;">
-    <div class="row">
+var template_obj = `
+<div style="min-height: 0;">
+    <div class="row" v-if="breadShow">
         <div class="col-lg-12">
             <ul class="breadcrumb">
                 <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
@@ -10,7 +9,7 @@ var template = `
             </ul>
         </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="topSelect">
         <div class="col-lg-12">
             <section class="panel panel-pad">
                 <!-- select start -->
@@ -35,7 +34,7 @@ var template = `
     <div class="row">
         <div class="col-lg-4">
             <section class="panel tree-panel">
-                <header class="panel-heading">
+                <header class="panel-heading"  v-if="top-select">
                     对象库
                 </header>
                 <div id="menuContent" class="menuContent treeMenu">
@@ -57,15 +56,15 @@ var template = `
         </div>
         <div class="col-lg-8">
             <section class="panel" id="">
-                <header class="panel-heading">
-                    {{objName}}
-                </header>
                 <div class="elementContent">
+                     <header class="panel-heading">
+                        {{objName}}
+                     </header>
                     <form class="form-horizontal panel-pad" id="objForm">
                         <div class="form-group">
                             <label class="col-lg-2 control-label">名称</label>
                             <div class="col-lg-3">
-                                <input type="text" name="name" class="form-control" value="{{objName}}">
+                                <input type="text" name="name" class="form-control" :value="objName">
                             </div>
                             <label for="" class="col-lg-2 control-label">类型</label>
                             <div class="col-lg-3">
@@ -210,6 +209,7 @@ var template = `
                                         <div class="col-lg-5">
                                             <input type="text" class="form-control" name="objName" id="addObjName">
                                         </div>
+                                    </div>
                                 </form>
                             </section>
                             <!-- modal-body end -->
@@ -224,37 +224,235 @@ var template = `
                 <!-- addUIModal end -->
             </div>
         </div>
-</section>
-</section>
+
+</div>
 `;
 
 // var app = new Vue({
-var objectRepo = Vue.component('object-repo', {
-    el: '#main-content',
-    template: template,
+// var objectRepo = Vue.component('object-repo', {
+var objectRepo =  Vue.extend({
+    // el: '#main-content',
+    name: 'object-repo',
+    template: template_obj,
+    props: {
+        'breadShow': {
+            type: Boolean,
+            default: true
+        }, 
+        'topSelect': {
+            type: Boolean,
+            default: true
+        },
+        componentMode: false,
+        transid: {
+            default: 79
+        }
+    },
     data: function(){ 
+        var _this = this;
         return {
             autId: '',
             transactId: '',
             objId: '',
             objName: '',
             propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
-            classtypeList: []
-    }},
+            classtypeList: [],
+            /*objtree start*/
+            setting1: {
+                view: {
+                    addHoverDom: false,
+                    removeHoverDom: false,
+                    selectedMulti: false
+                },
+                check: {
+                    enable: false,
+                    chkStyle: "checkbox",
+                    chkboxType: { "Y": "s", "N": "ps" }
+                },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: 'id', //id编号命名
+                        pIdKey: 'parentid', //父id编号命名
+                        rootPId: 0
+                    }
+                },
+                edit: {
+                    enable: true,
+                    showRemoveBtn: false,
+                    showRenameBtn: false
+                },
+                //回调函数
+                callback: {
+                    // 禁止拖拽
+                    beforeDrag: _this.zTreeBeforeDrag,
+                    onClick: function(event, treeId, treeNode, clickFlag) {
+                        console.log('kkkk')
+                        $('classtypeSelect').val('');
+                        _this.objName = treeNode.name;
+                        $('#objForm input[name="name"]').val(treeNode.name);
+                        _this.objId = treeNode.id;
+                        var transid = !_this.componentMode ? _this.transactId : _this.transid;
+                        var data = {
+                            transid: transid,
+                            id: _this.objId
+                        }
+                        $.ajax({
+                            url: address + 'object_repoController/queryObject_repo',
+                            type: 'post',
+                            data: data,
+                            success: function(data) {
+                                // console.log(data);
+                                var classtype=data.obj[0].classtype;
+                                // console.log(classtype)
+                                $('#classtypeSelect').val(classtype);
+                                //主属性
+                                var mainList = data.obj[0].locatePropertyCollection.main_properties;
+                                if (mainList.length !== 0) {
+                                    $('#mainProp').children().remove();
+                                    for (var i = 0; i < mainList.length; i++) {
+                                        var mainTr = $('<tr></tr>'),
+                                            mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                            mainNameTd = $('<td contenteditable="true"></td>'),
+                                            mainValTd = $('<td contenteditable="true"></td>');
+                                        mainNameTd.html(mainList[i].name);
+                                        mainValTd.html(mainList[i].value);
+                                        mainTr.append(mainCheckTd, mainNameTd, mainValTd);
+                                        $('#mainProp').append(mainTr);
+                                    }
+                                } else {
+                                    $('#mainProp').children().remove();
+                                    $('#mainProp').append(_this.propTr);
+                                }
+
+                                //附加属性
+                                var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
+                                if (addiList.length !== 0) {
+                                    $('#addiProp').children().remove();
+                                    for (var j = 0; j < addiList.length; j++) {
+                                        var addiTr = $('<tr></tr>'),
+                                            addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                            addiNameTd = $('<td contenteditable="true"></td>'),
+                                            addiValTd = $('<td contenteditable="true"></td>');
+                                        addiNameTd.html(addiList[j].name);
+                                        addiValTd.html(addiList[j].value);
+                                        addiTr.append(addiCheckTd, addiNameTd, addiValTd);
+                                        $('#addiProp').append(addiTr);
+                                    }
+                                } else {
+                                    $('#addiProp').children().remove();
+                                    $('#addiProp').append(app.propTr);
+                                }
+
+                                //辅助属性
+                                var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
+                                if (assiList.length !== 0) {
+                                    $('#assisProp').children().remove();
+                                    for (var k = 0; k < assiList.length; k++) {
+                                        var assiTr = $('<tr></tr>'),
+                                            assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                            assiNameTd = $('<td contenteditable="true"></td>'),
+                                            assiValTd = $('<td contenteditable="true"></td>');
+                                        assiNameTd.html(assiList[k].name);
+                                        assiValTd.html(assiList[k].value);
+                                        assiTr.append(assiCheckTd, assiNameTd, assiValTd);
+                                        $('#assisProp').append(assiTr);
+                                    }
+                                } else {
+                                    $('#assisProp').children().remove();
+                                    $('#assisProp').append(_this.propTr);
+                                }
+
+                            },
+                            error: function() {
+                                $('#failModal').modal();
+                            }
+                        });
+                    },
+                    // onCheck: function(event, treeId, treeNode) {
+                    //     $('classtypeSelect').val('');
+                    //     $('#mainProp').children().remove();
+                    //     $('#addiProp').children().remove();
+                    //     $('#assisProp').children().remove();
+                    //     app.objName = treeNode.name;
+                    //     $('#objForm input[name="name"]').val(treeNode.name);
+                    //     app.objId = treeNode.id;
+                    //     $.ajax({
+                    //         url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repo',
+                    //         type: 'post',
+                    //         data: {
+                    //             "id": app.objId,
+                    //             "transid": app.transactId,
+                    //         },
+                    //         success: function(data) {
+                    //             console.log(data);
+                    //             $('#classtypeSelect').val(data.obj.classtype);
+                    //             //主属性
+                    //             var mainList = data.obj[0].locatePropertyCollection.main_properties;
+                    //             for (var i = 0; i < mainList.length; i++) {
+                    //                 var mainTr = $('<tr></tr>'),
+                    //                     mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                    //                     mainNameTd = $('<td contenteditable="true"></td>'),
+                    //                     mainValTd = $('<td contenteditable="true"></td>');
+                    //                 mainNameTd.html(mainList[i].name);
+                    //                 mainValTd.html(mainList[i].value);
+                    //                 mainTr.append(mainCheckTd, mainNameTd, mainValTd);
+                    //                 $('#mainProp').append(mainTr);
+                    //             }
+                    //             //附加属性
+                    //             var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
+                    //             for (var j = 0; j < addiList.length; j++) {
+                    //                 var addiTr = $('<tr></tr>'),
+                    //                     addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                    //                     addiNameTd = $('<td contenteditable="true"></td>'),
+                    //                     addiValTd = $('<td contenteditable="true"></td>');
+                    //                 addiNameTd.html(addiList[j].name);
+                    //                 addiValTd.html(addiList[j].value);
+                    //                 addiTr.append(addiCheckTd, addiNameTd, addiValTd);
+                    //                 $('#addiProp').append(addiTr);
+                    //             }
+                    //             //辅助属性
+                    //             var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
+                    //             for (var k = 0; k < assiList.length; k++) {
+                    //                 var assiTr = $('<tr></tr>'),
+                    //                     assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                    //                     assiNameTd = $('<td contenteditable="true"></td>'),
+                    //                     assiValTd = $('<td contenteditable="true"></td>');
+                    //                 assiNameTd.html(assiList[k].name);
+                    //                 assiValTd.html(assiList[k].value);
+                    //                 assiTr.append(assiCheckTd, assiNameTd, assiValTd);
+                    //                 $('#assisProp').append(assiTr);
+                    //             }
+                    //         },
+                    //         error: function() {
+                    //             $('#failModal').modal();
+                    //         }
+                    //     });
+                    // },
+
+                }
+            },
+        }},
     ready: function() {
-        var _this = this
-        this.getAutandTrans();
-        $('#autSelect').change(function() {
-            _this.transactSelect();
-            _this.autId = $('#autSelect').val();
-            _this.transactId = $('#transactSelect').val();
-            _this.updateObjTree();
-        });
-        $('#transactSelect').change(() => {
-            _this.transactId = $('#transactSelect').val();
-            _this.updateObjTree();
-        });
-        // 搜索节点
+        var _this = this;
+        if(!this.componentMode){
+            this.getAutandTrans();
+            $('#autSelect').change(function() {
+                _this.transactSelect();
+                _this.autId = $('#autSelect').val();
+                _this.transactId = $('#transactSelect').val();
+                _this.updateObjTree();
+            });
+            $('#transactSelect').change(() => {
+                _this.transactId = $('#transactSelect').val();
+                _this.updateObjTree();
+            });
+            // 搜索节点
+            
+        }
+        if(this.componentMode) {
+            this.getObjTree();
+        }
         $('#search-btn').click(() => {
             var treeObj = $.fn.zTree.getZTreeObj("objectTree");
             var keywords = $("#keyword").val();
@@ -263,6 +461,8 @@ var objectRepo = Vue.component('object-repo', {
                 treeObj.selectNode(nodes[0]);
             }
         });
+        // 如果引入的是组件
+        
     },
     methods: {
         //获取classtype
@@ -288,7 +488,6 @@ var objectRepo = Vue.component('object-repo', {
                     var autList = data.obj;
                     var str = "";
                     for (var i = 0; i < autList.length; i++) {
-
                         str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
                     }
 
@@ -310,7 +509,7 @@ var objectRepo = Vue.component('object-repo', {
                             _this.transactId = sessionStorage.getItem("transactId");
                             $("#transactSelect").val(_this.transactId);
                             // 获取对象树
-                            getObjTree();
+                            _this.getObjTree();
 
                         }
 
@@ -369,8 +568,10 @@ var objectRepo = Vue.component('object-repo', {
             $("#transactSelect").val(this.transactId);
         },
         addObj: function() {
+            var _this = this;
             var objName = $("#addObjName").val(),
                 treeObj = $.fn.zTree.getZTreeObj("objectTree");
+            var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             var parentid=0,nodes;
             if(treeObj){
                 nodes = treeObj.getSelectedNodes(true);
@@ -385,7 +586,7 @@ var objectRepo = Vue.component('object-repo', {
                 type: 'post',
                 data: {
                     "name": objName,
-                    "transid": this.transactId,
+                    "transid": transid,
                     "classtype": '',
                     "compositeType": '',
                     "parentElementId": parentid
@@ -394,7 +595,7 @@ var objectRepo = Vue.component('object-repo', {
                     // console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getObjTree();
+                        _this.getObjTree();
                     } else {
                         $('#failModal').modal();
                     }
@@ -405,9 +606,11 @@ var objectRepo = Vue.component('object-repo', {
             });
         },
         delObj: function() {
+            var _this = this;
             var treeObj = $.fn.zTree.getZTreeObj("objectTree");
             var nodes = treeObj.getSelectedNodes(true);
             var ids;
+            var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             for (var i = 0; i < nodes.length; i++) {
                 ids = nodes[i].id;
             }
@@ -417,13 +620,13 @@ var objectRepo = Vue.component('object-repo', {
                 type: 'post',
                 data: {
                     "id": ids,
-                    "transid": this.transactId,
+                    "transid": transid,
                 },
                 success: function(data) {
                     console.info(data);
                     if (data.success) {
                         $('#successModal').modal();
-                        getObjTree();
+                        _this.getObjTree();
                     } else {
                         $('#failModal').modal();
                     }
@@ -433,65 +636,6 @@ var objectRepo = Vue.component('object-repo', {
                 }
             });
         },
-        // queryObj: function() {
-        //     $(':input', '#objForm').val(' ');
-        //     // $('#mainProp').children().remove();
-        //     // $('#addiProp').children().remove();
-        //     // $('#assisProp').children().remove();
-        //     $.ajax({
-        //         url: address + 'object_repoController/queryObject_repo',
-        //         type: 'post',
-        //         data: {
-        //             "id": objectRepo.objId,
-        //             "transid": objectRepo.transactId,
-        //         },
-        //         success: function(data) {
-        //             console.log(data);
-        //             objectRepo.objName = data.obj.name;
-        //             $('#objForm input[name="name"]').val(data.obj.name);
-        //             $('#classtypeSelect').val(data.obj.classtype);
-        //             //主属性
-        //             var mainList = data.obj[0].locatePropertyCollection.main_properties;
-        //             for (var i = 0; i < mainList.length; i++) {
-        //                 var mainTr = $('<tr></tr>'),
-        //                     mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-        //                     mainNameTd = $('<td contenteditable="true"></td>'),
-        //                     mainValTd = $('<td contenteditable="true"></td>');
-        //                 mainNameTd.html(mainList[i].name);
-        //                 mainValTd.html(mainList[i].value);
-        //                 mainTr.append(mainCheckTd, mainNameTd, mainValTd);
-        //                 $('#mainProp').append(mainTr);
-        //             }
-        //             //附加属性
-        //             var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
-        //             for (var j = 0; j < addiList.length; j++) {
-        //                 var addiTr = $('<tr></tr>'),
-        //                     addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-        //                     addiNameTd = $('<td contenteditable="true"></td>'),
-        //                     addiValTd = $('<td contenteditable="true"></td>');
-        //                 addiNameTd.html(addiList[j].name);
-        //                 addiValTd.html(addiList[j].value);
-        //                 addiTr.append(addiCheckTd, addiNameTd, addiValTd);
-        //                 $('#addiProp').append(addiTr);
-        //             }
-        //             //辅助属性
-        //             var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
-        //             for (var k = 0; k < assiList.length; k++) {
-        //                 var assiTr = $('<tr></tr>'),
-        //                     assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-        //                     assiNameTd = $('<td contenteditable="true"></td>'),
-        //                     assiValTd = $('<td contenteditable="true"></td>');
-        //                 assiNameTd.html(assiList[k].name);
-        //                 assiValTd.html(assiList[k].value);
-        //                 assiTr.append(assiCheckTd, assiNameTd, assiValTd);
-        //                 $('#assisProp').append(assiTr);
-        //             }
-        //         },
-        //         error: function() {
-        //             $('#failModal').modal();
-        //         }
-        //     });
-        // },
         updateObj: function() {
             var _this = this
             var treeObj = $.fn.zTree.getZTreeObj("objectTree"),
@@ -527,12 +671,13 @@ var objectRepo = Vue.component('object-repo', {
                 assisName.push(assisTd.eq(1).html()); //辅助属性名称
                 assisVal.push(assisTd.eq(2).html()); //辅助属性值
             });
+            var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
                 url: address + 'object_repoController/updateObejct_repo',
                 type: 'post',
                 data: {
                     "id": id,
-                    "transid": this.transactId,
+                    "transid": transid,
                     "name": name,
                     "parentElementId": parentElementId,
                     "classtype": classtype,
@@ -578,14 +723,15 @@ var objectRepo = Vue.component('object-repo', {
         },
         // 页面初始化获取对象库
         getObjTree: function(){
-            var transid = $("#transactSelect").val();
+            var _this = this
+            var transid = !this.componentMode ? this.transactId : this.transid;
             $.ajax({
                 url: address + 'object_repoController/queryObject_repoAll',
                 type: 'post',
                 data: { "transid": transid },
                 success: function(data) {
                     if (data !== null) {
-                        $.fn.zTree.init($("#objectTree"), setting1, data.obj);
+                        $.fn.zTree.init($("#objectTree"), _this.setting1, data.obj);
                     }
                 }
             });
@@ -593,13 +739,14 @@ var objectRepo = Vue.component('object-repo', {
         //刷新对象库
         updateObjTree: function(){
             var _this = this
+            var transid = !this.componentMode ? this.transactId : this.transid;
             $.ajax({
                 url: address + 'object_repoController/queryObject_repoAll',
                 type: 'post',
-                data: { "transid": _this.transactId },
+                data: { "transid": transid },
                 success: function(data) {
                     if (data !== null) {
-                        $.fn.zTree.init($("#objectTree"), setting1, data.obj);
+                        $.fn.zTree.init($("#objectTree"), _this.setting1, data.obj);
                     }
                 }
             });
@@ -611,6 +758,7 @@ var objectRepo = Vue.component('object-repo', {
         //点击保存按钮后更新属性
         updateProp: function() {
             var _this = this
+            var transid = !this.componentMode ? this.transactId : this.transid;
             const treeObj = $.fn.zTree.getZTreeObj("objectTree"),
                 nodes = treeObj.getSelectedNodes(true),
                 id = nodes[0].id,
@@ -620,7 +768,7 @@ var objectRepo = Vue.component('object-repo', {
                 type: 'post',
                 data: {
                     "id": id,
-                    "transid": _this.transactId,
+                    "transid":transid
                 },
                 success: function(data) {
                     console.log(data);
@@ -691,301 +839,4 @@ var objectRepo = Vue.component('object-repo', {
 
     },
 });
-
-/*objtree start*/
-var setting1 = {
-    view: {
-        addHoverDom: false,
-        removeHoverDom: false,
-        selectedMulti: false
-    },
-    check: {
-        enable: false,
-        chkStyle: "checkbox",
-        chkboxType: { "Y": "s", "N": "ps" }
-    },
-    data: {
-        simpleData: {
-            enable: true,
-            idKey: 'id', //id编号命名
-            pIdKey: 'parentid', //父id编号命名
-            rootPId: 0
-        }
-    },
-    edit: {
-        enable: true,
-        showRemoveBtn: false,
-        showRenameBtn: false
-    },
-    //回调函数
-    callback: {
-        // 禁止拖拽
-        beforeDrag: function(treeId, treeNodes) {
-            return false;
-        },
-        onClick: function(event, treeId, treeNode, clickFlag) {
-            $('classtypeSelect').val('');
-            objectRepo.objName = treeNode.name;
-            $('#objForm input[name="name"]').val(treeNode.name);
-            objectRepo.objId = treeNode.id;
-            $.ajax({
-                url: address + 'object_repoController/queryObject_repo',
-                type: 'post',
-                data: {
-                    "id": objectRepo.objId,
-                    "transid": objectRepo.transactId,
-                },
-                success: function(data) {
-                    // console.log(data);
-                    var classtype=data.obj[0].classtype;
-                    // console.log(classtype)
-                    $('#classtypeSelect').val(classtype);
-                    //主属性
-                    var mainList = data.obj[0].locatePropertyCollection.main_properties;
-                    if (mainList.length !== 0) {
-                        $('#mainProp').children().remove();
-                        for (var i = 0; i < mainList.length; i++) {
-                            var mainTr = $('<tr></tr>'),
-                                mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                                mainNameTd = $('<td contenteditable="true"></td>'),
-                                mainValTd = $('<td contenteditable="true"></td>');
-                            mainNameTd.html(mainList[i].name);
-                            mainValTd.html(mainList[i].value);
-                            mainTr.append(mainCheckTd, mainNameTd, mainValTd);
-                            $('#mainProp').append(mainTr);
-                        }
-                    } else {
-                        $('#mainProp').children().remove();
-                        $('#mainProp').append(objectRepo.propTr);
-                    }
-
-                    //附加属性
-                    var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
-                    if (addiList.length !== 0) {
-                        $('#addiProp').children().remove();
-                        for (var j = 0; j < addiList.length; j++) {
-                            var addiTr = $('<tr></tr>'),
-                                addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                                addiNameTd = $('<td contenteditable="true"></td>'),
-                                addiValTd = $('<td contenteditable="true"></td>');
-                            addiNameTd.html(addiList[j].name);
-                            addiValTd.html(addiList[j].value);
-                            addiTr.append(addiCheckTd, addiNameTd, addiValTd);
-                            $('#addiProp').append(addiTr);
-                        }
-                    } else {
-                        $('#addiProp').children().remove();
-                        $('#addiProp').append(objectRepo.propTr);
-                    }
-
-                    //辅助属性
-                    var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
-                    if (assiList.length !== 0) {
-                        $('#assisProp').children().remove();
-                        for (var k = 0; k < assiList.length; k++) {
-                            var assiTr = $('<tr></tr>'),
-                                assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                                assiNameTd = $('<td contenteditable="true"></td>'),
-                                assiValTd = $('<td contenteditable="true"></td>');
-                            assiNameTd.html(assiList[k].name);
-                            assiValTd.html(assiList[k].value);
-                            assiTr.append(assiCheckTd, assiNameTd, assiValTd);
-                            $('#assisProp').append(assiTr);
-                        }
-                    } else {
-                        $('#assisProp').children().remove();
-                        $('#assisProp').append(objectRepo.propTr);
-                    }
-
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-        },
-        // onCheck: function(event, treeId, treeNode) {
-        //     $('classtypeSelect').val('');
-        //     $('#mainProp').children().remove();
-        //     $('#addiProp').children().remove();
-        //     $('#assisProp').children().remove();
-        //     objectRepo.objName = treeNode.name;
-        //     $('#objForm input[name="name"]').val(treeNode.name);
-        //     objectRepo.objId = treeNode.id;
-        //     $.ajax({
-        //         url: 'http://10.108.226.152:8080/ATFCloud/object_repoController/queryObject_repo',
-        //         type: 'post',
-        //         data: {
-        //             "id": objectRepo.objId,
-        //             "transid": objectRepo.transactId,
-        //         },
-        //         success: function(data) {
-        //             console.log(data);
-        //             $('#classtypeSelect').val(data.obj.classtype);
-        //             //主属性
-        //             var mainList = data.obj[0].locatePropertyCollection.main_properties;
-        //             for (var i = 0; i < mainList.length; i++) {
-        //                 var mainTr = $('<tr></tr>'),
-        //                     mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-        //                     mainNameTd = $('<td contenteditable="true"></td>'),
-        //                     mainValTd = $('<td contenteditable="true"></td>');
-        //                 mainNameTd.html(mainList[i].name);
-        //                 mainValTd.html(mainList[i].value);
-        //                 mainTr.append(mainCheckTd, mainNameTd, mainValTd);
-        //                 $('#mainProp').append(mainTr);
-        //             }
-        //             //附加属性
-        //             var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
-        //             for (var j = 0; j < addiList.length; j++) {
-        //                 var addiTr = $('<tr></tr>'),
-        //                     addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-        //                     addiNameTd = $('<td contenteditable="true"></td>'),
-        //                     addiValTd = $('<td contenteditable="true"></td>');
-        //                 addiNameTd.html(addiList[j].name);
-        //                 addiValTd.html(addiList[j].value);
-        //                 addiTr.append(addiCheckTd, addiNameTd, addiValTd);
-        //                 $('#addiProp').append(addiTr);
-        //             }
-        //             //辅助属性
-        //             var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
-        //             for (var k = 0; k < assiList.length; k++) {
-        //                 var assiTr = $('<tr></tr>'),
-        //                     assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-        //                     assiNameTd = $('<td contenteditable="true"></td>'),
-        //                     assiValTd = $('<td contenteditable="true"></td>');
-        //                 assiNameTd.html(assiList[k].name);
-        //                 assiValTd.html(assiList[k].value);
-        //                 assiTr.append(assiCheckTd, assiNameTd, assiValTd);
-        //                 $('#assisProp').append(assiTr);
-        //             }
-        //         },
-        //         error: function() {
-        //             $('#failModal').modal();
-        //         }
-        //     });
-        // },
-    }
-};
-// 页面初始化获取对象库
-function getObjTree() {
-    var transid = $("#transactSelect").val();
-    $.ajax({
-        url: address + 'object_repoController/queryObject_repoAll',
-        type: 'post',
-        data: { "transid": transid },
-        success: function(data) {
-            if (data !== null) {
-                $.fn.zTree.init($("#objectTree"), setting1, data.obj);
-            }
-        }
-    });
-}
-//刷新对象库
-function updateObjTree() {
-    var _this = this
-    $.ajax({
-        url: address + 'object_repoController/queryObject_repoAll',
-        type: 'post',
-        data: { "transid": _this.transactId },
-        success: function(data) {
-            if (data !== null) {
-                $.fn.zTree.init($("#objectTree"), setting1, data.obj);
-            }
-        }
-    });
-}
-//禁止拖动
-function zTreeBeforeDrag(treeId, treeNodes) {
-    return false;
-}
-
-// 搜索节点
-$('#search-btn').click(() => {
-    var treeObj = $.fn.zTree.getZTreeObj("objectTree");
-    var keywords = $("#keyword").val();
-    var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);
-    if (nodes.length > 0) {
-        treeObj.selectNode(nodes[0]);
-    }
-});
-/*objtree end*/
-
-//点击保存按钮后更新属性
-function updateProp() {
-    var _this = this
-    const treeObj = $.fn.zTree.getZTreeObj("objectTree"),
-        nodes = treeObj.getSelectedNodes(true),
-        id = nodes[0].id,
-        classtype = $('#classtypeSelect').val();
-    $.ajax({
-        url: address + 'object_repoController/queryObject_repo',
-        type: 'post',
-        data: {
-            "id": id,
-            "transid": _this.transactId,
-        },
-        success: function(data) {
-            console.log(data);
-            $('#classtypeSelect').val(data.obj.classtype);
-            //主属性
-            var mainList = data.obj[0].locatePropertyCollection.main_properties;
-            if (mainList.length !== 0) {
-                $('#mainProp').children().remove();
-                for (var i = 0; i < mainList.length; i++) {
-                    var mainTr = $('<tr></tr>'),
-                        mainCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                        mainNameTd = $('<td contenteditable="true"></td>'),
-                        mainValTd = $('<td contenteditable="true"></td>');
-                    mainNameTd.html(mainList[i].name);
-                    mainValTd.html(mainList[i].value);
-                    mainTr.append(mainCheckTd, mainNameTd, mainValTd);
-                    $('#mainProp').append(mainTr);
-                }
-            } else {
-                $('#mainProp').children().remove();
-                $('#mainProp').append(_this.propTr);
-            }
-
-            //附加属性
-            var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
-            if (addiList.length !== 0) {
-                $('#addiProp').children().remove();
-                for (var j = 0; j < addiList.length; j++) {
-                    var addiTr = $('<tr></tr>'),
-                        addiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                        addiNameTd = $('<td contenteditable="true"></td>'),
-                        addiValTd = $('<td contenteditable="true"></td>');
-                    addiNameTd.html(addiList[j].name);
-                    addiValTd.html(addiList[j].value);
-                    addiTr.append(addiCheckTd, addiNameTd, addiValTd);
-                    $('#addiProp').append(addiTr);
-                }
-            } else {
-                $('#addiProp').children().remove();
-                $('#addiProp').append(_this.propTr);
-            }
-
-            //辅助属性
-            var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
-            if (assiList.length !== 0) {
-                $('#assisProp').children().remove();
-                for (var k = 0; k < assiList.length; k++) {
-                    var assiTr = $('<tr></tr>'),
-                        assiCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-                        assiNameTd = $('<td contenteditable="true"></td>'),
-                        assiValTd = $('<td contenteditable="true"></td>');
-                    assiNameTd.html(assiList[k].name);
-                    assiValTd.html(assiList[k].value);
-                    assiTr.append(assiCheckTd, assiNameTd, assiValTd);
-                    $('#assisProp').append(assiTr);
-                }
-            } else {
-                $('#assisProp').children().remove();
-                $('#assisProp').append(_this.propTr);
-            }
-
-        },
-        error: function() {
-            $('#failModal').modal();
-        }
-    });
-}
+Vue.component('object-repo', objectRepo)

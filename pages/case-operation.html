@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="import" href="./common/header.html?__inline">
+    <!-- css for this page only -->
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+    <title>objectRepo</title>
+    <style>
+      .wrapper {
+        
+      } 
+    </style>
+</head>
+
+<body id="" v-cloak>
+    <div class="content" id="app1">
+        <!--header start-->
+        <link rel="import" href="./common/header-guide.html?__inline">
+        <!--header end-->
+        <!--sidebar start-->
+        <link rel="import" href="./common/aside-guide.html?__inline">
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content" >
+          <section class="wrapper">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" ><a href="#home" aria-controls="home" role="tab" data-toggle="tab">对象库</a></li>
+                <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">元素库</a></li>
+                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">用例数据</a></li>
+                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">执行记录</a></li>
+              </ul>
+            
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="home">
+                    <object-repo :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></object-repo>
+                </div>
+                <div role="tabpanel" class="tab-pane  active" id="profile">
+                    <element-library :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></element-library>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="messages">..发.</div>
+                <div role="tabpanel" class="tab-pane" id="settings">...</div>
+              </div>
+            
+            <!-- <el-tab-pane label="对象库" name="first"><object-repo></object-repo></el-tab-pane> -->
+            <!-- <el-tab-pane label="元素库" name="second"><element-library></element-library></el-tab-pane> -->
+            
+            </el-tabs>
+          </section>
+        </section>
+        <!-- <object-repo></object-repo> -->
+        
+        <!--main content end-->
+        <div class="footer">
+            <link rel="import" href="./common/copy-right.html?__inline">
+        </div>
+        </div>
+</body>
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+ <!-- 先引入 Vue -->
+ <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+<!--script for this page only-->
+<script type="text/javascript" src="../static/js/objectRepo.js"></script>
+<script type="text/javascript" src="../static/js/elementLibrary.js"></script>
+<!-- ztree -->
+<script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
+
+<!-- 引入组件库 -->
+<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+<script>
+    var app = new Vue({
+        el: '#app1',
+        // component: {
+        //     'object-repo': objectRepo,
+        //     'element-library': elementLibrary
+        // },
+        data: function() {
+          return {
+            activeName: 'first'
+          }
+        }
+    })
+</script>
