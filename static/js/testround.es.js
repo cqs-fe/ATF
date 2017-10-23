@@ -264,8 +264,8 @@ var vBody = new Vue({
 			};
 			var _this = this;
 			$.ajax({
-				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
-				// url: '/api/getcaseandscene',
+				// url: address + 'testexecutioninstanceController/textexecutioninstancequery',
+				url: '/api/getcaseandscene',
 				type: 'post',
 				data: data,
 				dataType: 'json',

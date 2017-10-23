@@ -2,6 +2,8 @@ $(document).ready(function(){
 	// var submenuHeight = document.querySelector('#submenu').offsetHeight;
 	// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
+	var transid = '',
+		autId =  '';
 	(function(){
         
         var tooltipwindow = new Vue({
@@ -145,10 +147,13 @@ $(document).ready(function(){
 					this.uiOrFunctions.target = event.target;
 					this.uiOrFunctions.changed = false;
 					this.uiOrFunctions.table = type;
+					var dataT = {
+						transid: transid
+					}
 					// 请求Ui和Elment
 					$.ajax({
 						url: address + 'elementlibraryController/showUIandElement',
-						data: 'transid=1',
+						data: dataT,
 						type: 'post',
 						dataType: 'json',
 						success: (data, statusText) => {
@@ -158,9 +163,12 @@ $(document).ready(function(){
 						}
 					})
 					// 请求函数集
+					var autData = {
+						id: autId
+					}
 					$.ajax({
 						url: address + 'autController/selectFunctionSet',
-						data: 'id=2',
+						data: autData,
 						type: 'post',
 						dataType: 'json',
 						success: (data, statusText) => {
@@ -288,7 +296,7 @@ $(document).ready(function(){
 
 						// 发送ajax请求函数的数据
 						var data = {
-							id: 8,		// autid
+							id: autId,		// autid
 							classname: editDataVue.uiOrFunctions.ui,		// classname
 						}
 
@@ -311,7 +319,7 @@ $(document).ready(function(){
 							// var mname = $('.functions-select', parentRow).val()
 							var mname = operationRows[index].functions[0].mname
 							var data = {
-								autid: 8,	
+								autid: autId,	
 								className: editDataVue.uiOrFunctions.ui,
 								methodName: mname
 							}
@@ -642,8 +650,8 @@ $(document).ready(function(){
                         success: function(data, textStatus){
                             var treeData = [];
                             if(data.o.length == 0) {
-															Vac.alert('该测试点下未查询到相关数据！')
-															return
+								Vac.alert('该测试点下未查询到相关数据！')
+								return
                             }
                             data.o.forEach((value) => {
                                 var item = {};  //解构第一层
@@ -853,8 +861,8 @@ $(document).ready(function(){
 		};
 		function zTreeOnDblClick(event, treeId, treeNode){
 			if(treeNode && !treeNode.isParent){
-				var autId = treeNode.getParentNode().getParentNode().id;
-				var transId = treeNode.getParentNode().id;
+				autId = treeNode.getParentNode().getParentNode().id;
+				transid = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
 				// var testpoint = ''
 				// 将autid transId以及scriptid拼接起来，去testpointsMap中寻找testpoint
@@ -886,8 +894,8 @@ $(document).ready(function(){
 				// }
 				// 使用了mock
 				$.ajax({
-					// url: address + "scripttemplateController/searchScripttemplateInf",
-					url: '/api/handson',
+					url: address + "scripttemplateController/searchScripttemplateInf",
+					// url: '/api/handson',
 					data: data,
 					type:"post",
 					dataType: "json",
@@ -1016,136 +1024,141 @@ $(document).ready(function(){
 			}
 		}
 		// mock
-		(function(){
-			$.ajax({
-				// url: address + "scripttemplateController/searchScripttemplateInf",
-				url: '/api/handson',
-				data: data,
-				type:"post",
-				dataType: "json",
-				success: function(data){
-					var dataKey = [];
-					if(data.o.tableHead){
-						// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
-						dataKey = getDataKey(data.o.tableHead);
-						console.log("dataKey:"+dataKey);
-					}
-					var destrutData = [];
-					if(data.o.tableDatas){
-						if(data.o.tableDatas.length == 0) {
-							Vac.alert('该脚本下未查询到相关数据！')
-						}
-						data.o.tableDatas.forEach((value) => {
-						var data = {};
-						({
-							id: data.testcaseId,
-							expectresult:data.expectresult,
-							testpoint: data.testpoint,
-							teststep: data.teststep,
-							checkpoint: data.checkpoint,
-							testdesign: data.testdesign,
-							casecode: data.casecode
-						} = value);
-						dataKey.forEach((key) => {
-							data[key] = value[key];
-						});
-						console.log(data)
-						destrutData.push(data);
-					});
-					}
-					// console.log(destrutData);
-					dataSource = destrutData;
-					// console.log(dataSource)
-					rowSelectFlags.length = dataSource.length;
-					getTotalColHeaders(data.o.tableHead);
-					// console.log(totalColumnsHeaders);
-					var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
-					// handsontable 配置与生成
-					if(handsontable === null){
-						handsontable = new Handsontable(tableContainer,{
-							data: dataSource,
-							hiddenColumns: {
-									columns: [2,3],
-									indicators: false
-								},
-								// 配置列表头
-							columns: totalColumnsOptions,
-								colHeaders: colHeadersRenderer,
-								rowHeaders: true,
-								cells: function (row, col, prop) {
-									var cellProperties = {};
-									return cellProperties;
-							},
-							// 配置可以改变行的大小
-							manualRowResize: true,
-							multiSelect: true,
-							outsideClickDeselects: true,
-							// 配置contextMenu
-							contextMenu: contextMenuObj,
-							undo: true,
-							copyPaste: true,
-							allowInsertRow: false,
-							allowInsertColumn: false,
-							search: {
-								searchResultClass: ''
-							},
-							afterRender: function(){
-								if(searchResults && searchResults.length){
-									var trs = document.querySelectorAll('#handsontable tbody tr');
-									searchResults.forEach((value,index) => {
-										var tds = trs[value.row].getElementsByTagName('td');
-										if(index === currentResult){
-											tds[value.col].style.backgroundColor="#f00";
-										}else{
-											tds[value.col].style.backgroundColor="#0f0";
-										}
+		// (function(){
+		// 	var data = {
+		// 		testpoint: 6,
+		// 		executor: 6,
+		// 		caseLib_id: 6
+		// 	};
+		// 	$.ajax({
+		// 		url: address + "scripttemplateController/searchScripttemplateInf",
+		// 		// url: '/api/handson',
+		// 		data: data,
+		// 		type:"post",
+		// 		dataType: "json",
+		// 		success: function(data){
+		// 			var dataKey = [];
+		// 			if(data.o.tableHead){
+		// 				// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
+		// 				dataKey = getDataKey(data.o.tableHead);
+		// 				console.log("dataKey:"+dataKey);
+		// 			}
+		// 			var destrutData = [];
+		// 			if(data.o.tableDatas){
+		// 				if(data.o.tableDatas.length == 0) {
+		// 					Vac.alert('该脚本下未查询到相关数据！')
+		// 				}
+		// 				data.o.tableDatas.forEach((value) => {
+		// 				var data = {};
+		// 				({
+		// 					id: data.testcaseId,
+		// 					expectresult:data.expectresult,
+		// 					testpoint: data.testpoint,
+		// 					teststep: data.teststep,
+		// 					checkpoint: data.checkpoint,
+		// 					testdesign: data.testdesign,
+		// 					casecode: data.casecode
+		// 				} = value);
+		// 				dataKey.forEach((key) => {
+		// 					data[key] = value[key];
+		// 				});
+		// 				console.log(data)
+		// 				destrutData.push(data);
+		// 			});
+		// 			}
+		// 			// console.log(destrutData);
+		// 			dataSource = destrutData;
+		// 			// console.log(dataSource)
+		// 			rowSelectFlags.length = dataSource.length;
+		// 			getTotalColHeaders(data.o.tableHead);
+		// 			// console.log(totalColumnsHeaders);
+		// 			var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
+		// 			// handsontable 配置与生成
+		// 			if(handsontable === null){
+		// 				handsontable = new Handsontable(tableContainer,{
+		// 					data: dataSource,
+		// 					hiddenColumns: {
+		// 							columns: [2,3],
+		// 							indicators: false
+		// 						},
+		// 						// 配置列表头
+		// 					columns: totalColumnsOptions,
+		// 						colHeaders: colHeadersRenderer,
+		// 						rowHeaders: true,
+		// 						cells: function (row, col, prop) {
+		// 							var cellProperties = {};
+		// 							return cellProperties;
+		// 					},
+		// 					// 配置可以改变行的大小
+		// 					manualRowResize: true,
+		// 					multiSelect: true,
+		// 					outsideClickDeselects: true,
+		// 					// 配置contextMenu
+		// 					contextMenu: contextMenuObj,
+		// 					undo: true,
+		// 					copyPaste: true,
+		// 					allowInsertRow: false,
+		// 					allowInsertColumn: false,
+		// 					search: {
+		// 						searchResultClass: ''
+		// 					},
+		// 					afterRender: function(){
+		// 						if(searchResults && searchResults.length){
+		// 							var trs = document.querySelectorAll('#handsontable tbody tr');
+		// 							searchResults.forEach((value,index) => {
+		// 								var tds = trs[value.row].getElementsByTagName('td');
+		// 								if(index === currentResult){
+		// 									tds[value.col].style.backgroundColor="#f00";
+		// 								}else{
+		// 									tds[value.col].style.backgroundColor="#0f0";
+		// 								}
 
-									})
-								}
-								document.querySelectorAll("table th")[0].style.display = "none";
-							},
-							afterChange: function(changes,source){
-								if(changes){
-									// console.log(changes)
-									changes.forEach((value) => {
-										var data = {};
-										// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
-										data.testcaseId = dataSource[value[0]].testcaseId;
-										data.tbHead = value[1];
-										data.value = value[3];
-										var changedIndex;
-										changedData.forEach((value,index) => {
-											if(value.testcaseId == data.testcaseId && value.tbHead == data.tbHead){
-												changedIndex = index;
-											}
-										});
-										if(changedIndex !== undefined){
-											changedData.splice(changedIndex,1,data);
-										}else{
-											changedData.push(data);
-										}
-									});
-									console.log(changedData.toString());
-								}
-							}
+		// 							})
+		// 						}
+		// 						document.querySelectorAll("table th")[0].style.display = "none";
+		// 					},
+		// 					afterChange: function(changes,source){
+		// 						if(changes){
+		// 							// console.log(changes)
+		// 							changes.forEach((value) => {
+		// 								var data = {};
+		// 								// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
+		// 								data.testcaseId = dataSource[value[0]].testcaseId;
+		// 								data.tbHead = value[1];
+		// 								data.value = value[3];
+		// 								var changedIndex;
+		// 								changedData.forEach((value,index) => {
+		// 									if(value.testcaseId == data.testcaseId && value.tbHead == data.tbHead){
+		// 										changedIndex = index;
+		// 									}
+		// 								});
+		// 								if(changedIndex !== undefined){
+		// 									changedData.splice(changedIndex,1,data);
+		// 								}else{
+		// 									changedData.push(data);
+		// 								}
+		// 							});
+		// 							console.log(changedData.toString());
+		// 						}
+		// 					}
 
-						});
-						// handsontable.updateSettings(contextMenuObj);
-					}
-					else{
-						handsontable.updateSettings({
-							 data: dataSource,
-							 columns: totalColumnsOptions,
-							 colHeaders: colHeadersRenderer
-						});
-						handsontable.render();
-					}
-				},
-				error: function(){
-					Vac.alert('获取数据失败，请确认该脚本中含有数据！')
-				}
-			}); //aj
-		})()
+		// 				});
+		// 				// handsontable.updateSettings(contextMenuObj);
+		// 			}
+		// 			else{
+		// 				handsontable.updateSettings({
+		// 					 data: dataSource,
+		// 					 columns: totalColumnsOptions,
+		// 					 colHeaders: colHeadersRenderer
+		// 				});
+		// 				handsontable.render();
+		// 			}
+		// 		},
+		// 		error: function(){
+		// 			Vac.alert('获取数据失败，请确认该脚本中含有数据！')
+		// 		}
+		// 	}); //aj
+		// })()
 		Handsontable.Dom.addEvent(tableContainer, 'mousedown', function (event) {
     		if (event.target.nodeName == 'INPUT' && event.target.className == 'header-checker') {
       			selectAllFlag = !event.target.checked;

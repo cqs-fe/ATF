@@ -107,6 +107,7 @@
                   <div class="case-lib" v-for="case_wrapper in testCaseList" @mousedown.stop="1">
                     <template v-if="case_wrapper.caseCompositeType == '1'">
                     <div class="checkbox-wrapper">
+                      <i class="icon-move handle" style="color: #ff6c60;"></i>
                       <input type="checkbox" :value="case_wrapper.caseId" @change="checkallToggle($event)" class="checkall" v-model="selectedCases">
                     </div>
                     <div class="case-wrapper">
@@ -115,15 +116,14 @@
                           <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
                           <p>{{case_wrapper.caseId}}</p>
                         </div>
-                        <div class="case-main">
-                          <p>这是单案例</p>
-                          <span></span>
-                        </div>
                         <footer class="case-footer">
                           <img :src="exeImgs[0]">
                         </footer>
                       </div>
                     </div>
+                    <!-- new -->
+
+                    <!-- new end -->
                     </template>
                     <template v-else>
                     <div class="checkbox-wrapper">

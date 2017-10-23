@@ -160,8 +160,8 @@ var vBody = new Vue({
 		getCases: function(){
 			var _this = this;
 			$.ajax({
-				// url: address + 'sceneController/selectByPrimaryKey',
-				url: '/api/getcaseinscene',
+				url: address + 'sceneController/selectByPrimaryKey',
+				// url: '/api/getcaseinscene',
 				data: 'id='+_this.sceneid,
 				type: 'post',
 				dataType: 'json',

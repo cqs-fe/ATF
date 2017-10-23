@@ -426,7 +426,8 @@ $(document).ready(function() {
             //参数化
             para: function() {
                 $.ajax({
-                    url: '../../mock/script.json',
+                    // url: '../../mock/script.json',
+                    url: address + 'scripttemplateController/showscripttemplateTableSave',
                     type: 'post',
                     data: {
                         'autId': mainVue.autId,

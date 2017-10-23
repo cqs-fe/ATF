@@ -11,7 +11,7 @@ var template_ele = `
         </div>
     </div>
     <!-- breadcrumb end -->
-    <div class="row"  v-if="top-select">
+    <div class="row"  v-if="topSelect">
         <div class="col-lg-12">
             <section class="panel panel-pad">
                 <!-- select start -->
@@ -547,7 +547,6 @@ var elementLibrary = Vue.extend({
                 beforeDrag: _this.zTreeBeforeDrag,
                 //点击时的回调函数
                 onClick: function(event, treeId, treeNode, clickFlag) {
-                    console.log(treeNode);
                     var transid = !_this.componentMode ? _this.transactId : _this.transid;
                     if (treeNode.parentid == '0') { //选择的是UI
                         $(':input', '#UIForm').val('');
@@ -587,16 +586,16 @@ var elementLibrary = Vue.extend({
                         _this.UIName = parentNode.name;
                         $('#UI').css('display', 'none');
                         $('#ele').css('display', 'block');
+                        var transid = !_this.componentMode ? _this.transactId : _this.transid;
                         $.ajax({
                             url: address + 'elementlibraryController/queryElement',
                             type: 'post',
                             data: {
-                                "transid": _this.transactId,
+                                "transid": transid,
                                 "UIName": _this.UIName,
                                 "ElementName": _this.eleName
                             },
                             success: function(data) {
-                                console.log(data)
                                 var classtype = data.obj.identifyElement.classtype;
                                 $('#classtypeSelect').val(classtype);
                                 var relateParentObjectId = data.obj.identifyElement.parentElementId;
