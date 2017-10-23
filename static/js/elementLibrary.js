@@ -81,7 +81,7 @@ var template_ele = `
                                 <a class="btn btn-info" data-toggle="modal" href="#UILinkedModal">关联对象</a>
                             </div>
                             <div class="col-lg-2">
-                                <a class="btn btn-info" onclick="removeUILinked()">解除关联</a>
+                                <a class="btn btn-info" @click="removeUILinked()">解除关联</a>
                             </div>
                             <div class="col-lg-2">
                                 <a class="btn btn-info" @click="updateUI">保存</a>
@@ -420,7 +420,7 @@ var template_ele = `
                 </div>
                 <div class="modal-footer">
                     <button data-dismiss="modal" class="btn btn-default">取消</button>
-                    <button data-dismiss="modal" class="btn btn-success" onclick="setUILinked()">确认</button>
+                    <button data-dismiss="modal" class="btn btn-success" ＠click="setUILinked()">确认</button>
                 </div>
             </div>
         </div>
@@ -441,7 +441,7 @@ var template_ele = `
                 </div>
                 <div class="modal-footer">
                     <button data-dismiss="modal" class="btn btn-default">取消</button>
-                    <button data-dismiss="modal" class="btn btn-success" onclick="setEleParent()">确认</button>
+                    <button data-dismiss="modal" class="btn btn-success" @click="setEleParent()">确认</button>
                 </div>
             </div>
         </div>
@@ -462,7 +462,7 @@ var template_ele = `
                 </div>
                 <div class="modal-footer">
                     <button data-dismiss="modal" class="btn btn-default">取消</button>
-                    <button data-dismiss="modal" class="btn btn-success" onclick="setEleLinked()">确认</button>
+                    <button data-dismiss="modal" class="btn btn-success" @click="setEleLinked()">确认</button>
                 </div>
             </div>
         </div>
@@ -1222,6 +1222,7 @@ var elementLibrary = Vue.extend({
         },
         //设置对象库中父对象
          setEleParent: function() {
+            console.log(222)
             var treeObj = $.fn.zTree.getZTreeObj("eleParentTree"),
                 nodes = treeObj.getSelectedNodes(),
                 obj = nodes[0].name;

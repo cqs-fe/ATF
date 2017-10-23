@@ -3,11 +3,22 @@ var checkFunction = {
 		let caseCbs = $('input.check-case')
 		this.$nextTick(function () {
         	$.each(caseCbs, function(index, ele) {
+
 				if(ele.checked) {
-					$(ele).parents('.case').css({"border-color": "#ff6c60"})
+					$(ele).parents('.case').css({"border-color": "rgb(69, 185, 177)"})
+					$(ele).parents('.case').css({"background-color": "rgb(69, 185, 177)"})
+					$('p', $(ele).parents('.case')).css({"color": "#fff"})
 				}else {
 					$(ele).parents('.case').css({"border-color": "#ddd5d5"})
+					$(ele).parents('.case').css({"background-color": "#fff"})
+					$('p', $(ele).parents('.case')).css({"color": "#797979"})
 				}
+
+				// if(ele.checked) {
+				// 	$(ele).parents('.case').css({"border-color": "#ff6c60"})
+				// }else {
+				// 	$(ele).parents('.case').css({"border-color": "#ddd5d5"})
+				// }
 			})
       	})
 	},

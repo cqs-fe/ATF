@@ -144,23 +144,27 @@ var vBody = new Vue({
 			this.setBackground()
 		},
 		"checkedFlowNodes": function(value, oldVal) {
-			// console.log(this.flowNodeIds)
+			console.log(this.flowNodeIds)
+			console.log(this.checkedFlowNodes)
 			for(let key of this.flowNodeIds.keys()) {
 				if(this.flowNodeIds.get(key).every((value) => {
 					return this.checkedFlowNodes.includes(value)
 				}))
 				{
 					Vac.pushNoRepeat(this.selectedCases, +key)
-				} else if(this.flowNodeIds.get(key).every((value) => {
-					return !this.checkedFlowNodes.includes(+value)
-				}))
+				} else 
+				// if(this.flowNodeIds.get(key).every((value) => {
+				// 	return !this.checkedFlowNodes.includes(+value)
+				// }))
 				{
 					let set = new Set(this.selectedCases)
 					set.delete(+key)
 					this.selectedCases = [...set]
 				}
 			}
-		}
+			this.setBackground()
+		},
+		// "selectedSceneCases"
 	},
 	methods: {
 		hideAlert: function(){
@@ -339,6 +343,20 @@ var vBody = new Vue({
 				event.target.innerHTML = _this.unexpandString
 			}
 			event.stopPropagation()
+		},
+		changeCase: function(id, type){
+			let arr ;
+			switch(type) {
+				case 1: arr = this.selectedCases;
+					break;
+				case 2: arr = this.checkedFlowNodes;
+					break;
+				case 3: arr = this.selectedSceneCases;
+					break;
+			}
+			let index = arr.findIndex((value) => { return value === id })
+			index !== -1 ? arr.splice(index, 1) : arr.push(id)
+			this.setBackground()
 		},
 		setBackground: checkFunction.setBackground,
 		checkChanged: checkFunction.checkChanged,

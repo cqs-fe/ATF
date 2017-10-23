@@ -217,9 +217,9 @@ var vBody = new Vue({
 			let arr = type === 1 ? this.selectedCases : this.checkedFlowNodes;
 			let index = arr.findIndex((value) => { return value === id })
 			index !== -1 ? arr.splice(index, 1) : arr.push(id)
-			console.log("index:" + index)
-			console.log("id:" + id)
-			console.log(this.checkedFlowNodes)
+			// console.log("index:" + index)
+			// console.log("id:" + id)
+			// console.log(this.checkedFlowNodes)
 		},
 		// 点击checkbox
 		checkChanged: checkFunction.checkChanged,
