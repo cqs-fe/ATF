@@ -107,6 +107,36 @@
                             "flowNodeId": 123,
                             "casecode": 123,
                             "state": 2
+                        },
+                        {
+                            "flowNodeId": 1122,
+                            "casecode": 123,
+                            "state": 3
+                        },
+                        {
+                            "flowNodeId": 1124,
+                            "casecode": 123,
+                            "state": 1
+                        },
+                        {
+                            "flowNodeId": 1223,
+                            "casecode": 123,
+                            "state": 2
+                        },
+                        {
+                            "flowNodeId": 1222,
+                            "casecode": 123,
+                            "state": 3
+                        },
+                        {
+                            "flowNodeId": 1124,
+                            "casecode": 123,
+                            "state": 1
+                        },
+                        {
+                            "flowNodeId": 1223,
+                            "casecode": 123,
+                            "state": 2
                         }
                     ],
                     "isSelectedRun": "1",

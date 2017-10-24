@@ -95,7 +95,6 @@ var vBody = new Vue({
 							resolve()
 						}
 					}
-					console.log(_this.testrounds)
 				}
 			});
 		})
@@ -132,7 +131,8 @@ var vBody = new Vue({
 	},
 	ready: function(){
 		// console.log("ready")
-		this.setSelectListener()
+		this.setSelectListener();
+		this.setDraggable();
 	},
 	// updated: function(){
 	// 	console.log("updated")
@@ -144,8 +144,6 @@ var vBody = new Vue({
 			this.setBackground()
 		},
 		"checkedFlowNodes": function(value, oldVal) {
-			console.log(this.flowNodeIds)
-			console.log(this.checkedFlowNodes)
 			for(let key of this.flowNodeIds.keys()) {
 				if(this.flowNodeIds.get(key).every((value) => {
 					return this.checkedFlowNodes.includes(value)
@@ -164,7 +162,6 @@ var vBody = new Vue({
 			}
 			this.setBackground()
 		},
-		// "selectedSceneCases"
 	},
 	methods: {
 		hideAlert: function(){
@@ -258,6 +255,17 @@ var vBody = new Vue({
 				});
 			}
 		},
+		setDraggable: function () {
+			$('#sortable_caselist').sortable({
+				handle: '.handle'
+			})
+			$( "#sortable_caselist" ).disableSelection();
+	
+			$('.sortable_scene_caselist').sortable({
+				handle: '.handle1'
+			})
+			$( '.sortable_scene_caselist' ).disableSelection();
+		},
 		getCases: function(){
 			var data = {
 				caselibId: this.caselibId,
@@ -268,8 +276,8 @@ var vBody = new Vue({
 			};
 			var _this = this;
 			$.ajax({
-				// url: address + 'testexecutioninstanceController/textexecutioninstancequery',
-				url: '/api/getcaseandscene',
+				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
+				// url: '/api/getcaseandscene',
 				type: 'post',
 				data: data,
 				dataType: 'json',
@@ -295,29 +303,40 @@ var vBody = new Vue({
 					_this.flowNodesMap.clear()
 					for (var j = 0; j<_this.testSceneList.length;j++) {
 						var scene = _this.testSceneList[j]
-
+						// sceneIds save the id of scene  [4,5,6]
 						_this.sceneIds.push(scene.sceneId)
 						var caselist = []
 						for(var i = 0;i<scene.testCaseList.length;i++){
 							var c = scene.testCaseList[i]
+							// caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
 							caselist.push(scene.sceneId + '-' + c.caseId);
 
 							if(c.caseCompositeType == 2) {
 								_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
 								let flowNodes = []
 								for (let flowNode of c.flowNodes) {
+									// caselist also save the flowNodeId in flowCase in the form of 
+									//  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
 									caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
 									flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
 								}
+								// flowNodesMap save the map of caseId between flowNodes in the following form
+								// {
+								//  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
+								// }
 								_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
 							}
 						}
+						// sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
+						// {
+						//  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
+						// }
 						_this.sceneCaseMap.set(scene.sceneId, caselist)
 						
 					}
-			// 		console.log(_this.sceneIds)
-			// 		console.log(_this.sceneCaseMap)
-			// 		console.log(_this.flowNodesMap)
+					Vue.nextTick(() => {
+						_this.setDraggable()
+					})
 				}
 			});
 		},
@@ -354,9 +373,43 @@ var vBody = new Vue({
 				case 3: arr = this.selectedSceneCases;
 					break;
 			}
+			console.log(id)
 			let index = arr.findIndex((value) => { return value === id })
 			index !== -1 ? arr.splice(index, 1) : arr.push(id)
-			this.setBackground()
+			// 如果选中的是flowNode
+			// console.log('sceneCaseIds' + this.sceneCaseIds)
+			// console.log('flowNodesMap'+ this.flowNodesMap)
+			// console.log('sceneCaseMap'+ this.sceneCaseMap.keys())
+			let idArr = (id+'').split('-');
+			if(idArr.length === 3){
+				let sceneCaseId = idArr.slice(0, 2).join('-')
+				let caseList = this.flowNodesMap.get(sceneCaseId)
+				if(caseList.every((value) => {
+					return this.selectedSceneCases.includes(value)
+				}))
+				{
+					Vac.pushNoRepeat(this.selectedSceneCases, sceneCaseId)
+				} else {
+					let set = new Set(this.selectedSceneCases)
+					set.delete(sceneCaseId)
+					this.selectedSceneCases = [...set]
+				}
+			}
+			if(type === 3) {
+				let sceneId = idArr[0];
+				let caseIds = this.sceneCaseMap.get(+sceneId);
+				if (caseIds.every((value) => {
+					return this.selectedSceneCases.includes(value)
+				}))
+				{
+					this.checkallSceneIds.push(+sceneId)
+				} else {
+					let set = new Set(this.checkallSceneIds)
+					set.delete(+sceneId)
+					this.checkallSceneIds = [...set]
+				}
+			}
+			this.setBackground(this.selectedSceneCases)
 		},
 		setBackground: checkFunction.setBackground,
 		checkChanged: checkFunction.checkChanged,
