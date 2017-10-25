@@ -36,7 +36,7 @@ var template_ele = `
     <div class="row">
         <div class="col-lg-4">
             <section class="panel tree-panel">
-                <header class="panel-heading"  v-if="top-select">
+                <header class="panel-heading"  v-if="topSelect">
                     元素库
                 </header>
                 <div id="menuContent" class="menuContent treeMenu">
@@ -60,9 +60,8 @@ var template_ele = `
         </div>
         <div class="col-lg-8">
             <section class="panel" id="UI">
-                
                 <div class="elementContent">
-                    <header class="panel-heading">
+                    <header class="panel-heading" v-if="topSelect">
                     {{UIName}}
                 </header>
                     <form class="form-horizontal panel-pad" id="UIForm">

@@ -8,55 +8,116 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+		<link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+		<link rel="stylesheet" href="text/css" href="../static/css/case-operation.scss">
     <title>objectRepo</title>
     <style>
+        #menuContent, .elementContent, .tab-content {
+            height: calc(100vh - 210px);
+            background-color: #fff;
+        }
     </style>
 </head>
 
 <body id="" v-cloak>
-    <div class="content" id="app1">
-        <!--header start-->
-        <link rel="import" href="./common/header-guide.html?__inline">
-        <!--header end-->
-        <!--sidebar start-->
-        <link rel="import" href="./common/aside-guide.html?__inline">
-        <!--sidebar end-->
-        <!--main content start-->
-        <section id="main-content" >
-          <section class="wrapper">
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" ><a href="#home" aria-controls="home" role="tab" data-toggle="tab">对象库</a></li>
-                <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">元素库</a></li>
-                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">用例数据</a></li>
-                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">执行记录</a></li>
-              </ul>
-            
-              <!-- Tab panes -->
-              <div class="tab-content">
-                <div role="tabpanel" class="tab-pane" id="home">
-                    <object-repo :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></object-repo>
-                </div>
-                <div role="tabpanel" class="tab-pane  active" id="profile">
-                    <element-library :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></element-library>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="messages">..发.</div>
-                <div role="tabpanel" class="tab-pane" id="settings">...</div>
-              </div>
-            
-            <!-- <el-tab-pane label="对象库" name="first"><object-repo></object-repo></el-tab-pane> -->
-            <!-- <el-tab-pane label="元素库" name="second"><element-library></element-library></el-tab-pane> -->
-            
-            </el-tabs>
-          </section>
-        </section>
-        <!-- <object-repo></object-repo> -->
-        
-        <!--main content end-->
-        <div class="footer">
-            <link rel="import" href="./common/copy-right.html?__inline">
-        </div>
-        </div>
+	<div class="content" id="app1">
+	<!--header start-->
+	<link rel="import" href="./common/header-guide.html?__inline">
+	<!--header end-->
+	<!--sidebar start-->
+	<link rel="import" href="./common/aside-guide.html?__inline">
+	<!--sidebar end-->
+	<!--main content start-->
+	<section id="main-content" >
+		<section class="wrapper">
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" ><a href="#home" aria-controls="home" role="tab" data-toggle="tab">对象库</a></li>
+				<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">元素库</a></li>
+				<li role="presentation" class="active"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">用例数据</a></li>
+				<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">执行记录</a></li>
+			</ul>
+			
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane" id="home">
+						<object-repo :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></object-repo>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="profile">
+						<element-library :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></element-library>
+				</div>
+				<div role="tabpanel" class="tab-pane active"  id="messages">
+						<case-data></case-data>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="settings">...</div>
+			</div>
+			
+			<!-- <el-tab-pane label="对象库" name="first"><object-repo></object-repo></el-tab-pane> -->
+			<!-- <el-tab-pane label="元素库" name="second"><element-library></element-library></el-tab-pane> -->
+			
+			</el-tabs>
+		</section>
+	</section>
+	<!-- <object-repo></object-repo> -->
+	
+	<!--main content end-->
+	<div class="footer">
+		<link rel="import" href="./common/copy-right.html?__inline">
+	</div>
+	</div>
+
+	<script type="text/x-template" id="case-data">
+	<div class="tab-content">
+		<div class="top-selector">
+			<label class="checkbox-inline">
+					<input type="checkbox" id="" v-model="checkall" @change="toggleCheckAll"> 全选
+				</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox1" value="input-data" v-model="conditions"> 输入数据
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox2" value="flow-data" v-model="conditions"> 流程数据
+			</label>
+			<label class="checkbox-inline">
+					<input type="checkbox" id="inlineCheckbox2" value="scene-data" v-model="conditions"> 场景数据
+				</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox3" value="global-data" v-model="conditions"> 全局数据
+			</label>
+			<label class="checkbox-inline">
+					<button type="button" class="btn btn-primary"> 搜 索 </button>
+			</label>
+			<label class="checkbox-inline">
+					<button type="button" class="btn btn-primary"> 刷 新 </button>
+			</label>
+			<label class="checkbox-inline">
+					<button type="button" class="btn btn-primary"> 保 存 </button>
+			</label>
+		</div>
+		<div class="table-wrapper">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>数据名称</th>
+								<th>数据值</th>
+								<th>数据池名称</th>
+								<th>对象名称</th>
+								<th>描述</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(index,item) in dataList">
+								<td>{{ item.dataName }}</td>
+								<td>{{ item.dataValue }}</td>
+								<td>{{ item.dataPoolName }}</td>
+								<td>{{ item.objectName }}</td>
+								<td>{{ item.description }}</td>
+							</tr>
+							<tr v-if="dataList.length === 0"></tr>
+						</tbody>
+					</table>
+		</div>
+	</div>
+	</script>
 </body>
 </html>
 <link rel="import" href="./common/footer.html?__inline">
@@ -65,6 +126,7 @@
 <!--script for this page only-->
 <script type="text/javascript" src="../static/js/objectRepo.js"></script>
 <script type="text/javascript" src="../static/js/elementLibrary.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/case-data.js"></script>
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
 
@@ -73,10 +135,6 @@
 <script>
     var app = new Vue({
         el: '#app1',
-        // component: {
-        //     'object-repo': objectRepo,
-        //     'element-library': elementLibrary
-        // },
         data: function() {
           return {
             activeName: 'first'

@@ -57,7 +57,7 @@ var template_obj = `
         <div class="col-lg-8">
             <section class="panel" id="">
                 <div class="elementContent">
-                     <header class="panel-heading">
+                     <header class="panel-heading" v-if="topSelect">
                         {{objName}}
                      </header>
                     <form class="form-horizontal panel-pad" id="objForm">
