@@ -39,6 +39,15 @@ var caseData = Vue.extend({
       this.checkall = false;
     }
   },
+  ready: function() {
+    $('#alter-form').validate({
+      submitHandler: function(form) {
+        alert(444)
+        $(form).submit();
+      }
+    });
+    
+  },
   methods: {
     toggleCheckAll: function() {
       if (this.checkall) {
@@ -53,6 +62,9 @@ var caseData = Vue.extend({
         return
       }
       this.checkall = false;
+    },
+    alterData: function(){
+      $('#alterModal').modal('show')
     }
   }
 })
