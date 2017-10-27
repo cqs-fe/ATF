@@ -42,8 +42,8 @@ var caseData = Vue.extend({
   ready: function() {
     $('#alter-form').validate({
       submitHandler: function(form) {
-        alert(444)
-        $(form).submit();
+        console.log(333)
+        form.submit();
       }
     });
     

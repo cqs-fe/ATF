@@ -2,7 +2,7 @@ var template_ele = `
 <div>
     <!-- breadcrumb start -->
     <div class="row" v-if="breadShow">
-        <div class="col-lg-12">
+        <div class="col-xs-12">
             <ul class="breadcrumb">
                 <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
                 <li><a href="transact.html">功能点</a></li>
@@ -12,18 +12,18 @@ var template_ele = `
     </div>
     <!-- breadcrumb end -->
     <div class="row"  v-if="topSelect">
-        <div class="col-lg-12">
+        <div class="col-xs-12">
             <section class="panel panel-pad">
                 <!-- select start -->
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-lg-2 control-label">所属被测系统</label>
-                        <div class="col-lg-2">
+                        <label class="col-xs-2 control-label">所属被测系统</label>
+                        <div class="col-xs-2">
                             <select class="form-control" id="autSelect">
                             </select>
                         </div>
-                        <label class="col-lg-2 control-label">所属功能点</label>
-                        <div class="col-lg-2">
+                        <label class="col-xs-2 control-label">所属功能点</label>
+                        <div class="col-xs-2">
                             <select class="form-control" id="transactSelect" v-model="transid">
                             </select>
                         </div>
@@ -34,20 +34,20 @@ var template_ele = `
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-xs-4">
             <section class="panel tree-panel">
                 <header class="panel-heading"  v-if="topSelect">
                     元素库
                 </header>
                 <div id="menuContent" class="menuContent treeMenu">
                     <div class="form-group panel-pad form-horizontal">
-                        <div class="col-lg-6">
+                        <div class="col-xs-6">
                             <input type="text" name="" id="keyword" value="" class="form-control empty input-sm">
                         </div>
                         <a class="btn btn-info btn-sm" id="search-btn" @click="searchNodes()">搜索</a>
                     </div>
                     <div class="form-group form-horizontal">
-                        <div class="col-lg-12">
+                        <div class="col-xs-12">
                             <a class="btn btn-info btn-sm" data-toggle="modal" href="#addUIModal">添加UI</a>
                             <a class="btn btn-info btn-sm" @click="delUI">删除UI</a>
                             <a class="btn btn-info btn-sm" data-toggle="modal" href="#addElementModal">添加元素</a>
@@ -58,7 +58,7 @@ var template_ele = `
                 </div>
             </section>
         </div>
-        <div class="col-lg-8">
+        <div class="col-xs-8">
             <section class="panel" id="UI">
                 <div class="elementContent">
                     <header class="panel-heading" v-if="topSelect">
@@ -66,23 +66,23 @@ var template_ele = `
                 </header>
                     <form class="form-horizontal panel-pad" id="UIForm">
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">UI名称：</label>
-                            <div class="col-lg-3">
+                            <label class="col-xs-2 control-label">UI名称：</label>
+                            <div class="col-xs-3">
                                 <input type="text" name="UIName" class="form-control" :value="UIName" id="RUIName">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">关联对象库中对象：</label>
-                            <div class="col-lg-3">
+                            <label class="col-xs-3 control-label">关联对象库中对象：</label>
+                            <div class="col-xs-3">
                                 <input type="text" id="UILinkedInput" class="form-control" :value="UILinked" disabled>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-xs-2">
                                 <a class="btn btn-info" data-toggle="modal" href="#UILinkedModal">关联对象</a>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-xs-2">
                                 <a class="btn btn-info" @click="removeUILinked()">解除关联</a>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-xs-2">
                                 <a class="btn btn-info" @click="updateUI">保存</a>
                             </div>
                         </div>
@@ -96,12 +96,12 @@ var template_ele = `
                 <div class="elementContent">
                     <form class="form-horizontal panel-pad" id="eleForm">
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">元素名称</label>
-                            <div class="col-lg-3">
+                            <label class="col-xs-3 control-label">元素名称</label>
+                            <div class="col-xs-3">
                                 <input type="text" name="" class="form-control" :value="eleName" id="rEleName">
                             </div>
-                            <label for="" class="col-lg-2 control-label">类型</label>
-                            <div class="col-lg-3">
+                            <label for="" class="col-xs-2 control-label">类型</label>
+                            <div class="col-xs-3">
                                 <select class="form-control" id="classtypeSelect">
                                     <option value="">--选择控件类型--</option>
                                     <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
@@ -109,20 +109,20 @@ var template_ele = `
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">对象库中父对象</label>
-                            <div class="col-lg-3">
+                            <label class="col-xs-3 control-label">对象库中父对象</label>
+                            <div class="col-xs-3">
                                 <input type="text" name="" id="eleParentInput" class="form-control" :value="eleParent" disabled>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-xs-2">
                                 <a class="btn btn-info" data-toggle="modal" href="#eleParentModal">设置父对象</a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">对象库中关联对象</label>
-                            <div class="col-lg-3">
+                            <label class="col-xs-3 control-label">对象库中关联对象</label>
+                            <div class="col-xs-3">
                                 <input type="text" name="" id="eleLinkedInput" class="form-control" :value="eleLinked" disabled>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-xs-2">
                                 <a class="btn btn-info" data-toggle="modal" href="#eleLinkedModal">设置关联对象</a>
                             </div>
                         </div>
@@ -325,20 +325,20 @@ var template_ele = `
                             <section class="panel">
                                 <form id="addUIForm" class="form-horizontal" role="form">
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">UI名称</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label">UI名称</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name="UIName" id="addUIName">
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label class="col-lg-3 control-label">relateIdentifyObjectId</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label">relateIdentifyObjectId</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name="relateIdentifyObjectId" id="addRelateIdentifyObjectId">
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label class="col-lg-3 control-label"> relateParentIdentifyObjectId</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label"> relateParentIdentifyObjectId</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name="relateParentIdentifyObjectId" id="addRelateParentIdentifyObjectId">
                                         </div>
                                     </div>
@@ -367,26 +367,26 @@ var template_ele = `
                             <section class="panel">
                                 <form id="addElementForm" class="form-horizontal" role="form">
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">元素名称</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label">元素名称</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name="ElementName" id="addElementName">
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label class="col-lg-3 control-label">ClassType</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label">ClassType</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name="ClassType" id="addEleClassType">
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label class="col-lg-3 control-label"> relateIdentifyObjectId</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label"> relateIdentifyObjectId</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name=" relateIdentifyObjectId" id="addEleRelateIdentifyObjectId">
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label class="col-lg-3 control-label"> relateParentIdentifyObjectId</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label"> relateParentIdentifyObjectId</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name="  relateParentIdentifyObjectId" id="addEleRelateParentIdentifyObjectId">
                                         </div>
                                     </div>

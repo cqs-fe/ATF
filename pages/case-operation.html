@@ -15,7 +15,7 @@
     #menuContent,
     .elementContent,
     .tab-content {
-      height: calc(100vh - 210px);
+      height: calc(100vh - 190px);
       background-color: #fff;
     }
   </style>
@@ -58,7 +58,9 @@
           <div role="tabpanel" class="tab-pane active" id="messages">
             <case-data></case-data>
           </div>
-          <div role="tabpanel" class="tab-pane" id="settings">...</div>
+          <div role="tabpanel" class="tab-pane" id="settings">
+              <exec-record></exec-record>
+          </div>
         </div>
 
         <!-- <el-tab-pane label="对象库" name="first"><object-repo></object-repo></el-tab-pane> -->
@@ -177,7 +179,14 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 	</div>
-	</script>
+  </script>
+  
+  <script type="text/x-template" id="execution-record">
+    <div class="tab-content">
+      <button @click="changeSrcDoc()">click me</button>
+      <iframe class="record-iframe" frameborder="0" :srcdoc="srcDoc"></iframe>
+    </div>
+  </script>
 </body>
 
 </html>
@@ -188,6 +197,7 @@
 <script type="text/javascript" src="../static/js/objectRepo.js"></script>
 <script type="text/javascript" src="../static/js/elementLibrary.js"></script>
 <script type="text/javascript" src="../static/js/case-operation/case-data.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/execution-record.js"></script>
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>

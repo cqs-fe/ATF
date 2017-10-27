@@ -1,7 +1,7 @@
 var template_obj = `
 <div style="min-height: 0;">
     <div class="row" v-if="breadShow">
-        <div class="col-lg-12">
+        <div class="col-xs-12">
             <ul class="breadcrumb">
                 <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
                 <li><a href="transact.html"> 功能点</a></li>
@@ -10,18 +10,18 @@ var template_obj = `
         </div>
     </div>
     <div class="row" v-if="topSelect">
-        <div class="col-lg-12">
+        <div class="col-xs-12">
             <section class="panel panel-pad">
                 <!-- select start -->
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-lg-2 control-label">所属被测系统</label>
-                        <div class="col-lg-2">
+                        <label class="col-xs-2 control-label">所属被测系统</label>
+                        <div class="col-xs-2">
                             <select class="form-control" id="autSelect">
                             </select>
                         </div>
-                        <label class="col-lg-2 control-label">所属功能点</label>
-                        <div class="col-lg-2">
+                        <label class="col-xs-2 control-label">所属功能点</label>
+                        <div class="col-xs-2">
                             <select class="form-control" id="transactSelect" v-model="transid">
                             </select>
                         </div>
@@ -32,20 +32,20 @@ var template_obj = `
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-xs-4">
             <section class="panel tree-panel">
                 <header class="panel-heading"  v-if="top-select">
                     对象库
                 </header>
                 <div id="menuContent" class="menuContent treeMenu">
                     <div class="form-group panel-pad form-horizontal">
-                        <div class="col-lg-6">
+                        <div class="col-xs-6">
                             <input type="text" name="" placeholder="请输入对象名称" value="" class="form-control empty input-sm"  id="keyword">
                         </div>
                         <a class="btn btn-info btn-sm" id="search-btn">搜索</a>
                     </div>
                     <div class="form-group form-horizontal">
-                        <div class="col-lg-12">
+                        <div class="col-xs-12">
                             <a class="btn btn-info btn-sm" data-toggle="modal" href="#addObjModal">添加对象</a>
                             <a class="btn btn-info btn-sm" @click="delObj">删除对象</a>
                         </div>
@@ -54,7 +54,7 @@ var template_obj = `
                 </div>
             </section>
         </div>
-        <div class="col-lg-8">
+        <div class="col-xs-8">
             <section class="panel" id="">
                 <div class="elementContent">
                      <header class="panel-heading" v-if="topSelect">
@@ -62,12 +62,12 @@ var template_obj = `
                      </header>
                     <form class="form-horizontal panel-pad" id="objForm">
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">名称</label>
-                            <div class="col-lg-3">
+                            <label class="col-xs-2 control-label">名称</label>
+                            <div class="col-xs-3">
                                 <input type="text" name="name" class="form-control" :value="objName">
                             </div>
-                            <label for="" class="col-lg-2 control-label">类型</label>
-                            <div class="col-lg-3">
+                            <label for="" class="col-xs-2 control-label">类型</label>
+                            <div class="col-xs-3">
                                 <select class="form-control" id="classtypeSelect">
                                     <option value="">--选择控件类型--</option>
                                     <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
@@ -205,8 +205,8 @@ var template_obj = `
                             <section class="panel">
                                 <form id="addUIForm" class="form-horizontal" role="form">
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">名称</label>
-                                        <div class="col-lg-5">
+                                        <label class="col-xs-3 control-label">名称</label>
+                                        <div class="col-xs-5">
                                             <input type="text" class="form-control" name="objName" id="addObjName">
                                         </div>
                                     </div>
