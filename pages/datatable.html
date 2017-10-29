@@ -69,94 +69,50 @@
               <input type="text" id="input4" class="form-control" name="">
               <div class="input-group-addon">}</div>
             </div>
-          </div>
-          <div class="form-group " v-show="dataType==2">
-            <input type="text" id="input2" class="form-control" name="" readonly="true" value="nil">
-          </div>
-          <div class="form-group" v-show="dataType==3">
-            <input type="text" id="input3" class="form-control" name="" readonly="true" value="">
-          </div>
-          <div class="form-group" v-show="dataType==1">
-            <input type="text" id="input1" class="form-control" name="">
-          </div>
-          <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
-          <!-- <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button> -->
-        </form>
-        <!-- 前置操作暂时隐藏 -->
-        <div class="operation-wrapper">
-          <div class="sticky-top">
-            <label>前置操作</label>
-            <div>
-              <button class="btn btn-white" @click="showUiAndElement2($event, 1)">
-              <i class=" icon-trash"></i>
-              添加多项
-              </button>
-              <button class="btn btn-white" @click="removeRow($event, 1)">
-              <i class=" icon-trash"></i>
-              删除
-              </button>
-              <button class="btn btn-white" @click="moveUp($event, 1)">
-              <i class="icon-double-angle-up"></i>
-              上移
-              </button>
-              <button class="btn btn-white" @click="moveDown($event, 1)">
-              <i class="icon-double-angle-down"></i>
-              下移
-              </button>
-              <button class="btn btn-white" @click="saveOperation($event, 1)">
-              <i class="icon-save"></i>
-              保存
-              </button>
-            </div>
-          </div>
-          <div class="before-operation operation">
-            <table class="before-operation-table" border="1">
-              <thead>
-                <tr>
-                  <th class="move">排序</th>
-                  <th class="check">
-                    <!-- <input type="checkbox" class="checkall"> -->
-                    选择
-                  </th>
-                  <th class="index">行号</th>
-                  <th class="operations">操作项</th>
-                  <th class="functions">方法</th>
-                  <th class="parameters">参数</th>
-                  <th class="add-row">
-                    <i class="icon-plus" @click="addRow(1)" style="font-size: 18px"></i>
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="ui-sortable" id="sortable">
-                <tr v-for="(index, row) in beforeOperationRows" class="before-operation-row ui-sortable-handle" track-by="id" data-index={{index}}>
-                  <td class="move"><span class="icon-move"></span></td>
-                  <td class="check" @mousedown.stop="1">
-                    <input type="checkbox" class="checkone">
-                  </td>
-                  <td class="index" @mousedown.stop="1">{{index + 1}}</td>
-                  <td class="operations" @mousedown.stop="1">
-                    <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
-                    <label>UI:</label>
-                    <span class="operation-ui">{{row.operation.ui}}</span>
-                    <!-- <input type="text" class="operation-element" readonly="true" value={{row.operation.element}}> -->
-                    <label>元素:</label>
-                    <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
-                  </td>
-                  <td class="functions" @mousedown.stop="1">
-                    <select class="functions-select form-control" style="width: 90%;">
-                      <option v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
-                      <option>lajkj </option>
-                      <option>akjla</option>
-                    </select>
-                  </td>
-                  <td class="parameters" @mousedown.stop="1">
-                    <span class="icon-edit edit-param" style="color: #ff6c60" @click="editParameter($event, 1)"></span>
-                    <div>
-                      <div class="param-show">
-                        <span v-for="parameter in row.parameters" class="param-name-show">{{parameter.Name}}: <b class="param-value-show">{{parameter.Value}}</b>;&nbsp;&nbsp;</span>
-                        <!-- <span>参数1:<b> 1223 </b>;&nbsp;&nbsp;</span> -->
-                      </div>
-                      <table class="param-table table table-condensed table-bordered" style="display: none;">
+            <form class="data-content form-inline">
+                <div class="form-group" v-show="dataType==4">
+                    <div class="input-group">
+                        <div class="input-group-addon">{expr=</div>
+                        <input type="text" id="input4" class="form-control" name="">
+                        <div class="input-group-addon">}</div>
+                    </div>
+                </div>
+                <div class="form-group " v-show="dataType==2">
+                    <input type="text" id="input2" class="form-control" name="" readonly="true" value="nil">
+                </div>
+                <div class="form-group" v-show="dataType==3">
+                    <input type="text" id="input3" class="form-control" name="" readonly="true" value="">
+                </div>
+                <div class="form-group" v-show="dataType==1">
+                    <input type="text" id="input1" class="form-control" name="">
+                </div>
+                <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
+                <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
+            </form>
+            <div class="operation-wrapper">
+                <div class="sticky-top">
+                     <label>前置操作</label>
+                     <div>
+                         <button class="btn btn-white" @click="removeRow($event, 1)">
+                             <i class=" icon-trash"></i>
+                             删除
+                         </button>
+                         <button class="btn btn-white" @click="moveUp($event, 1)">
+                             <i class="icon-double-angle-up"></i>
+                             上移
+                         </button>
+                         <button class="btn btn-white" @click="moveDown($event, 1)">
+                             <i class="icon-double-angle-down"></i>
+                             下移
+                         </button>
+                         <button class="btn btn-white" @click="saveOperation($event, 1)">
+                             <i class="icon-save"></i>
+                             保存
+                         </button>
+                     </div>
+                </div>
+                <div class="before-operation operation">
+                    <table class="before-operation-table" border="1">
                         <thead>
                           <tr>
                             <td >名称</td>
@@ -372,9 +328,6 @@
     <!--header start-->
     <link rel="import" href="./common/header-guide.html?__inline">
     <!--header end-->
-        <!--header start-->
-        <link rel="import" href="./common/header-guide.html?__inline">
-        <!--header end-->
         <!--sidebar start-->
         <link rel="import" href="./common/aside-guide.html?__inline">
         <!--sidebar end-->
@@ -411,8 +364,6 @@
                         <div class="col-lg-12">
                             <ul class="breadcrumb" style="margin-bottom: 0;">
                                 <li><a href="#"><i class="icon-home"></i> 数据中心</a></li>
-                                <!-- <li class="active"><a href="#"> 任务管理</a></li> -->
-                                <!-- <li class="active"> 对象库</li> -->
                             </ul>
                         </div>
                     </div>
