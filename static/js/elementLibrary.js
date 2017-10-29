@@ -104,7 +104,6 @@ var template_ele = `
                             <div class="col-xs-3">
                                 <select class="form-control" id="classtypeSelect">
                                     <option value="">--选择控件类型--</option>
-                                    <!-- log: 20171024 改  :value="item.classId" => :value="item.className" ->
                                     <option v-for="item in classtypeList" :value="item.className">{{item.className}}</option>
                                 </select>
                             </div>

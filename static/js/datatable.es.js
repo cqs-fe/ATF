@@ -1072,7 +1072,7 @@ $(document).ready(function () {
 					executor: sub.systemInfo.executor,
 					caseLib_id: sub.systemInfo.caseLib_id,
 					autId: autId,
-					transId: transId,
+					transId: transid,
 					scriptId: scriptId
 				};
 				// var data = {
@@ -1086,7 +1086,6 @@ $(document).ready(function () {
 				// 使用了mock
 				$.ajax({
 					url: address + "scripttemplateController/searchScripttemplateInf",
-					// url: '/api/handson',
 					data: data,
 					type: "post",
 					dataType: "json",
