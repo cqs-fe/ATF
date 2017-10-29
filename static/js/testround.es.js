@@ -133,6 +133,7 @@ var vBody = new Vue({
 		// console.log("ready")
 		this.setSelectListener();
 		this.setDraggable();
+
 	},
 	// updated: function(){
 	// 	console.log("updated")
@@ -265,6 +266,7 @@ var vBody = new Vue({
 				handle: '.handle1'
 			})
 			$( '.sortable_scene_caselist' ).disableSelection();
+			$('#testround-main').disableSelection();
 		},
 		getCases: function(){
 			var data = {
@@ -285,6 +287,12 @@ var vBody = new Vue({
 					_this.testCaseList = data.testCaseList;
 					_this.testSceneList = data.testSceneList;
 
+					if(!(data.testCaseList && data.testCaseList.length)) {
+						Vac.alert('未查询到相关的用例信息！')
+					}
+					if(!(data.testSceneList && data.testSceneList.length)) {
+						Vac.alert('未查询到相关的场景信息！')
+					}
 					_this.caseIds.length = 0
 					_this.flowNodeIds.clear()
 					_this.testCaseList.forEach((value) => {

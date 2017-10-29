@@ -16,6 +16,7 @@ var checkFunction = {
       	})
 	},
 	setSelect (event){
+		
 		var _this = this;
 		var target  = event.target;
 		if(target.classList.contains('handle')) {
@@ -44,13 +45,16 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		container.addEventListener('mousemove', mouseMoveFunction, false);
-		container.addEventListener('mouseup', (event) => {
-			this.isSelect = true;
+		// 函数节流
+		var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		target.addEventListener('mousemove', moveFunction, false);
+		target.addEventListener('mouseup', (event) => {
+			// this.isSelect = true;
 			if (selDiv){
 				document.querySelector('.main-content').removeChild(selDiv);
 			}
-			container.removeEventListener('mousemove', mouseMoveFunction, false);
+
+			target.removeEventListener('mousemove', moveFunction, false);
 			selDiv = null;
 			// var caseLib = document.querySelectorAll('.case-lib');
 			// for(var i=0; i<caseLib.length; i++){
@@ -69,6 +73,7 @@ var checkFunction = {
 
 
 		function mouseMoveFunction(event){
+			console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}

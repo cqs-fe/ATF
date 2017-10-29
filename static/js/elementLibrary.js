@@ -105,7 +105,8 @@ var template_ele = `
                             <div class="col-lg-3">
                                 <select class="form-control" id="classtypeSelect">
                                     <option value="">--选择控件类型--</option>
-                                    <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
+                                    <!-- log: 20171024 改  :value="item.classId" => :value="item.className" ->
+                                    <option v-for="item in classtypeList" :value="item.className">{{item.className}}</option>
                                 </select>
                             </div>
                         </div>
@@ -884,6 +885,7 @@ var elementLibrary = Vue.extend({
             });
         },
         updateUI: function() {
+            var _this = this;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes(),
                 UIName = nodes[0].name,
@@ -1026,6 +1028,7 @@ var elementLibrary = Vue.extend({
             } else {
                 relateParentIdentifyObjectId = '';
             }
+            // 2017-10-24 classType改为发送名字
             // 控件类型
             var ClassType = $('#classtypeSelect').val();
             //主属性

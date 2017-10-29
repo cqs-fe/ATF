@@ -152,7 +152,7 @@ html, body{
 			height: 30px;
 			margin-top: 5px;
 			margin-bottom: 5px;
-			margin-left: 40px;
+			margin-left: 10px;
 			label,div{
 				display: inline-block;
 				margin-right: 20px;
@@ -162,7 +162,7 @@ html, body{
 			height: 35px;
 			margin-top: 5px;
 			margin-bottom: 5px;
-			margin-left: 40px;
+			margin-left: 10px;
 			overflow: hidden;
 			.form-group {
 				width: 75%;
@@ -173,7 +173,7 @@ html, body{
 		}
 		.operation-wrapper {
 			height: 448px;
-			margin-left: 40px;
+			margin-left: 10px;
 			overflow: auto;
 			.sticky-top {
 				position: sticky;
@@ -200,76 +200,107 @@ html, body{
 				.before-operation-table, .after-operation-table {
 					width: 150%;
 					margin: 5px auto;
+					.add-row, .delete-row{
+						color: #ff6c60;
+						width: 50px;
+					}
+					th {
+						text-align: center;
+						font-size: 13px;
+						font-weight: normal;
+					}
+					tbody {
+						font-size: 13px;
+					}
+					table {
+						float: right;
+						font-size: 13px;
+						width: 90%;
+						margin-bottom: 0px;
+					}
 					td {
+						text-align: left;
+					}
+					td:last-child, td:nth-child(-n+2){
 						text-align: center;
 					}
-					td.add-row {color: #ff6c60;}
-					td.delete-row { color: #ff6c60; }
-					td input {
-						vertical-align: top;
+					.check {
+						width: 40px;
 					}
-					thead, tbody {
-						td:first-child, td:nth-child(2) {
-							width: 50px;
-						}
-						td:last-child {width: 30px;}
-						td.operations{
-							position:relative;
-							width: 30%;
-							padding: 5px 0;
-							div {
-								width: calc(100% - 20px);
-								overflow: hidden;
-								label {
-									width: 30px;
-									text-align: right;
-									float:left;
-								}
-								.operation-ui, .operation-element {
-									width: calc(100% - 40px);
-									float: left;
-									margin-left: 10px;
-									border: 1px solid #888;
-								}
-							}
-							div:last-child {
-								margin-top: 5px;
-							}
-							i {
-								position:absolute;
-								float: rigth;
-								top: 45%;
-								right: 0;
-								color: #ff6c60;
-								font-size: 18px;
-							}
-						}
-						td.functions {
-							text-align: center;
-							width: 20%;
-							max-width: 20%;
-							overflow: auto;
-							select {
-								width: 90%;
-							}
-						}
-						td.parameters {
-							
+					.move {
+						width: 40px;
+						span {
+							color: #ff6c60;
 						}
 					}
+					.index {
+						width: 40px;
+						text-align: center;
+					}
+					.operations {
+						width: 180px;
+						i {
+							display: inline-block;
+							width: 20px;
+							height: 20px;
+							font-size: 18px;
+						}
+						span {
+							display: inline-block;
+							min-width: 30px;
+						}
+					}
+					.parameters {
+						&>span {
+							vertical-align: center;
+							display: inline-block;
+							width: 20px;
+							height: 20px;
+							font-size: 18px;
+							float: right;
+						}
 
+						.param-table {
+							td {
+								padding: 0;
+								// display: inline-block;
+								max-width: 120px;
+							}
+							td:first-child {
+								width: 90px;
+							}
+							td:last-child {
+								width: 120px;
+								word-break: break-all;
+								word-wrap:break-word;
+								white-space: pre-wrap;
+								overflow-wrap: break-word;
+							}
+							.bottom-row {
+								// display: none;
+							}
+							.param-name {
+								background-color: #ccc;
+							}
+						}
+					}
+					.delete-row i {
+						display: inline-block;
+						width: 20px;
+						height: 20px;
+						font-size: 16px;
+					}
+					.functions {
+						width: 120px;
+						.functions-select {
+							padding: 1px;
+							height: 22px;
+						}
+					}
 				}
 			}
 		}
 		.operation-wrapper .operation .parameters .param-table {
-			vertical-align: top;
-			width: 100%;
-			td:first-child {
-				width: 40%;
-			}
-			td:last-child {
-				width: 60%;
-			}
 		}
 	}
 	footer {
@@ -411,7 +442,7 @@ html, body{
 			position: relative;
 			min-width: 200px;
 			flex: 0 0 auto;
-			margin-left: -190px;
+			margin-left: 0px;
 			font-size: 0;
 			z-index: 1;
 			.selectDiv {
