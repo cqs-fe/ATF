@@ -432,7 +432,7 @@ $(document).ready(function() {
                     var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
                     sendDataArray.push(string)
                 }
-                var sendData = sendDataArray.join(';')
+                var sendData = sendDataArray.join(';\n')
                 console.log(sendData)
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
@@ -569,14 +569,11 @@ $(document).ready(function() {
             },
             cancelEditParam: function(event) {
                 var table = $(event.target).parents('.param-table')
-                // var index = table.parents('tr').attr('data-index')
                 $('.edit-param', table.parents('tr')).css({'visibility': 'visible'})
                 table.css({display: 'none'})
                 $('.param-show', table.parents('tr')).css({'display': 'block'})
-                // this.updateRow(this.operationRows, index)
             },
             saveParam: function(event) {
-                // var tbody = $(event.target).parent().parent().parent()
                 var target = $(event.target)
                 var tbody = target.parents('.param-table')
                 var trs = [...$('.param-row', tbody)]
@@ -585,8 +582,6 @@ $(document).ready(function() {
                 console.log(valueShows)
                 this.operationRows[parentRow.attr('data-index')].parameters.length = 0
                 trs.forEach((row, index) => {
-                    // parameters:[{Name:'', Value: ''}]
-                    // console.log(row.querySelector('.param-value').innerHTML)
                     var data = {}
                     data.Name = row.querySelector('.param-name').innerHTML
                     data.Value = row.querySelector('.param-value').innerHTML

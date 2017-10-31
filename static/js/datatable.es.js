@@ -30,7 +30,7 @@ $(document).ready(function () {
 				selection: null,
 				autId: null,
 				transactId: null,
-				beforeOperationRows: [],//[{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
+				beforeOperationRows: [],
 				afterOperationRows: [],
 				parameterVue: null,
 				beforeStr: '',
@@ -168,13 +168,81 @@ $(document).ready(function () {
 					this.afterOperationRows = []
 					document.getElementById("input1").value = ''
 					document.getElementById("input4").value = ''
+					var cellData = handsontable.getDataAtCell(this.selection.start.row, this.selection.start.col)
+					if(cellData.startsWith('@before')) {
+						// 表达式
+						editDataVue.dataType = 4;
+						var beforeStr = cellData.slice(cellData.indexOf('@before') + 6, cellData.indexOf('@value'));
+						console.log('beforeStr-->'+beforeStr)
+						var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
+						// console.log('valueStr-->'+valueStr)
+						var afterStr = cellData.slice(cellData.indexOf('@after') + 5);
+						// console.log('afterStr-->'+afterStr)
+						// 前置操作
+						var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
+						// console.log('beforeArr-->'+beforeArr)
+						this.parseScript(beforeArr, this.beforeOperationRows)
+
+						var afterArr = afterStr.includes('UI("') ? afterStr.slice(afterStr.indexOf('UI("')).split(';') : [];
+						// console.log('afterArr-->'+afterArr)
+
+						this.parseScript(afterArr, this.afterOperationRows)
+						var value = valueStr.split('{expr=')[1].slice(0, -1);
+					}
+				},
+				parseScript: function(strArray, operationRows) {
+					if(strArray.length) {
+						for (let i = 0; i < strArray.length - 1; i++) {
+							if(!strArray[i].length) return;
+							// @before\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');\n@value\n{expr= }\n@after\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');
+							var script = strArray[i].split(').');
+							var operation = {};
+							var arr = script[1].split('(');
+							// UI('aa'  --> aa
+							operation.ui = script[0].slice(script[0].indexOf('UI(') + 4, -1);
+							// WebElement('bb' --> WebElement  &  bb
+							operation.classType = arr[0];
+							operation.element = arr[1].slice(1, -1);
+							// click('a','b','c') --> click
+							var functions = [];
+							functions.push({mname: script[2].slice(0, script[2].indexOf('('))});
+							// click('a','b','c') --> 'a','b','c' --> ['a', 'b', 'c'] --> parameters: [{ Name: 'para1', Value: 'a' }]
+							var paraArr = script[2].slice(script[2].indexOf('(')+1, -1).split(',');
+							var parameters = [];
+							for (let j = 0; j < paraArr.length; j++) {
+								var o = {}
+								o.Name = 'para' + (j + 1)
+								o.Value = paraArr[j].slice(1, -1)
+								parameters.push(o)
+							}
+							operationRows.push({
+								id: Symbol(),
+								operation,
+								functions,
+								parameters
+							})
+						}
+						console.log(operationRows)
+					}
 				},
 				insert: function (type, title) {
 					insertDivVue.show(type, title);
 				},
 				saveEditData: function () {
-					var inputValue = document.getElementById("input" + this.dataType).value;
-					// console.log(inputValue);
+					var inputValue;
+					if(this.dataType == 1) {
+						inputValue= document.getElementById("input" + this.dataType).value;
+					} else if (this.dataType == 2) {
+						inputValue = 'nil';
+					} else if (this.dataType == 3) {
+						inputValue = '';
+					} else {
+						var inputStr = document.getElementById("input" + this.dataType).value;
+						var beforeStr = this.saveOperation(null, 1);
+						var afterStr = this.saveOperation(null, 2);
+						inputValue = `@before\n${beforeStr}\n@value\n{expr=${inputStr}}\n@after\n${afterStr}`;
+					}
+					console.log(inputValue);
 					handsontable.setDataAtCell(this.selection.start.row, this.selection.start.col, inputValue);
 					handsontable.render();
 				},
@@ -352,8 +420,9 @@ $(document).ready(function () {
 				},
 				saveOperation: function (event, type) {
 					var str = type === 1 ? 'before' : 'after'
+					var str2 = type === 1 ? '' : '2'
 					var sendDataArray = [];
-					var trs = Array.from(document.querySelectorAll('#sortable tr.' + str + '-operation-row'))
+					var trs = Array.from(document.querySelectorAll('#sortable' + str2 + ' tr.' + str + '-operation-row'))
 					for (var tr of trs) {
 						// 
 						var UI = tr.querySelector('.operation-ui').innerHTML
@@ -373,8 +442,8 @@ $(document).ready(function () {
 						var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
 						sendDataArray.push(string)
 					}
-					var sendData = sendDataArray.join(';')
-					console.log(sendData)
+					var sendData = sendDataArray.join(';\n');
+					return sendData;
 				},
 				updateRow: function (rows, index) {
 					// 使用splice方法，通过改变数组项的id更新绑定的数组，
@@ -584,8 +653,8 @@ $(document).ready(function () {
 							case 1: finalString = "var(\"" + dataName + "\")"; break;
 							case 2: finalString = "Data.Flow(\"" + dataName + "\")"; break;
 							case 3: finalString = "Data.Com(\"" + dataName + "\")"; break;
-							case 4: finalString = this.dataWritable === "readable" ? "Data.Scene(\"" : "Data.SceneShare(\"" + dataName + "\")"; break;
-							case 5: finalString = this.dataWritable === "readable" ? "Data.Scene(\"" : "Data.SceneShare(\"" + dataName + "\")"; break;
+							case 4: finalString = this.dataWritable === "readable" ? "Data.Scene(\"" + dataName + "\")": "Data.SceneShare(\"" + dataName + "\")"; break;
+							case 5: finalString = this.dataWritable === "readable" ? "Data.Scene(\"" + dataName + "\")": "Data.SceneShare(\"" + dataName + "\")"; break;
 							case 6: finalString = "Data.Env(\"" + dataName + "\")"; break;
 						}
 					} else {
@@ -641,6 +710,8 @@ $(document).ready(function () {
 					executor: 63,
 					caseLib_id: 1,
 					testpoints: '',
+					script_mode: '',
+					execute_method: ''
 				},
 				testpointsMap: new Map(),
 				testpointLength: 0
@@ -668,12 +739,18 @@ $(document).ready(function () {
 					var _this = this;
 					if (newVal.length > 1) {
 						newVal.shift()
+						return
 					}
-
-					// console.log(JSON.stringify(_this.checkedArray))
-					// console.log('[' + _this.checkedArray.toString() + ']')
-					// _this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
+					if(newVal.length == 0) {
+						return
+					}
 					_this.systemInfo.testpoints = JSON.stringify(newVal)
+					var checkboxs = $(`input[value=${newVal[0]}]`);
+					console.log(checkboxs)
+					_this.systemInfo.script_mode = checkboxs[0].getAttribute('data-script-mode');
+					_this.systemInfo.execute_method = checkboxs[0].getAttribute('data-execute-method');
+					console.log(_this.systemInfo.script_mode)
+					console.log(_this.systemInfo.execute_method)
 					// 假数据
 					var dataMock = {
 						executor: 63,
@@ -748,7 +825,6 @@ $(document).ready(function () {
 							Vac.alert('查询数据失败！')
 						}
 					});
-
 				}
 			},
 			methods: {
@@ -797,17 +873,15 @@ $(document).ready(function () {
 								for (let value of data.o) {
 									var arrayItem = {};
 									if (value != null) {
-										({ testpoint: arrayItem.value } = value);
+										({ 
+											testpoint: arrayItem.value,
+											executeMethod: arrayItem.execute_method,
+											scriptMode: arrayItem.script_mode,
+										} = value);
 										arrayItem.name = arrayItem.value;
 										_this.checkedItems.push(arrayItem);
 									}
 								}
-								// data.o.forEach(function(value,index){
-								//     var arrayItem = {};
-								//     ({testpoint:arrayItem.value} = value);
-								//     arrayItem.name = arrayItem.value;
-								//     _this.checkedItems.push(arrayItem);
-								// });
 							},
 							error: function (XMLHttpRequest, textStatus, errorThrown) {
 								Vac.alert('查询测试点失败，失败信息：' + textStatus)
@@ -1068,22 +1142,14 @@ $(document).ready(function () {
 				// console.log(sub.systemInfo.testpoints)
 				var data = {
 					testpoint: sub.checkedArray[0],
-					// testpoint: testpoint,
+					script_mode: sub.systemInfo.script_mode,
+					execute_method: sub.systemInfo.execute_method,
 					executor: sub.systemInfo.executor,
 					caseLib_id: sub.systemInfo.caseLib_id,
 					autId: autId,
 					transId: transid,
 					scriptId: scriptId
 				};
-				// var data = {
-				// 		testpoint: "登录",
-				// 		executor: 63,
-				// 		caseLib_id: 1,
-				// 		autId:22,
-				// 		transId:57,
-				// 		scriptId:1167
-				// }
-				// 使用了mock
 				$.ajax({
 					url: address + "scripttemplateController/searchScripttemplateInf",
 					data: data,
@@ -1194,8 +1260,7 @@ $(document).ready(function () {
 										});
 										console.log(changedData.toString());
 									}
-								}
-
+								},
 							});
 							// handsontable.updateSettings(contextMenuObj);
 						}
@@ -1380,20 +1445,20 @@ $(document).ready(function () {
 		//渲染第一列的内容 end
 		//渲染平常列
 		function renderNormalCol(instance, td, row, col, prop, value, cellProperties) {
-			if (row % 2) {
-				// td.style.backgroundColor = "#eeee11";
-			} else {
-				// td.style.backgroundColor = "#ffff00";
-			}
-			if (rowSelectFlags[row] === true) {
-				td.style.backgroundColor = "#1ABDE6";
-			} else {
-				// td.style.backgroundColor = "#fff";
-			}
-			if (td.isSearchResult) {
-				// td.style.backgroundColor = "#fff";
-				console.log("result");
-			}
+			// if (row % 2) {
+			// 	// td.style.backgroundColor = "#eeee11";
+			// } else {
+			// 	// td.style.backgroundColor = "#ffff00";
+			// }
+			// if (rowSelectFlags[row] === true) {
+			// 	// td.style.backgroundColor = "#1ABDE6";
+			// } else {
+			// 	// td.style.backgroundColor = "#fff";
+			// }
+			// if (td.isSearchResult) {
+			// 	// td.style.backgroundColor = "#fff";
+			// 	// console.log("result");
+			// }
 			td.innerHTML = value;
 			return td;
 		};
@@ -1529,7 +1594,6 @@ $(document).ready(function () {
 			for (i = selection.start.row; i <= selection.end.row; i++) {
 				let j = 0;
 				for (j = selection.start.col; j <= selection.end.col; j++) {
-					// let data = [i - selection.start.row, j - selection.start.col,handsontable.getDataAtCell(i,j)];
 					let nullData = [i, j, ""];
 					// clipBoard.push(data);
 					clipBoardData.push(nullData)
@@ -1553,8 +1617,6 @@ $(document).ready(function () {
 			var header = handsontable.getColHeader(selection.start.col);
 			var testcaseId = dataSource[selection.start.row].testcaseId;
 			editDataVue.show(selection);
-			editDataVue.beforeStr = ''
-			editDataVue.afterStr = ''
 		}
 		// 编辑单元格数据
 		// 设置单元格数据，保证设置的数据不超过最大行，最大列

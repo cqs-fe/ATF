@@ -56,19 +56,6 @@ var checkFunction = {
 
 			target.removeEventListener('mousemove', moveFunction, false);
 			selDiv = null;
-			// var caseLib = document.querySelectorAll('.case-lib');
-			// for(var i=0; i<caseLib.length; i++){
-			// 	var inputs = Array.from(caseLib[i].getElementsByClassName('check-case'));
-			// 	if(inputs.every(function(value){
-			// 		if(value.checked===true)
-			// 			{return true;} 
-			// 		return false;
-			// 	})){
-			// 		caseLib[i].getElementsByClassName('checkall')[0].checked = true;
-			// 	} else {
-			// 		caseLib[i].getElementsByClassName('checkall')[0].checked = false;
-			// 	}
-			// }
 		}, false);
 
 
