@@ -50,6 +50,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
+                                                    <th style="width:17%">继承标志</th>
                                                     <th style="width:15%">名称</th>
                                                     <th>描述</th>
                                                 </tr>
@@ -59,6 +60,7 @@
                                                     <td>
                                                         <input type="radio" name="class" />
                                                     </td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
@@ -114,7 +116,119 @@
                                         <label class="col-lg-2 control-label">描述</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="descname" class="form-control" value="">
+                                        </div>                                    
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">创建者</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="creator" class="form-control" value="" disabled>
                                         </div>
+                                        <label class="col-lg-2 control-label">创建时间</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="createTime" class="form-control" value="" disabled>
+                                        </div>                                    
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">修改者</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="modifier" class="form-control" value="" disabled>
+                                        </div>
+                                        <label class="col-lg-2 control-label">修改时间</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="modifiedTime" class="form-control" value="" disabled>
+                                        </div>                                    
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">缩略图</label>
+                                        <div class="col-lg-3">
+                                            <img id="previewImg" src="http://img.zcool.cn/community/0106e858135099a84a0e282b5b62b5.jpg" width="300" height="300">
+                                            <div style="margin-top:20px">
+                                                上传缩略图：
+                                                <input name="uploadImg" type="file" style="margin-top:10px" onchange="imgPreview(this)">                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <label class="col-lg-2 control-label">继承标志</label>
+                                            <div class="col-lg-3">
+                                                <select class="form-control" size="1" id="heritImgSelect" style="margin-top:5px">
+                                                    <!-- <option value="1"></option>
+                                                    <option value="2"></option> -->
+                                                </select>
+                                            </div>
+                                            <label class="col-lg-2 control-label">默认方法</label>                                            
+                                            <div class="col-lg-3">
+                                                <select class="form-control" size="1" id="defaultMethodSelect" style="margin-top:5px">
+                                                    <!-- <option value="1"></option>
+                                                    <option value="2"></option> -->
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <label class="col-lg-2 control-label">可见性</label>
+                                            <div class="col-lg-3">
+                                                <select class="form-control" size="1" id="visibilitySelect" style="margin-top:5px">
+                                                    <option value="1">可见</option>
+                                                    <option value="2">不可见</option>
+                                                </select>
+                                            </div>
+                            
+                                    </div>
+                                    <div class="property">
+                                            参数列表
+                                            <a class="btn btn-white btn-sm pull-right" @click="addSupRecPara($event)"><i class="icon-plus"></i></a>
+                                            <a class="btn btn-white btn-sm pull-right" @click="delSupRecPara($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                            <table class="table table-bordered" id="supportedRecognitionTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:5%"></th>
+                                                        <th id="name">参数名称</th>
+                                                        <th id="type">值类型</th>
+                                                        <th id="parameterizeColumn">参数化列</th>
+                                                        <th id="desc">描述</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="methodPara">
+                                                    <tr v-for="item in supRecList">
+                                                        <td>
+                                                            <input type="checkbox" name="supRec_list" />
+                                                        </td>
+                                                        <td contenteditable="true">{{item.name}}</td>
+                                                        <td contenteditable="true">{{item.type}}</td>
+                                                        <td contenteditable="true">{{item.parameterizeColumn}}</td>
+                                                        <td contenteditable="true">{{item.desc}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                    </div>
+                                    <div class="property">
+                                        对象识别属性列表
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:20%">属性名</th>
+                                                    <th >属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="recProp">
+                                                <tr>
+                                                    <td>runtime_args</td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>self_recognition_pros</td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>assist_recognition_pros</td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </form>
                                 <a class="btn btn-info rightBtn" @click="updateClass">保存</a>
@@ -142,8 +256,8 @@
                                     </div>
                                      <div class="property">
                                         参数列表
-                                        <a class="btn btn-white btn-sm pull-right" @click="addPara($event)"><i class="icon-plus"></i></a>
-                                        <a class="btn btn-white btn-sm pull-right" @click="delPara($event)"><i class="icon-minus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="addMethodPara($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delMethodPara($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
                                         <table class="table table-bordered" id="pTable">

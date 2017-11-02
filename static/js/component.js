@@ -7,10 +7,12 @@ var app = new Vue({
         methodName: '方法',
         classPropTr: '<tr><td><input type="radio" name="class"/></td><td ></td><td ></td></tr>',
         methodPropTr: '<tr><td><input type="radio" name="method"/></td><td ></td><td ></td></tr>',
-        paraTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
+        methodParaTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         autId: '',
         autName: '被测系统名称',
         paraList: [],//参数列表
+        supRecList: [],
     },
     ready: function() {
         this.getAutId();
@@ -146,13 +148,24 @@ var app = new Vue({
             }
 
         },
-        //添加参数
-        addPara: function(e) {
+        //添加控件supRec参数
+        addSupRecPara: function(e) {
             var curTbody = $(e.target).parent().next().find('tbody');
-            curTbody.append(this.paraTr);
+            curTbody.append(this.supRecParaTr);
         },
-        //删除参数
-        delPara: function(e) {
+        //删除控件supRec参数
+        delSupRecPara: function(e) {
+            var selectedTr = $(e.target).parent().next().find('input[name="supRec_list"]:checked').parent().parent();
+            selectedTr.remove();
+        },
+
+        //添加方法参数
+        addMethodPara: function(e) {
+            var curTbody = $(e.target).parent().next().find('tbody');
+            curTbody.append(this.methodParaTr);
+        },
+        //删除方法参数
+        delMethodPara: function(e) {
             var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
             selectedTr.remove();
         },
@@ -261,12 +274,14 @@ function getClass() {
             for (var i = 0; i < classList.length; i++) {
                 var classTr = $('<tr></tr>'),
                     classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
+                    classHeritImgTd = $('<td ></td>'),
                     classNameTd = $('<td ></td>'),
                     classDescriptionTd = $('<td ></td>');
                 classTr.attr('id', classList[i].classid);
+                classHeritImgTd.html('<img src="http://58pic.ooopic.com/58pic/11/72/82/37I58PICgk5.jpg" width="20" height="20">');
                 classNameTd.html(classList[i].classname);
                 classDescriptionTd.html(classList[i].descname);
-                classTr.append(classCheckTd, classNameTd, classDescriptionTd);
+                classTr.append(classCheckTd, classHeritImgTd ,classNameTd, classDescriptionTd);
                 $('#classProp').append(classTr);
             }
         },
@@ -282,8 +297,8 @@ function classClick(event) {
         $('#methodSection').css('display', 'none');
         $('#classForm input[name="classname"]').val('');
         $('#classForm input[name="descname"]').val('');
-        var curName = $(event.target).parent().next().html();
-        var curDesc = $(event.target).parent().next().next().html();
+        var curName = $(event.target).parent().next().next().html();
+        var curDesc = $(event.target).parent().next().next().next().html();
         $('#classForm input[name="classname"]').val(curName);
         $('#classForm input[name="descname"]').val(curDesc);
         //查询当前构件类型对应的方法
@@ -342,4 +357,31 @@ function methodClick(event) {
             }
         });
     }
+}
+
+//预览上传图片
+function imgPreview(fileDom){
+    //判断是否支持FileReader
+    if (window.FileReader) {
+        var reader = new FileReader();
+    } else {
+        alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+    }
+
+    //获取文件
+    var file = fileDom.files[0];
+    var imageType = /^image\//;
+    //是否是图片
+    if (!imageType.test(file.type)) {
+        alert("请选择图片！");
+        return;
+    }
+    //读取完成
+    reader.onload = function(e) {
+        //获取图片dom
+        var img = document.getElementById("previewImg");
+        //图片路径设置为读取的图片
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 }
