@@ -1,0 +1,105 @@
+@import 'mixins.scss';
+/* 常用菜单 */
+.menu-block {
+	margin-top: 2rem;
+	background: #fff;
+
+	.menu-list {
+		display: block;
+		height: 3.5rem;
+		line-height: 3.5rem;
+		padding-left: 1rem;
+		border-bottom: 1px solid #eee;
+		@include transition(0.5s);
+
+		&:last-child {
+			border-bottom: 0;
+		}
+		.iconfont {
+			position: absolute;
+			font-size: 1.3rem;
+		}
+		.name {
+			padding-left: 2rem;
+			position: absolute;
+
+			.text {
+				vertical-align: middle;
+				font-size: 1.05rem;
+			}
+			.new-message.text {
+				padding: 0.1rem 0.5rem;
+				background: #fc4548;
+				font-size: 0.75rem;
+				color: #fff;
+				border-radius: 1rem;
+				margin-left: 0.5rem;
+			}
+		}
+		.right-icon {
+			position: absolute;
+			right: 1rem;
+			top: 50%;
+			@include transformY(-50%);
+		}
+	}/* menu-list end */
+}/* menu-block end */
+
+/* 常用菜单 - 2 */
+.menu-list-body {
+	background: #fff;
+	padding-left: 1rem;
+
+	.item {
+		display: block;
+		height: 3.5rem;
+		padding-right: 1rem;
+		line-height: 3.5rem;
+		border-bottom: 1px solid #eee;
+
+		* {
+			color: #969696;
+		}
+	}
+	.flr.iconfont {
+		margin-left: 0.5rem;
+	}
+	.fll.iconfont {
+		margin-right: 0.5rem;
+	}
+}
+
+/* 明细列表样式 */
+.line-list-body {
+	background: #fff;
+	padding-left: 1rem;
+	margin-bottom: 2rem;
+
+	.item {
+		display: block;
+		height: 4rem;
+		padding-right: 1rem;
+		line-height: 4rem;
+		border-bottom: 1px solid #eee;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+		.one-line {
+			max-width: 12rem;
+		}
+		.img {
+			display: inline-block;
+			height: 2rem;
+			width: 2rem;
+			background: #ccc;
+			top: 50%;
+			@include transformY(-50%);
+			margin-right: 0.8rem;
+			border-radius: 50%;
+		}
+		.fll.iconfont {
+			margin-right: 0.8rem;
+		}
+	}
+}

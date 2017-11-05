@@ -1,0 +1,56 @@
+.select-name {
+    width: 100px;
+}
+
+.input-search {
+    width: 150px;
+}
+
+.panel-padding {
+    padding-left: 0;
+}
+
+table {
+    th,
+    td {
+        text-align: center;
+    }
+    .btn-tr {
+        color: dodgerblue;
+        border: none;
+        margin: 0 0px;
+        background-color: transparent;
+    }
+}
+
+.input-tip {
+    display: block;
+    margin-top: 50px;
+}
+
+.dataTables_filter input {
+    padding: 5px 10px;
+    font-size: 15px;
+    border-radius: 3px;
+    border: solid 1px #ddd;
+}
+
+.glyphicon-remove {
+    color: #b94a48;
+}
+
+// .modal-dialog {
+//     width: 600px;
+// }
+.form-control {
+    padding: 5px 5px;
+}
+
+.col-lg-1,
+.col-lg-2,
+.col-lg-3,
+.col-lg-4,
+.col-lg-8 {
+    padding-left: 8px;
+    padding-right: 8px;
+}
