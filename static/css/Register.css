@@ -1,0 +1,115 @@
+@charset "utf-8";
+
+*{padding:0;margin:0;}
+
+#ATF{font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:24px; color:#F33;}
+#title{font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:18px; color:#000; margin-left:10px;}
+.title{width:60%;height:30px;margin: 50px auto;}
+
+.ui-stepBar-wrap{width: 60%; margin: 0 auto;}
+.ui-stepBar-wrap .ui-stepBar{}
+.ui-stepBar-wrap .ui-stepBar .ui-stepProcess1{width:50%;height:5px;background:#F33;float: left}
+.ui-stepBar-wrap .ui-stepBar .ui-stepProcess2{width:50%;height:5px;background:#ccc;float: left}
+
+.clear{
+	clear: both;
+}
+.ui-stepBar-wrap .ui-stepInfo-wrap{height:30px;margin: 0 auto;}
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo{width:50%;float: left;font-weight:bold; text-align: center;}
+/* CSS Document */
+.main{
+	width:580px;
+	margin: 30px auto;
+}
+#result{
+	margin: 0 auto;
+	text-align: center;
+	font-size: 18px;
+}
+.bitian{
+	width:580px;
+	text-align:right;
+	font-size:14px;
+	margin: 10px auto;
+
+}
+.bitiantitle{
+	font-size: 18px;
+	text-align: left;
+}
+.xuantian{
+	width:580px;
+	text-align:right;
+	font-size:14px;
+	margin: 10px auto;
+}
+.xuantiantitle{
+	font-size: 18px;
+	text-align: left;
+}
+.form-group{
+	width:340px;
+	padding-right: 240px;
+    margin-top:15px; 
+    margin-bottom: :15px; 
+}
+.bitian input{margin:5px;  width:240px; }
+.xuantian input{margin:5px;width:240px; }
+
+input {
+	height: 36px;
+    border-radius:8px;
+    box-shadow:inset 0 2px 5px #eee;
+    border:1px solid #D4D4D4;
+    color:#999;
+	font-size:14px;
+}
+input:focus{
+	border:1px solid #50afeb;
+	outline:none;
+}
+.item-label{
+	width: 100px;
+	line-height: 36px;
+}
+.error{
+	display: inline-block;
+	width: 240px;
+	margin-left:1px; 
+	margin-right:-240px; 
+	line-height: 36px;
+	color: #F33;
+}
+input.authCode{
+	width: 134px;
+}
+
+
+#image{
+	width:100px;
+	height:36px;
+	display: inline-block;
+	padding-top: 20px: 
+	
+}
+#codeImage{
+	width: 100px;
+	height: 30px;
+}
+.autherror{
+	display: inline-block;
+	width: 240px;
+	margin-left:1px; 
+	margin-right:-240px; 
+	line-height: 36px;
+	color: #F33;
+}
+button{
+	padding:3px 20px;
+    background-color:#3c6db0;
+    border-radius:5px;
+    width:165px;
+    border:none;
+	color:#FFF;
+
+}

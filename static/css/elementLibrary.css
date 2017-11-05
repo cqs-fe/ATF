@@ -1,0 +1,81 @@
+.panel-pad {
+    padding-top: 10px;
+    padding-bottom: 1px;
+}
+
+#menuContent {
+    height: 400px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.treeMenu {
+    width: 100%;
+    border: 1px solid rgb(170, 170, 170);
+    z-index: 10;
+}
+
+.tree {
+    margin-top: 0;
+    width: 100%;
+    height: auto;
+}
+
+.elementContent {
+    height: 400px;
+    overflow: auto;
+    overflow-x: hidden;
+    border: 1px solid rgb(170, 170, 170);
+    z-index: 10;
+}
+
+.elementContent>a {
+    margin: 0 0 10px 80%;
+}
+
+.saveBtn {
+    margin: 5px 5px 5px 550px;
+}
+
+.property {
+    padding: 10px 20px 0 20px;
+}
+
+.small-panel {
+    padding: 0 25px 0 25px;
+    width: 60%;
+}
+
+.elelink-panel {
+    padding: 0 25px 0 25px;
+    /* width: 60%; */
+}
+
+.linked {
+    display: flex;
+    border: 1px solid rgb(170, 170, 170);
+}
+
+.linked-left {
+    flex: 1;
+    border-right: 1px solid rgb(170, 170, 170);
+    padding: 20px;
+}
+
+.linked-right {
+    flex: 2;
+    padding: 20px;
+}
+
+.linked-left a {
+    display: block
+}
+
+.property a {
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+#main-content {
+    min-height: 0px;
+}

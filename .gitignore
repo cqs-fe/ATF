@@ -1,0 +1,5 @@
+.vscode/
+debug.log
+dist/
+public/
+dist/
