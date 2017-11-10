@@ -3,7 +3,7 @@ $(document).ready(function () {
 	// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
 	var transid = '',
-		autId = '';
+		autId ='';
 	(function () {
 
 		var tooltipwindow = new Vue({
@@ -23,7 +23,7 @@ $(document).ready(function () {
 			el: '#editData',
 			data: {
 				dataType: 4,
-				isShow: false,
+				isShow: true,
 				insertTitle: null,
 				insertType: null,
 				isInsertDivShow: true, //
@@ -247,13 +247,13 @@ $(document).ready(function () {
 					handsontable.render();
 				},
 				addRow: function (type) {
-					let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [{ Name: 'value1', Value: '' }] }
+					let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [] }
 					type === 1 ?
 						(this.beforeOperationRows.push(s)) :
 						(this.afterOperationRows.push(s))
 				},
 				insertRow: function (index, type) {
-					let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [{ Name: 'value1', Value: '' }] }
+					let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [] }
 					type === 1 ?
 						(this.beforeOperationRows.splice(+index + 1, 0, s)) :
 						(this.afterOperationRows.splice(+index + 1, 0, s))
@@ -287,7 +287,7 @@ $(document).ready(function () {
 					var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
 					$.ajax({
 						url: address + 'elementlibraryController/showUIandElementforScript',
-						data: 'transid=' + sessionStorage.getItem('transactId'),
+						data: 'transid=' + transid,
 						type: 'post',
 						dataType: 'json',
 						success: (data, statusText) => {
@@ -481,7 +481,7 @@ $(document).ready(function () {
 
 						// 发送ajax请求函数的数据
 						var data = {
-							id: this.autId,		// autid
+							id: autId,		// autid
 							classname: editDataVue.uiOrFunctions.classType,		// classname
 						}
 
@@ -504,7 +504,7 @@ $(document).ready(function () {
 							// var mname = $('.functions-select', parentRow).val()
 							var mname = operationRows[index].functions[0].mname
 							var data = {
-								autid: 8,
+								autid: autId,
 								className: editDataVue.uiOrFunctions.classType,
 								methodName: mname
 							}
@@ -515,14 +515,22 @@ $(document).ready(function () {
 									type: 'post',
 									dataType: 'json',
 									success: function (data, statusText) {
-										operationRows[index].parameters = JSON.parse(`${data}`)
+										let paras = JSON.parse(`${data}`);
+										let arr = []
+										for (let para of paras) {
+												arr.push({
+														Name: para.name,
+														Value: ''
+												})
+										}
+										operationRows[index].parameters = arr
 										_this.updateRow(operationRows, index)
 										resolve()
 									}
 								})
 							})
 						}).then(() => {
-							console.log('success')
+							// console.log('success')
 						})
 					} else {
 						// 清空functions数组并新添加选中的公共方法
@@ -561,7 +569,7 @@ $(document).ready(function () {
 					var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
 					var uiNodes = uiTree.getCheckedNodes(true);
 					var operationRows = editDataVue.uiOrFunctions.table === 1 ? editDataVue.beforeOperationRows : editDataVue.afterOperationRows;
-					var functionNodes = functionTree.getCheckedNodes(true)
+					var functionNodes = functionTree && functionTree.getCheckedNodes(true)
 					console.log(functionNodes)
 					for (var node of uiNodes) {
 						if (node.isParent) {
@@ -577,7 +585,7 @@ $(document).ready(function () {
 						newRow.functions = []
 						$.ajax({
 							url: address + 'autController/selectMethod',
-							data: { id: editDataVue.autId, classname: newRow.operation.classType },
+							data: { id: autId, classname: newRow.operation.classType },
 							type: 'post',
 							dataType: 'json',
 							success: function (data, statusText) {
@@ -586,34 +594,47 @@ $(document).ready(function () {
 								}
 								// data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
 								// 把第一个function的参数取出来，放入
-								data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
+								if(data.ommethod[0]) {
+									let paras = JSON.parse(`${data.ommethod[0].arguments}`);
+									let arr = []
+									for (let para of paras) {
+											arr.push({
+													Name: para.name,
+													Value: ''
+											})
+									}
+									newRow.parameters = arr
+								}
+								// data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
 								operationRows.push(newRow)
 							}
 						})
 					}
-					for (var node of functionNodes) {
-						console.log(node)
-						let newRow = {}
-						newRow.id = Symbol()
-						newRow.operation = {
-							element: '',
-							ui: '',
-							classType: ''
-						}
-						newRow.functions = []
-						newRow.functions.push({ ...node, mname: node.methodname })
-
-						newRow.parameters = []
-						try {
-							var parameters = JSON.parse(node.parameterlist)
-							for (let param of parameters) {
-								newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+					if (functionNodes) {
+						for (var node of functionNodes) {
+							console.log(node)
+							let newRow = {}
+							newRow.id = Symbol()
+							newRow.operation = {
+								element: '',
+								ui: '',
+								classType: ''
 							}
-						} catch (e) {
-							newRow.parameters = []
-						}
+							newRow.functions = []
+							newRow.functions.push({ ...node, mname: node.methodname })
 
-						operationRows.push(newRow)
+							newRow.parameters = []
+							try {
+								var parameters = JSON.parse(node.parameterlist)
+								for (let param of parameters) {
+									newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+								}
+							} catch (e) {
+								newRow.parameters = []
+							}
+
+							operationRows.push(newRow)
+						}
 					}
 					$('#ui-ele-modal2').modal('hide')
 				},
@@ -752,17 +773,17 @@ $(document).ready(function () {
 					console.log(_this.systemInfo.script_mode)
 					console.log(_this.systemInfo.execute_method)
 					// 假数据
-					var dataMock = {
-						executor: 63,
-						caseLib_id: 1,
-						testpoints: JSON.stringify(["登录"]),
+					var data = {
+						executor: 	_this.systemInfo.executor,
+						caseLib_id:	_this.systemInfo.caseLib_id,
+						testpoints:	_this.systemInfo.testpoints,
 					}
 					$.ajax({
 						url: address + "autController/selectTestCaseByCondition",
 						type: "post",
 						dataType: "json",
-						data: _this.systemInfo,
-						// data: dataMock,
+						// data: _this.systemInfo,
+						data: data,
 						success: function (data, textStatus) {
 							var treeData = [];
 							if (data.o.length == 0) {
@@ -1142,8 +1163,8 @@ $(document).ready(function () {
 				// console.log(sub.systemInfo.testpoints)
 				var data = {
 					testpoint: sub.checkedArray[0],
-					script_mode: sub.systemInfo.script_mode,
-					execute_method: sub.systemInfo.execute_method,
+					// script_mode: sub.systemInfo.script_mode,
+					// execute_method: sub.systemInfo.execute_method,
 					executor: sub.systemInfo.executor,
 					caseLib_id: sub.systemInfo.caseLib_id,
 					autId: autId,
