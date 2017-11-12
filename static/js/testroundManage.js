@@ -24,6 +24,10 @@ var app = new Vue({
         getTestRound();
         // getScene(this.currentPage, this.pageSize, this.order, this.sort);
         // changeListNum();
+        $('.3').addClass('open')
+        $('.3 .arrow').addClass('open')
+        $('.3-ul').css({display: 'block'})
+        $('.3-5').css({color: '#ff6c60'})
     },
     methods: {
         //获取选中的id

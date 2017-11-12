@@ -44,6 +44,11 @@ var app = new Vue({
         getCase(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
         getScene();
+
+        $('.3').addClass('open')
+        $('.3 .arrow').addClass('open')
+        $('.3-ul').css({display: 'block'})
+        $('.3-4').css({color: '#ff6c60'})
     },
     methods: {
         //获取上级页面选中的场景id和名称

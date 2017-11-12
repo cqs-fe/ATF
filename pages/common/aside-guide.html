@@ -1,213 +1,158 @@
+<style>
+    .active-item {
+        color: #ff6c60;
+    }
+</style>
 <aside>
-    <div id="sidebar" class="nav-collapse ">
-        <!-- sidebar menu start-->
+    <div id="sidebar" class="nav-collapse">
         <ul class="sidebar-menu">
-            <!-- <li :class="compareWithSessionStorageSidebarTag(itemIndex)===0?'open sub-menu':'sub-menu'" v-for="(itemIndex, item) in map">
-                <a :href="item.item_child_list.length===0?item.item_address:'javascript:;'">
-                    <i :class="item.item_icon"></i>
-                    <span v-on:click="clickEvent(itemIndex)" :id="'item'+itemIndex">{{item.item_name}}</span>
-                    <span :class="compareWithSessionStorageSidebarTag(itemIndex)===0?'open arrow':'arrow'" v-if="item.item_child_list.length>0"></span>
-                    </span>
-                </a>
-                <ul class="sub" v-if="item.item_child_list.length>0" :style="compareWithSessionStorageSidebarTag(itemIndex)===0?'display:block':'display:none'">
-                    <li class="sub-menu" v-for="(subItemIndex,subItem) in item.item_child_list">
-                        <a :href="subItem.item_child_address">
-                            <span v-on:click="clickEvent(itemIndex,subItemIndex)" :id="'subItem'+subItemIndex">
-                                {{subItem.item_child_name}}
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-                
-            </li> -->
-            <li class="sub-menu">
-                <a href="testProject.html" class="">
-                    <i class="icon-book"></i>
-                    <span>测试项目</span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a href="testitems.html" class="">
-                    <i class="icon-bookmark"></i>
-                    <span>测试任务</span>
-                </a>
-            </li>
-            <li class="sub-menu">
+            <li class="sub-menu 0">
                 <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
-                    <span>系统管理</span>
+                    <span class="">系统管理</span>
                     <span class="arrow"></span>
                 </a>
-                <ul class="sub">
+                <ul class="sub 0-ul">
                     <li class="sub-menu">
-                        <a class="" href="architecture.html">
-                            <span>开发架构</span>
+                        <a class="0-0" href="usermanagement.html">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                    <!-- <li class="sub-menu">
+                        <a class="0-1" href="#">
+                            <span>权限设置</span>
                         </a>
                     </li>
                     <li class="sub-menu">
-                        <a class="" href="aut.html">
-                            <span>测试系统</span>
+                        <a class="0-2" href="#">
+                            <span>数据字典设置</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
-            <li class="sub-menu">
+            <li class="sub-menu 1">
                 <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
-                    <span>用例管理</span>
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试过程配置</span>
                     <span class="arrow"></span>
                 </a>
-                <ul class="sub">
+                <ul class="sub 1-ul">
                     <li class="sub-menu">
-                        <a class="" href="caseManagement.html">
-                            <span>案例管理</span>
-                        </a>
-                    </li>
-                    <li class="sub-menu">
-                        <a class="" href="datatable.html">
-                            <span>数据中心</span>
-                        </a>
-                    </li>
-                    <li class="sub-menu">
-                        <a class="" href="scene.html">
-                            <span>场景管理</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
-                    <span>测试管理</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li class="sub-menu">
-                        <a class="" href="testphase.html">
+                        <a class="1-0" href="testphase.html">
                             <span>测试阶段</span>
                         </a>
                     </li>
                     <li class="sub-menu">
-                        <a class="" href="testroundManage.html">
-                            <span>测试轮次</span>
-                        </a>
-                    </li>
-                    <li class="sub-menu">
-                        <a class="" href="testround.html">
-                            <span>测试计划与执行</span>
+                        <a class="1-1" href="productLine.html">
+                            <span>业务线管理</span>
                         </a>
                     </li>
                 </ul>
             </li>
-            <li class="sub-menu">
-                <a href="testRecord.html">
-                    <i class="icon-tasks"></i>
-                    <span>记录单管理</span>
+            <li class="sub-menu 2">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试基础设施</span>
+                    <span class="arrow"></span>
                 </a>
+                <ul class="sub 2-ul">
+                    <li class="sub-menu">
+                        <a class="2-0" href="aut.html">
+                            <span>被测系统管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="2-1" href="component.html">
+                            <span>自动化构件管理</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li class="sub-menu">
-                <a href="usermanagement.html">
-                    <i class=" icon-male"></i>
-                    <span>用户管理</span>
+            <li class="sub-menu 3">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>项目测试</span>
+                    <span class="arrow"></span>
                 </a>
+                <ul class="sub 3-ul">
+                    <li class="sub-menu">
+                        <a class="3-0" href="testitems.html">
+                            <span>测试任务</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-1" href="testProject.html">
+                            <span>测试项目管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-2" href="caseManagement.html">
+                            <span>测试用例管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-3" href="datatable.html">
+                            <span>测试资源管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-4" href="scene.html">
+                            <span>测试场景</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-5" href="testroundManage.html">
+                            <span>测试轮次管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-6" href="testround.html">
+                            <span>测试计划及执行</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-7" href="testRecord.html">
+                            <span>执行记录管理</span>
+                        </a>
+                    </li>
+                    <!-- <li class="sub-menu">
+                        <a class="3-8" href="#">
+                            <span>统计及度量</span>
+                        </a>
+                    </li> -->
+                </ul>
+            </li>
+            <li class="sub-menu 4">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试资产库</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 4-ul">
+                    
+                </ul>
             </li>
         </ul>
         <!-- sidebar menu end-->
     </div>
 </aside>
 
-<!-- <script src="../../lib/jquery.js"></script> -->
-<!-- <script type="text/javascript" src="../../lib/vue.js"></script> -->
-
 <script>
-    var dropdown = function () {
-
-//    sidebar dropdown menu
-
-    // jQuery('#sidebar .sub-menu > a').click(function () {
-    //     var last = jQuery('.sub-menu.open', $('#sidebar'));
-    //     last.removeClass("open");
-    //     jQuery('.arrow', last).removeClass("open");
-    //     jQuery('.sub', last).slideUp(200);
-    //     var sub = jQuery(this).next();
-    //     if (sub.is(":visible")) {
-    //         jQuery('.arrow', jQuery(this)).removeClass("open");
-    //         jQuery(this).parent().removeClass("open");
-    //         sub.slideUp(200);
-    //     } else {
-    //         jQuery('.arrow', jQuery(this)).addClass("open");
-    //         jQuery(this).parent().addClass("open");
-    //         sub.slideDown(200);
-    //     }
-    //     var o = ($(this).offset());
-    //     diff = 200 - o.top;
-    //     if(diff>0)
-    //         $("#sidebar").scrollTo("-="+Math.abs(diff),500);
-    //     else
-    //         $("#sidebar").scrollTo("+="+Math.abs(diff),500);
-    // });
-}
-
-
-
-</script>
-<script>
-    // var address1 = 'http://10.108.222.144:8080/'
-    // var address1 = '/'
-    // var asidebarVue = new Vue({
-
-    //     el:'#sidebar',
-    //     data:{
-    //         map:null,
-    //         caselibId: null
-    //     },
-    //     ready: function(){
-    //         this.caselibId = sessionStorage.getItem('caselibid')
-    //     },
-    //     methods:{
-
-    //         clickEvent: function (itemTag,subItemTag) {
-    //             sessionStorage.setItem("sidebarTag",itemTag);
-    //             sessionStorage.setItem("sidebarSubTag",subItemTag);
-    //             // let tmpStr;
-    //             // if(subItemTag===undefined){
-    //             //     tmpStr=sessionStorage.getItem("sidebarTag");
-    //             //     alert('clicked! Tag:' + tmpStr);
-    //             // }
-    //             // else{
-    //             //     tmpStr=sessionStorage.getItem("sidebarTag")+' ; '+sessionStorage.getItem("sidebarSubTag");
-    //             //     alert('clicked! Tag:' + tmpStr);
-    //             // }
-          
-    //         },
-
-    //         compareWithSessionStorageSidebarTag: function (itemNum){
-
-    //             let tmp = sessionStorage.getItem("sidebarTag");
-    //             tmp=parseInt(tmp);
-    //             if(itemNum===tmp){
-    //                 return 0;
-    //             }
-    //             else{
-    //                 return 1;
-    //             }
-    //         }
-
-    //     },
-    //     ready: function(){
-    //         var _this = this;
-    //         $.ajax({
-    //             url: address1 + 'pages/getasidebar.json',
-    //             type:'get',
-    //             success:function(data,statusText){
-    //                 _this.map = data.items_list;
-    //                 Vue.nextTick(dropdown);
-    //             },
-    //             error:function(data,statusText){
-
-    //             }
-
-    //         });
-    //     }
-    // }) 
+    var sidebarVue 
+    window.addEventListener('load', function(){
+        sidebarVue = new Vue({
+            el: '#sidebar',
+            data: {
+                menu: '',
+                subMenu: ''
+            },
+            ready:function(){
+                var caselib_Id = sessionStorage.getItem('caselibid')
+                if(!caselib_Id) {
+                    for(let i = 2; i <= 8; i++) {
+                        $('.3-'+i).css({display: 'none'})
+                    }
+                }
+            }
+        })
+    })
 </script>

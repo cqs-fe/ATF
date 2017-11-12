@@ -385,6 +385,10 @@ $(document).ready(function() {
             // $('#edit-parameter-modal').on('hidden.bs.modal', function() {
 
             // })
+            $('.2').addClass('open')
+            $('.2 .arrow').addClass('open')
+            $('.2-ul').css({display: 'block'})
+            $('.2-0').css({color: '#ff6c60'})
         },
         methods: {
             setChanged: function(){

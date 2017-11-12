@@ -703,6 +703,10 @@ var elementLibrary = Vue.extend({
             this.getEleLinkedObjectTree();
         }
         // $("#search-btn").click(this.searchNodes);
+        $('.2').addClass('open')
+        $('.2 .arrow').addClass('open')
+        $('.2-ul').css({display: 'block'})
+        $('.2-0').css({color: '#ff6c60'})
     },
     methods: {
         //初始化获取测试系统和功能点

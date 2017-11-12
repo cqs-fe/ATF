@@ -1,4 +1,8 @@
 $(document).ready(function () {
+	$('.3').addClass('open')
+	$('.3 .arrow').addClass('open')
+	$('.3-ul').css({display: 'block'})
+	$('.3-3').css({color: '#ff6c60'})
 	// var submenuHeight = document.querySelector('#submenu').offsetHeight;
 	// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
@@ -23,7 +27,7 @@ $(document).ready(function () {
 			el: '#editData',
 			data: {
 				dataType: 4,
-				isShow: true,
+				isShow: false,
 				insertTitle: null,
 				insertType: null,
 				isInsertDivShow: true, //

@@ -134,6 +134,10 @@ var vBody = new Vue({
 		this.setSelectListener();
 		this.setDraggable();
 
+		$('.3').addClass('open')
+		$('.3 .arrow').addClass('open')
+		$('.3-ul').css({display: 'block'})
+		$('.3-6').css({color: '#ff6c60'})
 	},
 	// updated: function(){
 	// 	console.log("updated")

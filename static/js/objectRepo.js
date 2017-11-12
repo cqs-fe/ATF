@@ -461,8 +461,10 @@ var objectRepo =  Vue.extend({
                 treeObj.selectNode(nodes[0]);
             }
         });
-        // 如果引入的是组件
-        
+        $('.2').addClass('open')
+        $('.2 .arrow').addClass('open')
+        $('.2-ul').css({display: 'block'})
+        $('.2-0').css({color: '#ff6c60'})
     },
     methods: {
         //获取classtype
