@@ -327,6 +327,7 @@ function methodClick(event) {
         $('#methodForm input[name="description"]').val('');
         $('#methodForm input[name="maintainTime"]').val('');
         $('#methodForm textarea[name="executecode"]').val('');
+        app.paraList=[];
 
         app.methodId = $(event.target).parent().parent().attr('id');
         $.ajax({

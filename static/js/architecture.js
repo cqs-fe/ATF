@@ -300,8 +300,8 @@ var app = new Vue({
                 isparameter = $('#methodForm select[name="isparameter"]').val(),
                 waittime = $('#methodForm input[name="waittime"]').val(),
                 timeout = $('#methodForm input[name="timeout"]').val();
-            var paraList = '[',
-                pTable = $('#pTable'),
+            var paraList = '[';
+            var pTable = $('#pTable'),
                 pRow = pTable.find('tr'),
                 pCol = pRow[0].children;
             for (var j = 1; j < pRow.length; j++) {
@@ -442,7 +442,7 @@ var setting1 = {
                         }
                     } else {
                         $('#classProp').children().remove();
-                        $('#classProp').append(propTr);
+                        $('#classProp').append(app.propTr);
                     }
 
                 },
@@ -629,6 +629,7 @@ function methodClick(event) {
         $('#methodForm input[name="name"]').val('');
         $('#methodForm input[name="description"]').val('');
         $('#methodForm select[name="isPara"]').val('');
+        app.methodParamList=[];
         $('#methodForm select[name="waittime"]').val('');
         $('#methodForm select[name="timeout"]').val('');
         $('#methodForm textarea[name="objectcode"]').val('');
