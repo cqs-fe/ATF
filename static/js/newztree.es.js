@@ -208,12 +208,13 @@ $(document).ready(function() {
                                         }
                                         row.id = Symbol()
                                         row.functions.push({ mname: operationRow.function })
-                                        row.operation.element = operationRow.operator[0]
-                                        row.operation.ui = operationRow.operator[1]
+                                        row.operation.element = operationRow.operator[2]
+                                        row.operation.ui = operationRow.operator[0]
+                                        row.operation.classType = operationRow.operator[1]
                                         for (let para of operationRow.arguments) {
                                             row.parameters.push({
-                                                Name: para.value,
-                                                Value: ''
+                                                Name: para.name,
+                                                Value: para.value
                                             })
                                         }
                                         // 插入到operationRows中
@@ -461,11 +462,15 @@ $(document).ready(function() {
                     for (var paramTr of paramTrs) {
                         paramValues.push(`"${paramTr.innerHTML}"`)
                     }
+                    if(paramValues.length === 0) {
+                        paramValues = ["\"\""]
+                    }
                     var parameterString = paramValues.toString()
+                    console.log(parameterString)
                     var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
                     sendDataArray.push(string)
                 }
-                var sendData = sendDataArray.join(';\n')
+                var sendData = sendDataArray.join(';\n') + ';'
                 console.log(sendData)
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
@@ -508,11 +513,14 @@ $(document).ready(function() {
                     for (var paramTr of paramTrs) {
                         paramValues.push(`"${paramTr.innerHTML}"`)
                     }
+                    if(paramValues.length === 0) {
+                        paramValues = ["\"\""]
+                    }
                     var parameterString = paramValues.toString()
                     var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
                     sendDataArray.push(string)
                 }
-                var sendData = sendDataArray.join(';\n')
+                var sendData = sendDataArray.join(';\n') + ';';
                 $.ajax({
                     url: address + 'scripttemplateController/showscripttemplateTableSave',
                     type: 'post',

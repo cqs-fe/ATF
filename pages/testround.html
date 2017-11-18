@@ -96,6 +96,7 @@
               <button class="btn btn-info" @click="executeAll()">批量执行</button>
               <button class="btn btn-info" @click="getCases()">查询</button>
               <button class="btn btn-info" @click="addScene();">添加场景</button>
+              <button class="btn btn-info" @click="removeSceneAndCase();">移除场景与用例</button>
             </div>
             <div class="main-content2">
               <div class="case-list-wrapper list-wrapper">
@@ -153,14 +154,14 @@
               </div>
               <!-- 场景列表 -->
               <div class="scene-list-wrapper list-wrapper" v-for="scene in testSceneList">
-                <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;">
+                <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;padding: 2px 5px;" @mousedown.stop="1">
                   <input type="checkbox" :value="scene.sceneId" class="checkscene" v-model="selectedScenes">
                 </div>
                 <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
                 <span class="hide-case-list" @click="hideCaseList($event)" @mousedown.stop="1">收起</span>
                 <!-- <div class="case-list"> -->
                   <div class="case-list">
-                    <div class="check-all-case" v-if="scene.testCaseList.length">全选
+                    <div class="check-all-case" v-if="scene.testCaseList.length" style"padding: 2px 5px;" @mousedown.stop="1">全选
                       <input type="checkbox"  @change="checkAllInScene($event)" class="checkall-inscene" 
                         :value="scene.sceneId" v-model="checkallSceneIds">
                     </div>

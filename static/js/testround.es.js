@@ -182,7 +182,6 @@ var vBody = new Vue({
 				testPhase: this.testphaseValue,
 				testRound: this.testroundValue
 			}
-			console.log(data)
 			$.ajax({
 				url: address + 'executeController/t1',
 				data: data,
@@ -201,7 +200,7 @@ var vBody = new Vue({
 			})
 			// 2,2,3,q,2,1,''
 		},
-		addScene: function(){
+		addScene: function() {
 			var _this = this;
 			
 			$.ajax({
@@ -218,6 +217,48 @@ var vBody = new Vue({
 			});
 			$('#add-modal').modal("show");
 		},
+		removeSceneAndCase: function() {
+			let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
+			let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
+			let scenecaseList = new Array();
+			let o = {};
+			for (let sceneCase of this.selectedSceneCases) {
+				let arr = sceneCase.split('-');
+				if (arr.length === 3) {continue;}
+				o[arr[0]] ? o[arr[0]].push(+arr[1]) : o[arr[0]] = [+arr[1]];
+			}
+			for (let key of Object.keys(o)) {
+				scenecaseList.push({
+					sceneId: +key, 
+					testcaseList: o[key].length === 0 ? '' : o[key]
+				})
+			}
+			scenecaseList = JSON.stringify(scenecaseList);
+			let data = {
+				removeFlag: 1,
+				caselibId: this.caselibId,
+				testPhase: this.testphaseValue,
+				testRound: this.testroundValue,
+				sceneList,
+				testcaseList,
+				scenecaseList
+			}
+			// let scenecaseList = 
+			$.ajax({
+				url: address + 'testexecutioninstanceController/delete',
+				data: data,
+				type: 'post',
+				dataType: 'json',
+				success: function(data, statusText){
+					if(data.success){
+						$('#add-modal').modal('hide');
+						Vac.alert('移除成功')
+					}else {
+						Vac.alert("移除失败")
+					}
+				}
+			});
+		},
 		sendSceneData: function(){
 			var _this = this;
 			var data = {
@@ -228,7 +269,6 @@ var vBody = new Vue({
 				sceneList: '[' + this.selectedScene.toString() + ']',     // [3]
 				scenecaseList: ''			//  暂时为空 [{"sceneId":1,"testcaseList":[1,2]}]
 			};
-			console.log(data)
 			// send data and display the modal 
 			$.ajax({
 				url: address + 'testexecutioninstanceController/insert',
@@ -283,7 +323,6 @@ var vBody = new Vue({
 			var _this = this;
 			$.ajax({
 				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
-				// url: '/api/getcaseandscene',
 				type: 'post',
 				data: data,
 				dataType: 'json',
