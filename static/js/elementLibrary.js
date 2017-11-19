@@ -62,8 +62,8 @@ var template_ele = `
             <section class="panel" id="UI">
                 <div class="elementContent">
                     <header class="panel-heading" v-if="topSelect">
-                    {{UIName}}
-                </header>
+                        {{UIName}}
+                    </header>
                     <form class="form-horizontal panel-pad" id="UIForm">
                         <div class="form-group">
                             <label class="col-xs-2 control-label">UI名称：</label>
