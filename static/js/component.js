@@ -333,7 +333,7 @@ var app = new Vue({
                     "assistRecognitionPros": assistRecParaList,
                     "ordernum": null,
                     "modifierId": null,
-                    "picfile": null,
+                    // "picfile": null,
                 }
 
             });
@@ -506,11 +506,12 @@ function classClick(event) {
                 $('#classForm input[name="modifiedTime"]').val('');
         
                 $.ajax({
-                    // url: 'http://10.108.223.23:8080/ATFCloud2.0/omclassController/selectByPrimaryKey',   //ATF2.0
-                    url: '/api/postcomponent',
+                    url: 'http://10.108.223.23:8080/ATFCloud2.0/omclassController/selectByPrimaryKey',   //ATF2.0
+                    // url: '/api/postcomponent',
                     type: 'post',
                     data: {
-                        forClassid: app.classId,
+                        // forClassid: app.classId,
+                        forClassid: '1',
                     },
                     success: function(data) {
                         $('#classForm input[name="classname"]').val(data.name);
