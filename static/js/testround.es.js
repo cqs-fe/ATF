@@ -95,7 +95,6 @@ var vBody = new Vue({
 							resolve()
 						}
 					}
-					console.log(_this.testrounds)
 				}
 			});
 		})
@@ -132,7 +131,13 @@ var vBody = new Vue({
 	},
 	ready: function(){
 		// console.log("ready")
-		this.setSelectListener()
+		this.setSelectListener();
+		this.setDraggable();
+
+		$('.3').addClass('open')
+		$('.3 .arrow').addClass('open')
+		$('.3-ul').css({display: 'block'})
+		$('.3-6').css({color: '#ff6c60'})
 	},
 	// updated: function(){
 	// 	console.log("updated")
@@ -144,23 +149,24 @@ var vBody = new Vue({
 			this.setBackground()
 		},
 		"checkedFlowNodes": function(value, oldVal) {
-			// console.log(this.flowNodeIds)
 			for(let key of this.flowNodeIds.keys()) {
 				if(this.flowNodeIds.get(key).every((value) => {
 					return this.checkedFlowNodes.includes(value)
 				}))
 				{
 					Vac.pushNoRepeat(this.selectedCases, +key)
-				} else if(this.flowNodeIds.get(key).every((value) => {
-					return !this.checkedFlowNodes.includes(+value)
-				}))
+				} else 
+				// if(this.flowNodeIds.get(key).every((value) => {
+				// 	return !this.checkedFlowNodes.includes(+value)
+				// }))
 				{
 					let set = new Set(this.selectedCases)
 					set.delete(+key)
 					this.selectedCases = [...set]
 				}
 			}
-		}
+			this.setBackground()
+		},
 	},
 	methods: {
 		hideAlert: function(){
@@ -176,7 +182,6 @@ var vBody = new Vue({
 				testPhase: this.testphaseValue,
 				testRound: this.testroundValue
 			}
-			console.log(data)
 			$.ajax({
 				url: address + 'executeController/t1',
 				data: data,
@@ -195,7 +200,7 @@ var vBody = new Vue({
 			})
 			// 2,2,3,q,2,1,''
 		},
-		addScene: function(){
+		addScene: function() {
 			var _this = this;
 			
 			$.ajax({
@@ -212,6 +217,48 @@ var vBody = new Vue({
 			});
 			$('#add-modal').modal("show");
 		},
+		removeSceneAndCase: function() {
+			let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
+			let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
+			let sceneCaseList = new Array();
+			let o = {};
+			for (let sceneCase of this.selectedSceneCases) {
+				let arr = sceneCase.split('-');
+				if (arr.length !== 2) {continue;}
+				o[arr[0]] ? o[arr[0]].push(+arr[1]) : o[arr[0]] = [+arr[1]];
+			}
+			for (let key of Object.keys(o)) {
+				sceneCaseList.push({
+					sceneId: +key, 
+					testcaseList: o[key].length === 0 ? '' : o[key]
+				})
+			}
+			sceneCaseList = JSON.stringify(sceneCaseList);
+			let data = {
+				removeFlag: 1,
+				caselibId: this.caselibId,
+				testPhase: this.testphaseValue,
+				testRound: this.testroundValue,
+				sceneList,
+				testcaseList,
+				sceneCaseList
+			}
+			$.ajax({
+				url: address + 'testexecutioninstanceController/delete',
+				data: data,
+				type: 'post',
+				dataType: 'json',
+				success: function(data, statusText){
+					if(data.success){
+						$('#add-modal').modal('hide');
+						Vac.alert('移除成功')
+						this.getCases()
+					}else {
+						Vac.alert("移除失败")
+					}
+				}
+			});
+		},
 		sendSceneData: function(){
 			var _this = this;
 			var data = {
@@ -222,7 +269,6 @@ var vBody = new Vue({
 				sceneList: '[' + this.selectedScene.toString() + ']',     // [3]
 				scenecaseList: ''			//  暂时为空 [{"sceneId":1,"testcaseList":[1,2]}]
 			};
-			console.log(data)
 			// send data and display the modal 
 			$.ajax({
 				url: address + 'testexecutioninstanceController/insert',
@@ -234,6 +280,7 @@ var vBody = new Vue({
 					if(data.success){
 						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
+						this.getCases()
 						// _this.alertShow = true;
 						// _this.tooltipMessage = '添加成功';
 					}else {
@@ -254,6 +301,18 @@ var vBody = new Vue({
 				});
 			}
 		},
+		setDraggable: function () {
+			$('#sortable_caselist').sortable({
+				handle: '.handle'
+			})
+			$( "#sortable_caselist" ).disableSelection();
+	
+			$('.sortable_scene_caselist').sortable({
+				handle: '.handle1'
+			})
+			$( '.sortable_scene_caselist' ).disableSelection();
+			$('#testround-main').disableSelection();
+		},
 		getCases: function(){
 			var data = {
 				caselibId: this.caselibId,
@@ -265,7 +324,6 @@ var vBody = new Vue({
 			var _this = this;
 			$.ajax({
 				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
-				// url: '/api/getcaseandscene',
 				type: 'post',
 				data: data,
 				dataType: 'json',
@@ -273,6 +331,12 @@ var vBody = new Vue({
 					_this.testCaseList = data.testCaseList;
 					_this.testSceneList = data.testSceneList;
 
+					if(!(data.testCaseList && data.testCaseList.length)) {
+						Vac.alert('未查询到相关的用例信息！')
+					}
+					if(!(data.testSceneList && data.testSceneList.length)) {
+						Vac.alert('未查询到相关的场景信息！')
+					}
 					_this.caseIds.length = 0
 					_this.flowNodeIds.clear()
 					_this.testCaseList.forEach((value) => {
@@ -289,31 +353,44 @@ var vBody = new Vue({
 					_this.sceneIds.length = []
 					_this.sceneCaseMap.clear()
 					_this.flowNodesMap.clear()
-					for (var j = 0; j<_this.testSceneList.length;j++) {
-						var scene = _this.testSceneList[j]
+					if (_this.testSceneList) {
+						for (var j = 0; j<_this.testSceneList.length;j++) {
+							var scene = _this.testSceneList[j]
+							// sceneIds save the id of scene  [4,5,6]
+							_this.sceneIds.push(scene.sceneId)
+							var caselist = []
+							for(var i = 0;i<scene.testCaseList.length;i++){
+								var c = scene.testCaseList[i]
+								// caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
+								caselist.push(scene.sceneId + '-' + c.caseId);
 
-						_this.sceneIds.push(scene.sceneId)
-						var caselist = []
-						for(var i = 0;i<scene.testCaseList.length;i++){
-							var c = scene.testCaseList[i]
-							caselist.push(scene.sceneId + '-' + c.caseId);
-
-							if(c.caseCompositeType == 2) {
-								_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
-								let flowNodes = []
-								for (let flowNode of c.flowNodes) {
-									caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
-									flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+								if(c.caseCompositeType == 2) {
+									_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
+									let flowNodes = []
+									for (let flowNode of c.flowNodes) {
+										// caselist also save the flowNodeId in flowCase in the form of 
+										//  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
+										caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+										flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+									}
+									// flowNodesMap save the map of caseId between flowNodes in the following form
+									// {
+									//  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
+									// }
+									_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
 								}
-								_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
 							}
+							// sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
+							// {
+							//  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
+							// }
+							_this.sceneCaseMap.set(scene.sceneId, caselist)
+							
 						}
-						_this.sceneCaseMap.set(scene.sceneId, caselist)
-						
 					}
-			// 		console.log(_this.sceneIds)
-			// 		console.log(_this.sceneCaseMap)
-			// 		console.log(_this.flowNodesMap)
+					Vue.nextTick(() => {
+						_this.setDraggable()
+					})
 				}
 			});
 		},
@@ -339,6 +416,54 @@ var vBody = new Vue({
 				event.target.innerHTML = _this.unexpandString
 			}
 			event.stopPropagation()
+		},
+		changeCase: function(id, type){
+			let arr ;
+			switch(type) {
+				case 1: arr = this.selectedCases;
+					break;
+				case 2: arr = this.checkedFlowNodes;
+					break;
+				case 3: arr = this.selectedSceneCases;
+					break;
+			}
+			console.log(id)
+			let index = arr.findIndex((value) => { return value === id })
+			index !== -1 ? arr.splice(index, 1) : arr.push(id)
+			// 如果选中的是flowNode
+			// console.log('sceneCaseIds' + this.sceneCaseIds)
+			// console.log('flowNodesMap'+ this.flowNodesMap)
+			// console.log('sceneCaseMap'+ this.sceneCaseMap.keys())
+			let idArr = (id+'').split('-');
+			if(idArr.length === 3){
+				let sceneCaseId = idArr.slice(0, 2).join('-')
+				let caseList = this.flowNodesMap.get(sceneCaseId)
+				if(caseList.every((value) => {
+					return this.selectedSceneCases.includes(value)
+				}))
+				{
+					Vac.pushNoRepeat(this.selectedSceneCases, sceneCaseId)
+				} else {
+					let set = new Set(this.selectedSceneCases)
+					set.delete(sceneCaseId)
+					this.selectedSceneCases = [...set]
+				}
+			}
+			if(type === 3) {
+				let sceneId = idArr[0];
+				let caseIds = this.sceneCaseMap.get(+sceneId);
+				if (caseIds.every((value) => {
+					return this.selectedSceneCases.includes(value)
+				}))
+				{
+					this.checkallSceneIds.push(+sceneId)
+				} else {
+					let set = new Set(this.checkallSceneIds)
+					set.delete(+sceneId)
+					this.checkallSceneIds = [...set]
+				}
+			}
+			this.setBackground(this.selectedSceneCases)
 		},
 		setBackground: checkFunction.setBackground,
 		checkChanged: checkFunction.checkChanged,

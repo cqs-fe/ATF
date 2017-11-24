@@ -16,10 +16,7 @@ fis.match('*.scss', {
     optimizer: fis.plugin('clean-css')
 });
 
-// // 压缩js
-// fis.match('/static/*.js', {
-// 	optimizer: fis.plugin('uglify-js')
-// });
+
 
 fis.match('::package', {
     // npm install [-g] fis3-postpackager-loader
@@ -35,11 +32,11 @@ fis.match('::package', {
 //     release: '../public/$0'
 // });
 
-fis.media('debug').match('*.{js,scss,png}', {
-	useHash: false,
-	useSprite: false,
-	optimizer: null
-});
+// fis.media('debug').match('*.{js,scss,png}', {
+// 	useHash: false,
+// 	useSprite: false,
+// 	optimizer: null
+// });
 
 
 // 发布命令 fis3 release push
@@ -73,4 +70,7 @@ fis.match('*.es.js', {
     }),
     rExt: 'js'
 });
-
+// 压缩js
+fis.match('/static/*.js', {
+	optimizer: fis.plugin('uglify-js')
+});

@@ -1,3 +1,6 @@
+// editDataVue 保存一个selectedScript属性，用于设置是否显示下方的表格
+// 关于是否保存过：
+// mainVue 保存一个变量，
 $(document).ready(function() {
     var mainVue = new Vue({
         el: '#main',
@@ -8,13 +11,16 @@ $(document).ready(function() {
             transIds: [],
             templateList: [],
             checkedTemplate: [],
+            lastCheckedTemplate: null,
             script_id: '',
-            ids: '',
+            // ids: '',
             // 新增模板绑定数据
             newTemplate: {
                 name: '',
                 description: ''
-            }
+            },
+            scriptIsChanged: false,
+            scriptLength: 0
         },
         ready: function() {
             var _this = this;
@@ -61,7 +67,6 @@ $(document).ready(function() {
                                 $("#transactSelect").val(mainVue.transId);
                                 mainVue.getScriptTemplate();
                             }
-
                         });
                     }
                 });
@@ -69,7 +74,7 @@ $(document).ready(function() {
             //获取测试系统
             autSelect: function() {
                 $.ajax({
-                    async: false,
+                    async: true,
                     url: address + "autController/selectAll",
                     type: "POST",
                     success: function(data) {
@@ -91,7 +96,7 @@ $(document).ready(function() {
                 // var val = sessionStorage.getItem('autId');
                 // console.log(this.autId);
                 $.ajax({
-                    async: false,
+                    async: true,
                     url: address + 'transactController/showalltransact',
                     data: { 'autlistselect': val },
                     type: "POST",
@@ -105,7 +110,6 @@ $(document).ready(function() {
                         }
                         $('#transactSelect').html(str);
                     }
-
                 });
                 this.transId = $('#transactSelect').val();
             },
@@ -116,75 +120,130 @@ $(document).ready(function() {
                 $("#autSelect").val(this.autId);
                 $("#transactSelect").val(this.transId);
             },
-            //获取选中的id
-            getIds: function() {
-                var id_array = new Array();
-                $('input[name="chk_list"]:checked').each(function() {
-                    id_array.push($(this).attr('id'));
-                });
-                this.ids = id_array.join(',');
-                // $('input[name="id"]').val(id_array.join(','));
-            },
             getScriptTemplate: function() {
                 var _this = this;
-                $.ajax({
-                    url: address + 'scripttemplateController/showallscripttemplate',
-                    data: { 'transactid': _this.transId },
-                    type: "POST",
-                    success: function(data) {
-                        _this.templateList = data.o;
-                    }
-                });
-            },
-            change: function() {
-                var _this = this;
-                var length = this.checkedTemplate.length;
-                if (length > 0) {
-                    // this.checkedTemplate.splice(0, 1)
-                    var templateId = this.checkedTemplate[length - 1];
-                    // return 
-                    this.script_id = _this.templateList[templateId].id;
-                    console.log(this.script_id);
-                    var data = {
-                        aut_id: _this.autId,
-                        script_id: _this.templateList[templateId].id
-                    };
+                if(_this.scriptIsChanged) {
+                    var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
+                    promise.then(() => {
+                    }, () => {
+                        getTemplate();
+                    })
+                } else {
+                    getTemplate();
+                }
+                function getTemplate() {
                     $.ajax({
-                        url: address + 'scripttemplateController/showScripttemplateTable',
-                        data: data,
-                        type: 'post',
-                        dataType: 'json',
+                        url: address + 'scripttemplateController/showallscripttemplate',
+                        data: { 'transactid': _this.transId },
+                        type: "POST",
                         success: function(data) {
-                            if (data.success === true) {
-                                console.log(data.o.data)
-                                // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name:'', Value: ''}]}}
-                                for (var operationRow of data.o.data) {
-                                    let row = {
-                                        id: null,
-                                        functions: [],
-                                        operation: {
-                                            element: '',
-                                            ui: ''
-                                        },
-                                        parameters: []
-                                    }
-                                    row.id = Symbol()
-                                    row.functions.push({ mname: operationRow.function })
-                                    row.operation.element = operationRow.operator[0]
-                                    row.operation.ui = operationRow.operator[1]
-                                    for (let para of operationRow.arguments) {
-                                        row.parameters.push({
-                                            Name: para.value,
-                                            Value: ''
-                                        })
-                                    }
-                                    // 插入到operationRows中
-                                    editDataVue.operationRows.push(row)
-                                    // editDataVue.operationRows = [row]
-                                }
-                            }
+                            _this.templateList = data.o;
+                            _this.checkedTemplate = [];
+                            editDataVue.selectedScript = 0
+                            _this.scriptIsChanged = false
                         }
                     });
+                }
+            },
+            change: function(event) {
+                var value = +event.target.value;
+                var array = this.checkedTemplate.slice(0);
+                var _this = this;
+                var index = $(event.target).val();
+                if(event.target.checked) {
+                    if(this.scriptIsChanged) {
+                        var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
+                        promise.then(() => {
+                            this.checkedTemplate = this.checkedTemplate.slice(0, -1)
+                            event.preventDefault()
+                            return
+                        }, () => {
+                            _this.scriptIsChanged = false
+                            _this.checkedTemplate = [+value]
+                            process(value)
+                            event.preventDefault()
+                        })
+                    } else {
+                        this.checkedTemplate = [value]
+                        process(value)
+                    }
+                } else {
+                    // event.preventDefault()
+                    if(this.scriptIsChanged) {
+                        var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
+                        promise.then(() => {
+                            this.checkedTemplate = this.checkedTemplate.slice(0)
+                            this.checkedTemplate = [+value]
+                            return
+                        }, () => {
+                            _this.scriptIsChanged = false
+                            _this.checkedTemplate = []
+                            editDataVue.selectedScript = 0;
+                            event.target.checked = false;
+                        })
+                    } else {
+                        _this.checkedTemplate = []
+                        editDataVue.selectedScript = 0
+                        // $(`input[value='${index}']`).prop('checked', false);
+                    }
+                }
+                function process(value) {
+                    var length = _this.checkedTemplate.length;
+                    // if(length > 1) {
+                    //     _this.checkedTemplate.shift()
+                    // }
+                    editDataVue.selectedScript = 1;
+                    if (length > 0) {
+                        var templateId = +value;
+                        _this.script_id = _this.templateList[templateId].id;
+                        var data = {
+                            aut_id: _this.autId,
+                            script_id: _this.templateList[templateId].id
+                        };
+                        $.ajax({
+                            url: address + 'scripttemplateController/showScripttemplateTable',
+                            data: data,
+                            type: 'post',
+                            dataType: 'json',
+                            success: function(data) {
+                                // _this.scriptIsChanged = false
+                                editDataVue.operationRows = []
+                                if (data.success === true) {
+                                    // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name:'', Value: ''}]}}
+                                    _this.scriptLength = data.o.data.length
+                                   
+                                    for (var operationRow of data.o.data) {
+                                        let row = {
+                                            id: null,
+                                            functions: [],
+                                            operation: {
+                                                element: '',
+                                                ui: '',
+                                                classType: ''
+                                            },
+                                            parameters: []
+                                        }
+                                        row.id = Symbol()
+                                        row.functions.push({ mname: operationRow.function })
+                                        row.operation.element = operationRow.operator[2]
+                                        row.operation.ui = operationRow.operator[0]
+                                        row.operation.classType = operationRow.operator[1]
+                                        for (let para of operationRow.arguments) {
+                                            row.parameters.push({
+                                                Name: para.name,
+                                                Value: para.value
+                                            })
+                                        }
+                                        // 插入到operationRows中
+                                        editDataVue.operationRows.push(row)
+                                        // editDataVue.operationRows = [row]
+                                    }
+                                } else {
+                                    Vac.alert(data.msg)
+                                }
+                            }
+                        });
+                    }
                 }
             },
             saveTemplate: function() {
@@ -207,20 +266,20 @@ $(document).ready(function() {
             },
             deleteTemplate: function() {
                 var _this = this;
-                _this.getIds();
                 if (!_this.checkedTemplate.length) {
                     Vac.alert('请选择要删除的模板！')
                     return
                 }
+                var templateId = this.checkedTemplate[0];
+                _this.script_id = _this.templateList[templateId].id;
                 $.ajax({
                     url: address + 'scripttemplateController/delete',
-                    data: { 'id': _this.ids },
+                    data: { 'id': _this.script_id },
                     type: 'post',
                     dataType: 'json',
                     success: function(data) {
                         if (data) {
                             Vac.alert('删除成功！')
-                            // _this.checkedTemplate.pop()
                             _this.getScriptTemplate();
                         }
                     },
@@ -236,7 +295,7 @@ $(document).ready(function() {
         el: '#table2',
         data: {
             // 保存table中每一行的数据 [{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
-            operationRows: [],
+            operationRows: [],//[{id:Symbol(), functions: [], operation: {element:'1', ui: '2', parameters: [{Name: 'name1', Value: ''}]}}],
             // parameterVue: null,
             // ztree的设置项
             zTreeSettings: {
@@ -279,7 +338,7 @@ $(document).ready(function() {
                     },
                     check: {
                         enable: true,
-                        chkStyle: "checkbox",
+                        hkStyle: "checkbox",
                         chkboxType: { "Y": "ps", "N": "ps" }
                     }
                 },
@@ -298,7 +357,7 @@ $(document).ready(function() {
                     },
                     check: {
                         enable: true,
-                        chkStyle: "checkbox",
+                        hkStyle: "checkbox",
                         chkboxType: { "Y": "ps", "N": "ps" }
                     }
                 }
@@ -307,11 +366,13 @@ $(document).ready(function() {
                 changed: false, // 模态框出现后是否点击过，如果点击过，在模态框点击保存时才会进行更改
                 type: 'ui', // 保存最后点击的是UI还是函数集，据此来确定不同的后续执行行为
                 ui: '', // 保存点击的ui
+                classType: '', // 保存元素类型
                 element: '', // 保存点击的元素
                 function: '', // 保存点击的函数集中的项
                 target: null, // 保存点击编辑的target，据此可以获得parent tr
                 index: 0 // 保存每一行的index
-            }
+            },
+            selectedScript: 0
         },
         ready: function() {
             var _this = this;
@@ -334,33 +395,49 @@ $(document).ready(function() {
                         } else {
                             _this.operationRows.splice(target, 0, _this.operationRows.splice(start, 1)[0])
                         }
+                        _this.setChanged()
                     }
                 });
-                $("#sortable").disableSelection();
+                // $("#sortable").disableSelection();
             });
-            $('#edit-parameter-modal').on('hidden.bs.modal', function() {
+            // $('#edit-parameter-modal').on('hidden.bs.modal', function() {
 
-            })
+            // })
+            $('.2').addClass('open')
+            $('.2 .arrow').addClass('open')
+            $('.2-ul').css({display: 'block'})
+            $('.2-0').css({color: '#ff6c60'})
         },
         methods: {
+            setChanged: function(){
+                mainVue.scriptIsChanged = true
+            },
             addRow: function() {
-                let s = { id: Symbol(), operation: { element: '', ui: '' }, functions: [], parameters: [] }
+                let s = { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [] }
                 this.operationRows.push(s)
+                this.setChanged()
+            },
+            insertRow: function(index) {
+               this.setChanged()
+               this.operationRows.splice(+index+1, 0, { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [] })
             },
             deleteRow: function(index) {
+                this.setChanged()
                 this.operationRows.splice(index, 1)
             },
             // remove the row who is checked when 
             removeRow: function(event) {
+                this.setChanged()
                 var parent = $(event.target).closest('.operation-wrapper')
                 var trs = parent.find("tbody input[type='checkbox']:checked").closest('tr')
 
                 for (var tr of trs) {
                     this.operationRows.splice(tr.getAttribute('data-index'), 1)
                 }
+                mainVue.scriptIsChanged = true
             },
             moveUp: function(event) {
-                console.log('moveUp')
+                this.setChanged()
                 var _this = this;
                 var operationRows = this.operationRows;
                 var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr');
@@ -369,6 +446,7 @@ $(document).ready(function() {
                     originIndex >= 1 &&
                         operationRows.splice(originIndex - 1, 0, operationRows.splice(originIndex, 1)[0])
                 })
+                mainVue.scriptIsChanged = true
             },
             moveDown: function(event) {
                 console.log(JSON.parse(`[{"Name":"输入值1","Type":"","Desc":"","ParameterizeColumn":"{element}"},{"Name":"输入值2","Type":"","Desc":"","ParameterizeColumn":"{element}"}]`))
@@ -379,6 +457,7 @@ $(document).ready(function() {
                     var originIndex = trs[i].getAttribute('data-index')
                     operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
                 }
+                this.setChanged()
             },
             //保存 
             tableSave: function() {
@@ -387,23 +466,32 @@ $(document).ready(function() {
                 var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
                 for (var tr of trs) {
                     // 
-                    var UI = tr.querySelector('.operation-element').value
-                    var webedit = tr.querySelector('.operation-ui').value
+                    var UI = tr.querySelector('.operation-ui').innerHTML
+                    var element = tr.querySelector('.operation-element').innerHTML
+                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
                     var method = tr.querySelector('.functions-select').value
+                    if (!UI && !method) {
+                        continue
+                    }
                     // 获取参数列表
                     var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
                     var paramValues = []
                     for (var paramTr of paramTrs) {
                         paramValues.push(`"${paramTr.innerHTML}"`)
                     }
+                    if(paramValues.length === 0) {
+                        paramValues = ["\"\""]
+                    }
                     var parameterString = paramValues.toString()
-                    var string = `UI("${UI}").webedit("${webedit}").${method}(${paramValues})`
+                    console.log(parameterString)
+                    var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
                     sendDataArray.push(string)
                 }
-                var sendData = sendDataArray.join(';')
+                var sendData = sendDataArray.join(';\n') + ';'
                 console.log(sendData)
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
+                // return
                 $.ajax({
                     url: address + 'scripttemplateController/scripttemplateSave',
                     type: 'post',
@@ -414,6 +502,7 @@ $(document).ready(function() {
                     success: function(data) {
                         if (data.success) {
                             $('#success').modal();
+                            mainVue.scriptIsChanged = false
                         } else {
                             $('#fail').modal();
                         }
@@ -425,77 +514,76 @@ $(document).ready(function() {
             },
             //参数化
             para: function() {
+                var sendDataArray = [];
+                var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
+                for (var tr of trs) {
+                    var UI = tr.querySelector('.operation-ui').innerHTML
+                    var element = tr.querySelector('.operation-element').innerHTML
+                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
+                    var method = tr.querySelector('.functions-select').value
+                    if (!UI && !method) {
+                        continue
+                    }
+                    // 获取参数列表
+                    var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
+                    var paramValues = []
+                    for (var paramTr of paramTrs) {
+                        paramValues.push(`"${paramTr.innerHTML}"`)
+                    }
+                    if(paramValues.length === 0) {
+                        paramValues = ["\"\""]
+                    }
+                    var parameterString = paramValues.toString()
+                    var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
+                    sendDataArray.push(string)
+                }
+                var sendData = sendDataArray.join(';\n') + ';';
                 $.ajax({
-                    url: '../../mock/script.json',
+                    url: address + 'scripttemplateController/showscripttemplateTableSave',
                     type: 'post',
                     data: {
                         'autId': mainVue.autId,
-                        'script_id': mainVue.script_id
+                        'script_id': mainVue.script_id,
+                        'content': sendData
                     },
                     success: function(data) {
-                        console.log(data);
-                        if (data.success) {
-                            var param_tds = [...$('.param-value')]; //$('.param-value')取到的是类数组，不能使用forEach方法，所以使用es6的rest方法将其转换为数组
-                            param_tds.forEach(function(item, index) {
-                                item.innerHTML = data.o[index];
-                            })
-                        } else {
-                            $('#fail').modal();
-                        }
+                        Vac.alert(data.msg);
                     },
                     error: function() {
-                        $('#fail').modal();
+                        Vac.alert('参数化失败，请求未成功');
                     }
                 })
             },
             // 显示UI和元素 、函数集
             showUiAndElement: function(event, type) {
-                var _this = this;
                 this.uiOrFunctions.target = event.target;
                 this.uiOrFunctions.changed = false;
                 // 请求Ui和Elment
-                $.ajax({
-                    url: address + 'elementlibraryController/showUIandElement',
-                    data: 'transid=' + mainVue.transId,
-                    type: 'post',
-                    dataType: 'json',
-                    success: (data, statusText) => {
-                        if (data && data.success === true && (data.obj instanceof Array)) {
-                            $.fn.zTree.init($('#ui-element-ul'), _this.zTreeSettings.uiAndElement, data.obj);
-                        }
-                    }
-                })
-                // 请求函数集
-                var autId = $("#autSelect").val();
-                console.log(autId)
-                $.ajax({
-                    url: address + 'autController/selectFunctionSet',
-                    data: { 'id': mainVue.autId },
-                    type: 'post',
-                    dataType: 'json',
-                    success: (data, statusText) => {
-                        if (data.arcmethod) {
-                            $.fn.zTree.init($('#functions-ul'), _this.zTreeSettings.functions, data.arcmethod);
-                        }
-                    }
-                })
-
+                this.getUIAndFunctions(1)
                 $('#ui-ele-modal').modal('show')
             },
             showUIModal: function() {
-                var _this = this;
+                this.getUIAndFunctions(2)
+                $('#ui-ele-modal2').modal('show')
+            },
+            getUIAndFunctions: function(type){
+                var str = +type === 1 ? '' : 2
+                var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
                 $.ajax({
-                    url: address + 'elementlibraryController/showUIandElement',
+                    url: address + 'elementlibraryController/showUIandElementforScript',
                     data: 'transid=' + mainVue.transId,
                     type: 'post',
                     dataType: 'json',
                     success: (data, statusText) => {
                         if (data && data.success === true && (data.obj instanceof Array)) {
-                            $.fn.zTree.init($('#ui-element-ul2'), _this.zTreeSettings2.uiAndElement, data.obj);
+                            $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+                            // var da = [{"id":1,"parentid":0,"name":"ui-chai"},{"id":2,"parentid":1,"name":"ele-chai", "classType": 'webedit'}]
+                            // $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, da);
                         }
                     }
                 })
                 // 请求函数集
+                // var autId = $("#autSelect").val();
                 $.ajax({
                     url: address + 'autController/selectFunctionSet',
                     data: { 'id': mainVue.autId },
@@ -503,12 +591,10 @@ $(document).ready(function() {
                     dataType: 'json',
                     success: (data, statusText) => {
                         if (data.arcmethod) {
-                            $.fn.zTree.init($('#functions-ul2'), _this.zTreeSettings2.functions, data.arcmethod);
+                            $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.arcmethod);
                         }
                     }
                 })
-
-                $('#ui-ele-modal2').modal('show')
             },
             // 确定ztree的点击事件
             zTreeOnClick: function(event, treeId, treeNode) {
@@ -522,12 +608,15 @@ $(document).ready(function() {
                         return // 没有父元素，则返回
                     }
                     this.uiOrFunctions.type = 'ui'
-                    this.uiOrFunctions.ui = treeNode.name
-                    this.uiOrFunctions.element = parent.name;
+                    this.uiOrFunctions.element = treeNode.name
+                    this.uiOrFunctions.ui = parent.name;
+                    this.uiOrFunctions.classType = treeNode.classType
                 } else {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
-                    this.uiOrFunctions.function = treeNode;
+                    // treeNode:"id":45,"methodname":"click","methoddescription":"点击","arcclassid":27,"objectcode":"132","parameterlist":"[{\"name\":\"11\",\"valueclass\":\"11\",\"parameterizedcolumn\":\"\",\"defaultvalue\":\"\",\"description\":\"\"}
+                    // this.uiOrFunctions.function = {mname: treeNode.methodname};
+                    this.uiOrFunctions.function = {...treeNode, mname: treeNode.methodname }
                     // console.log(treeNode)
                 }
                 this.uiOrFunctions.changed = true; // 已经在模态框中点击了树节点
@@ -536,38 +625,50 @@ $(document).ready(function() {
             editParameter: function(event, type) {
                 var _this = this
                 // 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
-                _this.uiOrFunctions.target = event.target
-                var parentRow = $(event.target).parents('tr')
-                _this.uiOrFunctions.index = parentRow.attr('data-index');
-
-                parameterVue.parameters = _this.operationRows[_this.uiOrFunctions.index].parameters;
-                $('#edit-parameter-modal').modal('show')
+                var target = event.target
+                target.style.visibility = 'hidden'
+                var parent = $(target).parent()[0]
+                $('.param-table', parent).css({'display': 'table'})
+                $('.param-show', parent).css({'display': 'none'})
+                var paramV = $('.param-value', parent)[0]
+                paramV && paramV.focus()
+                var range = document.createRange()
+                var sel = window.getSelection()
+                range.setStart(paramV.childNodes[0], paramV.innerHTML.length)
+                range.collapse(true)
+                sel.removeAllRanges()
+                sel.addRange(range)
             },
-        }
-    })
-    var parameterVue = new Vue({
-        el: '#edit-parameter-modal',
-        data: {
-            parameters: null
-        },
-        ready: function() {
-            // console.log(editDataVue.uiOrFunctions.index)
-            // console.log(editDataVue.operationRows[editDataVue.uiOrFunctions.index].parameters)
-            // this.parameters = editDataVue.operationRows[editDataVue.uiOrFunctions.index].parameters;
-        },
-        methods: {
-            okParameter: function(event) {
-                var inputs = $('#edit-parameter-modal input')
-
-                var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
-                var operationRows = editDataVue.operationRows
-                var index = editDataVue.uiOrFunctions.index
-                for (var i = 0; i < operationRows[index].parameters.length; i++) {
-                    operationRows[index].parameters[i].Value = inputs[i].value
-                }
-                modalVue.updateRow(operationRows, index)
-                // console.log(operationRows)
-                $('#edit-parameter-modal').modal('hide')
+            cancelEditParam: function(event) {
+                var table = $(event.target).parents('.param-table')
+                $('.edit-param', table.parents('tr')).css({'visibility': 'visible'})
+                table.css({display: 'none'})
+                $('.param-show', table.parents('tr')).css({'display': 'block'})
+            },
+            saveParam: function(event) {
+                var target = $(event.target)
+                var tbody = target.parents('.param-table')
+                var trs = [...$('.param-row', tbody)]
+                var parentRow = target.parents('table').parents('tr')
+                var valueShows = $('.param-value-show', parentRow)
+                console.log(valueShows)
+                this.operationRows[parentRow.attr('data-index')].parameters.length = 0
+                trs.forEach((row, index) => {
+                    var data = {}
+                    data.Name = row.querySelector('.param-name').innerHTML
+                    data.Value = row.querySelector('.param-value').innerHTML
+                    valueShows[index].innerHTML = data.Value
+                    this.operationRows[parentRow.attr('data-index')].parameters.push(data)
+                })
+                this.cancelEditParam(event)
+                // 已经修改过
+                mainVue.scriptIsChanged = true
+            },
+            updateRow: function(rows, index) {
+                // 使用splice方法，通过改变数组项的id更新绑定的数组，
+                var cache = rows[index]
+                cache.id = Symbol()
+                rows.splice(index, 1, cache)
             }
         }
     })
@@ -578,6 +679,8 @@ $(document).ready(function() {
         methods: {
             // 在模态框中点击了保存按钮
             editRow: function() {
+                // 已经修改过
+                mainVue.scriptIsChanged = true
                 var _this = this;
                 if (!editDataVue.uiOrFunctions.changed) {
                     return; // 没有点击树结构，则返回
@@ -585,15 +688,17 @@ $(document).ready(function() {
                 // 保存当前点击行，行索引值以及当前需要操作的table所绑定的数组
                 var parentRow = $(editDataVue.uiOrFunctions.target).parents('tr')
                 var index = parentRow.attr('data-index');
-                console.log(index)
                 var operationRows = editDataVue.operationRows;
 
                 if (editDataVue.uiOrFunctions.type === 'ui') {
                     // 点击了ui 与 元素后, 更新operation
                     operationRows[index].operation = {
                         ui: editDataVue.uiOrFunctions.ui,
-                        element: editDataVue.uiOrFunctions.element
+                        element: editDataVue.uiOrFunctions.element,
+                        classType: editDataVue.uiOrFunctions.classType
                     };
+                    operationRows[index].functions = []
+                    operationRows[index].parameters = []
 
                     // 使用splice方法，通过改变数组项的id更新绑定的数组，
                     _this.updateRow(operationRows, index);
@@ -601,7 +706,7 @@ $(document).ready(function() {
                     // 发送ajax请求函数的数据
                     var data = {
                         id: mainVue.autId, // autid
-                        classname: editDataVue.uiOrFunctions.ui, // classname
+                        classname: editDataVue.uiOrFunctions.classType, // classname
                     }
 
                     var getFunctions = new Promise((resolve, reject) => {
@@ -621,10 +726,13 @@ $(document).ready(function() {
                     getFunctions.then(() => {
                         // 获取函数项的值
                         // var mname = $('.functions-select', parentRow).val()
+                        if(!operationRows[index].functions.length) {
+                            return
+                        }
                         var mname = operationRows[index].functions[0].mname
                         var data = {
                             autid: mainVue.autId,
-                            className: editDataVue.uiOrFunctions.ui,
+                            className: editDataVue.uiOrFunctions.classType,
                             methodName: mname
                         }
                         return new Promise((resolve, reject) => {
@@ -634,7 +742,15 @@ $(document).ready(function() {
                                 type: 'post',
                                 dataType: 'json',
                                 success: function(data, statusText) {
-                                    operationRows[index].parameters = JSON.parse(`${data}`)
+                                    let paras = JSON.parse(`${data}`);
+                                    let arr = []
+                                    for (let para of paras) {
+                                        arr.push({
+                                            Name: para.name,
+                                            Value: ''
+                                        })
+                                    }
+                                    operationRows[index].parameters = arr
                                     _this.updateRow(operationRows, index)
                                     resolve()
                                 }
@@ -645,10 +761,27 @@ $(document).ready(function() {
                     })
                 } else {
                     // $('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
-                    operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
-                    console.log()
-                    operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
+                    // operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
+                    operationRows[index].functions = [editDataVue.uiOrFunctions.function]
+                    // 插入函数集
+                    // 20170901 更改
+                    // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
+                    // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].parameterlist)
+                    console.log(operationRows[index])
+                    // parameters: [{"name":"11","valueclass":"11","parameterizedcolumn":"","defaultvalue":"","description":""}]
+                    var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
+
+                    operationRows[index].parameters = []
+                    for(let param of parametersArray) {
+                        operationRows[index].parameters.push({
+                            Name: param.name,
+                            Value: param.defaultvalue,
+                            ...param
+                        })
+                    }
+
                     _this.updateRow(operationRows, index)
+                    
                 }
                 $('#ui-ele-modal').modal('hide')
             },
@@ -666,28 +799,28 @@ $(document).ready(function() {
         methods: {
             // 在模态框中点击了保存按钮
             editRowMultiple: function() {
-                console.log(uiNodes)
+                // 已经修改过
+                mainVue.scriptIsChanged = true
                 var uiTree = $.fn.zTree.getZTreeObj("ui-element-ul2");
                 var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
                 var uiNodes = uiTree.getCheckedNodes(true);
 
-                var functionNodes = functionTree.getCheckedNodes(true)
-                console.log(functionNodes)
-
+                var functionNodes = functionTree ? functionTree.getCheckedNodes(true) : []
                 for (var node of uiNodes) {
                     if (node.isParent) {
                         continue;
                     }
-                    let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}
+                    let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name: '', Value: ''}]}}
                     newRow.id = Symbol()
                     newRow.operation = {
-                        element: node.getParentNode().name,
-                        ui: node.name
+                        ui: node.getParentNode().name,
+                        element: node.name,
+                        classType: node.classType
                     }
                     newRow.functions = []
                     $.ajax({
                         url: address + 'autController/selectMethod',
-                        data: { id: mainVue.autId, classname: newRow.operation.ui },
+                        data: { id: mainVue.autId, classname: newRow.operation.classType },
                         type: 'post',
                         dataType: 'json',
                         success: function(data, statusText) {
@@ -696,31 +829,46 @@ $(document).ready(function() {
                             }
                             // data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
                             // 把第一个function的参数取出来，放入
-                            data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
+                            var arr = [];
+                            var params = JSON.parse(data.ommethod[0].arguments)
+                            arr.push({
+                                Name: params[0].name,
+                                Value: ''
+                            });
+                            data.ommethod[0] && (newRow.parameters = arr)
                             editDataVue.operationRows.push(newRow)
                         }
                     })
                 }
-                for (var node of functionNodes) {
-                    console.log(node)
-                    let newRow = {}
-                    newRow.id = Symbol()
-                    newRow.operation = {
+                if (functionNodes && functionNodes.length) {
+                    for (var node of functionNodes) {
+                        console.log(node)
+                        let newRow = {}
+                        newRow.id = Symbol()
+                        newRow.operation = {
                             element: '',
-                            ui: ''
-                        },
+                            ui: '',
+                            classType: ''
+                        }
                         newRow.functions = []
-                    newRow.functions.push(node)
-                    newRow.parameters = JSON.parse(node.parameterlist)
-                    editDataVue.operationRows.push(newRow)
+                        newRow.functions.push({ ...node, mname: node.methodname })
+
+                        newRow.parameters = []
+                        try{
+                            var parameters = JSON.parse(node.parameterlist)
+                            for(let param of parameters) {
+                                newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+                            }
+                        } catch(e) {
+                            newRow.parameters = []
+                        }
+                        
+                        editDataVue.operationRows.push(newRow)
+                    }
                 }
                 $('#ui-ele-modal2').modal('hide')
             },
             updateRow: function(rows, index) {
-                // 使用splice方法，通过改变数组项的id更新绑定的数组，
-                // var cache = rows[index]
-                // cache.id = Symbol()
-                // rows.splice(index, 1, cache)
             }
         }
     })

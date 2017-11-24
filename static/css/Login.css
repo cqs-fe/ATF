@@ -17,11 +17,8 @@ body{
 }
 
 .titleATF{
-
+	color: #108ee9;
 	font-family:Verdana, Geneva, sans-serif;
-
-	color:#F33;
-	
 }
 .titleWord{
 	font-family:Comic Sans MS, cursive;
@@ -41,7 +38,7 @@ body{
 	width:300px;
 	height:300px;
 	float:left;
-	background-color:#F33;
+	background-color:#108ee9;
 	border-radius:3px;
 	padding-top:50px;
 }
@@ -74,7 +71,7 @@ body{
 	padding-left:40px;
 }
 #Login{
-
+	color: #108ee9;
 	width:460px;
 	height:300px;
 	float:left;
@@ -85,11 +82,10 @@ body{
 }
 
 #loginTitle{
-
+	color: #108ee9;
 	font-family:Verdana, Geneva, sans-serif;
 	font-weight:600; 
 	font-size:24px; 
-	color:#F33;
 	margin-left:30px;
 
 }
@@ -115,7 +111,7 @@ body{
 	height:30px;
 	width:325px;
 	text-align:center;
-	background-color:#F33;
+	background-color:#108ee9;
 	color:#FFF;
     position:absolute;
 	left:370px;

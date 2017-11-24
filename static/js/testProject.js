@@ -24,6 +24,11 @@ var app = new Vue({
     ready: function() {
         getTestProject(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
+
+        $('.3').addClass('open')
+        $('.3 .arrow').addClass('open')
+        $('.3-ul').css({display: 'block'})
+        $('.3-1').css({color: '#ff6c60'})
     },
     methods: {
         //获取选中的id

@@ -19,6 +19,10 @@ var app = new Vue({
         $('#autSelect').change(function() {
             queryTransact();
         });
+        $('.2').addClass('open')
+        $('.2 .arrow').addClass('open')
+        $('.2-ul').css({display: 'block'})
+        $('.2-0').css({color: '#ff6c60'})
     },
     methods: {
         //获取选中的id
@@ -115,7 +119,12 @@ var app = new Vue({
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
             } else{
-                $('#updateModal').modal();
+                if (selectedInput.next().next().next().text()==='接口'){
+                    location.href="interfacesManagement.html";
+                }
+                else{
+                    $('#updateModal').modal();                    
+                }
             } 
         },
         //修改功能点

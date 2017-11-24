@@ -1,0 +1,46 @@
+{
+  "msg": "",
+  "success": true,
+  "o": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "scriptid": 1182,
+              "name": "模板脚本01"
+            }
+          ],
+          "transactid": 76,
+          "name": "注册页面"
+        },
+        {
+          "children": [
+            {
+              "scriptid": 1183,
+              "name": "test"
+            },
+            {
+              "scriptid": 1185,
+              "name": "hh"
+            }
+          ],
+          "transactid": 77,
+          "name": "登录页面"
+        },
+        {
+          "children": [
+            {
+              "scriptid": 1193,
+              "name": "商品分类模板脚本"
+            }
+          ],
+          "transactid": 80,
+          "name": "商品分类"
+        }
+      ],
+      "autid": 33,
+      "name": "进货管理系统"
+    }
+  ]
+}

@@ -4,22 +4,28 @@ var checkFunction = {
 		this.$nextTick(function () {
         	$.each(caseCbs, function(index, ele) {
 				if(ele.checked) {
-					$(ele).parents('.case').css({"border-color": "#ff6c60"})
+					$(ele).parents('.case').css({"border-color": "rgb(69, 185, 177)"})
+					$(ele).parents('.case').css({"background-color": "rgb(69, 185, 177)"})
+					$('p', $(ele).parents('.case')).css({"color": "#fff"})
 				}else {
 					$(ele).parents('.case').css({"border-color": "#ddd5d5"})
+					$(ele).parents('.case').css({"background-color": "#fff"})
+					$('p', $(ele).parents('.case')).css({"color": "#797979"})
 				}
 			})
       	})
 	},
 	setSelect (event){
+		
 		var _this = this;
 		var target  = event.target;
-		if(!target.classList.contains('main-content')) {
+		if(target.classList.contains('handle')) {
 			return
 		}
-		var fileNodes = document.querySelectorAll(".case input.check-case");
-		var startX = event.offsetX;
-		var startY = event.offsetY;
+		let container = document.querySelector('.main-content')
+		var fileNodes = document.querySelectorAll(".case .check-case");
+		var startX = event.offsetX + Vac.getOffsetTo(event.target, container).offsetLeft;
+		var startY = event.offsetY + Vac.getOffsetTo(event.target, container).offsetTop;
 		var moveBeforeX = event.pageX;
 		var moveBeforeY = event.pageY;
 		var selDiv = document.createElement('div');
@@ -39,31 +45,22 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		target.addEventListener('mousemove', mouseMoveFunction, false);
+		// 函数节流
+		var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		target.addEventListener('mousemove', moveFunction, false);
 		target.addEventListener('mouseup', (event) => {
-			this.isSelect = true;
+			// this.isSelect = true;
 			if (selDiv){
 				document.querySelector('.main-content').removeChild(selDiv);
 			}
-			target.removeEventListener('mousemove', mouseMoveFunction, false);
+
+			target.removeEventListener('mousemove', moveFunction, false);
 			selDiv = null;
-			// var caseLib = document.querySelectorAll('.case-lib');
-			// for(var i=0; i<caseLib.length; i++){
-			// 	var inputs = Array.from(caseLib[i].getElementsByClassName('check-case'));
-			// 	if(inputs.every(function(value){
-			// 		if(value.checked===true)
-			// 			{return true;} 
-			// 		return false;
-			// 	})){
-			// 		caseLib[i].getElementsByClassName('checkall')[0].checked = true;
-			// 	} else {
-			// 		caseLib[i].getElementsByClassName('checkall')[0].checked = false;
-			// 	}
-			// }
 		}, false);
 
 
 		function mouseMoveFunction(event){
+			console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}
@@ -119,7 +116,6 @@ var checkFunction = {
 	},
 	setSelectListener (){
 		document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
-		// 防止点击用例框时也进行选取
 	},
 	pushNoRepeat (array, value) {
 		array.includes(value)

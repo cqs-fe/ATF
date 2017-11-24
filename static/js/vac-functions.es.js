@@ -89,6 +89,7 @@ Vac.addClass = function(element,className){
  if(!this.isHasClass(element,className)){
      element.className = element.className.trim() + " " + className;
  }
+ return element
 };
 
 Vac.removeClass = function(element,className){
@@ -96,6 +97,7 @@ Vac.removeClass = function(element,className){
      var pattern = new RegExp('\\b'+className+'\\b','g');
      element.className = element.className.replace(pattern,"");
  }
+ return element
 };
 
 /**
@@ -191,12 +193,13 @@ Vac.pushNoRepeat = function(array, value){
 }
 
 /**
- * 判断两个Element是否具有包含关系，比如某个Element是另一个Element的父辈或祖辈
+ * 判断两个Element是否具有包含关系，某个Element是另一个Element的父辈或祖辈
  * @param { HTMLElement } ancestor
  * @param { HTMLElement } child
  * @returns { boolean } if the first element is an ancestor of the second element
  *           return true, otherwise return false
  */
+
  Vac.isAncestorOf = function(ancestor, child) {
   if(!(ancestor instanceof HTMLElement)) {
     console.error(new Error("Error: the first parameter is not a HTMLElement"))
@@ -206,7 +209,7 @@ Vac.pushNoRepeat = function(array, value){
     console.error(new Error("Error: the second parameter is not a HTMLElement"))
     return false
   }
-  let parentEle = child.parentElement
+  let parentEle = child
   while(parentEle){
     if(parentEle === ancestor) {
       return true
@@ -232,6 +235,9 @@ Vac.pushNoRepeat = function(array, value){
     if(window.getComputedStyle(ancestor).position == 'static') {
        console.error(new Error('请更改父辈元素的定位方式！'))
       return
+    }
+    if　(child === ancestor) {
+      return { offsetLeft:0, offsetTop:0 }
     }
     let offsetLeft = child.offsetLeft
     let offsetTop = child.offsetTop
@@ -280,3 +286,67 @@ Vac.pushNoRepeat = function(array, value){
   * @param { Number } [wait=0] The number of milliseconds to delay.
   * @returns { Function } Returns the new throttled function.
   */
+  Vac.throttle = function(func, wait, context) {
+    var timeout = null
+
+    return function() {
+      if(timeout === null) {
+        func.apply(context, [...arguments])
+        timeout = setTimeout(() => {
+          timeout = null
+        }, wait)
+      }
+    }
+  }
+
+/**
+ * 用于表单验证的类
+ */
+Vac.formValidation = function() {
+  // save the inputs dom
+  this.inputs = []
+
+}
+
+Vac.formValidation.prototype.setValidation = function(inputId, iconId, tooltipId, rules) {
+  var item = {}
+  item.inputId = inputId
+  item.iconId = iconId
+  item.tooltipId = tooltipId
+  item.rules = rules
+  this.inputs.push(item)
+
+  // 设置校验事件
+  var _this = this
+  var input = document.querySelector('#'+inputId)
+  input.addEventListener('blur', function(event) {
+    _this._valid(inputId, iconId, tooltipId, rules)
+  })
+}
+
+Vac.formValidation.prototype._valid = function(inputId, iconId, tooltipId, rules) {
+  var input = document.querySelector('#'+inputId)
+  var icon = document.querySelector('#'+iconId)
+  var tooltip = document.querySelector('#'+tooltipId)
+  // use Approvejs to validate the value
+  var results = approve.value(input.value, rules)
+  if(results.approved) {
+    $(icon).addClass('icon-ok correct').removeClass('hide icon-warning-sign error')
+    $(tooltip).removeClass('show').addClass('hide')
+    return true
+  } else {
+    $(icon).addClass('icon-warning-sign error show').removeClass('hide correct icon-ok ')
+    $(tooltip).addClass('show').removeClass('hide')
+    tooltip.innerHTML = ''
+    results.each((error) => {
+      tooltip.innerHTML = tooltip.innerHTML + error + '</br>'
+    })
+    return false
+  }
+}
+
+Vac.formValidation.prototype.validAll = function() {
+  return this.inputs.every((item) => {    
+    return this._valid(item.inputId, item.iconId, item.tooltipId, item.rules)
+  })
+}

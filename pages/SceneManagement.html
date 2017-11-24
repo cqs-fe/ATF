@@ -8,8 +8,9 @@
     <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/scene-management.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/scene-management.scss">
     <script src="../lib/jquery.js"></script>
+    <script src="../lib/jquery-ui.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="../lib/vue.js"></script>
     <title>Scene Manager</title>
@@ -211,7 +212,7 @@
               <!--  <button class="btn btn-white"><i class="icon-file"></i>
               生成报告</button> -->
             </div>
-            <div class="form-input">
+            <div class="form-input" :class="{'form-input-show': isDebugInfoShow}">
                 <div>
                   <label for="" class="">请输入调试轮次：</label>
                   <input type="number" min="1" class="" id="" placeholder="调试轮次" v-model="debugRound"> 
@@ -223,55 +224,61 @@
                     <option value="2">执行选中的案例</option>
                   </select> 
                 </div>
+                <div>
+                  <button class="btn btn-white" @click="this.isDebugInfoShow=false;">
+                    收起</button>
+                </div>
             </div>
             <div class="main-content">
-              <div class="check-all-case">全部选取
-                <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">
+              <div class="check-all-case">
+                <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">全选
               </div>
-              <div class="case-lib" v-for="case_wrapper in sceneInfo.caseDtos">
-                <template v-if="case_wrapper.caseCompositeType == '1'">
-                <div class="checkbox-wrapper">
-                  <!-- <label>全选</label> -->
-                  <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
-                </div>
-                <div class="case-wrapper">
-                  <div class="case" >
-                    <div class="case-header">
-                      <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
-                      <p>{{case_wrapper.id}}</p>
-                    </div>
-                    <div class="case-main">
-                      <p>{{case_wrapper.casecode}}</p>
-                      <span></span>
-                    </div>
-                    <footer class="case-footer">
-                      <img :src="exeImgs[case_wrapper.state]">
-                    </footer>
+              <div id="sortable">
+                <div class="case-lib" v-for="case_wrapper in sceneInfo.caseDtos">
+                  <template v-if="case_wrapper.caseCompositeType == '1'">
+                  <div class="checkbox-wrapper">
+                    <i class="icon-move handle" style="color: #ff6c60;"></i>
+                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
                   </div>
-                </div>
-                </template>
-                <template v-else>
-                <div class="checkbox-wrapper">
-                  <!-- <label>全选</label> -->
-                  <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
-                  @change="checkallToggle($event)">
-                </div>
-                <div class="case-wrapper">
-                  <div class="case" v-for="item in case_wrapper.flowNodeDtos">
-                    <div class="case-header">
-                      <input type="checkbox" v-bind:value="item.id"
-                      class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                      <p>{{item.id}}</p>
+                  <div class="case-wrapper">
+                    <div class="case"  @click="changeCase(case_wrapper.id, 1)"  @mousedown.stop="1">
+                      <div class="case-header">
+                        <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
+                        <p>{{case_wrapper.casecode}}</p>
+                      </div>
+                      <!-- <div class="case-main">
+                        <p>{{case_wrapper.casecode}}</p>
+                        <span></span>
+                      </div> -->
+                      <!-- <footer class="case-footer">
+                        <img :src="exeImgs[case_wrapper.state]">
+                      </footer> -->
                     </div>
-                    <div class="case-main">
-                      <p>{{item.casecode}}</p>
-                    </div>
-                    <footer class="case-footer">
-                      <img :src="exeImgs[item.state]">
-                    </footer>
                   </div>
+                  </template>
+                  <template v-else>
+                  <div class="checkbox-wrapper">
+                    <i class="icon-move handle" style="color: #ff6c60;"></i>
+                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
+                    @change="checkallToggle($event)">
+                  </div>
+                  <div class="case-wrapper">
+                    <div class="case" v-for="item in case_wrapper.flowNodeDtos" @mousedown.stop="1"  @click="changeCase(item.id, 2)">
+                      <div class="case-header">
+                        <input type="checkbox" v-bind:value="item.id"
+                        class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
+                        <p>item.casecode</p>
+                      </div>
+                      <!-- <div class="case-main">
+                        <p>{{item.casecode}}</p>
+                      </div> -->
+                      <!-- <footer class="case-footer">
+                        <img :src="exeImgs[item.state]">
+                      </footer> -->
+                    </div>
+                  </div>
+                  </template>
                 </div>
-                </template>
               </div>
             </div>
           </main>

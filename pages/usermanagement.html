@@ -2,413 +2,426 @@
 <html>
 
 <head>
-    <link rel="import" href="./common/header.html?__inline">
-    <link rel="import" href="./noLoginAlert.html?__inline">
-    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    <!-- <link rel="stylesheet" type="text/css" href="../static/css/usermanagement.scss"> -->
-    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/testitems.scss">
-    <script src="../lib/jquery.js"></script>
-    <script src="../lib/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../lib/vue.js"></script>
-    <title>Case Manager</title>
-    <style>
+	<link rel="import" href="./common/header.html?__inline">
+	<link rel="import" href="./noLoginAlert.html?__inline">
+	<link rel="stylesheet" type="text/css" href="../static/css/index.css">
+	<!-- <link rel="stylesheet" type="text/css" href="../static/css/usermanagement.scss"> -->
+	<link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/testitems.scss">
+	<link rel="stylesheet" type="text/css" href="../static/css/vac/form-modal.scss">
+	<script src="../lib/jquery.js"></script>
+	<script src="../lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../lib/vue.js"></script>
+	<title>Case Manager</title>
+	<style>
 
-    </style>
+	</style>
 </head>
 
 <body id="v-demo" v-cloak>
-    <div class="content">
-        <!--header start-->
-        <link rel="import" href="./common/header-guide.html?__inline">
-        <!--header end-->
-        <!--sidebar start-->
-        <link rel="import" href="./common/aside-guide.html?__inline">
-        <!--sidebar end-->
-        <!--main content start-->
-        <section id="main-content">
-            <section class="wrapper">
-                <div class="row">
-                    <!-- breadcrumb start -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <ul class="breadcrumb">
-                                <li><a href="aut.html"><i class="icon-home"></i> 系统管理</a></li>
-                                <li><a href="transact.html">用户管理</a></li>
-                                <!-- <li class="active"> 对象库</li> -->
-                            </ul>
-                        </div>
-                    </div>
+	<div class="content">
+		<!--header start-->
+		<link rel="import" href="./common/header-guide.html?__inline">
+		<!--header end-->
+		<!--sidebar start-->
+		<link rel="import" href="./common/aside-guide.html?__inline">
+		<!--sidebar end-->
+		<!--main content start-->
+		<section id="main-content">
+			<section class="wrapper">
+				<div class="row">
+					<!-- breadcrumb start -->
+					<div class="row">
+						<div class="col-xs-12">
+							<ul class="breadcrumb">
+								<li><a href="aut.html"><i class="icon-home"></i> 系统管理</a></li>
+								<li><a href="transact.html">用户管理</a></li>
+								<!-- <li class="active"> 对象库</li> -->
+							</ul>
+						</div>
+					</div>
 
-                    <div class="col-lg-12 top-btn">
-                        <a class="btn btn-white" data-toggle="modal" href="#addModal"><i class="icon-plus"></i> 添加</a>
-                        <!--<a href="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-minus"></i> 删除</a>-->
-                        <!-- addModal start -->
-                        <div class="modal fade " id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">添加用户</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form class="form-horizontal " role="form">
-                                            <span class=""><strong>必填信息</strong></span>
-                                            <div class="form-group">
-                                                <label for="username" class="col-lg-2 control-label">用户名</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="text" id="username" class="form-control" required>
-                                                </div>
-                                                <span class="col-lg-1 glyphicon glyphicon-remove" id="add-feedback-username" style="color: #b94a48;"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="name">姓名</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="text" id="name" required class="form-control">
-                                                </div>
-                                                <span class="col-lg-1 glyphicon glyphicon-remove" id="add-feedback-name" style="color: #b94a48;"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="password">密码</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="password" id="password" required class="form-control">
-                                                </div>
-                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-password" style="color: #b94a48;"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="confirm">确认密码</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="password" id="confirm" required class="form-control">
-                                                </div>
-                                                <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-confirmpassword" style="color: #b94a48;"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="role">角色</label>
-                                                <div class="col-lg-4">
-                                                    <select name="" id="role" class="form-control">
-                                                        <option value="01">测试主管</option>
-                                                        <option value="02">测试经理</option>
-                                                        <option value="03">测试组长</option>
-                                                        <option value="04">自动化技术人员</option>
-                                                        <option value="05">功能测试人员</option>
-                                                    </select>
-                                                </div>
-                                                <label class="col-lg-2 control-label" for="state">状态</label>
-                                                <div class="col-lg-3">
-                                                    <select name="" id="state" class="form-control">
-                                                        <option value="00">正常</option>
-                                                        <option value="01">不正常</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <span class="input-tip"><strong>选填信息</strong></span>
-                                            <div class="form-group">
-                                                <label for="department" class="control-label col-lg-2">所属部门</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="text" id="department" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="phonenumber" class="control-label col-lg-2">手机号</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="text" id="phonenumber" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="telephone" class="control-label col-lg-2">固定电话</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="text" id="telephone" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="email" class="control-label col-lg-2">电子邮箱</label>
-                                                <div class="col-lg-9 ">
-                                                    <input type="text" id="email" class="form-control">
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <div class="alert alert-danger" style="margin-bottom: 0;" id="add-input-detecting">
-                                            输入信息不完整！
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button class="btn btn-success" type="button" disabled id="btn-add">添加</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- addModal end -->
-                    </div>
-                    <!--topbutton end-->
-                    <!-- table start -->
-                    <div class="col-lg-12 panel" style="overflow: scroll;">
-                        <div class="table-responsive">
-                           <div class="table-tool container">
-                            <form class="table-search col-lg-6">
-                                <select id="search-type" class="form-control inline-block">
-                                    <option value="username">用户名</option>
-                                    <option value="reallyname">姓名</option>
-                                    <option value="role">角色</option>
-                                    <option value="tel">固定电话</option>
-                                    <option value="dept">部门</option>
-                                </select>
-                                <input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
-                                <button type="button" class="btn btn-white inline-block" id="btn-search">搜索</button>
-                            </form>
-                            <div class="display-items col-lg-2 col-lg-offset-3">
-                                <label class="inline-block">展示条目</label>
-                                <select class="form-control inline-block" id="showRows">
-                                    <option value="5">05</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-1">
-                                <button type="button" id="btn-freshTable" class="btn btn-white">刷新</button>
-                            </div>
-                        </div>
-                            <table id="example" class=" table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th data-order="id" data-sort="desc" onclick="resort(this);">id&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th data-order="username" data-sort="desc" onclick="resort(this);">用户名&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th>姓名</th>
-                                        <th>角色</th>
-                                        <th>所属部门</th>
-                                        <th>固定电话</th>
-                                        <th>状态</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody">
-                                    
-                                </tbody>
-                            </table>
-                            <div class="col-lg-12 col-md-12 text-center">
-                                <ul class="pagination " id="pagination">
-                                    <li><a href="javascript:void(0)" id="firstPage">首页</a></li>
-                                    <li><a href="javascript:void(0)" id="previousPage">上一页</a></li>
-                                    <li><a href="javascript:void(0)" id="nextPage">下一页</a></li>
-                                    <li><a href="javascript:void(0)" id="lastPage">尾页</a></li>
-                                </ul>
-                                <small class="page-tooltip">
-                                    当前第<span id="currentPageId">1</span>页,
-                                    共有<span id="totalPages">4</span>页
-                                </small>
-                                <div class="go">
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="gotoPage" min="1">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" id="btn-gotoPage" type="button">Go</button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <!-- viewModal start -->
-                            <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">查看用户</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form class="form-horizontal" role="form">
-                                                <span class=""><strong>必填信息</strong></span>
-                                                <div class="form-group">
-                                                    <label for="username" class="col-lg-3 control-label">用户名</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="view-username" class="form-control" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="view-name">姓名</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" disabled id="view-name" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="view-role">角色</label>
-                                                    <div class="col-lg-8">
-                                                        <select name="" id="view-role" disabled class="form-control">
-                                                           <option value="01">测试主管</option>
-                                                           <option value="02">测试经理</option>
-                                                           <option value="03">测试组长</option>
-                                                           <option value="04">自动化技术人员</option>
-                                                           <option value="05">功能测试人员</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="view-state">状态</label>
-                                                    <div class="col-lg-8">
-                                                        <select name="" id="view-state" disabled class="form-control">
-                                                            <option value="00">正常</option>
-                                                            <option value="01">不正常</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <span class="input-tip"><strong>选填信息</strong></span>
-                                                <div class="form-group">
-                                                    <label for="view-department" class="control-label col-lg-3">所属部门</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="view-department" disabled class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="view-phonenumber" class="control-label col-lg-3">手机号</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="view-phonenumber" disabled class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="view-telephone" class="control-label col-lg-3">固定电话</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="view-telephone" disabled class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="view-email" class="control-label col-lg-3">电子邮箱</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="view-email" disabled class="form-control">
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer" style="text-align: center;">
-                                            <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- viewModal end -->
-                            <!-- alterModal start -->
-                            <div class="modal fade" id="alterModal" tabindex="-1" role="dialog" aria-labelledby="alterModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">修改用户</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form class="form-horizontal " role="form">
-                                                <span class=""><strong>必填信息</strong></span>
-                                                <input type="text" id="alter-id" class="form-control hidden">
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="alter-username">用户名</label>
-                                                    <div class="col-lg-8">
-                                                        <input type="text" id="alter-username" class="form-control" required>
-                                                    </div>
-                                                    <span class="col-lg-1 glyphicon hidden" id="alter-feedback-username"></span>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="alter-name">姓名</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" required id="alter-name" class="form-control ">
-                                                    </div>
-                                                    <span class="col-lg-1 glyphicon glyphicon-ok hidden" id="alter-feedback-name"></span>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="alter-password">密码</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="password" required id="alter-password" class="form-control">
-                                                    </div>
-                                                    <span class="col-lg-1 glyphicon hidden" style="color:#b94a48;" id="alter-feedback-password"></span>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="alter-confirmpassword">确认密码</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="password" required id="alter-confirmpassword" class="form-control">
-                                                    </div>
-                                                    <span class="glyphicon col-lg-1 hidden" style="color:#b94a48;" id="alter-feedback-confirmpassword"></span>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="alter-role">角色</label>
-                                                    <div class="col-lg-8">
-                                                        <select name="" required id="alter-role" class="form-control">
-                                                           <option value="01">测试主管</option>
-                                                           <option value="02">测试经理</option>
-                                                           <option value="03">测试组长</option>
-                                                           <option value="04">自动化技术人员</option>
-                                                           <option value="05">功能测试人员</option>
-                                                        </select>
-                                                    </div>
-                                                    <span class="glyphicon col-lg-1" id="alter-feedback-role"></span>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="alter-state">状态</label>
-                                                    <div class="col-lg-8">
-                                                        <select name="" required id="alter-state" class="form-control">
-                                                             <option value="00">正常</option>
-                                                             <option value="01">不正常</option>
-                                                        </select>
-                                                    </div>
-                                                    <span class="col-lg-1 glyphicon" id="alter-feedback-state"></span>
-                                                </div>
-                                                <span class="input-tip"><strong>选填信息</strong></span>
-                                                <div class="form-group">
-                                                    <label for="alter-department" class="control-label col-lg-3">所属部门</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="alter-department" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="alter-phonenumber" class="control-label col-lg-3">手机号</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="alter-phonenumber" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="alter-telephone" class="control-label col-lg-3">固定电话</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="alter-telephone" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="alter-email" class="control-label col-lg-3">电子邮箱</label>
-                                                    <div class="col-lg-8 ">
-                                                        <input type="text" id="alter-email" class="form-control">
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <div class="alert alert-danger" role="alert" id="input-detecting">
-                                                输入信息不完整！
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                            <button class="btn btn-success" type="button" disabled id="btn-alter">修改</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- alterModal end -->
-                        </div>
-                    </div>
-                    <!-- table end -->
-                </div>
-            </section>
-            <link rel="import" href="./common/copy-right.html?__inline">
-        </section>
-        <!--main content end-->
-        <!-- <div class="footer">
-            <link rel="import" href="./common/copy-right.html?__inline">
-        </div> -->
-    </div>
-    <!--content end -->
-    <link rel="import" href="./common-vac/alert.html?__inline">
-    <!--<link rel="import" href="./common/footer.html?__inline">-->
-    <!--script for this page only-->
-    <script src="../static/js/config.js"></script>
-    <script src="../static/js/vac-functions.es.js"></script>
-    <script src="../static/js/usermanagement.js"></script>
-    <script src="../lib/jquery.scrollTo.min.js"></script>
-    <script src="../../lib/jquery.nicescroll.js" type="text/javascript"></script>
-    <script src="../../lib/owl.carousel.js"></script>
-    <script src="../../lib/common-scripts.js"></script>
+					<!-- <div class="col-xs-12 top-btn">
+						
+						<a href="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-minus"></i> 删除</a>
+					</div> -->
+					<!--topbutton end-->
+					<!-- table start -->
+					<div class="col-xs-12 panel" style="overflow: scroll;">
+						<div class="table-responsive">
+						   <div class="table-tool container">
+							<form class="table-search col-xs-6">
+								<select id="search-type" class="form-control inline-block">
+									<option value="username">用户名</option>
+									<option value="reallyname">姓名</option>
+									<option value="role">角色</option>
+									<option value="tel">固定电话</option>
+									<option value="dept">部门</option>
+								</select>
+								<input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
+								<button type="button" class="btn btn-white inline-block" id="btn-search">搜索</button>
+							</form>
+							<div class="display-items col-xs-2 col-xs-offset-3">
+								<label class="inline-block">展示条目</label>
+								<select class="form-control inline-block" id="showRows">
+									<option value="5">05</option>
+									<option value="20">20</option>
+									<option value="50">50</option>
+								</select>
+							</div>
+							<div class="col-xs-4">
+								<button type="button" id="btn-freshTable" class="btn btn-white"><i class="icon-refresh"></i> 刷新</button>
+								<a class="btn btn-white" data-toggle="modal" href="#addModal" ><i class="icon-plus"></i> 添加</a>
+							</div>
+						</div>
+							<table id="example" class=" table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th data-order="id" data-sort="desc" onclick="resort(this);">id&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
+										<th data-order="username" data-sort="desc" onclick="resort(this);">用户名&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
+										<th>姓名</th>
+										<th>角色</th>
+										<th>所属部门</th>
+										<th>固定电话</th>
+										<th>状态</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody id="tbody">
+									
+								</tbody>
+							</table>
+							<div class="col-xs-12 col-md-12 text-center">
+								<ul class="pagination " id="pagination">
+									<li><a href="javascript:void(0)" id="firstPage">首页</a></li>
+									<li><a href="javascript:void(0)" id="previousPage">上一页</a></li>
+									<li><a href="javascript:void(0)" id="nextPage">下一页</a></li>
+									<li><a href="javascript:void(0)" id="lastPage">尾页</a></li>
+								</ul>
+								<small class="page-tooltip">
+									当前第<span id="currentPageId">1</span>页,
+									共有<span id="totalPages">4</span>页
+								</small>
+								<div class="go">
+									<div class="input-group">
+										<input type="number" class="form-control" id="gotoPage" min="1">
+										<span class="input-group-btn">
+											<button class="btn btn-default" id="btn-gotoPage" type="button">Go</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<!-- viewModal start -->
+							<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">查看用户</h4>
+										</div>
+										<div class="modal-body">
+											<form class="form-horizontal" role="form">
+												<span class=""><strong>必填信息</strong></span>
+												<div class="form-group">
+													<label for="username" class="col-xs-3 control-label">用户名</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="view-username" class="form-control" disabled>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="view-name">姓名</label>
+													<div class="col-xs-8 ">
+														<input type="text" disabled id="view-name" class="form-control">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="view-role">角色</label>
+													<div class="col-xs-8">
+														<select name="" id="view-role" disabled class="form-control">
+														   <option value="01">测试主管</option>
+														   <option value="02">测试经理</option>
+														   <option value="03">测试组长</option>
+														   <option value="04">自动化技术人员</option>
+														   <option value="05">功能测试人员</option>
+														</select>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="view-state">状态</label>
+													<div class="col-xs-8">
+														<select name="" id="view-state" disabled class="form-control">
+															<option value="00">正常</option>
+															<option value="01">不正常</option>
+														</select>
+													</div>
+												</div>
+												<span class="input-tip"><strong>选填信息</strong></span>
+												<div class="form-group">
+													<label for="view-department" class="control-label col-xs-3">所属部门</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="view-department" disabled class="form-control">
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="view-phonenumber" class="control-label col-xs-3">手机号</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="view-phonenumber" disabled class="form-control">
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="view-telephone" class="control-label col-xs-3">固定电话</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="view-telephone" disabled class="form-control">
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="view-email" class="control-label col-xs-3">电子邮箱</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="view-email" disabled class="form-control">
+													</div>
+												</div>
+											</form>
+										</div>
+										<div class="modal-footer" style="text-align: center;">
+											<button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- viewModal end -->
+							<!-- alterModal start -->
+							<div class="modal fade" id="alterModal" tabindex="-1" role="dialog" aria-labelledby="alterModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">修改用户</h4>
+										</div>
+										<div class="modal-body">
+											<form class="form-horizontal " role="form">
+												<span class=""><strong>必填信息</strong></span>
+												<input type="text" id="alter-id" class="form-control hidden">
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="alter-username">用户名</label>
+													<div class="col-xs-8">
+														<input type="text" id="alter-username" class="form-control" required>
+													</div>
+													<span class="col-xs-1 glyphicon hidden" id="alter-feedback-username"></span>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="alter-name">姓名</label>
+													<div class="col-xs-8 ">
+														<input type="text" required id="alter-name" class="form-control ">
+													</div>
+													<span class="col-xs-1 glyphicon glyphicon-ok hidden" id="alter-feedback-name"></span>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="alter-password">密码</label>
+													<div class="col-xs-8 ">
+														<input type="password" required id="alter-password" class="form-control">
+													</div>
+													<span class="col-xs-1 glyphicon hidden" style="color:#b94a48;" id="alter-feedback-password"></span>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="alter-confirmpassword">确认密码</label>
+													<div class="col-xs-8 ">
+														<input type="password" required id="alter-confirmpassword" class="form-control">
+													</div>
+													<span class="glyphicon col-xs-1 hidden" style="color:#b94a48;" id="alter-feedback-confirmpassword"></span>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="alter-role">角色</label>
+													<div class="col-xs-8">
+														<select name="" required id="alter-role" class="form-control">
+														   <option value="01">测试主管</option>
+														   <option value="02">测试经理</option>
+														   <option value="03">测试组长</option>
+														   <option value="04">自动化技术人员</option>
+														   <option value="05">功能测试人员</option>
+														</select>
+													</div>
+													<span class="glyphicon col-xs-1" id="alter-feedback-role"></span>
+												</div>
+												<div class="form-group">
+													<label class="col-xs-3 control-label" for="alter-state">状态</label>
+													<div class="col-xs-8">
+														<select name="" required id="alter-state" class="form-control">
+															 <option value="00">正常</option>
+															 <option value="01">不正常</option>
+														</select>
+													</div>
+													<span class="col-xs-1 glyphicon" id="alter-feedback-state"></span>
+												</div>
+												<span class="input-tip"><strong>选填信息</strong></span>
+												<div class="form-group">
+													<label for="alter-department" class="control-label col-xs-3">所属部门</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="alter-department" class="form-control">
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="alter-phonenumber" class="control-label col-xs-3">手机号</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="alter-phonenumber" class="form-control">
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="alter-telephone" class="control-label col-xs-3">固定电话</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="alter-telephone" class="form-control">
+													</div>
+												</div>
+												<div class="form-group">
+													<label for="alter-email" class="control-label col-xs-3">电子邮箱</label>
+													<div class="col-xs-8 ">
+														<input type="text" id="alter-email" class="form-control">
+													</div>
+												</div>
+											</form>
+											<div class="alert alert-danger" role="alert" id="input-detecting">
+												输入信息不完整！
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+											<button class="btn btn-success" type="button" disabled id="btn-alter">修改</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- alterModal end -->
+							<!-- addModal start -->
+						<div class="modal fade " id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+										<h4 class="modal-title">添加用户</h4>
+									</div>
+									<div class="modal-body">
+										<form class="form-horizontal " role="form">
+											<div class="row"><span class="col-xs-2 col-sm-offset-1 input-tip" ><strong>必填信息</strong></span></div>
+											<div class="form-group">
+												<label for="username" class="col-xs-2 control-label col-sm-offset-2">用户名</label>
+												<div class="col-xs-6 ">
+													<input type="text" id="username" class="form-control" required v-model="username">
+												</div>
+												<span class="valid icon-warning-sign hide"  id="add-icon-username"></span>
+												<p class="valid tip text-danger col-xs-10 col-md-10 col-sm-offset-4" id="add-tip-username"></p>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-2 col-sm-offset-2 control-label" for="name">姓名</label>
+												<div class="col-xs-6 ">
+													<input type="text" id="name" required class="form-control" v-model="reallyname">
+												</div>
+												<span class="icon-warning-sign" id="add-feedback-name" style="color: #b94a48;"></span>
+												<p class="tip text-danger col-xs-10 col-md-10 col-sm-offset-2 "></p>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-2 col-sm-offset-2 control-label" for="password">密码</label>
+												<div class="col-xs-6 ">
+													<input type="password" id="password" required class="form-control" v-model="password">
+												</div>
+												<span class="icon-warning-sign" id="add-feedback-password" style="color: #b94a48;"></span>
+												<p class="tip text-danger col-xs-10 col-md-10 col-sm-offset-2"></p>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-2 col-sm-offset-2 control-label" for="confirm">确认密码</label>
+												<div class="col-xs-6 ">
+													<input type="password" id="confirm" required class="form-control" v-model="repassword">
+												</div>
+												<span class="icon-ok" id="add-feedback-confirmpassword" style="color: #b94a48;"></span>
+												<p class="tip text-danger col-xs-10 col-md-10 col-sm-offset-2 "></p>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-2 col-sm-offset-2 control-label" for="role">角色</label>
+												<div class="col-xs-4">
+													<select name="" id="role" class="form-control" v-model="role">
+														<option value="01">测试主管</option>
+														<option value="02">测试经理</option>
+														<option value="03">测试组长</option>
+														<option value="04">自动化技术人员</option>
+														<option value="05">功能测试人员</option>
+													</select>
+												</div>
+												<span class="icon-ok" id="add-feedback-confirmpassword" style="color: #b94a48;"></span>
+												<p class="tip text-danger col-xs-10 col-md-10 col-sm-offset-2 "></p>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-2 col-sm-offset-2 control-label" for="state">状态</label>
+												<div class="col-xs-4 col-md-4">
+													<select name="" id="state" class="form-control" v-model="status">
+														<option value="00">正常</option>
+														<option value="01">不正常</option>
+													</select>
+												</div>
+												<span class="icon-ok" id="add-feedback-confirmpassword" style="color: #b94a48;"></span>
+												<p class="tip text-danger col-xs-10 col-md-10 col-sm-offset-2 "></p>
+											</div>
+											<div class="row"><span class="input-tip col-xs-2 col-sm-offset-1"><strong>选填信息</strong></span></div>
+											<div class="form-group">
+												<label for="department" class="control-label col-xs-2 col-sm-offset-2">所属部门</label>
+												<div class="col-xs-5">
+													<input type="text" id="department" class="form-control" v-model="dept">
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="phonenumber" class="control-label col-xs-2 col-sm-offset-2">手机号</label>
+												<div class="col-xs-5">
+													<input type="text" id="phonenumber" class="form-control" v-model="phone">
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="telephone" class="control-label col-xs-2 col-sm-offset-2">固定电话</label>
+												<div class="col-xs-5">
+													<input type="text" id="telephone" class="form-control" v-model="tel">
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="email" class="control-label col-xs-2 col-sm-offset-2">电子邮箱</label>
+												<div class="col-xs-5">
+													<input type="text" id="email" class="form-control" v-model="email">
+												</div>
+											</div>
+										</form>
+										<!-- <div class="alert alert-danger" style="margin-bottom: 0;" id="add-input-detecting">
+											输入信息不完整！
+										</div> -->
+									</div>
+									<div class="modal-footer">
+										<button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+										<button class="btn btn-success" type="button" id="btn-add" @click="addUser()">添加</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- addModal end -->
+						</div>
+					</div>
+					<!-- table end -->
+				</div>
+			</section>
+			<link rel="import" href="./common/copy-right.html?__inline">
+		</section>
+		<!--main content end-->
+		<!-- <div class="footer">
+			<link rel="import" href="./common/copy-right.html?__inline">
+		</div> -->
+	</div>
+	<!--content end -->
+	<link rel="import" href="./common-vac/alert.html?__inline">
+	<!--<link rel="import" href="./common/footer.html?__inline">-->
+	<!--script for this page only-->
+	<script src="../static/js/config.js"></script>
+	<script src="../static/js/vac-functions.es.js"></script>
+	<script src="../static/js/usermanagement.js"></script>
+	<script src="../lib/jquery.scrollTo.min.js"></script>
+	<script src="../../lib/jquery.nicescroll.js" type="text/javascript"></script>
+	<script src="../../lib/owl.carousel.js"></script>
+	<script src="../../lib/common-scripts.js"></script>
+	<script src="../../lib/approve.min.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="import" href="./common/header.html?__inline">
+  <!-- css for this page only -->
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+  <link rel="stylesheet" href="text/css" href="../static/css/case-operation.scss">
+  <title>objectRepo</title>
+  <style>
+    #menuContent,
+    .elementContent,
+    .tab-content {
+      height: calc(100vh - 190px);
+      background-color: #fff;
+    }
+  </style>
+</head>
+
+<body id="" v-cloak>
+  <div class="content" id="app1">
+    <!--header start-->
+    <link rel="import" href="./common/header-guide.html?__inline">
+    <!--header end-->
+    <!--sidebar start-->
+    <link rel="import" href="./common/aside-guide.html?__inline">
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+      <section class="wrapper">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation">
+            <a href="#home" aria-controls="home" role="tab" data-toggle="tab">对象库</a>
+          </li>
+          <li role="presentation">
+            <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">元素库</a>
+          </li>
+          <li role="presentation" class="active">
+            <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">用例数据</a>
+          </li>
+          <li role="presentation">
+            <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">执行记录</a>
+          </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane" id="home">
+            <object-repo :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></object-repo>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="profile">
+            <element-library :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></element-library>
+          </div>
+          <div role="tabpanel" class="tab-pane active" id="messages">
+            <case-data></case-data>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="settings">
+              <exec-record></exec-record>
+          </div>
+        </div>
+
+        <!-- <el-tab-pane label="对象库" name="first"><object-repo></object-repo></el-tab-pane> -->
+        <!-- <el-tab-pane label="元素库" name="second"><element-library></element-library></el-tab-pane> -->
+
+        </el-tabs>
+      </section>
+    </section>
+    <!-- <object-repo></object-repo> -->
+
+    <!--main content end-->
+    <div class="footer">
+      <link rel="import" href="./common/copy-right.html?__inline">
+    </div>
+  </div>
+
+<script type="text/x-template" id="case-data">
+	<div class="tab-content">
+		<div class="top-selector">
+			<label class="checkbox-inline">
+					<input type="checkbox" id="" v-model="checkall" @change="toggleCheckAll"> 全选
+				</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox1" value="input-data" v-model="conditions"> 输入数据
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox2" value="flow-data" v-model="conditions"> 流程数据
+			</label>
+			<label class="checkbox-inline">
+					<input type="checkbox" id="inlineCheckbox2" value="scene-data" v-model="conditions"> 场景数据
+				</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox3" value="global-data" v-model="conditions"> 全局数据
+			</label>
+			<label class="checkbox-inline">
+					<button type="button" class="btn btn-info"> 搜 索 </button>
+			</label>
+			<label class="checkbox-inline">
+					<button type="button" class="btn btn-info"> 刷 新 </button>
+			</label>
+			<label class="checkbox-inline">
+				<button type="button" class="btn btn-info"> 保 存 </button>
+			</label>
+		</div>
+		<div class="table-wrapper">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>数据名称</th>
+            <th>数据值</th>
+            <th>数据池名称</th>
+            <th>对象名称</th>
+            <th>描述</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(index,item) in dataList">
+            <td>{{ item.dataName }}</td>
+            <td>{{ item.dataValue }}</td>
+            <td>{{ item.dataPoolName }}</td>
+            <td>{{ item.objectName }}</td>
+            <td>{{ item.description }}</td>
+            <td><button class="btn btn-info" @click="alterData()">修改</button></td>
+          </tr>
+          <tr v-if="dataList.length === 0"></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="alterModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">修改数据</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" id="alter-form">
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="data-name">数据名</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="email" id="data-name" placeholder="" name="data-name" required>
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="data-value">数据值</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="url" id="data-value" placeholder="" name="data-value" required>
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="formGroupInputLarge">数据池名称</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="text" id="formGroupInputLarge" placeholder="Large input">
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="formGroupInputSmall">对象名称</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="text" id="formGroupInputSmall" placeholder="Small input">
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="formGroupInputLarge">数据描述</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="text" id="formGroupInputLarge" placeholder="Large input">
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-default " data-dismiss="modal">取 消</button>
+                <button type="submit" class="btn btn-info ">保 存</button>
+              </div>
+            </form>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	</div>
+  </script>
+  
+  <script type="text/x-template" id="execution-record">
+    <div class="tab-content">
+      <button @click="changeSrcDoc()">click me</button>
+      <iframe class="record-iframe" frameborder="0" :srcdoc="srcDoc"></iframe>
+    </div>
+  </script>
+</body>
+
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+<!-- 先引入 Vue -->
+<!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+<!--script for this page only-->
+<script type="text/javascript" src="../static/js/objectRepo.js"></script>
+<script type="text/javascript" src="../static/js/elementLibrary.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/case-data.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/execution-record.js"></script>
+<!-- ztree -->
+<script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+<!-- 引入组件库 -->
+<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+<script>
+  var app = new Vue({
+    el: '#app1',
+    data: function () {
+      return {
+        activeName: 'first'
+      }
+    }
+  })
+</script>

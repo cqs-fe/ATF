@@ -4,9 +4,13 @@ var checkFunction = {
 		this.$nextTick(function () {
         	$.each(caseCbs, function(index, ele) {
 				if(ele.checked) {
-					$(ele).parents('.case').css({"border-color": "#ff6c60"})
+					$(ele).parents('.case').css({"border-color": "rgb(69, 185, 177)"})
+					$(ele).parents('.case').css({"background-color": "rgb(69, 185, 177)"})
+					$('p', $(ele).parents('.case')).css({"color": "#fff"})
 				}else {
 					$(ele).parents('.case').css({"border-color": "#ddd5d5"})
+					$(ele).parents('.case').css({"background-color": "#fff"})
+					$('p', $(ele).parents('.case')).css({"color": "#797979"})
 				}
 			})
       	})
@@ -70,7 +74,7 @@ var checkFunction = {
 	},
 	checkAllInScene (event) {
 		var flag = event.target.checked
-		var inputs = event.target.parentNode.parentNode.querySelectorAll('input[type=checkbox]')
+		var inputs = Array.from(event.target.parentNode.parentNode.querySelectorAll('input[type=checkbox]'))
 		for(let input of inputs) {
 			input.checked = flag
 			flag === true 
@@ -83,8 +87,8 @@ var checkFunction = {
 		var _this = this
 		let flag = event.target.checked
 		let caseLibDiv = event.target.parentNode.parentNode
-		let caseListDiv = caseLibDiv.parentNode
-		var inputs = caseLibDiv.querySelectorAll('.check-case')
+		let caseListDiv = caseLibDiv.parentNode.parentNode
+		var inputs = Array.from(caseLibDiv.querySelectorAll('.check-case'))
 		if( flag === true ) {
 			// get all the flownodes in this flowcase
 			for(let input of inputs) {
@@ -92,7 +96,7 @@ var checkFunction = {
 			}
 			// get all the check-flownodes and if all the check-flownodes' value is in the selectedSceneCases,
 			// then set the checkall-inscene true
-			let checkFlowNodesInputs = [...caseListDiv.querySelectorAll('.check-flownodes')]
+			let checkFlowNodesInputs = Array.from(caseListDiv.querySelectorAll('.check-flownodes'))
 			if(checkFlowNodesInputs.every((input) => { return this.selectedSceneCases.includes(input.value)})) {
 				caseListDiv.querySelector('.checkall-inscene').checked = true
 				_this.checkallSceneIds.push(+caseListDiv.querySelector('.checkall-inscene').value)
@@ -119,7 +123,7 @@ var checkFunction = {
 	checkFlowNode (event) {
 		var _this = this
 		let flag = event.target.checked
-		let caseDiv = event.target.parentNode.parentNode.parentNode
+		let caseDiv = event.target.parentNode.parentNode
 		let caseListDiv = caseDiv.parentNode.parentNode
 		let caseId = caseDiv.parentNode.querySelector('.check-flownodes').value
 		if(flag) {
@@ -164,12 +168,13 @@ var checkFunction = {
 		this.setBackground()
 	},
 	setSelect (event){
+		
 		var _this = this;
 		var target  = event.target;
 		console.log(target)
-		// if(!target.classList.contains('main-content2')) {
-		// 	return
-		// }
+		if(target.classList.contains('handle1') || target.classList.contains('handle')) {
+			return
+		}
 		let container = document.querySelector('.main-content2')
 		var fileNodes = document.querySelectorAll(".case .check-case");
 		var startX = event.offsetX + Vac.getOffsetTo(event.target, container).offsetLeft
@@ -193,13 +198,15 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		container.addEventListener('mousemove', mouseMoveFunction, false);
+		// 函数节流
+		var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		container.addEventListener('mousemove', moveFunction, false);
 		container.addEventListener('mouseup', (event) => {
 			// this.isSelect = true;
 			if (selDiv){
 				container.removeChild(selDiv);
 			}
-			container.removeEventListener('mousemove', mouseMoveFunction, false);
+			container.removeEventListener('mousemove', moveFunction, false);
 			selDiv = null;
 			
 			for(let sceneid of _this.sceneIds) {
@@ -233,6 +240,7 @@ var checkFunction = {
 		
 
 		function mouseMoveFunction(event){
+			console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}
@@ -294,7 +302,8 @@ var checkFunction = {
 		}
 	},
 	setSelectListener (){
-		document.querySelector('.main-content2').addEventListener('mousedown',this.setSelect,false);
+		// document.querySelector('.main-content2').addEventListener('mousedown',Vac.throttle(this.setSelect, 1000, this),false);
+		document.querySelector('.main-content2').addEventListener('mousedown',this.setSelect, false);
 		// 防止点击用例框时也进行选取
 		
 		// var caseLibs = Array.from(document.querySelectorAll('.case-lib'))

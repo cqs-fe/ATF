@@ -26,7 +26,7 @@ var app = new Vue({
                     'autid':this.autId
                 },
                 success:function(data){
-                    // console.log(data);
+                    console.log(data);
                     if(data){
                         app.execodeId=data.obj.id;
                         $('textarea[name="maincodeBegin"]').val(data.obj.maincodeBegin);

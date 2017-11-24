@@ -151,7 +151,7 @@ $okGreen: #66F60C;
 .row {
 	marign:0;
 	.breadcrumb {
-		margin-bottom: 10px;
+		margin-bottom: 0px;
 	}
 }
 #main-content{
@@ -159,9 +159,6 @@ $okGreen: #66F60C;
 	display:flex;
 	flex-direction: column;
 	padding-top:60px;
-	.check-all-case {
-		margin: 5px 0 20px 0;
-	}
 	.strench {
 		flex: 1 1 auto;
 		background-color: #fff;
@@ -183,6 +180,11 @@ $okGreen: #66F60C;
 			flex: 1 1 auto;
 			overflow: auto;
 			background-color: #fff;
+			font-size: 13px;
+			.btn {
+				padding: 3px 6px;
+				font-size: 13px;
+			}
 			.route-position {
 				flex: 0 0 auto;
 				padding: 5px 20px;
@@ -194,13 +196,15 @@ $okGreen: #66F60C;
 				}
 			}
 			.top-bar{
+				position: sticky;
+				top: 0;
 				flex: 0 0 auto;
 				width: 100%;
 				background-color: #f1f2f7;
 			}
 			.form-input {
-				margin: 10px 0 5px 0;
-				padding: 10px 20px;
+				// height: 0;
+				display: none;
 				background-color: #f1f2f7;
 				&>div {
 					float: left;
@@ -215,35 +219,48 @@ $okGreen: #66F60C;
     				padding: 5px 10px;
 				}
 			}
+			.form-input-show {
+				margin: 10px 0 5px 0;
+				padding: 10px 20px;
+				// height: auto;
+				display: block;
+			}
 			.main-content {
 				position: relative;
 				flex: 1 0 auto;
 				overflow: auto;
 				background-color: #fff;
-				padding: 10px 20px;
+				padding: 0px 0px;
+				width: max-content;
+				min-width: 100%;
 				.check-all-case {
 					display: inline-block;
 				}
 				.case-lib {
-					margin-bottom: 20px;
-					border: 1px dashed #ddd;
+					// margin-bottom: 20px;
+					// border: 1px dashed #ddd;
 					padding: 5px;
 					background-color: #fafafa;
+					width: max-content;
+					min-width: 100%;
+					display: flex;
+					flex-direction: row;
 					.checkbox-wrapper {
-						display: inline-block;
+						display: flex;
 						height: 100%;
 						// width: 30px;
 						vertical-align: top;
 						// padding: 0px 0px 0px 8px;
-						padding: 10px;
+						padding: 5px;
 						input {
 							float: left;
 							margin: 0;
 						}
 					}
 					.case-wrapper {
-						display: inline-block;
-						width: calc(100% - 40px);
+						display: flex;
+						flex-direction: row;
+						width: max-content;
 					}
 				}
 				.case-lib:last-child {
@@ -251,34 +268,58 @@ $okGreen: #66F60C;
 				}
 				.case {
 					flex: 1 0 auto;
-					display: inline-block;
+					display: flex;
 					margin-bottom: 0px;
 					margin-left: 20px;
 					min-width: 50px;
+					width: 110px;
 					border: 1px solid #ddd5d5;
 					border-radius: 5px;
-					$caseHeaderheight: 30px;
+					$caseHeaderheight: 25px;
+					height: 30px;
+					&:first-of-type {
+						margin-left: 0;
+					}
 					.case-header {
 						height: $caseHeaderheight;
-						padding: 0 5px;
-						background-color: #f5f5f5;
+						padding: 0 0px;
+						// background-color: #f5f5f5;
+						background: transparent;
 						border-top-left-radius: 5px;
 						border-top-right-radius: 5px;
+						flex: 0 0 auto;
+						width: 110px;
+						input[type="checkbox"] {
+							visibility: hidden;
+						}
 						p {
 							display: inline-block;
 							line-height: $caseHeaderheight;
-							margin: 0px 0 0 0px;
-						}
-						input:checked {
+							width: 90px;
+							margin: 0px 0 0 -10px;
+							overflow-x: hidden;
+							white-space: nowrap;
+							text-overflow: ellipsis; 
 						}
 					}
+					// .case-main {
+					// 	flex: 0 0 auto;
+					// 	margin: 0 5px;
+					// 	p {
+					// 		line-height: 30px;
+					// 		margin: 0;
+					// 	}
+					// }
 					.case-footer {
 						font-size: 16px;
+						line-height: $caseHeaderheight;
+						height: $caseHeaderheight;
 						img {
-							display: block;
-							width: 20px;
-							height: 20px;
+							display: inline-block;
+							width: 16px;
+							height: 16px;
 							margin: 0 auto;
+							vertical-align: middle;
 						}
 					}
 				}
@@ -302,14 +343,14 @@ $okGreen: #66F60C;
 		}
 	}
 	.bigMarginBottom {
-		margin-bottom: 250px;
+		margin-bottom: 0px;
 	}
 	.smallMarginBottom {
-		margin-bottom: 84px;
+		margin-bottom: 0px;
 	}
 	.panel{
 		position:fixed;
-		bottom: 50px;
+		bottom: 0px;
 		// left: 0;
 		flex: 1 0 auto;
 		height: 200px;
@@ -320,6 +361,7 @@ $okGreen: #66F60C;
 		margin-bottom: 0;
 		overflow: hidden;
 		transition: 0.5s height;
+		z-index: 3;
 		.panel-heading{
 			height: 34px;
 			border-top-left-radius: 5px;
@@ -328,9 +370,6 @@ $okGreen: #66F60C;
 			font-size: 14px;
 			margin: 0 0px;
 			padding:5px 10px;
-		}
-		.close{
-			
 		}
 		.panel-body{
 			height: 166px;
@@ -438,7 +477,8 @@ $okGreen: #66F60C;
 		}
 	}
 	.panel.height43px {
-		height: 34px;
+		// height: 34px;
+		height: 0px;
 		// top: 0;
 	}
 	.panel.height200px{
@@ -446,7 +486,7 @@ $okGreen: #66F60C;
 		// top: -0;
 	}
 	.copy-right{
-		position: fixed;
+		// position: fixed;
 		// left: 0;
 		bottom: 0;
 		height: 50px;
@@ -480,7 +520,7 @@ $okGreen: #66F60C;
 				// padding: 10px;
 				overflow: hidden;
 				box-sizing: border-box;
-				transition: height 500ms;
+				transition: height 100ms;
 				.case-item {
 					display: inline-block;
 					flex: 1 1 auto;

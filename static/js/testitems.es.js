@@ -48,6 +48,11 @@ $(document).ready(function(){
         xmlHttpRequest.send(data);
     })();// 立即执行函数，获取服务器全部数据结束
 
+    $('.3').addClass('open')
+    $('.3 .arrow').addClass('open')
+    $('.3-ul').css({display: 'block'})
+    $('.3-0').css({color: '#ff6c60'})
+
     // 添加模态框显示时的初始化
     (function(){
         $("a[id='addModalBtn']").click(function(){
