@@ -122,20 +122,34 @@ $(document).ready(function() {
             },
             getScriptTemplate: function() {
                 var _this = this;
-                $.ajax({
-                    url: address + 'scripttemplateController/showallscripttemplate',
-                    data: { 'transactid': _this.transId },
-                    type: "POST",
-                    success: function(data) {
-                        _this.templateList = data.o;
-                    }
-                });
+                if(_this.scriptIsChanged) {
+                    var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
+                    promise.then(() => {
+                    }, () => {
+                        getTemplate();
+                    })
+                } else {
+                    getTemplate();
+                }
+                function getTemplate() {
+                    $.ajax({
+                        url: address + 'scripttemplateController/showallscripttemplate',
+                        data: { 'transactid': _this.transId },
+                        type: "POST",
+                        success: function(data) {
+                            _this.templateList = data.o;
+                            _this.checkedTemplate = [];
+                            editDataVue.selectedScript = 0
+                            _this.scriptIsChanged = false
+                        }
+                    });
+                }
             },
             change: function(event) {
                 var value = +event.target.value;
                 var array = this.checkedTemplate.slice(0);
                 var _this = this;
-                console.log(this.checkedTemplate)
+                var index = $(event.target).val();
                 if(event.target.checked) {
                     if(this.scriptIsChanged) {
                         var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
@@ -154,20 +168,23 @@ $(document).ready(function() {
                         process(value)
                     }
                 } else {
-                    event.preventDefault()
+                    // event.preventDefault()
                     if(this.scriptIsChanged) {
                         var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
                         promise.then(() => {
                             this.checkedTemplate = this.checkedTemplate.slice(0)
+                            this.checkedTemplate = [+value]
                             return
                         }, () => {
                             _this.scriptIsChanged = false
                             _this.checkedTemplate = []
-                            editDataVue.selectedScript = 0
+                            editDataVue.selectedScript = 0;
+                            event.target.checked = false;
                         })
                     } else {
                         _this.checkedTemplate = []
                         editDataVue.selectedScript = 0
+                        // $(`input[value='${index}']`).prop('checked', false);
                     }
                 }
                 function process(value) {
@@ -222,7 +239,7 @@ $(document).ready(function() {
                                         // editDataVue.operationRows = [row]
                                     }
                                 } else {
-                                    Vac.alert('查询模板脚本失败')
+                                    Vac.alert(data.msg)
                                 }
                             }
                         });
@@ -530,18 +547,10 @@ $(document).ready(function() {
                         'content': sendData
                     },
                     success: function(data) {
-                        console.log(data);
-                        if (data.success) {
-                            var param_tds = [...$('.param-value')]; //$('.param-value')取到的是类数组，不能使用forEach方法，所以使用es6的rest方法将其转换为数组
-                            param_tds.forEach(function(item, index) {
-                                item.innerHTML = data.o[index];
-                            })
-                        } else {
-                            $('#fail').modal();
-                        }
+                        Vac.alert(data.msg);
                     },
                     error: function() {
-                        $('#fail').modal();
+                        Vac.alert('参数化失败，请求未成功');
                     }
                 })
             },
@@ -796,7 +805,7 @@ $(document).ready(function() {
                 var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
                 var uiNodes = uiTree.getCheckedNodes(true);
 
-                var functionNodes = functionTree.getCheckedNodes(true)
+                var functionNodes = functionTree ? functionTree.getCheckedNodes(true) : []
                 for (var node of uiNodes) {
                     if (node.isParent) {
                         continue;
@@ -820,34 +829,42 @@ $(document).ready(function() {
                             }
                             // data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
                             // 把第一个function的参数取出来，放入
-                            data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
+                            var arr = [];
+                            var params = JSON.parse(data.ommethod[0].arguments)
+                            arr.push({
+                                Name: params[0].name,
+                                Value: ''
+                            });
+                            data.ommethod[0] && (newRow.parameters = arr)
                             editDataVue.operationRows.push(newRow)
                         }
                     })
                 }
-                for (var node of functionNodes) {
-                    console.log(node)
-                    let newRow = {}
-                    newRow.id = Symbol()
-                    newRow.operation = {
-                        element: '',
-                        ui: '',
-                        classType: ''
-                    }
-                    newRow.functions = []
-                    newRow.functions.push({ ...node, mname: node.methodname })
-
-                    newRow.parameters = []
-                    try{
-                        var parameters = JSON.parse(node.parameterlist)
-                        for(let param of parameters) {
-                            newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+                if (functionNodes && functionNodes.length) {
+                    for (var node of functionNodes) {
+                        console.log(node)
+                        let newRow = {}
+                        newRow.id = Symbol()
+                        newRow.operation = {
+                            element: '',
+                            ui: '',
+                            classType: ''
                         }
-                    } catch(e) {
+                        newRow.functions = []
+                        newRow.functions.push({ ...node, mname: node.methodname })
+
                         newRow.parameters = []
+                        try{
+                            var parameters = JSON.parse(node.parameterlist)
+                            for(let param of parameters) {
+                                newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+                            }
+                        } catch(e) {
+                            newRow.parameters = []
+                        }
+                        
+                        editDataVue.operationRows.push(newRow)
                     }
-                    
-                    editDataVue.operationRows.push(newRow)
                 }
                 $('#ui-ele-modal2').modal('hide')
             },

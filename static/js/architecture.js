@@ -300,8 +300,8 @@ var app = new Vue({
                 isparameter = $('#methodForm select[name="isparameter"]').val(),
                 waittime = $('#methodForm input[name="waittime"]').val(),
                 timeout = $('#methodForm input[name="timeout"]').val();
-            var paraList = '[';
-            var pTable = $('#pTable'),
+            var paraList = '[',
+                pTable = $('#pTable'),
                 pRow = pTable.find('tr'),
                 pCol = pRow[0].children;
             for (var j = 1; j < pRow.length; j++) {
@@ -314,9 +314,10 @@ var app = new Vue({
                 r += "},";
                 paraList += r;
             }
-            paraList = paraList.substring(0, paraList.length - 1);
+            if(paraList.length>1){
+               paraList = paraList.substring(0, paraList.length - 1); 
+            }
             paraList += "]";
-            console.log(paraList)
             $.ajax({
                 url: address+'methodController/update',
                 type: 'post',

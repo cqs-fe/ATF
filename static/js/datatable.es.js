@@ -172,12 +172,11 @@ $(document).ready(function () {
 					this.afterOperationRows = []
 					document.getElementById("input1").value = ''
 					document.getElementById("input4").value = ''
-					var cellData = handsontable.getDataAtCell(this.selection.start.row, this.selection.start.col)
+					var cellData = $.trim(handsontable.getDataAtCell(this.selection.start.row, this.selection.start.col))
 					if(cellData.startsWith('@before')) {
 						// 表达式
 						editDataVue.dataType = 4;
 						var beforeStr = cellData.slice(cellData.indexOf('@before') + 6, cellData.indexOf('@value'));
-						console.log('beforeStr-->'+beforeStr)
 						var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
 						// console.log('valueStr-->'+valueStr)
 						var afterStr = cellData.slice(cellData.indexOf('@after') + 5);
@@ -189,9 +188,18 @@ $(document).ready(function () {
 
 						var afterArr = afterStr.includes('UI("') ? afterStr.slice(afterStr.indexOf('UI("')).split(';') : [];
 						// console.log('afterArr-->'+afterArr)
+						this.parseScript(afterArr, this.afterOperationRows);
 
-						this.parseScript(afterArr, this.afterOperationRows)
-						var value = valueStr.split('{expr=')[1].slice(0, -1);
+						let str = valueStr.split('{expr=')[1]
+						var value = str.slice(0, str.indexOf('}'));
+						$('#input4').val(value);
+					} else if( cellData != '' && cellData != 'nil'){
+						editDataVue.dataType = 1;
+						$('#input1').val(cellData);
+					} else if( cellData == 'nil') {
+						editDataVue.dataType = 2;
+					} else {
+						editDataVue.dataType = 3;
 					}
 				},
 				parseScript: function(strArray, operationRows) {
@@ -246,7 +254,6 @@ $(document).ready(function () {
 						var afterStr = this.saveOperation(null, 2);
 						inputValue = `@before\n${beforeStr}\n@value\n{expr=${inputStr}}\n@after\n${afterStr}`;
 					}
-					console.log(inputValue);
 					handsontable.setDataAtCell(this.selection.start.row, this.selection.start.col, inputValue);
 					handsontable.render();
 				},
@@ -446,7 +453,7 @@ $(document).ready(function () {
 						var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
 						sendDataArray.push(string)
 					}
-					var sendData = sendDataArray.join(';\n');
+					var sendData = sendDataArray.join(';\n') + ';';
 					return sendData;
 				},
 				updateRow: function (rows, index) {
@@ -767,6 +774,7 @@ $(document).ready(function () {
 						return
 					}
 					if(newVal.length == 0) {
+						zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, []);
 						return
 					}
 					_this.systemInfo.testpoints = JSON.stringify(newVal)
@@ -776,7 +784,6 @@ $(document).ready(function () {
 					_this.systemInfo.execute_method = checkboxs[0].getAttribute('data-execute-method');
 					console.log(_this.systemInfo.script_mode)
 					console.log(_this.systemInfo.execute_method)
-					// 假数据
 					var data = {
 						executor: 	_this.systemInfo.executor,
 						caseLib_id:	_this.systemInfo.caseLib_id,
@@ -842,7 +849,6 @@ $(document).ready(function () {
 								} = value);
 								treeData.push(item);
 							});
-							console.log(treeData)
 							zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
 							_this.testpointLength = newVal.length
 						},
@@ -1181,121 +1187,126 @@ $(document).ready(function () {
 					type: "post",
 					dataType: "json",
 					success: function (data) {
-						var dataKey = [];
-						if (data.o.tableHead) {
-							// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
-							dataKey = getDataKey(data.o.tableHead);
-							console.log("dataKey:" + dataKey);
-						}
-						var destrutData = [];
-						if (data.o.tableDatas) {
-							if (data.o.tableDatas.length == 0) {
-								Vac.alert('该脚本下未查询到相关数据！')
+						if (data.success) {
+							var dataKey = [];
+							if (data.o.tableHead) {
+								// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
+								dataKey = getDataKey(data.o.tableHead);
+								console.log("dataKey:" + dataKey);
 							}
-							data.o.tableDatas.forEach((value) => {
-								var data = {};
-								({
-									id: data.testcaseId,
-									expectresult: data.expectresult,
-									testpoint: data.testpoint,
-									teststep: data.teststep,
-									checkpoint: data.checkpoint,
-									testdesign: data.testdesign,
-									casecode: data.casecode
-								} = value);
-								dataKey.forEach((key) => {
-									data[key] = value[key];
+							var destrutData = [];
+							if (data.o.tableDatas) {
+								if (data.o.tableDatas.length == 0) {
+									Vac.alert('该脚本下未查询到相关数据！')
+								}
+								data.o.tableDatas.forEach((value) => {
+									var data = {};
+									({
+										id: data.testcaseId,
+										expectresult: data.expectresult,
+										testpoint: data.testpoint,
+										teststep: data.teststep,
+										checkpoint: data.checkpoint,
+										testdesign: data.testdesign,
+										casecode: data.casecode
+									} = value);
+									dataKey.forEach((key) => {
+										data[key] = value[key];
+									});
+									console.log(data)
+									destrutData.push(data);
 								});
-								console.log(data)
-								destrutData.push(data);
-							});
-						}
-						// console.log(destrutData);
-						dataSource = destrutData;
-						// console.log(dataSource)
-						rowSelectFlags.length = dataSource.length;
-						getTotalColHeaders(data.o.tableHead);
-						// console.log(totalColumnsHeaders);
-						var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
-						// handsontable 配置与生成
-						if (handsontable === null) {
-							handsontable = new Handsontable(tableContainer, {
-								data: dataSource,
-								hiddenColumns: {
-									columns: [2, 3],
-									indicators: false
-								},
-								// 配置列表头
-								columns: totalColumnsOptions,
-								colHeaders: colHeadersRenderer,
-								rowHeaders: true,
-								cells: function (row, col, prop) {
-									var cellProperties = {};
-									return cellProperties;
-								},
-								// 配置可以改变行的大小
-								manualRowResize: true,
-								multiSelect: true,
-								outsideClickDeselects: true,
-								// 配置contextMenu
-								contextMenu: contextMenuObj,
-								undo: true,
-								copyPaste: true,
-								allowInsertRow: false,
-								allowInsertColumn: false,
-								fillHandle: false,
-								search: {
-									searchResultClass: ''
-								},
-								afterRender: function () {
-									if (searchResults && searchResults.length) {
-										var trs = document.querySelectorAll('#handsontable tbody tr');
-										searchResults.forEach((value, index) => {
-											var tds = trs[value.row].getElementsByTagName('td');
-											if (index === currentResult) {
-												tds[value.col].style.backgroundColor = "#f00";
-											} else {
-												tds[value.col].style.backgroundColor = "#0f0";
-											}
+							}
+							// console.log(destrutData);
+							dataSource = destrutData;
+							// console.log(dataSource)
+							rowSelectFlags.length = dataSource.length;
+							getTotalColHeaders(data.o.tableHead);
+							// console.log(totalColumnsHeaders);
+							var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
+							// handsontable 配置与生成
+							if (handsontable === null) {
+								handsontable = new Handsontable(tableContainer, {
+									data: dataSource,
+									hiddenColumns: {
+										columns: [2, 3],
+										indicators: false
+									},
+									// 配置列表头
+									columns: totalColumnsOptions,
+									colHeaders: colHeadersRenderer,
+									// colWidths: [50, 90, 90, 90, 90, 90, 90],
+									// stretchH: 'all',
+									rowHeaders: true,
+									cells: function (row, col, prop) {
+										var cellProperties = {};
+										return cellProperties;
+									},
+									// 配置可以改变行的大小
+									manualRowResize: true,
+									multiSelect: true,
+									outsideClickDeselects: true,
+									// 配置contextMenu
+									contextMenu: contextMenuObj,
+									undo: true,
+									copyPaste: true,
+									allowInsertRow: false,
+									allowInsertColumn: false,
+									fillHandle: false,
+									search: {
+										searchResultClass: ''
+									},
+									afterRender: function () {
+										if (searchResults && searchResults.length) {
+											var trs = document.querySelectorAll('#handsontable tbody tr');
+											searchResults.forEach((value, index) => {
+												var tds = trs[value.row].getElementsByTagName('td');
+												if (index === currentResult) {
+													tds[value.col].style.backgroundColor = "#f00";
+												} else {
+													tds[value.col].style.backgroundColor = "#0f0";
+												}
 
-										})
-									}
-									document.querySelectorAll(".handsontable table th")[0].style.display = "none";
-								},
-								afterChange: function (changes, source) {
-									if (changes) {
-										// console.log(changes)
-										changes.forEach((value) => {
-											var data = {};
-											// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
-											data.testcaseId = dataSource[value[0]].testcaseId;
-											data.tbHead = value[1];
-											data.value = value[3];
-											var changedIndex;
-											changedData.forEach((value, index) => {
-												if (value.testcaseId == data.testcaseId && value.tbHead == data.tbHead) {
-													changedIndex = index;
+											})
+										}
+										document.querySelectorAll(".handsontable table th")[0].style.display = "none";
+									},
+									afterChange: function (changes, source) {
+										if (changes) {
+											// console.log(changes)
+											changes.forEach((value) => {
+												var data = {};
+												// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
+												data.testcaseId = dataSource[value[0]].testcaseId;
+												data.tbHead = value[1];
+												data.value = value[3];
+												var changedIndex;
+												changedData.forEach((value, index) => {
+													if (value.testcaseId == data.testcaseId && value.tbHead == data.tbHead) {
+														changedIndex = index;
+													}
+												});
+												if (changedIndex !== undefined) {
+													changedData.splice(changedIndex, 1, data);
+												} else {
+													changedData.push(data);
 												}
 											});
-											if (changedIndex !== undefined) {
-												changedData.splice(changedIndex, 1, data);
-											} else {
-												changedData.push(data);
-											}
-										});
-										console.log(changedData.toString());
-									}
-								},
-							});
-							// handsontable.updateSettings(contextMenuObj);
-						}
-						else {
-							handsontable.updateSettings({
-								data: dataSource,
-								columns: totalColumnsOptions,
-								colHeaders: colHeadersRenderer
-							});
-							handsontable.render();
+										}
+									},
+								});
+								// handsontable.updateSettings(contextMenuObj);
+							}
+							else {
+								handsontable.updateSettings({
+									data: dataSource,
+									columns: totalColumnsOptions,
+									colHeaders: colHeadersRenderer
+								});
+								handsontable.render();
+							}
+						} else {
+							Vac.alert(data.msg);
 						}
 					},
 					error: function () {

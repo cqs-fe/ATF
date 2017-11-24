@@ -48,7 +48,6 @@ var template_obj = `
                         <div class="col-xs-12">
                             <a class="btn btn-info btn-sm" data-toggle="modal" href="#addObjModal">添加对象</a>
                             <a class="btn btn-info btn-sm" @click="delObj">删除对象</a>
-                            <span style="margin-left:20px;"> 提示：ctrl+click 取消选中</span>
                         </div>
                     </div>
                     <ul id="objectTree" class="ztree tree"></ul>
