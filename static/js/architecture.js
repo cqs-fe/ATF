@@ -314,9 +314,10 @@ var app = new Vue({
                 r += "},";
                 paraList += r;
             }
-            paraList = paraList.substring(0, paraList.length - 1);
+            if(paraList.length>1){
+               paraList = paraList.substring(0, paraList.length - 1); 
+            }
             paraList += "]";
-            console.log(paraList)
             $.ajax({
                 url: address+'methodController/update',
                 type: 'post',
@@ -442,7 +443,7 @@ var setting1 = {
                         }
                     } else {
                         $('#classProp').children().remove();
-                        $('#classProp').append(propTr);
+                        $('#classProp').append(app.propTr);
                     }
 
                 },
@@ -629,6 +630,7 @@ function methodClick(event) {
         $('#methodForm input[name="name"]').val('');
         $('#methodForm input[name="description"]').val('');
         $('#methodForm select[name="isPara"]').val('');
+        app.methodParamList=[];
         $('#methodForm select[name="waittime"]').val('');
         $('#methodForm select[name="timeout"]').val('');
         $('#methodForm textarea[name="objectcode"]').val('');
