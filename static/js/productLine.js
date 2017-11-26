@@ -11,15 +11,20 @@ var app = new Vue({
     },
     ready: function() {
 
-        getList(1, 10, 'id', 'asc');
-        changeListNum();
+        this.getList(1, 10, 'id', 'asc');
+        this.changeListNum();
+
+        $('.1').addClass('open')
+        $('.1 .arrow').addClass('open')
+        $('.1-ul').css({display: 'block'})
+        $('.1-1').css({color: '#ff6c60'})
     },
     methods: {
 
         changePage: function(number) {
             listnum = $("#mySelect").children('option:selected').val();
             this.pageData.page = parseInt(this.pageData.page) + number;
-            getList(this.pageData.page, listnum, 'id', 'asc'); //此处的筛选参数可能有变化，根据筛选情况来
+            this.getList(this.pageData.page, listnum, 'id', 'asc'); //此处的筛选参数可能有变化，根据筛选情况来
         },
 
 
@@ -37,42 +42,40 @@ var app = new Vue({
                     }
                 }
             });
-        }
-
-    },
-
+        },
         getList: function(page, listnum, order, sort) {
+            
+            //获取list通用方法，只需要传入多个所需参数
+            $.ajax({
+                url: address+'productLineController/selectAll',
+                type: 'GET',
+                data: {
+                    'page': page,
+                    'rows': listnum,
+                    'order': order,
+                    'sort': sort
+                },
+                success: function(data) {
+                    console.info(data);
+                    console.info(data.obj);
+                    // var data = JSON.parse(data);
+                    app.productLineList = data.obj;
+                    var tt = data.total;
 
-                //获取list通用方法，只需要传入多个所需参数
-                $.ajax({
-                    url: address+'productLineController/selectAll',
-                    type: 'GET',
-                    data: {
-                        'page': page,
-                        'rows': listnum,
-                        'order': order,
-                        'sort': sort
-                    },
-                    success: function(data) {
-                        console.info(data);
-                        console.info(data.obj);
-                        // var data = JSON.parse(data);
-                        app.productLineList = data.obj;
-                        var tt = data.total;
-
-                        app.pageData.totalPage = Math.ceil(tt / listnum);
-                        app.pageData.pageSize = listnum;
-                    }
-                });
-         },
-
-    changeListNum：function() {
-        $('#mySelect').change(function() {
-            listnum = $(this).children('option:selected').val();
-            $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-            getList(1, listnum, 'id', 'asc');
-        });
-    }
+                    app.pageData.totalPage = Math.ceil(tt / listnum);
+                    app.pageData.pageSize = listnum;
+                }
+            });
+        },
+    
+        changeListNum: function() {
+            $('#mySelect').change(function() {
+                listnum = $(this).children('option:selected').val();
+                $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+                getList(1, listnum, 'id', 'asc');
+            });
+        }
+    },
          
 });
 

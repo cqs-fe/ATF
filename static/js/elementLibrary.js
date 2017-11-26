@@ -116,6 +116,9 @@ var template_ele = `
                             <div class="col-xs-2">
                                 <a class="btn btn-info" data-toggle="modal" href="#eleParentModal">设置父对象</a>
                             </div>
+                            <div class="col-xs-2">
+                                <a class="btn btn-info" @click="removeEleParent">解除关联</a>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="col-xs-3 control-label">对象库中关联对象</label>
@@ -124,6 +127,9 @@ var template_ele = `
                             </div>
                             <div class="col-xs-2">
                                 <a class="btn btn-info" data-toggle="modal" href="#eleLinkedModal">设置关联对象</a>
+                            </div>
+                            <div class="col-xs-2">
+                                <a class="btn btn-info" @click="removeEleLinked">解除关联</a>
                             </div>
                         </div>
                     </form>
@@ -419,7 +425,7 @@ var template_ele = `
                 </div>
                 <div class="modal-footer">
                     <button data-dismiss="modal" class="btn btn-default">取消</button>
-                    <button data-dismiss="modal" class="btn btn-success" ＠click="setUILinked()">确认</button>
+                    <button data-dismiss="modal" class="btn btn-success" @click="setUILinked()">确认</button>
                 </div>
             </div>
         </div>
@@ -1177,14 +1183,13 @@ var elementLibrary = Vue.extend({
         // 页面初始化获取对象库
          getUILinkedObjectTree: function() {
              var _this = this;
-             console.log(this)
             // var transid = $("#transactSelect").val();
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
                 url: address + 'object_repoController/queryObject_repoAll',
                 type: 'post',
                 data: { "transid": transid },
-                success: function(data) {console.log(this);
+                success: function(data) {
                     if (data !== null) {
                         $.fn.zTree.init($("#UILinkedTree"), _this.setting2, data.obj);
                     }
@@ -1196,12 +1201,17 @@ var elementLibrary = Vue.extend({
             var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree"),
                 nodes = treeObj.getSelectedNodes(),
                 obj = nodes[0].name;
-            $('#UILinkedInput').val(obj);
+            if(nodes[0].getParentNode()){
+                   var pObj=nodes[0].getParentNode().name;
+                    $('#UILinkedInput').val(pObj+' / '+obj); 
+            }else{
+                    $('#UILinkedInput').val(obj);
+            } 
         },
         //解除关联
          removeUILinked: function() {
             var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
-            treeObj.checkAllNodes(false);
+            treeObj.cancelSelectedNode();
             $('#UILinkedInput').val('');
             $('#successModalEle').modal();
         },
@@ -1223,11 +1233,22 @@ var elementLibrary = Vue.extend({
         },
         //设置对象库中父对象
          setEleParent: function() {
-            console.log(222)
             var treeObj = $.fn.zTree.getZTreeObj("eleParentTree"),
                 nodes = treeObj.getSelectedNodes(),
                 obj = nodes[0].name;
-            $('#eleParentInput').val(obj);
+                if(nodes[0].getParentNode()){
+                   var pObj=nodes[0].getParentNode().name;
+                    $('#eleParentInput').val(pObj+' / '+obj); 
+                }else{
+                    $('#eleParentInput').val(obj);
+                }  
+        },
+        // 解除关联对象库中父对象
+         removeEleParent: function() {
+            var treeObj = $.fn.zTree.getZTreeObj("eleParentTree");
+            treeObj.cancelSelectedNode();
+            $('#eleParentInput').val('');
+            $('#successModalEle').modal();
         },
         /*eleParent objecttree end*/
         // 页面初始化获取对象库
@@ -1250,7 +1271,19 @@ var elementLibrary = Vue.extend({
             var treeObj = $.fn.zTree.getZTreeObj("eleLinkedTree"),
                 nodes = treeObj.getSelectedNodes(),
                 obj = nodes[0].name;
-            $('#eleLinkedInput').val(obj);
+            if(nodes[0].getParentNode()){
+                   var pObj=nodes[0].getParentNode().name;
+                    $('#eleLinkedInput').val(pObj+' / '+obj); 
+                }else{
+                    $('#eleLinkedInput').val(obj);
+                }
+        },
+        // 解除对象库中关联对象
+        removeEleLinked: function() {
+            var treeObj = $.fn.zTree.getZTreeObj("eleLinkedTree");
+            treeObj.cancelSelectedNode();
+            $('#eleLinkedInput').val('');
+            $('#successModalEle').modal();
         },
         /*eleLinked objecttree end*/
 

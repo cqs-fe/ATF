@@ -36,6 +36,11 @@ $(document).ready(function() {
         }
         sendQuery(1,updatePagination);
     })();
+
+    $('.0').addClass('open')
+    $('.0 .arrow').addClass('open')
+    $('.0-ul').css({display: 'block'})
+    $('.0-0').css({color: '#ff6c60'})
         // 页面跳转相关按钮事件点击初始化
     (function(){
         document.getElementById("firstPage").onclick = function(){

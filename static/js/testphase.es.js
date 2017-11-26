@@ -10,7 +10,7 @@ var vBody = new Vue({
 		// tooltipMessage: '',
 		// alertShow: false
 	},
-	created: function(){
+	ready: function(){
 		var _this = this;
 		$.ajax({
 			url: address + "testphaseController/selectAll",
@@ -26,6 +26,10 @@ var vBody = new Vue({
 		  _this.addRowData.phasedesc = '';
 		  _this.addRowData.phasename = '';
 		});
+		$('.1').addClass('open')
+    $('.1 .arrow').addClass('open')
+    $('.1-ul').css({display: 'block'})
+    $('.1-0').css({color: '#ff6c60'})
 	},
 	methods: {
 		addRow: function(){
