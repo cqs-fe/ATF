@@ -115,7 +115,7 @@ var app = new Vue({
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
             } else{
-                if (selectedInput.next().next().next().text()==='接口'){
+                if (selectedInput.parent().next().next().next().text()==='接口'){
                     location.href="interfacesManagement.html";
                 }
                 else{

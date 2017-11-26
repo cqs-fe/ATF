@@ -6,7 +6,7 @@ var template_int = `
         <ul class="breadcrumb">
             <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
             <li><a href="transact.html">功能点</a></li>
-            <li class="active">元素库</li>
+            <li class="active">接口管理</li>
         </ul>
     </div>
 </div>
