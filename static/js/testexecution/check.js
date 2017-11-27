@@ -87,7 +87,7 @@ var checkFunction = {
 		var _this = this
 		let flag = event.target.checked
 		let caseLibDiv = event.target.parentNode.parentNode
-		let caseListDiv = caseLibDiv.parentNode
+		let caseListDiv = caseLibDiv.parentNode.parentNode
 		var inputs = Array.from(caseLibDiv.querySelectorAll('.check-case'))
 		if( flag === true ) {
 			// get all the flownodes in this flowcase
@@ -123,7 +123,7 @@ var checkFunction = {
 	checkFlowNode (event) {
 		var _this = this
 		let flag = event.target.checked
-		let caseDiv = event.target.parentNode.parentNode.parentNode
+		let caseDiv = event.target.parentNode.parentNode
 		let caseListDiv = caseDiv.parentNode.parentNode
 		let caseId = caseDiv.parentNode.querySelector('.check-flownodes').value
 		if(flag) {

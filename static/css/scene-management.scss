@@ -288,14 +288,18 @@ $okGreen: #66F60C;
 						border-top-left-radius: 5px;
 						border-top-right-radius: 5px;
 						flex: 0 0 auto;
-						width: 90px;
+						width: 110px;
 						input[type="checkbox"] {
 							visibility: hidden;
 						}
 						p {
 							display: inline-block;
 							line-height: $caseHeaderheight;
+							width: 90px;
 							margin: 0px 0 0 -10px;
+							overflow-x: hidden;
+							white-space: nowrap;
+							text-overflow: ellipsis; 
 						}
 					}
 					// .case-main {

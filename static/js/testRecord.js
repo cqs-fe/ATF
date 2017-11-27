@@ -35,6 +35,11 @@ var app = new Vue({
         getTestRound();
         getScene();
         changeListNum();
+
+        $('.3').addClass('open')
+		$('.3 .arrow').addClass('open')
+		$('.3-ul').css({display: 'block'})
+		$('.3-7').css({color: '#ff6c60'})
     },
     methods: {
         //获取选中的id

@@ -105,9 +105,11 @@ var vBody = new Vue({
 			handle: '.handle'
 		})
 		$( "#sortable" ).disableSelection();
-	},
-	created: function(){
-		
+
+		$('.3').addClass('open')
+		$('.3 .arrow').addClass('open')
+		$('.3-ul').css({display: 'block'})
+		$('.3-4').css({color: '#ff6c60'})
 	},
 	watch: {
 		"selectedCases": function(value, oldVal) {

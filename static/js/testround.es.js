@@ -134,6 +134,10 @@ var vBody = new Vue({
 		this.setSelectListener();
 		this.setDraggable();
 
+		$('.3').addClass('open')
+		$('.3 .arrow').addClass('open')
+		$('.3-ul').css({display: 'block'})
+		$('.3-6').css({color: '#ff6c60'})
 	},
 	// updated: function(){
 	// 	console.log("updated")
@@ -178,7 +182,6 @@ var vBody = new Vue({
 				testPhase: this.testphaseValue,
 				testRound: this.testroundValue
 			}
-			console.log(data)
 			$.ajax({
 				url: address + 'executeController/t1',
 				data: data,
@@ -197,7 +200,7 @@ var vBody = new Vue({
 			})
 			// 2,2,3,q,2,1,''
 		},
-		addScene: function(){
+		addScene: function() {
 			var _this = this;
 			
 			$.ajax({
@@ -214,6 +217,48 @@ var vBody = new Vue({
 			});
 			$('#add-modal').modal("show");
 		},
+		removeSceneAndCase: function() {
+			let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
+			let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
+			let sceneCaseList = new Array();
+			let o = {};
+			for (let sceneCase of this.selectedSceneCases) {
+				let arr = sceneCase.split('-');
+				if (arr.length !== 2) {continue;}
+				o[arr[0]] ? o[arr[0]].push(+arr[1]) : o[arr[0]] = [+arr[1]];
+			}
+			for (let key of Object.keys(o)) {
+				sceneCaseList.push({
+					sceneId: +key, 
+					testcaseList: o[key].length === 0 ? '' : o[key]
+				})
+			}
+			sceneCaseList = JSON.stringify(sceneCaseList);
+			let data = {
+				removeFlag: 1,
+				caselibId: this.caselibId,
+				testPhase: this.testphaseValue,
+				testRound: this.testroundValue,
+				sceneList,
+				testcaseList,
+				sceneCaseList
+			}
+			$.ajax({
+				url: address + 'testexecutioninstanceController/delete',
+				data: data,
+				type: 'post',
+				dataType: 'json',
+				success: function(data, statusText){
+					if(data.success){
+						$('#add-modal').modal('hide');
+						Vac.alert('移除成功')
+						this.getCases()
+					}else {
+						Vac.alert("移除失败")
+					}
+				}
+			});
+		},
 		sendSceneData: function(){
 			var _this = this;
 			var data = {
@@ -224,7 +269,6 @@ var vBody = new Vue({
 				sceneList: '[' + this.selectedScene.toString() + ']',     // [3]
 				scenecaseList: ''			//  暂时为空 [{"sceneId":1,"testcaseList":[1,2]}]
 			};
-			console.log(data)
 			// send data and display the modal 
 			$.ajax({
 				url: address + 'testexecutioninstanceController/insert',
@@ -236,6 +280,7 @@ var vBody = new Vue({
 					if(data.success){
 						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
+						this.getCases()
 						// _this.alertShow = true;
 						// _this.tooltipMessage = '添加成功';
 					}else {
@@ -279,7 +324,6 @@ var vBody = new Vue({
 			var _this = this;
 			$.ajax({
 				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
-				// url: '/api/getcaseandscene',
 				type: 'post',
 				data: data,
 				dataType: 'json',
@@ -309,38 +353,40 @@ var vBody = new Vue({
 					_this.sceneIds.length = []
 					_this.sceneCaseMap.clear()
 					_this.flowNodesMap.clear()
-					for (var j = 0; j<_this.testSceneList.length;j++) {
-						var scene = _this.testSceneList[j]
-						// sceneIds save the id of scene  [4,5,6]
-						_this.sceneIds.push(scene.sceneId)
-						var caselist = []
-						for(var i = 0;i<scene.testCaseList.length;i++){
-							var c = scene.testCaseList[i]
-							// caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
-							caselist.push(scene.sceneId + '-' + c.caseId);
+					if (_this.testSceneList) {
+						for (var j = 0; j<_this.testSceneList.length;j++) {
+							var scene = _this.testSceneList[j]
+							// sceneIds save the id of scene  [4,5,6]
+							_this.sceneIds.push(scene.sceneId)
+							var caselist = []
+							for(var i = 0;i<scene.testCaseList.length;i++){
+								var c = scene.testCaseList[i]
+								// caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
+								caselist.push(scene.sceneId + '-' + c.caseId);
 
-							if(c.caseCompositeType == 2) {
-								_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
-								let flowNodes = []
-								for (let flowNode of c.flowNodes) {
-									// caselist also save the flowNodeId in flowCase in the form of 
-									//  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
-									caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
-									flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+								if(c.caseCompositeType == 2) {
+									_this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
+									let flowNodes = []
+									for (let flowNode of c.flowNodes) {
+										// caselist also save the flowNodeId in flowCase in the form of 
+										//  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
+										caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+										flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
+									}
+									// flowNodesMap save the map of caseId between flowNodes in the following form
+									// {
+									//  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
+									// }
+									_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
 								}
-								// flowNodesMap save the map of caseId between flowNodes in the following form
-								// {
-								//  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
-								// }
-								_this.flowNodesMap.set(scene.sceneId+'-'+c.caseId, flowNodes)
 							}
+							// sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
+							// {
+							//  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
+							// }
+							_this.sceneCaseMap.set(scene.sceneId, caselist)
+							
 						}
-						// sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
-						// {
-						//  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
-						// }
-						_this.sceneCaseMap.set(scene.sceneId, caselist)
-						
 					}
 					Vue.nextTick(() => {
 						_this.setDraggable()

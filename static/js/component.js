@@ -7,7 +7,7 @@ var app = new Vue({
         methodName: '方法',
         classPropTr: '<tr><td><input type="radio" name="class"/></td><td ></td><td ></td></tr>',
         methodPropTr: '<tr><td><input type="radio" name="method"/></td><td ></td><td ></td></tr>',
-        supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
+        supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td></tr>',    
         runtimeArgsParaTr: '<tr><td><input type="checkbox" name="runtimeArgs_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         selfRecParaTr: '<tr><td><input type="checkbox" name="selfRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         assistRecParaTr: '<tr><td><input type="checkbox" name="assistRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
@@ -90,11 +90,6 @@ var app = new Vue({
         addMethod: function() {
             var methodname = $('#addMethodForm input[name="methodname"]').val(),
                 methoddesc = $('#addMethodForm input[name="methoddesc"]').val();
-                // mtype = $('#addMethodForm input[name="mtype"]').val(),
-                // author = $('#addMethodForm input[name="author"]').val(),
-                // maintainTime = $('#addMethodForm input[name="maintainTime"]').val(),
-                // outputvaluedesc = $('#addMethodForm input[name="outputvaluedesc"]').val(),
-                // inputargdesc = $('#addMethodForm input[name="inputargdesc"]').val();
 
             $.ajax({
                 url: address + 'ommethodController/insertSelective',
@@ -489,11 +484,9 @@ function classClick(event) {
                         for (var i = 0; i < supRecList.length; i++) {                            
                                 var paraTr = $('<tr></tr>'),
                                 paraCheckTd = $('<td><input type="checkbox" name="supRec_list"/></td>'),
-                                paraNameTd = $('<td contenteditable="true"></td>'),
-                                paraDescriptionTd = $('<td contenteditable="true"></td>');
+                                paraNameTd = $('<td contenteditable="true"></td>');
                             paraNameTd.html(supRecList[i].name);
-                            paraDescriptionTd.html(supRecList[i].value);
-                            paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
+                            paraTr.append(paraCheckTd, paraNameTd);
                             $('#supRecTbody').append(paraTr);
                         }
 

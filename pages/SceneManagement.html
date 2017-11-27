@@ -244,15 +244,15 @@
                     <div class="case"  @click="changeCase(case_wrapper.id, 1)"  @mousedown.stop="1">
                       <div class="case-header">
                         <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
-                        <p>{{case_wrapper.id}}</p>
+                        <p>{{case_wrapper.casecode}}</p>
                       </div>
                       <!-- <div class="case-main">
                         <p>{{case_wrapper.casecode}}</p>
                         <span></span>
                       </div> -->
-                      <footer class="case-footer">
+                      <!-- <footer class="case-footer">
                         <img :src="exeImgs[case_wrapper.state]">
-                      </footer>
+                      </footer> -->
                     </div>
                   </div>
                   </template>
@@ -267,14 +267,14 @@
                       <div class="case-header">
                         <input type="checkbox" v-bind:value="item.id"
                         class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                        <p>这是六个字哦</p>
+                        <p>item.casecode</p>
                       </div>
                       <!-- <div class="case-main">
                         <p>{{item.casecode}}</p>
                       </div> -->
-                      <footer class="case-footer">
+                      <!-- <footer class="case-footer">
                         <img :src="exeImgs[item.state]">
-                      </footer>
+                      </footer> -->
                     </div>
                   </div>
                   </template>
