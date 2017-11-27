@@ -7,12 +7,12 @@ var app = new Vue({
         methodName: '方法',
         classPropTr: '<tr><td><input type="radio" name="class"/></td><td ></td><td ></td></tr>',
         methodPropTr: '<tr><td><input type="radio" name="method"/></td><td ></td><td ></td></tr>',
-        supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
+        supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td></tr>',        
         runtimeArgsParaTr: '<tr><td><input type="checkbox" name="runtimeArgs_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         selfRecParaTr: '<tr><td><input type="checkbox" name="selfRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         assistRecParaTr: '<tr><td><input type="checkbox" name="assistRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         
-        methodParaTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        methodParaTr: '<tr><td><input type="checkbox" name="methodPara_check"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         autId: '',
         autName: '被测系统名称',
         paraList: [],//参数列表
@@ -24,17 +24,10 @@ var app = new Vue({
     ready: function() {
         this.getAutId();
         getClass();
-        $('.2').addClass('open')
-        $('.2 .arrow').addClass('open')
-        $('.2-ul').css({display: 'block'})
-        $('.2-1').css({color: '#ff6c60'})
     },
     methods: {
         //获取autid
         getAutId() {
-            // var thisUrl = document.URL,
-            //     getVal = thisUrl.split('?')[1],
-            //     autId = getVal.split('&')[0].split('=')[1];
             this.autId = sessionStorage.getItem("autId");
         },
         //添加控件类型
@@ -97,11 +90,6 @@ var app = new Vue({
         addMethod: function() {
             var methodname = $('#addMethodForm input[name="methodname"]').val(),
                 methoddesc = $('#addMethodForm input[name="methoddesc"]').val();
-                // mtype = $('#addMethodForm input[name="mtype"]').val(),
-                // author = $('#addMethodForm input[name="author"]').val(),
-                // maintainTime = $('#addMethodForm input[name="maintainTime"]').val(),
-                // outputvaluedesc = $('#addMethodForm input[name="outputvaluedesc"]').val(),
-                // inputargdesc = $('#addMethodForm input[name="inputargdesc"]').val();
 
             $.ajax({
                 url: address + 'ommethodController/insertSelective',
@@ -204,25 +192,25 @@ var app = new Vue({
         },
 
         //添加方法参数
-        addMethodPara: function(e) {
-            var curTbody = $(e.target).parent().next().find('tbody');
+        addMethodPara: function() {
+            var curTbody = $("#methodPara");
             curTbody.append(this.methodParaTr);
         },
         //删除方法参数
-        delMethodPara: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
+        delMethodPara: function() {
+            var selectedTr = $('#methodPara').find('input[name="methodPara_check"]:checked').parent().parent();
             selectedTr.remove();
         },
         //修改控件类型
-
         updateClass:function(){
 
             var className = $('#classForm input[name="classname"]').val(),
                 descName = $('#classForm input[name="descname"]').val(),
            
                 heritTagSelect = $('#heritTagSelect').val(), //接口尚未加入这个变量    
-                // defaultMethod = $("#defaultMethodSelect").find("option:selected").text(),
-                defaultMethod = $('#defaultMethodSelect').val(),
+                // defaultMethodSel = $('#defaultMethodSelect'),
+                // defaultMethod = defaultMethodSel.option[defaultMethodSel.selectedIndex].text(),
+                defaultMethod = $("#defaultMethodSelect").find("option:selected").text(),
                 visibilitySelect = $('#visibilitySelect').val(); //接口尚未加入这个变量
 
                 picfile = $('#');
@@ -244,7 +232,7 @@ var app = new Vue({
                 supRecParaList += r;
             }
             if(supRecParaList.length>1){
-                supRecParaList = supRecParaList.substring(0, supRecParaList.length - 1);                
+                supRecParaList = supRecParaList.substring(0, supRecParaList.length - 1);
             }
             supRecParaList += ']';
 
@@ -265,7 +253,7 @@ var app = new Vue({
                 runtimeArgsParaList += r;
             }
             if(runtimeArgsParaList.length>1){
-                runtimeArgsParaList = runtimeArgsParaList.substring(0, runtimeArgsParaList.length - 1);                
+               runtimeArgsParaList = runtimeArgsParaList.substring(0, runtimeArgsParaList.length - 1);  
             }
             runtimeArgsParaList += ']';
 
@@ -286,7 +274,7 @@ var app = new Vue({
                 selfRecParaList += r;
             }
             if(selfRecParaList.length>1){
-                selfRecParaList = selfRecParaList.substring(0, selfRecParaList.length - 1);                
+               selfRecParaList = selfRecParaList.substring(0, selfRecParaList.length - 1); 
             }
             selfRecParaList += ']';
 
@@ -307,20 +295,10 @@ var app = new Vue({
                 assistRecParaList += r;
             }
             if(assistRecParaList.length>1){
-                assistRecParaList = assistRecParaList.substring(0, assistRecParaList.length - 1);                
+               assistRecParaList = assistRecParaList.substring(0, assistRecParaList.length - 1); 
             }
             assistRecParaList += ']';
 
-            // alert(app.classId);
-            // alert(className);
-            // alert(descName);
-            // alert(this.autId);
-            // alert(defaultMethod);
-            // alert(supRecParaList);
-            // alert(runtimeArgsParaList);
-            // alert(selfRecParaList);
-            // alert(assistRecParaList);
-            
             $.ajax({
                 url: 'http://10.108.223.23:8080/ATFCloud2.0/omclassController/updateSelective',
                 type: 'post',
@@ -337,38 +315,11 @@ var app = new Vue({
                     "assistRecognitionPros": assistRecParaList,
                     "ordernum": null,
                     "modifierId": null,
-                    // "picfile": null,
+                    "picfile": null,
                 }
 
             });
         },
-        // updateClass: function() {
-        //     var classname = $('#classForm input[name="classname"]').val(),
-        //         descname = $('#classForm input[name="descname"]').val();
-        //     $.ajax({
-        //         url: address + 'omclassController/update',
-        //         type: 'post',
-        //         data: {
-        //             "classid": app.classId,
-        //             "classname": classname,
-        //             'descname': descname,
-        //             'autId': this.autId
-        //         },
-        //         success: function(data) {
-        //             if (data.success) {
-        //                 $('#successModal').modal();
-        //                 $('#classForm input[name="classname"]').val('');
-        //                 $('#classForm input[name="descname"]').val('');
-        //                 getClass();
-        //             } else {
-        //                 $('#failModal').modal();
-        //             }
-        //         },
-        //         error: function() {
-        //             $('#failModal').modal();
-        //         }
-        //     });
-        // },
 
         //修改方法
         updateMethod: function() {
@@ -391,9 +342,10 @@ var app = new Vue({
                 r += "},";
                 paraList += r;
             }
-            paraList = paraList.substring(0, paraList.length - 1);
+            if(paraList.length>1){
+               paraList = paraList.substring(0, paraList.length - 1); 
+            }
             paraList += ']';
-            console.log(paraList)
             $.ajax({
                 url: address + 'ommethodController/update',
                 type: 'post',
@@ -468,11 +420,6 @@ function classClick(event) {
     if ($(event.target).attr("checked")) {
         $('#classSection').css('display', 'block');
         $('#methodSection').css('display', 'none');
-       
-        // var curName = $(event.target).parent().next().next().html();
-        // var curDesc = $(event.target).parent().next().next().next().html();
-        // $('#classForm input[name="classname"]').val(curName);
-        // $('#classForm input[name="descname"]').val(curDesc);
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
@@ -488,15 +435,17 @@ function classClick(event) {
                 for (var i = 0; i < methodList.length; i++) {
                     var methodTr = $('<tr></tr>'),
                         methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event)'/></td>"),
+                        methodFlagTd = $('<td ></td>'),
                         methodNameTd = $('<td ></td>'),
                         methodDescriptionTd = $('<td ></td>');
-                    methodTr.attr('id', methodList[i].methodid);
-                    methodNameTd.html(methodList[i].mname);
-                    methodDescriptionTd.html(methodList[i].mdesc);
-                    methodTr.append(methodCheckTd, methodNameTd, methodDescriptionTd);
+                    methodTr.attr('id', methodList[i].id);
+                    methodFlagTd.html(methodList[i].deleteFlag);
+                    methodNameTd.html(methodList[i].name);
+                    methodDescriptionTd.html(methodList[i].descShort);
+                    methodTr.append(methodCheckTd, methodFlagTd, methodNameTd, methodDescriptionTd);
                     $('#methodProp').append(methodTr);
                           
-                    var tmpOption = $('<option>').text(methodList[i].mname).val(i);
+                    var tmpOption = $('<option>').text(methodList[i].name).val(i);
                     $('#defaultMethodSelect').append(tmpOption);
                 }
 
@@ -510,12 +459,11 @@ function classClick(event) {
                 $('#classForm input[name="modifiedTime"]').val('');
         
                 $.ajax({
-                    url: 'http://10.108.223.23:8080/ATFCloud2.0/omclassController/selectByPrimaryKey',   //ATF2.0
-                    // url: '/api/postcomponent',
+                    // url: 'http://10.108.223.23:8080/ATFCloud2.0/omclassController/selectByPrimaryKey',   //ATF2.0
+                    url: '/api/postcomponent',
                     type: 'post',
                     data: {
-                        // forClassid: app.classId,
-                        forClassid: '1',
+                        forClassid: app.classId,
                     },
                     success: function(data) {
                         $('#classForm input[name="classname"]').val(data.name);
@@ -536,11 +484,9 @@ function classClick(event) {
                         for (var i = 0; i < supRecList.length; i++) {                            
                                 var paraTr = $('<tr></tr>'),
                                 paraCheckTd = $('<td><input type="checkbox" name="supRec_list"/></td>'),
-                                paraNameTd = $('<td contenteditable="true"></td>'),
-                                paraDescriptionTd = $('<td contenteditable="true"></td>');
+                                paraNameTd = $('<td contenteditable="true"></td>');
                             paraNameTd.html(supRecList[i].name);
-                            paraDescriptionTd.html(supRecList[i].value);
-                            paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
+                            paraTr.append(paraCheckTd, paraNameTd);
                             $('#supRecTbody').append(paraTr);
                         }
 
@@ -597,7 +543,14 @@ function methodClick(event) {
 
         $('#methodForm input[name="name"]').val('');
         $('#methodForm input[name="description"]').val('');
-        $('#methodForm input[name="maintainTime"]').val('');
+        $('#methodForm input[name="creator"]').val('');
+        $('#methodForm input[name="createTime"]').val('');
+        $('#methodForm input[name="modifier"]').val('');
+        $('#methodForm input[name="modifiedTime"]').val('');
+        $('#heritTagSelect').val('');
+        $('#visibilitySelect').val('');
+        $('#methodForm input[name="waittime"]').val('');
+        $('#methodForm input[name="timeout"]').val('');
         $('#methodForm textarea[name="executecode"]').val('');
         app.paraList=[];
 
@@ -606,15 +559,22 @@ function methodClick(event) {
             url: address + 'ommethodController/selectByPrimaryKey',
             type: 'post',
             data: {
-                methodid: app.methodId,
+                id: app.methodId,
             },
             success: function(data) {
-                var method = data.obj;
-                $('#methodForm input[name="name"]').val(method.mname);
-                $('#methodForm input[name="description"]').val(method.mdesc);
-                $('#methodForm input[name="maintainTime"]').val(method.maintainTime);
-                $('#methodForm textarea[name="executecode"]').val(method.executecode);
-                app.paraList = method.argumentslist;
+                var method = data.ommethod;
+                $('#methodForm input[name="name"]').val(method.name);
+                $('#methodForm input[name="description"]').val(method.descShort);
+                $('#methodForm input[name="creator"]').val(method.creatorId);
+                $('#methodForm input[name="createTime"]').val(method.createTime);
+                $('#methodForm input[name="modifier"]').val(method.modifierId);
+                $('#methodForm input[name="modifiedTime"]').val(method.modifiedTime);
+                $('#heritTagSelect').val(method.deleteFlag);
+                $('#visibilitySelect').val(method.visibilityFlag);
+                $('#methodForm input[name="waittime"]').val(method.waittime);
+                $('#methodForm input[name="timeout"]').val(method.timeout);
+                $('#methodForm textarea[name="executecode"]').val(method.targetcodecontent);
+                app.paraList = method.arguments;
                 console.log(app.paraList);
             }
         });

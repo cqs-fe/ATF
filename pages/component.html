@@ -6,9 +6,6 @@
     <!-- css for this page only -->
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/component.css">
-    <!-- <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-    <!-- <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script> -->
-    <!-- <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">     -->
     <title>自动化构件维护</title>
 </head>
 
@@ -46,7 +43,7 @@
                                     <div class="property">
                                         控件类型
                                         <a class="btn btn-white btn-sm pull-right" data-toggle="modal" href="#addClassModal"><i class="icon-plus"></i></a>
-                                        <!-- <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a> -->
+                                        <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
                                         <table class="table table-bordered">
@@ -84,7 +81,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
-                                                    <th style="width:17%">继承标志</th>                                                    
+                                                    <th style="width:17%">继承标志</th>
                                                     <th style="width:15%">名称</th>
                                                     <th>描述</th>
                                                 </tr>
@@ -95,7 +92,7 @@
                                                         <input type="radio" name="method" />
                                                     </td>
                                                     <td></td>
-                                                    <td></td>                                                    
+                                                    <td></td>
                                                     <td></td>
                                                 </tr>
                                             </tbody>
@@ -180,38 +177,10 @@
                                             </div>
                             
                                     </div>
-                                    <div class="property">
-                                        支持的识别属性
-                                            <a class="btn btn-white btn-sm pull-right" @click="addSupRecPara($event)"><i class="icon-plus"></i></a>
-                                            <a class="btn btn-white btn-sm pull-right" @click="delSupRecPara($event)"><i class="icon-minus"></i></a>
-                                    </div>
-                                    <div class="property">
-                                            <table class="table table-bordered" id="supportedRecognitionTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="width:5%"></th>
-                                                        <th id="name">属性名</th>
-                                                        <th id="value">属性值</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="supRecTbody">
-                                                    <tr>
-                                                        <td>
-                                                            <input type="checkbox" name="supRec_list" />
-                                                        </td>
-                                                        <td contenteditable="true"></td>
-                                                        <td contenteditable="true"></td>
-                                            
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                    </div>
-                                    <div class="property">
+                                    <div class="property col-lg-6">
                                         运行时参数
                                             <a class="btn btn-white btn-sm pull-right" @click="addRuntimeArgsPara($event)"><i class="icon-plus"></i></a>
                                             <a class="btn btn-white btn-sm pull-right" @click="delRuntimeArgsPara($event)"><i class="icon-minus"></i></a>
-                                    </div>
-                                    <div class="property">
                                             <table class="table table-bordered" id="runtimeArgsTable">
                                                 <thead>
                                                     <tr>
@@ -232,12 +201,32 @@
                                                 </tbody>
                                             </table>
                                     </div>
-                                    <div class="property">
+                                    <div class="property col-lg-6">
+                                        支持的识别属性
+                                            <a class="btn btn-white btn-sm pull-right" @click="addSupRecPara($event)"><i class="icon-plus"></i></a>
+                                            <a class="btn btn-white btn-sm pull-right" @click="delSupRecPara($event)"><i class="icon-minus"></i></a>
+                                            <table class="table table-bordered" id="supportedRecognitionTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:5%"></th>
+                                                        <th id="name">属性名</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="supRecTbody">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox" name="supRec_list" />
+                                                        </td>
+                                                        <td contenteditable="true"></td>
+                                            
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                    </div>
+                                    <div class="property col-lg-6">
                                         自识别属性
                                             <a class="btn btn-white btn-sm pull-right" @click="addSelfRecPara($event)"><i class="icon-plus"></i></a>
                                             <a class="btn btn-white btn-sm pull-right" @click="delSelfRecPara($event)"><i class="icon-minus"></i></a>
-                                    </div>
-                                    <div class="property">
                                             <table class="table table-bordered" id="selfRecTable">
                                                 <thead>
                                                     <tr>
@@ -258,12 +247,10 @@
                                                 </tbody>
                                             </table>
                                     </div>
-                                    <div class="property">
+                                    <div class="property col-lg-6">
                                         辅助识别属性
                                             <a class="btn btn-white btn-sm pull-right" @click="addAssistRecPara($event)"><i class="icon-plus"></i></a>
                                             <a class="btn btn-white btn-sm pull-right" @click="delAssistRecPara($event)"><i class="icon-minus"></i></a>
-                                    </div>
-                                    <div class="property">
                                             <table class="table table-bordered" id="assistRecTable">
                                                 <thead>
                                                     <tr>
@@ -284,33 +271,7 @@
                                                 </tbody>
                                             </table>
                                     </div>
-                                    <!-- <div class="property">
-                                        对象识别属性列表
-                                    </div>
-                                    <div class="property">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width:20%">属性名</th>
-                                                    <th >属性值</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="recProp">
-                                                <tr>
-                                                    <td>runtime_args</td>
-                                                    <td name="runtimeArgs" contenteditable="true"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>self_recognition_pros</td>
-                                                    <td name="selfRecognitionPros" contenteditable="true"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>assist_recognition_pros</td>
-                                                    <td name="assistRecognitionPros"  contenteditable="true"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div> -->
+
                                 </form>
                                 <a class="btn btn-info rightBtn" @click="updateClass">保存</a>
                             </div>
@@ -372,7 +333,7 @@
                                                     <option value="1">私有</option>
                                                 </select>
                                             </div>
-                                    </div>                            
+                                    </div>
                                      <div class="property">
                                         参数列表
                                         <a class="btn btn-white btn-sm pull-right" @click="addMethodPara($event)"><i class="icon-plus"></i></a>
@@ -392,7 +353,7 @@
                                             <tbody id="methodPara">
                                                 <tr v-for="item in paraList">
                                                     <td>
-                                                        <input type="checkbox" name="chk_list" />
+                                                        <input type="checkbox" name="methodPara_check" />
                                                     </td>
                                                     <td contenteditable="true">{{item.name}}</td>
                                                     <td contenteditable="true">{{item.type}}</td>
@@ -403,10 +364,16 @@
                                         </table>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label">执行时间</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="maintainTime" class="form-control">
+                                        <label class="col-lg-2 control-label">等待时间</label>
+                                        <div class="col-lg-2">
+                                            <input type="text" name="waittime" class="form-control">
                                         </div>
+                                        <label class="col-lg-1 control-label" style="text-align: left;">秒</label>
+                                        <label class="col-lg-2 control-label">超时时间</label>
+                                        <div class="col-lg-2">
+                                            <input type="text" name="timeout" class="form-control">
+                                        </div>
+                                        <label class="col-lg-1 control-label" style="text-align: left;">秒</label>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-lg-2 control-label">执行代码</label>
@@ -414,52 +381,6 @@
                                             <textarea type="text" name="executecode" class="form-control" rows='15'></textarea>
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <label class="col-lg-2 control-label">mtype</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="mtype" class="form-control" value="">
-                                        </div>
-                                        <label class="col-lg-2 control-label">author</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="author" class="form-control" value="">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-2 control-label">outputvaluedesc</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="outputvaluedesc" class="form-control" value="">
-                                        </div>
-                                        <label class="col-lg-2 control-label">inputargdesc</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="inputargdesc" class="form-control" value="">
-                                        </div>
-                                    </div> -->
-                                    <!--    <div class="form-group">
-                                        <label class="col-lg-2 control-label">有无参数</label>
-                                        <div class="col-lg-3">
-                                            <select class="form-control" name="isPara">
-                                                <option>有</option>
-                                                <option>无</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                   
-                                    <!-- <div class="form-group">
-                                        <label class="col-lg-2 control-label">等待时间</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="waittime" class="form-control" value="">
-                                        </div>
-                                        <label class="col-lg-2 control-label">超时时间</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="timeout" class="form-control" value="">
-                                        </div>
-                                    </div> -->
-                                   <!--  <div class="form-group">
-                                        <label class="col-lg-2 control-label">目标代码</label>
-                                        <div class="col-lg-9">
-                                            <textarea class="form-control" rows="10" name="objectcode"></textarea>
-                                        </div>
-                                    </div> -->
                                 </form>
                                 <a class="btn btn-info rightBtn" @click="updateMethod">保存</a>
                             </div>
@@ -562,61 +483,6 @@
                                                     <input type="text" class="form-control" name="methoddesc" id="">
                                                 </div>
                                             </div>
-                                           <!--  <div class="form-group">
-                                                <label class="col-lg-3 control-label">mtype</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="mtype" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">author</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="author" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">maintainTime</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="maintainTime" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">outputvaluedesc</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="outputvaluedesc" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">inputargdesc</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="inputargdesc" id="">
-                                                </div>
-                                            </div> -->
-                                            <!--                      <div class="form-group">
-                                                <label class="col-lg-3 control-label">有无参数</label>
-                                                <div class="col-lg-3">
-                                                    <select class="form-control" name="isparameter">
-                                                        <option>有</option>
-                                                        <option>无</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">等待时间</label>
-                                                <div class="col-lg-3">
-                                                    <input type="text" name="waittime" class="form-control" value="">
-                                                </div>
-                                                <label class="col-lg-2 control-label">超时时间</label>
-                                                <div class="col-lg-3">
-                                                    <input type="text" name="timeout" class="form-control" value="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">目标代码</label>
-                                                <div class="col-lg-9">
-                                                    <textarea class="form-control" rows="10" name="objectcode"></textarea>
-                                                </div>
-                                            </div> -->
                                         </form>
                                     </section>
                                     <!-- modal-body end -->
