@@ -45,10 +45,10 @@ var app = new Vue({
             $(".show").val(filename);
         });
 
-        $('.3').addClass('open')
-        $('.3 .arrow').addClass('open')
-        $('.3-ul').css({display: 'block'})
-        $('.3-2').css({color: '#ff6c60'})
+        $('.3').addClass('open');
+        $('.3 .arrow').addClass('open');
+        $('.3-ul').css({display: 'block'});
+        $('.3-2').css({color: '#ff6c60'});
     },
     methods: {
         //获取案例

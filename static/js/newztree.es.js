@@ -487,8 +487,8 @@ $(document).ready(function() {
                     var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
                     sendDataArray.push(string)
                 }
-                var sendData = sendDataArray.join(';\n') + ';'
-                console.log(sendData)
+                var sendData = sendDataArray.join(';\n')
+                sendData = sendData.length === 0 ? '': sendData + ';';
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
                 // return
@@ -634,7 +634,7 @@ $(document).ready(function() {
                 paramV && paramV.focus()
                 var range = document.createRange()
                 var sel = window.getSelection()
-                range.setStart(paramV.childNodes[0], paramV.innerHTML.length)
+                paramV && range.setStart(paramV.childNodes[0], paramV.innerHTML.length)
                 range.collapse(true)
                 sel.removeAllRanges()
                 sel.addRange(range)
@@ -767,7 +767,6 @@ $(document).ready(function() {
                     // 20170901 更改
                     // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
                     // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].parameterlist)
-                    console.log(operationRows[index])
                     // parameters: [{"name":"11","valueclass":"11","parameterizedcolumn":"","defaultvalue":"","description":""}]
                     var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
 
@@ -830,19 +829,25 @@ $(document).ready(function() {
                             // data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
                             // 把第一个function的参数取出来，放入
                             var arr = [];
-                            var params = JSON.parse(data.ommethod[0].arguments)
-                            arr.push({
-                                Name: params[0].name,
-                                Value: ''
-                            });
-                            data.ommethod[0] && (newRow.parameters = arr)
-                            editDataVue.operationRows.push(newRow)
+                            try{
+                                if (data.ommethod.length>0) {
+                                    var params = JSON.parse(data.ommethod[0].arguments)
+                                    for (let para of params) {
+                                        arr.push({ Name: para.name,Value: '' });
+                                    }
+                                } else {     
+                                }
+                            } catch(err) {
+                            } finally {
+                                newRow.parameters = arr;
+                                editDataVue.operationRows.push(newRow)
+                            }
+                            
                         }
                     })
                 }
                 if (functionNodes && functionNodes.length) {
                     for (var node of functionNodes) {
-                        console.log(node)
                         let newRow = {}
                         newRow.id = Symbol()
                         newRow.operation = {

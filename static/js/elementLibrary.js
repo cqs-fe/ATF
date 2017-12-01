@@ -137,8 +137,8 @@ var template_ele = `
                         <header class="panel-heading">属性</header>
                         <div class="property">
                             主属性
-                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event, 1)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event, 1)"><i class="icon-minus"></i></a>
                         </div>
                         <div class="property">
                             <table class="table table-bordered">
@@ -165,8 +165,8 @@ var template_ele = `
                         </div>
                         <div class="property">
                             附加属性
-                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event, 2)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event, 2)"><i class="icon-minus"></i></a>
                         </div>
                         <div class="property">
                             <table class="table table-bordered">
@@ -193,8 +193,8 @@ var template_ele = `
                         </div>
                         <div class="property">
                             辅助属性
-                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event, 3)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event, 3)"><i class="icon-minus"></i></a>
                         </div>
                         <div class="property">
                             <table class="table table-bordered">
@@ -252,8 +252,8 @@ var template_ele = `
                             <div class="linked-right">
                                 <div class="property">
                                     属性
-                                    <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                                    <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    <a class="btn btn-white btn-sm pull-right" @click="addProp($event,4)"><i class="icon-plus"></i></a>
+                                    <a class="btn btn-white btn-sm pull-right" @click="delProp($event,4)"><i class="icon-minus"></i></a>
                                 </div>
                                 <table class="table table-bordered">
                                     <thead>
@@ -282,42 +282,6 @@ var template_ele = `
                     <a class="btn btn-info" @click="updateElement">保存</a>
                 </div>
             </section>
-            <!-- successModal start -->
-            <div class="modal fade" id="successModalEle" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">操作成功</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h4>操作成功！</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- successModal end -->
-            <!-- failModalEle start -->
-            <div class="modal fade" id="failModalEle" tabindex="-1" role="dialog" aria-labelledby="failModalEleLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">操作失败</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h4>操作失败！</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- failModalEle end -->
             <!-- addUIModal start -->
             <div class="modal fade" id="addUIModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -408,6 +372,42 @@ var template_ele = `
                 </div>
             </div>
             <!-- addElementModal end -->
+            <!-- successModal start -->
+            <div class="modal fade" id="successModalEle" tabindex="-1" style="" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">操作成功</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>操作成功！</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- successModal end -->
+            <!-- failModalEle start -->
+            <div class="modal fade" id="failModalEle" tabindex="-1" role="dialog" aria-labelledby="failModalEleLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">操作失败</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>操作失败！</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- failModalEle end -->
         </div>
     </div>
     <!-- <link rel="import" href="./common/copy-right.html?__inline"> -->
@@ -623,6 +623,7 @@ var elementLibrary = Vue.extend({
                                 }
 
                                 //主属性
+                                _this.mainList = []
                                 _this.mainList = data.obj.identifyElement.locatePropertyCollection.main_properties;
                                 _this.mainListLength = _this.mainList.length;
 
@@ -709,6 +710,10 @@ var elementLibrary = Vue.extend({
             this.getEleLinkedObjectTree();
         }
         // $("#search-btn").click(this.searchNodes);
+        $('.2').addClass('open');
+        $('.2 .arrow').addClass('open');
+        $('.2-ul').css({display: 'block'});
+        $('.2-0').css({color: '#ff6c60'});
     },
     methods: {
         //初始化获取测试系统和功能点
@@ -1127,12 +1132,12 @@ var elementLibrary = Vue.extend({
                 }
             });
         },
-        addProp: function(e) {
+        addProp: function(e, type) {
             var curTbody = $(e.target).parent().next().find('tbody');
             curTbody.children().filter('.text-center').remove();
             curTbody.append(this.propTr);
         },
-        delProp: function(e) {
+        delProp: function(e, type) {
             var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
             selectedTr.remove();
         },

@@ -396,24 +396,22 @@ var vBody = new Vue({
 		},
 		hideCaseList: function(event){
 			var _this = this
-			var el = $('.case-list', $(event.target).parent())[0]
+			var el = $('.case-list', $(event.currentTarget).parent())[0]
 			var curHeight = el.offsetHeight;
 			el.style.height = curHeight + 'px';
-			// var autoHeight = el.offsetHeight
-			// console.log(autoHeight)
-			if(event.target.innerHTML == _this.unexpandString){  // unexpandString 收起
-				// window.requestAnimationFrame(function() {
-					el.style.height = '0px'
-				// })
-				event.target.innerHTML = _this.expandString
-			} else {		
+			if($(event.currentTarget).find('span').html() == _this.unexpandString){  // unexpandString 收起
+				$(event.currentTarget).find('i').removeClass('icon-caret-down').addClass('icon-caret-right');
+				el.style.height = '0px'
+				$(event.currentTarget).find('span').html(_this.expandString)
+			} else {
+				$(event.currentTarget).find('i').removeClass('icon-caret-right').addClass('icon-caret-down');
 				el.style.height = 'auto';
 				var curHeight = el.offsetHeight; 	// 展开
 				el.style.height = '0px';
 				window.requestAnimationFrame(function() {
 					el.style.height = curHeight+ 'px'
 				})
-				event.target.innerHTML = _this.unexpandString
+				$(event.currentTarget).find('span').html(_this.unexpandString)
 			}
 			event.stopPropagation()
 		},

@@ -48,10 +48,10 @@ $(document).ready(function(){
         xmlHttpRequest.send(data);
     })();// 立即执行函数，获取服务器全部数据结束
 
-    $('.3').addClass('open')
-    $('.3 .arrow').addClass('open')
-    $('.3-ul').css({display: 'block'})
-    $('.3-0').css({color: '#ff6c60'})
+    $('.3').addClass('open');
+    $('.3 .arrow').addClass('open');
+    $('.3-ul').css({display: 'block'});
+    $('.3-0').css({color: '#ff6c60'});
 
     // 添加模态框显示时的初始化
     (function(){
@@ -149,6 +149,7 @@ $(document).ready(function(){
     //更改按钮，发送ajax
     (function(){
         $("#btn-alter").click(function(){
+            console.log(44)
             var data = $("#alterForm").serialize()+"&id="+itemId;
             $.ajax({
                 url: address + "missionController/update",
