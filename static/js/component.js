@@ -17,8 +17,8 @@ var app = new Vue({
         getClass();
         $('.2').addClass('open')
         $('.2 .arrow').addClass('open')
-        $('.2-ul').css({display: 'block'});
-        $('.2-1').css({color: '#ff6c60'});
+        $('.2-ul').css({display: 'block'})
+        $('.2-1').css({color: '#ff6c60'})
     },
     methods: {
         //获取autid
