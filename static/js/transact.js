@@ -119,7 +119,12 @@ var app = new Vue({
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
             } else{
-                $('#updateModal').modal();
+                if (selectedInput.next().next().next().text()==='接口'){
+                    location.href="interfacesManagement.html";
+                }
+                else{
+                    $('#updateModal').modal();                    
+                }
             } 
         },
         //修改功能点
