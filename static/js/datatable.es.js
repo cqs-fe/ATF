@@ -1,8 +1,8 @@
 $(document).ready(function () {
-	$('.3').addClass('open')
-	$('.3 .arrow').addClass('open')
-	$('.3-ul').css({display: 'block'})
-	$('.3-3').css({color: '#ff6c60'})
+	$('.3').addClass('open');
+	$('.3 .arrow').addClass('open');
+	$('.3-ul').css({display: 'block'});
+	$('.3-3').css({color: '#ff6c60'});
 	// var submenuHeight = document.querySelector('#submenu').offsetHeight;
 	// document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
@@ -280,9 +280,9 @@ $(document).ready(function () {
 					this.uiOrFunctions.target = event.target;
 					this.uiOrFunctions.changed = false;
 					this.uiOrFunctions.table = type;
-					var dataT = {
-						transid: transid
-					}
+					// var dataT = {
+					// 	transid: transid
+					// }
 					// 请求Ui和Elment
 					this.getUIAndFunctions(1)
 
@@ -303,9 +303,8 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: (data, statusText) => {
 							if (data && data.success === true && (data.obj instanceof Array)) {
-								// $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
-								var da = [{ "id": 1, "parentid": 0, "name": "ui-chai" }, { "id": 2, "parentid": 1, "name": "ele-chai", "classType": 'webedit' }]
-								$.fn.zTree.init($('#ui-element-ul' + str), setting.uiAndElement, da);
+								$.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+								// var da = [{ "id": 1, "parentid": 0, "name": "ui-chai" }, { "id": 2, "parentid": 1, "name": "ele-chai", "classType": 'webedit' }]
 							}
 						}
 					})
@@ -420,7 +419,6 @@ $(document).ready(function () {
 					})
 				},
 				moveDown: function (event, type) {
-					console.log(JSON.parse(`[{"Name":"输入值1","Type":"","Desc":"","ParameterizeColumn":"{element}"},{"Name":"输入值2","Type":"","Desc":"","ParameterizeColumn":"{element}"}]`))
 					var _this = this;
 					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows)
 					var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
@@ -453,7 +451,8 @@ $(document).ready(function () {
 						var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
 						sendDataArray.push(string)
 					}
-					var sendData = sendDataArray.join(';\n') + ';';
+					var sendData = sendDataArray.join(';\n')
+					sendData = sendData.length === 0 ? '': sendData + ';';
 					return sendData;
 				},
 				updateRow: function (rows, index) {
@@ -643,7 +642,6 @@ $(document).ready(function () {
 							} catch (e) {
 								newRow.parameters = []
 							}
-
 							operationRows.push(newRow)
 						}
 					}
@@ -779,11 +777,8 @@ $(document).ready(function () {
 					}
 					_this.systemInfo.testpoints = JSON.stringify(newVal)
 					var checkboxs = $(`input[value=${newVal[0]}]`);
-					console.log(checkboxs)
 					_this.systemInfo.script_mode = checkboxs[0].getAttribute('data-script-mode');
 					_this.systemInfo.execute_method = checkboxs[0].getAttribute('data-execute-method');
-					console.log(_this.systemInfo.script_mode)
-					console.log(_this.systemInfo.execute_method)
 					var data = {
 						executor: 	_this.systemInfo.executor,
 						caseLib_id:	_this.systemInfo.caseLib_id,
@@ -793,7 +788,6 @@ $(document).ready(function () {
 						url: address + "autController/selectTestCaseByCondition",
 						type: "post",
 						dataType: "json",
-						// data: _this.systemInfo,
 						data: data,
 						success: function (data, textStatus) {
 							var treeData = [];
