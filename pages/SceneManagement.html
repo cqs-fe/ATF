@@ -244,7 +244,7 @@
                     <div class="case"  @click="changeCase(case_wrapper.id, 1)"  @mousedown.stop="1">
                       <div class="case-header">
                         <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
-                        <p>{{case_wrapper.casecode}}</p>
+                        <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
                       </div>
                       <!-- <div class="case-main">
                         <p>{{case_wrapper.casecode}}</p>
@@ -267,7 +267,7 @@
                       <div class="case-header">
                         <input type="checkbox" v-bind:value="item.id"
                         class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                        <p>item.casecode</p>
+                        <p :title="item.casecode">{{item.casecode}}</p>
                       </div>
                       <!-- <div class="case-main">
                         <p>{{item.casecode}}</p>

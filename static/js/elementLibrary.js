@@ -137,8 +137,8 @@ var template_ele = `
                         <header class="panel-heading">属性</header>
                         <div class="property">
                             主属性
-                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="addMainProp"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delMainProp"><i class="icon-minus"></i></a>
                         </div>
                         <div class="property">
                             <table class="table table-bordered">
@@ -150,14 +150,7 @@ var template_ele = `
                                     </tr>
                                 </thead>
                                 <tbody id="mainTbody">
-                                    <tr v-for="item in mainList">
-                                        <td>
-                                            <input type="checkbox" name="chk_list" />
-                                        </td>
-                                        <td contenteditable="true">{{item.name}}</td>
-                                        <td contenteditable="true">{{item.value}}</td>
-                                    </tr>
-                                    <tr v-show="mainListLength==0" class="text-center">
+                                    <tr class="text-center">
                                         <td colspan="3">暂无数据</td>
                                     </tr>
                                 </tbody>
@@ -165,8 +158,8 @@ var template_ele = `
                         </div>
                         <div class="property">
                             附加属性
-                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="addAddiProp"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delAddiProp"><i class="icon-minus"></i></a>
                         </div>
                         <div class="property">
                             <table class="table table-bordered">
@@ -178,14 +171,7 @@ var template_ele = `
                                     </tr>
                                 </thead>
                                 <tbody id="addiTbody">
-                                    <tr v-for="item in addiList">
-                                        <td>
-                                            <input type="checkbox" name="chk_list" />
-                                        </td>
-                                        <td contenteditable="true">{{item.name}}</td>
-                                        <td contenteditable="true">{{item.value}}</td>
-                                    </tr>
-                                    <tr v-show="addiListLength==0" class="text-center">
+                                    <tr class="text-center">
                                         <td colspan="3">暂无数据</td>
                                     </tr>
                                 </tbody>
@@ -193,8 +179,8 @@ var template_ele = `
                         </div>
                         <div class="property">
                             辅助属性
-                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="addAssiProp"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delAssiProp"><i class="icon-minus"></i></a>
                         </div>
                         <div class="property">
                             <table class="table table-bordered">
@@ -206,14 +192,7 @@ var template_ele = `
                                     </tr>
                                 </thead>
                                 <tbody id="assiTbody">
-                                    <tr v-for="item in assiList">
-                                        <td>
-                                            <input type="checkbox" name="chk_list" />
-                                        </td>
-                                        <td contenteditable="true">{{item.name}}</td>
-                                        <td contenteditable="true">{{item.value}}</td>
-                                    </tr>
-                                    <tr v-show="assiListLength==0" class="text-center">
+                                    <tr class="text-center">
                                         <td colspan="3">暂无数据</td>
                                     </tr>
                                 </tbody>
@@ -226,8 +205,8 @@ var template_ele = `
                             <div class="linked-left">
                                 <div class="property">
                                     关联元素
-                                    <a class="btn btn-white btn-sm pull-right" @click="addLinked($event)"><i class="icon-plus"></i></a>
-                                    <a class="btn btn-white btn-sm pull-right" @click="delLinked($event)"><i class="icon-minus"></i></a>
+                                    <a class="btn btn-white btn-sm pull-right" @click="addLinked"><i class="icon-plus"></i></a>
+                                    <a class="btn btn-white btn-sm pull-right" @click="delLinked"><i class="icon-minus"></i></a>
                                 </div>
                                 <table class="table table-bordered">
                                     <thead>
@@ -237,13 +216,7 @@ var template_ele = `
                                         </tr>
                                     </thead>
                                     <tbody id="relateNameTbody">
-                                        <tr v-for="(index,item) in relateElementList">
-                                            <td>
-                                                <input type="radio" name="chk_list" @click="showLinkProp(index)"/>
-                                            </td>
-                                            <td contenteditable="true">{{item.name}}</td>
-                                        </tr>
-                                        <tr v-show="relateElementListLength==0" class="text-center">
+                                        <tr class="text-center">
                                             <td colspan="3">暂无数据</td>
                                         </tr>
                                     </tbody>
@@ -252,8 +225,8 @@ var template_ele = `
                             <div class="linked-right">
                                 <div class="property">
                                     属性
-                                    <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
-                                    <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                                    <a class="btn btn-white btn-sm pull-right" @click="addLinkedProp"><i class="icon-plus"></i></a>
+                                    <a class="btn btn-white btn-sm pull-right" @click="delLinkedProp"><i class="icon-minus"></i></a>
                                 </div>
                                 <table class="table table-bordered">
                                     <thead>
@@ -264,14 +237,7 @@ var template_ele = `
                                         </tr>
                                     </thead>
                                     <tbody id="relatePropTbody">
-                                        <tr v-for="item in relatePropList">
-                                            <td>
-                                                <input type="checkbox" name="chk_list" />
-                                            </td>
-                                            <td contenteditable="true">{{item.name}}</td>
-                                            <td contenteditable="true">{{item.value}}</td>
-                                        </tr>
-                                        <tr v-show="relatePropListLength==0" class="text-center">
+                                        <tr class="text-center">
                                             <td colspan="3">暂无数据</td>
                                         </tr>
                                     </tbody>
@@ -282,42 +248,6 @@ var template_ele = `
                     <a class="btn btn-info" @click="updateElement">保存</a>
                 </div>
             </section>
-            <!-- successModal start -->
-            <div class="modal fade" id="successModalEle" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">操作成功</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h4>操作成功！</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- successModal end -->
-            <!-- failModalEle start -->
-            <div class="modal fade" id="failModalEle" tabindex="-1" role="dialog" aria-labelledby="failModalEleLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">操作失败</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h4>操作失败！</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- failModalEle end -->
             <!-- addUIModal start -->
             <div class="modal fade" id="addUIModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -354,7 +284,7 @@ var template_ele = `
                         </div>
                         <div class="modal-footer">
                             <button data-dismiss="modal" class="btn btn-default">取消</button>
-                            <button class="btn btn-success" @click="addUI">添加</button>
+                            <button data-dismiss="modal"  class="btn btn-success" @click="addUI">添加</button>
                         </div>
                     </div>
                 </div>
@@ -408,6 +338,42 @@ var template_ele = `
                 </div>
             </div>
             <!-- addElementModal end -->
+            <!-- successModal start -->
+            <div class="modal fade" id="successModalEle" tabindex="-1" style="" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">操作成功</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>操作成功！</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- successModal end -->
+            <!-- failModalEle start -->
+            <div class="modal fade" id="failModalEle" tabindex="-1" role="dialog" aria-labelledby="failModalEleLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">操作失败</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>操作失败！</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- failModalEle end -->
         </div>
     </div>
     <!-- <link rel="import" href="./common/copy-right.html?__inline"> -->
@@ -504,12 +470,14 @@ var elementLibrary = Vue.extend({
         transactId: '',
         UIName: '',
         eleName: '',
-        propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         UILinked: '',
         eleParent: '',
         eleLinked: '',
-        linkedTr: '<tr><td><input type="radio" name="chk_list"/></td><td contenteditable="true"></td></tr>',
-        linkedPropTr: '<tr><td><input type="checkbox" name="chk_list" @click="showLinkProp(index)"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        mainPropTr: '<tr><td><input type="checkbox" name="mainProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        addiPropTr: '<tr><td><input type="checkbox" name="addiProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        assiPropTr: '<tr><td><input type="checkbox" name="assiProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        linkedTr: '<tr><td><input type="radio" name="linkEle" @click="showLinkProp(index)"/></td><td contenteditable="true"></td></tr>',
+        linkedPropTr: '<tr><td><input type="checkbox" name="linkProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         classtypeList: [], //控件类型下拉列表
         mainList: [], //主属性
         mainListLength: 0,
@@ -589,6 +557,11 @@ var elementLibrary = Vue.extend({
                         _this.eleName = treeNode.name;
                         var parentNode = nodes[0].getParentNode();
                         _this.UIName = parentNode.name;
+                        $("#mainTbody").children().remove();
+                        $("#addiTbody").children().remove();
+                        $("#assiTbody").children().remove();
+                        $("#relateNameTbody").children().remove();
+                        $("#relatePropTbody").children().remove();
                         $('#UI').css('display', 'none');
                         $('#ele').css('display', 'block');
                         var transid = !_this.componentMode ? _this.transactId : _this.transid;
@@ -623,23 +596,64 @@ var elementLibrary = Vue.extend({
                                 }
 
                                 //主属性
+                                _this.mainList = []
                                 _this.mainList = data.obj.identifyElement.locatePropertyCollection.main_properties;
                                 _this.mainListLength = _this.mainList.length;
+                                for(var i=0;i< _this.mainListLength;i++){
+                                    var paraTr = $('<tr></tr>'),
+                                    paraCheckTd = $('<td><input type="checkbox" name="mainProp"/></td>'),
+                                    paraNameTd = $('<td contenteditable="true"></td>'),
+                                    paraValTd = $('<td contenteditable="true"></td>');
+                                    paraNameTd.html(_this.mainList[i].name);
+                                    paraValTd.html(_this.mainList[i].value);
+                                    paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                    $('#mainTbody').append(paraTr);
+                                }
 
                                 //附加属性
                                 _this.addiList = data.obj.identifyElement.locatePropertyCollection.addtional_properties;
                                 _this.addiListLength = _this.addiList.length;
+                                for(var i=0;i< _this.addiListLength;i++){
+                                    var paraTr = $('<tr></tr>'),
+                                    paraCheckTd = $('<td><input type="checkbox" name="addiProp"/></td>'),
+                                    paraNameTd = $('<td contenteditable="true"></td>'),
+                                    paraValTd = $('<td contenteditable="true"></td>');
+                                    paraNameTd.html(_this.addiList[i].name);
+                                    paraValTd.html(_this.addiList[i].value);
+                                    paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                    $('#addiTbody').append(paraTr);
+                                }
 
                                 //辅助属性
                                 _this.assiList = data.obj.identifyElement.locatePropertyCollection.assistant_properties;
                                 _this.assiListLength = _this.assiList.length;
+                                for(var i=0;i< _this.assiListLength;i++){
+                                    var paraTr = $('<tr></tr>'),
+                                    paraCheckTd = $('<td><input type="checkbox" name="assiProp"/></td>'),
+                                    paraNameTd = $('<td contenteditable="true"></td>'),
+                                    paraValTd = $('<td contenteditable="true"></td>');
+                                    paraNameTd.html(_this.assiList[i].name);
+                                    paraValTd.html(_this.assiList[i].value);
+                                    paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                    $('#assiTbody').append(paraTr);
+                                }
 
                                 //关联元素
                                 _this.relateElementList = data.obj.relateElementList;
                                 if(_this.relateElementList){
                                     _this.relateElementListLength = _this.relateElementList.length;     
                                 }
-                            
+                                for(var i=0;i< _this.relateElementListLength;i++){
+                                    var paraTr = $('<tr></tr>'),
+                                    paraCheckTd = $('<td><input type="radio" name="linkEle" @click="showLinkProp(index)"/></td>'),
+                                    paraNameTd = $('<td contenteditable="true"></td>'),
+                                    paraValTd = $('<td contenteditable="true"></td>');
+                                    paraNameTd.html(_this.relateElementList[i].name);
+                                    paraValTd.html(_this.relateElementList[i].value);
+                                    paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                    $('#relateNameTbody').append(paraTr);
+                                }
+
                                 //关联元素属性
 
                             }
@@ -709,6 +723,10 @@ var elementLibrary = Vue.extend({
             this.getEleLinkedObjectTree();
         }
         // $("#search-btn").click(this.searchNodes);
+        $('.2').addClass('open');
+        $('.2 .arrow').addClass('open');
+        $('.2-ul').css({display: 'block'});
+        $('.2-0').css({color: '#ff6c60'});
     },
     methods: {
         //初始化获取测试系统和功能点
@@ -849,16 +867,18 @@ var elementLibrary = Vue.extend({
                     "relateParentIdentifyObjectId": relateParentIdentifyObjectId
                 },
                 success: function(data) {
-                    console.info(data);
                     if (data.success) {
                         $('#successModalEle').modal('show');
                         _this.getElementTree();
+                        $("#addUIName").val('');
                     } else {
                         $('#failModalEle').modal('show');
+                        $("#addUIName").val('');
                     }
                 },
                 error: function() {
                     $('#failModalEle').modal('show');
+                    $("#addUIName").val('');
                 }
             });
         },
@@ -875,7 +895,6 @@ var elementLibrary = Vue.extend({
                     "transid": _this.transactId,
                 },
                 success: function(data) {
-                    console.info(data);
                     if (data.success) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
@@ -1127,28 +1146,71 @@ var elementLibrary = Vue.extend({
                 }
             });
         },
-        addProp: function(e) {
-            var curTbody = $(e.target).parent().next().find('tbody');
-            curTbody.children().filter('.text-center').remove();
-            curTbody.append(this.propTr);
+        // 添加主属性
+        addMainProp:function(){
+            var curTbody = $('#mainTbody');
+            curTbody.append(this.mainPropTr);
         },
-        delProp: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
+        // 删除主属性
+        delMainProp:function(){
+            var selectedTr = $('#mainTbody').find('input[name="mainProp"]:checked').parent().parent();
             selectedTr.remove();
         },
-        addLinked: function(e) {
-            var curTbody = $(e.target).parent().next().find('tbody');
-            curTbody.children().filter('.text-center').remove();
+        // 添加附加属性
+        addAddiProp:function(){
+            var curTbody = $('#addiTbody');
+            curTbody.append(this.addiPropTr);
+        },
+        // 删除附加属性
+        delAddiProp:function(){
+            var selectedTr = $('#addiTbody').find('input[name="addiProp"]:checked').parent().parent();
+            selectedTr.remove();
+        },
+        // 添加辅助属性
+        addAssiProp:function(){
+            var curTbody = $('#assiTbody');
+            curTbody.append(this.assiPropTr);
+        },
+        // 删除辅助属性
+        delAssiProp:function(){
+            var selectedTr = $('#assiTbody').find('input[name="assiProp"]:checked').parent().parent();
+            selectedTr.remove();
+        },
+        // 添加关联元素
+        addLinked: function() {
+            var curTbody = $('#relateNameTbody');
             curTbody.append(this.linkedTr);
         },
-        delLinked: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
+        // 删除关联元素
+        delLinked: function() {
+            var selectedTr = $('#relateNameTbody').find('input[name="linkEle"]:checked').parent().parent();
             selectedTr.remove();
         },
+        //添加关联元素属性
+        addLinkedProp:function(){
+            var curTbody = $('#relatePropTbody');
+            curTbody.append(this.linkedPropTr);
+        }, 
+        // 删除关联元素属性
+        delLinkedProp:function(){
+            var selectedTr = $('#relatePropTbody').find('input[name="linkProp"]:checked').parent().parent();
+            selectedTr.remove();
+        },
+
         //获取关联元素属性
         showLinkProp: function(index) {
             this.relatePropList = this.relateElementList[index].locatePropertyCollection.main_properties;
             this.relatePropListLength = this.relatePropList.length;
+            for (var i = 0; i < this.relatePropListLength; i++) {
+                 var paraTr = $('<tr></tr>'),
+                     paraCheckTd = $('<td><input type="checkbox" name="linkProp"/></td>'),
+                     paraNameTd = $('<td contenteditable="true"></td>'),
+                     paraValTd = $('<td contenteditable="true"></td>');
+                 paraNameTd.html(this.relatePropList[i].name);
+                 paraValTd.html(this.relatePropList[i].value);
+                 paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                 $('#relatePropTbody').append(paraTr);
+             }
         },
         // 页面初始化获取元素库
         getElementTree: function() {

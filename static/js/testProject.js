@@ -76,23 +76,30 @@ var app = new Vue({
 
         //添加测试项目
         insert: function() {
-            $.ajax({
-                url: address + 'testProjectController/insert',
-                type: 'post',
-                data: $("#insertForm").serializeArray(),
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        getTestProject(1, app.pageSize, 'id', 'asc');
-                        $('#successModal').modal();
-                    } else {
+            let testProjectCode=$('#insertForm input[name="testProjectCode"]').val();
+            let testProjectName=$('#insertForm input[name="testProjectName"]').val();
+            let taskDescription=$('#insertForm textarea[name="taskDescription"]').val();
+            if(testProjectCode=='' || testProjectName=='' || taskDescription==''){
+                alert("所有项均为必填项");
+            }else{
+                $.ajax({
+                    url: address + 'testProjectController/insert',
+                    type: 'post',
+                    data: $("#insertForm").serializeArray(),
+                    success: function(data) {
+                        console.info(data);
+                        if (data.success) {
+                            getTestProject(1, app.pageSize, 'id', 'asc');
+                            $('#successModal').modal();
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+                });
+            }
         },
         //删除测试项目
         del: function() {
