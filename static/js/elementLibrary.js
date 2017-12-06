@@ -446,7 +446,6 @@ var template_ele = `
 // var elementLibrary = new Vue({
 // var elementLibrary = Vue.component('element-library',{
 var elementLibrary = Vue.extend({
-    // el: '#main-content',
     name:'element-library',
     template: template_ele,
     props: {
@@ -574,6 +573,7 @@ var elementLibrary = Vue.extend({
                                 "ElementName": _this.eleName
                             },
                             success: function(data) {
+                                console.log(data)
                                 var classtype = data.obj.identifyElement.classtype;
                                 $('#classtypeSelect').val(classtype);
                                 var relateParentObjectId = data.obj.identifyElement.parentElementId;
@@ -645,12 +645,10 @@ var elementLibrary = Vue.extend({
                                 }
                                 for(var i=0;i< _this.relateElementListLength;i++){
                                     var paraTr = $('<tr></tr>'),
-                                    paraCheckTd = $('<td><input type="radio" name="linkEle" @click="showLinkProp(index)"/></td>'),
-                                    paraNameTd = $('<td contenteditable="true"></td>'),
-                                    paraValTd = $('<td contenteditable="true"></td>');
+                                    paraCheckTd = $('<td><input type="radio" name="linkEle" onclick="showLinkProp('+i+')"/></td>'),
+                                    paraNameTd = $('<td contenteditable="true"></td>');
                                     paraNameTd.html(_this.relateElementList[i].name);
-                                    paraValTd.html(_this.relateElementList[i].value);
-                                    paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                    paraTr.append(paraCheckTd, paraNameTd);
                                     $('#relateNameTbody').append(paraTr);
                                 }
 
@@ -1198,20 +1196,21 @@ var elementLibrary = Vue.extend({
         },
 
         //获取关联元素属性
-        showLinkProp: function(index) {
-            this.relatePropList = this.relateElementList[index].locatePropertyCollection.main_properties;
-            this.relatePropListLength = this.relatePropList.length;
-            for (var i = 0; i < this.relatePropListLength; i++) {
-                 var paraTr = $('<tr></tr>'),
-                     paraCheckTd = $('<td><input type="checkbox" name="linkProp"/></td>'),
-                     paraNameTd = $('<td contenteditable="true"></td>'),
-                     paraValTd = $('<td contenteditable="true"></td>');
-                 paraNameTd.html(this.relatePropList[i].name);
-                 paraValTd.html(this.relatePropList[i].value);
-                 paraTr.append(paraCheckTd, paraNameTd, paraValTd);
-                 $('#relatePropTbody').append(paraTr);
-             }
-        },
+        // showLinkProp: function(index) {
+        //     console.log("hehe")
+        //     this.relatePropList = this.relateElementList[index].locatePropertyCollection.main_properties;
+        //     this.relatePropListLength = this.relatePropList.length;
+        //     for (var i = 0; i < this.relatePropListLength; i++) {
+        //          var paraTr = $('<tr></tr>'),
+        //              paraCheckTd = $('<td><input type="checkbox" name="linkProp"/></td>'),
+        //              paraNameTd = $('<td contenteditable="true"></td>'),
+        //              paraValTd = $('<td contenteditable="true"></td>');
+        //          paraNameTd.html(this.relatePropList[i].name);
+        //          paraValTd.html(this.relatePropList[i].value);
+        //          paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+        //          $('#relatePropTbody').append(paraTr);
+        //      }
+        // },
         // 页面初始化获取元素库
         getElementTree: function() {
             var _this = this;
@@ -1354,6 +1353,23 @@ var elementLibrary = Vue.extend({
             if ($(event.target).attr('checked')) {
             }
         }
-    },
+    }
 });
-Vue.component('element-library', elementLibrary)
+Vue.component('element-library', elementLibrary);
+
+       //获取关联元素属性
+       function  showLinkProp(index) {
+            console.log(elementLibrary);
+            elementLibrary.relatePropList = elementLibrary.relateElementList[index].locatePropertyCollection.main_properties;
+            elementLibrary.relatePropListLength = elementLibrary.relatePropList.length;
+            for (var i = 0; i < elementLibrary.relatePropListLength; i++) {
+                 var paraTr = $('<tr></tr>'),
+                     paraCheckTd = $('<td><input type="checkbox" name="linkProp"/></td>'),
+                     paraNameTd = $('<td contenteditable="true"></td>'),
+                     paraValTd = $('<td contenteditable="true"></td>');
+                 paraNameTd.html(elementLibrary.relatePropList[i].name);
+                 paraValTd.html(elementLibrary.relatePropList[i].value);
+                 paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                 $('#relatePropTbody').append(paraTr);
+             }
+        }

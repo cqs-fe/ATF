@@ -188,6 +188,7 @@ var app = new Vue({
         updateMethod: function() {
             var methodname = $('#methodForm input[name="name"]').val(),
                 methoddescription = $('#methodForm input[name="description"]').val(),
+                labelArgument = $('#methodForm input[name="labelArgument"]').val(), 
                 maintainTime = $('#methodForm input[name="maintainTime"]').val(),
                 executecode=$('#methodForm textarea[name="executecode"]').val();
             var paraList = '[',
@@ -218,7 +219,7 @@ var app = new Vue({
                     "mdesc": methoddescription,
                     "mtype": '1',
                     "argsCount": '',
-                    "labelArgument": '',
+                    "labelArgument": labelArgument,
                     "author": '',
                     "maintaintime": maintainTime,
                     "outputvaluedesc":'',
@@ -321,6 +322,7 @@ function methodClick(event) {
 
         $('#methodForm input[name="name"]').val('');
         $('#methodForm input[name="description"]').val('');
+        $('#methodForm input[name="labelArgument"]').val('');
         $('#methodForm input[name="maintainTime"]').val('');
         $('#methodForm textarea[name="executecode"]').val('');
         app.paraList=[];
@@ -336,6 +338,7 @@ function methodClick(event) {
                 var method = data.obj;
                 $('#methodForm input[name="name"]').val(method.mname);
                 $('#methodForm input[name="description"]').val(method.mdesc);
+                $('#methodForm input[name="labelArgument"]').val(method.labelArgument);
                 $('#methodForm input[name="maintainTime"]').val(method.maintainTime);
                 $('#methodForm textarea[name="executecode"]').val(method.executecode);
                 app.paraList = method.argumentslist;
