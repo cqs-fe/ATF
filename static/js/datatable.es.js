@@ -434,8 +434,8 @@ $(document).ready(function () {
 					var trs = Array.from(document.querySelectorAll('#sortable' + str2 + ' tr.' + str + '-operation-row'))
 					for (var tr of trs) {
 						// 
-						var UI = tr.querySelector('.operation-ui').innerHTML
-						var element = tr.querySelector('.operation-element').innerHTML
+						var UI = tr.querySelector('.operation-ui').innerHTML.replace(/^\"+|\"+$/g, "\"");
+						var element = tr.querySelector('.operation-element').innerHTML.replace(/^\"+|\"+$/g, "\"");
 						var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
 						var method = tr.querySelector('.functions-select').value
 						if (!UI && !method) {
@@ -445,7 +445,14 @@ $(document).ready(function () {
 						var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
 						var paramValues = []
 						for (var paramTr of paramTrs) {
-							paramValues.push(`"${paramTr.innerHTML}"`)
+								if(paramTr.innerHTML.startsWith('Data.TableColumn')) {
+										paramValues.push(`${paramTr.innerHTML}`); 
+								} else {
+										paramValues.push(`"${paramTr.innerHTML}"`);
+								}
+						}
+						if(paramValues.length === 0) {
+								paramValues = ["\"\""];
 						}
 						var parameterString = paramValues.toString()
 						var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`

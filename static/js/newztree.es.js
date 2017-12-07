@@ -187,6 +187,7 @@ $(document).ready(function() {
                         // $(`input[value='${index}']`).prop('checked', false);
                     }
                 }
+                // 查询模板脚本
                 function process(value) {
                     var length = _this.checkedTemplate.length;
                     // if(length > 1) {
@@ -200,6 +201,10 @@ $(document).ready(function() {
                             aut_id: _this.autId,
                             script_id: _this.templateList[templateId].id
                         };
+                        _this.showScripttemplateTableArgs = {
+                            aut_id: _this.autId,
+                            script_id: _this.templateList[templateId].id
+                        }
                         $.ajax({
                             url: address + 'scripttemplateController/showScripttemplateTable',
                             data: data,
@@ -245,6 +250,52 @@ $(document).ready(function() {
                         });
                     }
                 }
+            },
+            showScripttemplateTable: function(args) {
+                var _this = this;
+                $.ajax({
+                    url: address + 'scripttemplateController/showScripttemplateTable',
+                    data: args,
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(data) {
+                        // _this.scriptIsChanged = false
+                        editDataVue.operationRows = []
+                        if (data.success === true) {
+                            // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name:'', Value: ''}]}}
+                            _this.scriptLength = data.o.data.length
+                           
+                            for (var operationRow of data.o.data) {
+                                let row = {
+                                    id: null,
+                                    functions: [],
+                                    operation: {
+                                        element: '',
+                                        ui: '',
+                                        classType: ''
+                                    },
+                                    parameters: []
+                                }
+                                row.id = Symbol()
+                                row.functions.push({ mname: operationRow.function })
+                                row.operation.element = operationRow.operator[2]
+                                row.operation.ui = operationRow.operator[0]
+                                row.operation.classType = operationRow.operator[1]
+                                for (let para of operationRow.arguments) {
+                                    row.parameters.push({
+                                        Name: para.name,
+                                        Value: para.value
+                                    })
+                                }
+                                // 插入到operationRows中
+                                editDataVue.operationRows.push(row)
+                                // editDataVue.operationRows = [row]
+                            }
+                        } else {
+                            Vac.alert(data.msg)
+                        }
+                    }
+                });
             },
             saveTemplate: function() {
                 var _this = this;
@@ -459,6 +510,10 @@ $(document).ready(function() {
                 }
                 this.setChanged()
             },
+            // 遍历表格，保存脚本内容
+            generateScriptString: function(arr){
+
+            },
             //保存 
             tableSave: function() {
                 //UI("denglu").webedit("username").set(1,"123");
@@ -466,8 +521,8 @@ $(document).ready(function() {
                 var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
                 for (var tr of trs) {
                     // 
-                    var UI = tr.querySelector('.operation-ui').innerHTML
-                    var element = tr.querySelector('.operation-element').innerHTML
+                    var UI = tr.querySelector('.operation-ui').innerHTML.replace(/^\"+|\"+$/g, "\"");
+                    var element = tr.querySelector('.operation-element').innerHTML.replace(/^\"+|\"+$/g, "\"");
                     var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
                     var method = tr.querySelector('.functions-select').value
                     if (!UI && !method) {
@@ -477,12 +532,16 @@ $(document).ready(function() {
                     var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
                     var paramValues = []
                     for (var paramTr of paramTrs) {
-                        paramValues.push(`"${paramTr.innerHTML}"`)
+                        if(paramTr.innerHTML.startsWith('Data.TableColumn')) {
+                            paramValues.push(`${paramTr.innerHTML}`); 
+                        } else {
+                            paramValues.push(`"${paramTr.innerHTML}"`);
+                        }
                     }
                     if(paramValues.length === 0) {
                         paramValues = ["\"\""]
                     }
-                    var parameterString = paramValues.toString()
+                    var parameterString = paramValues.toString();
                     console.log(parameterString)
                     var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
                     sendDataArray.push(string)
@@ -517,10 +576,10 @@ $(document).ready(function() {
                 var sendDataArray = [];
                 var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
                 for (var tr of trs) {
-                    var UI = tr.querySelector('.operation-ui').innerHTML
-                    var element = tr.querySelector('.operation-element').innerHTML
-                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
-                    var method = tr.querySelector('.functions-select').value
+                    var UI = tr.querySelector('.operation-ui').innerHTML.replace(/^\"+|\"+$/g, "\"");
+                    var element = tr.querySelector('.operation-element').innerHTML.replace(/^\"+|\"+$/g, "\"");
+                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype');
+                    var method = tr.querySelector('.functions-select').value;
                     if (!UI && !method) {
                         continue
                     }
@@ -528,7 +587,11 @@ $(document).ready(function() {
                     var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
                     var paramValues = []
                     for (var paramTr of paramTrs) {
-                        paramValues.push(`"${paramTr.innerHTML}"`)
+                         if(paramTr.innerHTML.startsWith('Data.TableColumn')) {
+                            paramValues.push(`${paramTr.innerHTML}`); 
+                        } else {
+                            paramValues.push(`"${paramTr.innerHTML}"`);
+                        }
                     }
                     if(paramValues.length === 0) {
                         paramValues = ["\"\""]
@@ -548,6 +611,7 @@ $(document).ready(function() {
                     },
                     success: function(data) {
                         Vac.alert(data.msg);
+                        mainVue.showScripttemplateTable(mainVue.showScripttemplateTableArgs);
                     },
                     error: function() {
                         Vac.alert('参数化失败，请求未成功');
