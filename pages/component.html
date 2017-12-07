@@ -114,7 +114,7 @@
                                         <label class="col-lg-2 control-label">描述</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="descname" class="form-control" value="">
-                                        </div>
+                                        </div>                           
                                     </div>
                                 </form>
                                 <a class="btn btn-info rightBtn" @click="updateClass">保存</a>
@@ -170,6 +170,10 @@
                                         </table>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-lg-2 control-label">标志参数化列</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="labelArgument" class="form-control">
+                                        </div>
                                         <label class="col-lg-2 control-label">执行时间</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="maintainTime" class="form-control">
@@ -181,52 +185,6 @@
                                             <textarea type="text" name="executecode" class="form-control" rows='15'></textarea>
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <label class="col-lg-2 control-label">mtype</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="mtype" class="form-control" value="">
-                                        </div>
-                                        <label class="col-lg-2 control-label">author</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="author" class="form-control" value="">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-2 control-label">outputvaluedesc</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="outputvaluedesc" class="form-control" value="">
-                                        </div>
-                                        <label class="col-lg-2 control-label">inputargdesc</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="inputargdesc" class="form-control" value="">
-                                        </div>
-                                    </div> -->
-                                    <!--    <div class="form-group">
-                                        <label class="col-lg-2 control-label">有无参数</label>
-                                        <div class="col-lg-3">
-                                            <select class="form-control" name="isPara">
-                                                <option>有</option>
-                                                <option>无</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                   
-                                    <!-- <div class="form-group">
-                                        <label class="col-lg-2 control-label">等待时间</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="waittime" class="form-control" value="">
-                                        </div>
-                                        <label class="col-lg-2 control-label">超时时间</label>
-                                        <div class="col-lg-3">
-                                            <input type="text" name="timeout" class="form-control" value="">
-                                        </div>
-                                    </div> -->
-                                   <!--  <div class="form-group">
-                                        <label class="col-lg-2 control-label">目标代码</label>
-                                        <div class="col-lg-9">
-                                            <textarea class="form-control" rows="10" name="objectcode"></textarea>
-                                        </div>
-                                    </div> -->
                                 </form>
                                 <a class="btn btn-info rightBtn" @click="updateMethod">保存</a>
                             </div>
@@ -329,61 +287,6 @@
                                                     <input type="text" class="form-control" name="methoddesc" id="">
                                                 </div>
                                             </div>
-                                           <!--  <div class="form-group">
-                                                <label class="col-lg-3 control-label">mtype</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="mtype" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">author</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="author" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">maintainTime</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="maintainTime" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">outputvaluedesc</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="outputvaluedesc" id="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">inputargdesc</label>
-                                                <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="inputargdesc" id="">
-                                                </div>
-                                            </div> -->
-                                            <!--                      <div class="form-group">
-                                                <label class="col-lg-3 control-label">有无参数</label>
-                                                <div class="col-lg-3">
-                                                    <select class="form-control" name="isparameter">
-                                                        <option>有</option>
-                                                        <option>无</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">等待时间</label>
-                                                <div class="col-lg-3">
-                                                    <input type="text" name="waittime" class="form-control" value="">
-                                                </div>
-                                                <label class="col-lg-2 control-label">超时时间</label>
-                                                <div class="col-lg-3">
-                                                    <input type="text" name="timeout" class="form-control" value="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label">目标代码</label>
-                                                <div class="col-lg-9">
-                                                    <textarea class="form-control" rows="10" name="objectcode"></textarea>
-                                                </div>
-                                            </div> -->
                                         </form>
                                     </section>
                                     <!-- modal-body end -->

@@ -7,7 +7,12 @@ var app = new Vue({
         methodName: '方法',
         classPropTr: '<tr><td><input type="radio" name="class"/></td><td ></td><td ></td></tr>',
         methodPropTr: '<tr><td><input type="radio" name="method"/></td><td ></td><td ></td></tr>',
-        paraTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td></tr>',    
+        runtimeArgsParaTr: '<tr><td><input type="checkbox" name="runtimeArgs_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
+        selfRecParaTr: '<tr><td><input type="checkbox" name="selfRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
+        assistRecParaTr: '<tr><td><input type="checkbox" name="assistRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
+        
+        methodParaTr: '<tr><td><input type="checkbox" name="methodPara_check"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         autId: '',
         autName: '被测系统名称',
         paraList: [],//参数列表
@@ -23,9 +28,6 @@ var app = new Vue({
     methods: {
         //获取autid
         getAutId() {
-            // var thisUrl = document.URL,
-            //     getVal = thisUrl.split('?')[1],
-            //     autId = getVal.split('&')[0].split('=')[1];
             this.autId = sessionStorage.getItem("autId");
         },
         //添加控件类型
@@ -88,12 +90,6 @@ var app = new Vue({
         addMethod: function() {
             var methodname = $('#addMethodForm input[name="methodname"]').val(),
                 methoddesc = $('#addMethodForm input[name="methoddesc"]').val();
-                // mtype = $('#addMethodForm input[name="mtype"]').val(),
-                // author = $('#addMethodForm input[name="author"]').val(),
-                // maintainTime = $('#addMethodForm input[name="maintainTime"]').val(),
-                // outputvaluedesc = $('#addMethodForm input[name="outputvaluedesc"]').val(),
-                // inputargdesc = $('#addMethodForm input[name="inputargdesc"]').val();
-
             $.ajax({
                 url: address + 'ommethodController/insertSelective',
                 type: 'post',
@@ -192,6 +188,7 @@ var app = new Vue({
         updateMethod: function() {
             var methodname = $('#methodForm input[name="name"]').val(),
                 methoddescription = $('#methodForm input[name="description"]').val(),
+                labelArgument = $('#methodForm input[name="labelArgument"]').val(), 
                 maintainTime = $('#methodForm input[name="maintainTime"]').val(),
                 executecode=$('#methodForm textarea[name="executecode"]').val();
             var paraList = '[',
@@ -222,7 +219,7 @@ var app = new Vue({
                     "mdesc": methoddescription,
                     "mtype": '1',
                     "argsCount": '',
-                    "labelArgument": '',
+                    "labelArgument": labelArgument,
                     "author": '',
                     "maintaintime": maintainTime,
                     "outputvaluedesc":'',
@@ -325,6 +322,7 @@ function methodClick(event) {
 
         $('#methodForm input[name="name"]').val('');
         $('#methodForm input[name="description"]').val('');
+        $('#methodForm input[name="labelArgument"]').val('');
         $('#methodForm input[name="maintainTime"]').val('');
         $('#methodForm textarea[name="executecode"]').val('');
         app.paraList=[];
@@ -340,6 +338,7 @@ function methodClick(event) {
                 var method = data.obj;
                 $('#methodForm input[name="name"]').val(method.mname);
                 $('#methodForm input[name="description"]').val(method.mdesc);
+                $('#methodForm input[name="labelArgument"]').val(method.labelArgument);
                 $('#methodForm input[name="maintainTime"]').val(method.maintainTime);
                 $('#methodForm textarea[name="executecode"]').val(method.executecode);
                 app.paraList = method.argumentslist;
