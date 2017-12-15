@@ -512,26 +512,26 @@ $(document).ready(function() {
             },
             // 遍历表格，保存脚本内容
             generateScriptString: function(arr){
-
-            },
-            //保存 
-            tableSave: function() {
-                //UI("denglu").webedit("username").set(1,"123");
                 var sendDataArray = [];
                 var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
                 for (var tr of trs) {
-                    // 
                     var UI = tr.querySelector('.operation-ui').innerHTML.replace(/^\"+|\"+$/g, "\"");
                     var element = tr.querySelector('.operation-element').innerHTML.replace(/^\"+|\"+$/g, "\"");
-                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype')
-                    var method = tr.querySelector('.functions-select').value
+                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype');
+                    var method = tr.querySelector('.functions-select').value;
                     if (!UI && !method) {
                         continue
                     }
                     // 获取参数列表
-                    var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
+                    var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-row'))
                     var paramValues = []
-                    for (var paramTr of paramTrs) {
+                    var type = 1; // record the type  --  1: normal  2: canshuhua biaozhu
+                    for (var paramRow of paramTrs) {
+                        var paramName = paramRow.querySelector('.param-name');
+                        if (paramName.innerHTML == '参数化标注') {
+                            type = 2;
+                        }
+                        var paramTr = paramRow.querySelector('.param-value');
                         if(paramTr.innerHTML.startsWith('Data.TableColumn')) {
                             paramValues.push(`${paramTr.innerHTML}`); 
                         } else {
@@ -542,12 +542,20 @@ $(document).ready(function() {
                         paramValues = ["\"\""]
                     }
                     var parameterString = paramValues.toString();
-                    console.log(parameterString)
-                    var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
+                    var string;
+                    if (type === 1) {
+                        string = `UI("${UI}").${classType}("${element}").${method}(${parameterString});\n`;
+                    } else {
+                        string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
+                    }
                     sendDataArray.push(string)
                 }
-                var sendData = sendDataArray.join(';\n')
-                sendData = sendData.length === 0 ? '': sendData + ';';
+                return sendDataArray.join('');
+            },
+            //保存 
+            tableSave: function() {
+                //UI("denglu").webedit("username").set(1,"123");
+                var sendData = this.generateScriptString();
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
                 // return
@@ -573,34 +581,7 @@ $(document).ready(function() {
             },
             //参数化
             para: function() {
-                var sendDataArray = [];
-                var trs = Array.from(document.querySelectorAll('#sortable tr.before-operation-row '))
-                for (var tr of trs) {
-                    var UI = tr.querySelector('.operation-ui').innerHTML.replace(/^\"+|\"+$/g, "\"");
-                    var element = tr.querySelector('.operation-element').innerHTML.replace(/^\"+|\"+$/g, "\"");
-                    var classType = tr.querySelector('.operation-element').getAttribute('data-classtype');
-                    var method = tr.querySelector('.functions-select').value;
-                    if (!UI && !method) {
-                        continue
-                    }
-                    // 获取参数列表
-                    var paramTrs = Array.from(tr.querySelectorAll('.parameters .param-value'))
-                    var paramValues = []
-                    for (var paramTr of paramTrs) {
-                         if(paramTr.innerHTML.startsWith('Data.TableColumn')) {
-                            paramValues.push(`${paramTr.innerHTML}`); 
-                        } else {
-                            paramValues.push(`"${paramTr.innerHTML}"`);
-                        }
-                    }
-                    if(paramValues.length === 0) {
-                        paramValues = ["\"\""]
-                    }
-                    var parameterString = paramValues.toString()
-                    var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
-                    sendDataArray.push(string)
-                }
-                var sendData = sendDataArray.join(';\n') + ';';
+               var sendData = this.generateScriptString();
                 $.ajax({
                     url: address + 'scripttemplateController/showscripttemplateTableSave',
                     type: 'post',
