@@ -120,6 +120,10 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else{
                 if (selectedInput.parent().next().next().next().text()==='接口'){
+                    var transactId = selectedInput.attr('id');
+                    var autId = $('#autSelect').val();
+                    sessionStorage.setItem("transactId",transactId);
+                    sessionStorage.setItem("autId",autId);
                     location.href="interfacesManagement.html";
                 }
                 else{
@@ -332,8 +336,8 @@ function queryTransact() {
             'order': app.order,
             'sort': app.sort,
             'id': '',
-            'transcode': '',
-            'transname': '',
+            'transcode': $('#transcode').val(),
+            'transname': $('#transname').val(),
             'autctgId': '',
             'descript': '',
             'maintainer': '',

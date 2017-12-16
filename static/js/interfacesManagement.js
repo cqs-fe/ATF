@@ -22,30 +22,10 @@ var template_int = `
                     <div class="col-xs-2">
                         <input class="form-control" type="text" id="intNameInput" >
                     </div>
-                    <label class="col-xs-1 control-label">创建者</label>
-                    <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intCreatorIdInput" >
-                    </div>
-                    <label class="col-xs-1 control-label">创建时间</label>
-                    <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intCreatTimeInput" >
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="col-xs-1 control-label">版本号</label>
                     <div class="col-xs-2">
                         <input class="form-control" type="text" id="intVersionInput" >
                     </div>
-                    <label class="col-xs-1 control-label">维护者</label>
-                    <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intMaintainerIdInput" >
-                    </div>
-                    <label class="col-xs-1 control-label">修改时间</label>
-                    <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intModifyTimeInput" >
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="col-xs-1 control-label">开发状态</label>
                     <div class="col-xs-2">
                         <select class="form-control" size="1" id="intStatusSelect" style="height:34px">
@@ -54,12 +34,32 @@ var template_int = `
                             <option value="2">已废弃</option>                            
                         </select>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-1 control-label">分组名称</label>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" id="intGroupNameInput" >
+                    </div>
+                    <label class="col-xs-1 control-label">编码</label>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" id="intCodeInput" >
+                    </div>
                     <label class="col-xs-1 control-label">通信类型</label>
                     <div class="col-xs-2">
                         <select class="form-control" size="1" id="intProtocolSelect" style="height:34px">
                             <option value="0">HTTP</option>
                             <option value="1">FTP</option>
                         </select>                    
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-1 control-label">创建者</label>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" id="intCreatorNameInput" disabled>
+                    </div>
+                    <label class="col-xs-1 control-label">维护者</label>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" id="intMaintainerNameInput" disabled>
                     </div>
                     <label class="col-xs-1 control-label">请求方法</label>
                     <div class="col-xs-2">
@@ -72,6 +72,18 @@ var template_int = `
                     </div>
                 </div>
                 <div class="form-group">
+
+                    <label class="col-xs-1 control-label">创建时间</label>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" id="intCreateTimeInput" disabled>
+                    </div>
+                    <label class="col-xs-1 control-label">修改时间</label>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" id="intModifyTimeInput" disabled>
+                    </div>
+
+                </div>
+                <div class="form-group">
                     <label class="col-xs-1 control-label">接口路径</label>
                     <div class="input-group col-xs-8">
                         <span class="input-group-addon" id="basic-addon3">https://example.com/users/</span>
@@ -81,7 +93,7 @@ var template_int = `
                 <div class="form-group">
                     <label class="col-xs-1 control-label">接口简介</label>
                     <div class="col-xs-8">
-                        <textarea class="form-control" id="intDecTextArea"></textarea>
+                        <textarea class="form-control" id="intDescTextArea"></textarea>
                     </div>
                 </div>   
                 <div class="form-group">
@@ -105,17 +117,14 @@ var template_int = `
                     <div class="form-group" id="queryParaListBody">
                         <div class="form-group queryParaRow">
                             <div class="col-xs-1"></div>
-                            <div class="col-xs-3">
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
-                                    <span class="input-group-addon">
-                                        <input type="checkbox" aria-label="query参数名称">
-                                        必输参数
-                                    </span>                         
-                                </div>
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
                             </div>
-                            <div class="col-xs-5">
-                                <input class="form-control" type="text" name="queryParaDec" placeholder="请填写备注">
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="queryParaVal" placeholder="请填写value">
+                            </div>
+                            <div class="col-xs-4">
+                                <input class="form-control" type="text" name="queryParaDesc" placeholder="请填写备注">
                             </div>
                         </div>
                     </div>
@@ -139,7 +148,7 @@ var template_int = `
                                 <input class="form-control" type="text" name="headerParaVal" placeholder="请填写value">
                             </div>
                             <div class="col-xs-4">
-                                <input class="form-control" type="text" name="headerParaDec" placeholder="请填写备注">
+                                <input class="form-control" type="text" name="headerParaDesc" placeholder="请填写备注">
                             </div>
                         </div>
                     </div>
@@ -167,6 +176,42 @@ var template_int = `
             </form>
             
         </section>
+        <!-- successModal start -->
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">操作成功</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>操作成功！</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- successModal end -->
+        <!-- failModal start -->
+        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">操作失败</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>操作失败！</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- failModal end -->
     </div>
 </div>
 `;
@@ -182,9 +227,9 @@ var interfacesManagement = Vue.extend({
     },
     data: function() {
 
-
     },
     ready: function() {
+        getInterfacesInfo();
         $('input[name="queryParaName"]').last().change(queryParaAdd);
         $('input[name="headerParaName"]').last().change(headerParaAdd);
         
@@ -205,7 +250,95 @@ var interfacesManagement = Vue.extend({
         },
 
         intInfoSave :function() {
-            alert("intInfoSave-Button Clicked!");
+
+            if($('#intNameInput').val()===""){
+                alert('接口名称不能为空！');
+            }
+            else{
+
+                //封装queryParaList
+                var queryParaList = '[',
+                pRow = $('#queryParaListBody .queryParaRow');
+
+                for (var i = 0; i < pRow.length; i++) {
+                    if($('#queryParaListBody input[name="queryParaName"]')[i].value!==""){
+                        var r = '{';
+                        r +=  "\"name\":\"" + $('#queryParaListBody input[name="queryParaName"]')[i].value + "\","
+                            + "\"desc\":\"" + $('#queryParaListBody input[name="queryParaDesc"]')[i].value + "\","
+                            + "\"val\":\"" + $('#queryParaListBody input[name="queryParaVal"]')[i].value;
+                            
+                        r += "\"},";
+                        queryParaList += r;
+                    }
+
+                }
+                if(queryParaList.length>1){
+                    queryParaList = queryParaList.substring(0, queryParaList.length - 1);                    
+                }
+                queryParaList += ']';
+                console.log(queryParaList);
+
+                //封装headerParaList
+                var headerParaList = '[',
+                pRow = $('#headerParaListBody .queryParaRow');
+
+                for (var i = 0; i < pRow.length; i++) {
+                    if($('#headerParaListBody input[name="queryParaName"]')[i].value!==""){
+                        var r = '{';
+                        r +=  "\"name\":\"" + $('#headerParaListBody input[name="queryParaName"]')[i].value + "\","
+                            + "\"desc\":\"" + $('#headerParaListBody input[name="queryParaDesc"]')[i].value + "\","
+                            + "\"val\":\"" + $('#headerParaListBody input[name="queryParaVal"]')[i].value;
+                            
+                        r += "\"},";
+                        headerParaList += r;
+                    }
+
+                }
+                if(headerParaList.length>1){
+                    headerParaList = headerParaList.substring(0, headerParaList.length - 1);                    
+                }
+                headerParaList += ']';
+                console.log(headerParaList);
+
+
+                $.ajax({
+                    url: 'http://10.108.221.75:8080/ATFCloud2.0/interfaceController/update',
+                    type: 'post',
+                    data: {
+                        "id":1,
+                        // "id": sessionStorage.getItem("transactId"),
+                        "systemId": sessionStorage.getItem("autId"),
+                        "name": $('#intNameInput').val(),
+                        "groupName": null,
+                        "protocol": $('#intProtocolSelect').val(),
+                        "urlPath": $('#intUrlPathInput').val(),
+                        "status": $('#intStatusSelect').val(),
+                        "description": $('#intDescTextArea').val(),
+                        "version": $('#intVersionInput').val(),
+                        // "creatorName": $('#intCreatorNameInput').val(),
+                        "createTime": $('#intCreateTimeInput').val(),
+                        // "maintainerId": $('#intMaintainerNameInput').val(),
+                        "method": $('#intMethodSelect').val(),
+                        "query": queryParaList,
+                        // "query": [{"name":"id","desc":"","val":""}],
+                        "header": headerParaList,
+                        "creatorId": 2
+
+                    },
+                    success: function(data) {
+                        $('#successModal').modal();
+                        getInterfacesInfo();
+            
+                    },
+                    error: function() {
+                        $('#failModal').modal();
+                    }
+
+                });
+            }
+
+           
+
         },
 
         queryParaListSave: function() {
@@ -218,6 +351,147 @@ var interfacesManagement = Vue.extend({
 
     } 
 });
+
+function getInterfacesInfo() {
+    $.ajax({
+        // url: address + 'interfaceController/selectById',
+        url: 'http://10.108.223.23:8080/ATFCloud2.0/interfaceController/selectById',
+        type: 'post',
+        data: {
+            id: 1
+            // id: sessionStorage.getItem("transactId")
+        },
+        success: function(data) {
+            var interfaceInfo = data.interfaceInfo;
+            $('#intNameInput').val(interfaceInfo.name);
+            $('#intCreatorNameInput').val('接口缺少该字段');
+            $('#intCreateTimeInput').val(interfaceInfo.createTime);
+            $('#intVersionInput').val(interfaceInfo.version);
+            $('#intMaintainerNameInput').val('接口缺少该字段');
+            $('#intModifyTimeInput').val(interfaceInfo.modifyTime);
+            $('#intStatusSelect').val(interfaceInfo.status).attr('selected',true);
+            $('#intProtocolSelect').val(interfaceInfo.protocol).attr('selected',true);
+            $('#intMethodSelect').val(interfaceInfo.method).attr('selected',true);
+            $('#intUrlPathInput').val(interfaceInfo.urlPath);
+            $('#intDescTextArea').val(interfaceInfo.description);
+            
+            //query列表封装
+            var queryParaList = interfaceInfo.query;
+            $('#queryParaListBody').children().remove();
+
+            var queryParaTr = `
+            <div class="form-group queryParaRow">
+                <div class="col-xs-1">
+            
+                </div>
+                <div class="col-xs-2">
+                    <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
+                </div>
+                <div class="col-xs-2">
+                    <input class="form-control" type="text" name="queryParaVal" placeholder="请填写value">
+                </div>
+                <div class="col-xs-4">
+                    <input class="form-control" type="text" name="queryParaDesc" placeholder="请填写备注">
+                </div>
+            </div>`;
+
+            var deleteButtonTr = `
+            <div class="col-xs-0">
+                <button class="btn" type="button" onclick="queryParaRowDelete(event)" style="color:red;background:transparent">
+                    <i class="icon-remove"></i>
+                </button>
+            </div>`;
+
+            if(queryParaList===null){
+                $('#queryParaListBody').append(queryParaTr);                               
+            }
+            else{
+                for (let i = 0; i < queryParaList.length; i++) {
+        
+                    $('#queryParaListBody').append(queryParaTr);
+                    $('#queryParaListBody input[name=queryParaName]').last().val(queryParaList[i].name);                 
+                    $('#queryParaListBody input[name=queryParaVal]').last().val(queryParaList[i].val);
+                    $('#queryParaListBody input[name=queryParaDesc]').last().val(queryParaList[i].desc);
+                    $('.queryParaRow').last().append(deleteButtonTr);                 
+                }
+                $('#queryParaListBody').append(queryParaTr);                               
+            }
+ 
+
+            $('input[name="queryParaName"]').last().change(queryParaAdd);
+
+
+            //header列表封装
+            var headerParaList = interfaceInfo.header;
+            $('#headerParaListBody').children().remove();
+
+            var headerParaTr = `
+            <div class="form-group headerParaRow">
+                <div class="col-xs-1">
+            
+                </div>
+                <div class="col-xs-2">
+                    <input class="form-control" type="text" name="headerParaName" placeholder="请填写参数名称">   
+                </div>
+                <div class="col-xs-2">
+                    <input class="form-control" type="text" name="headerParaVal" placeholder="请填写value">
+                </div>
+                <div class="col-xs-4">
+                    <input class="form-control" type="text" name="headerParaDesc" placeholder="请填写备注">
+                </div>
+            </div>`;
+
+            var deleteButtonTr = `
+            <div class="col-xs-0">
+                <button class="btn" type="button" onclick="headerParaRowDelete(event)" style="color:red;background:transparent">
+                    <i class="icon-remove"></i>
+                </button>
+            </div>`;
+
+            if(headerParaList===null){
+                $('#headerParaListBody').append(headerParaTr);                      
+            }
+            else{
+                for (let i = 0; i < headerParaList.length; i++) {
+        
+                    $('#headerParaListBody').append(headerParaTr);
+                    $('#headerParaListBody input[name=headerParaName]').last().val(headerParaList[i].name);                 
+                    $('#headerParaListBody input[name=headerParaVal]').last().val(headerParaList[i].val);
+                    $('#headerParaListBody input[name=headerParaDesc]').last().val(headerParaList[i].desc);
+                    $('.headerParaRow').last().append(deleteButtonTr);                 
+                }
+
+                $('#headerParaListBody').append(headerParaTr);  
+            }
+    
+            $('input[name="headerParaName"]').last().change(headerParaAdd);
+
+            // "id": 1,
+            // "systemId": 2,
+            // "groupName": "用户管理",
+            // "name": "添加用户",
+            // "protocol": null,
+            // "urlPath": "/userController/insert",
+            // "status": null,
+            // "description": "",
+            // "version": "",
+            // "creatorId": 2,
+            // "maintainerId": null,
+            // "createTime": "2017-11-30 21:26:54",
+            // "modifyTime": "2017-12-01 19:52:59",
+            // "method": null,
+            // "authType": null,
+            // "authContent": "",
+            // "query": "",
+            // "header": "",
+            // "bodyFormat": null,
+            // "rawFormat": null,
+            // "dataDictList": "",
+            // "bodyContent": "",
+            // "preRequestScript": ""
+        } 
+    });
+}
 
 function queryParaAdd() {
     $('input[name="queryParaName"]').last().unbind('change',queryParaAdd);    
@@ -235,17 +509,14 @@ function queryParaAdd() {
                     <div class="col-xs-1">
                 
                     </div>
-                    <div class="col-xs-3">
-                        <div class="input-group">
-                            <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
-                            <span class="input-group-addon">
-                                <input type="checkbox" aria-label="query参数名称">
-                                必输参数
-                            </span>                         
-                        </div>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">      
                     </div>
-                    <div class="col-xs-5">
-                        <input class="form-control" type="text" name="queryParaDec" placeholder="请填写备注">
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" name="queryParaVal" placeholder="请填写value">
+                    </div>
+                    <div class="col-xs-4">
+                        <input class="form-control" type="text" name="queryParaDesc" placeholder="请填写备注">
                     </div>
                 </div>`;
     $('#queryParaListBody').append(queryParaTr);
@@ -279,7 +550,7 @@ function headerParaAdd() {
                         <input class="form-control" type="text" name="headerParaVal" placeholder="请填写value">
                     </div>
                     <div class="col-xs-4">
-                        <input class="form-control" type="text" name="headerParaDec" placeholder="请填写备注">
+                        <input class="form-control" type="text" name="headerParaDesc" placeholder="请填写备注">
                     </div>
                 </div>`;
     $('#headerParaListBody').append(headerParaTr);

@@ -50,7 +50,7 @@ var template_ele = `
                         <div class="col-xs-12">
                             <a class="btn btn-info btn-sm" data-toggle="modal" href="#addUIModal">添加UI</a>
                             <a class="btn btn-info btn-sm" @click="delUI">删除UI</a>
-                            <a class="btn btn-info btn-sm" data-toggle="modal" href="#addElementModal">添加元素</a>
+                            <a class="btn btn-info btn-sm" @click="addElementsingle">添加元素</a>
                             <a class="btn btn-info btn-sm" @click="delElement">删除元素</a>
                         </div>
                     </div>
@@ -62,8 +62,8 @@ var template_ele = `
             <section class="panel" id="UI">
                 <div class="elementContent">
                     <header class="panel-heading" v-if="topSelect">
-                        {{UIName}}
-                    </header>
+                    {{UIName}}
+                </header>
                     <form class="form-horizontal panel-pad" id="UIForm">
                         <div class="form-group">
                             <label class="col-xs-2 control-label">UI名称：</label>
@@ -368,8 +368,9 @@ var template_ele = `
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title">添加元素</h4>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" >
                             <!-- modal-body start -->
+                            
                             <section class="panel">
                                 <form id="addElementForm" class="form-horizontal" role="form">
                                     <div class="form-group">
@@ -378,14 +379,29 @@ var template_ele = `
                                             <input type="text" class="form-control" name="ElementName" id="addElementName">
                                         </div>
                                     </div>
-                                    <div class="form-group hidden">
-                                        <label class="col-xs-3 control-label">ClassType</label>
+                                    <div class="form-group ">
+                                        <label class="col-xs-3 control-label">控件类型</label>
+                                        <div class="col-xs-5"> 
+                                              <select class="form-control" name="ClassType" id="addEleClassType">
+						                                    <option value="">--选择控件类型--</option>
+						                                    <option v-for="item in classtypeList" :value="item.className">{{item.className}}</option>
+                                							</select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label class="col-xs-3 control-label">主属性名</label>
                                         <div class="col-xs-5">
-                                            <input type="text" class="form-control" name="ClassType" id="addEleClassType">
+                                            <input type="text" class="form-control" name="ClassType" id="addElemainattributename">
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label class="col-xs-3 control-label">主属性值</label>
+                                        <div class="col-xs-5">
+                                            <input type="text" class="form-control" name="ClassType" id="addElemainattributeid">
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label class="col-xs-3 control-label"> relateIdentifyObjectId</label>
+                                        <label class="col-xs-3 control-label">relateIdentifyObjectId</label>
                                         <div class="col-xs-5">
                                             <input type="text" class="form-control" name=" relateIdentifyObjectId" id="addEleRelateIdentifyObjectId">
                                         </div>
@@ -398,16 +414,72 @@ var template_ele = `
                                     </div>
                                 </form>
                             </section>
+                           
                             <!-- modal-body end -->
                         </div>
                         <div class="modal-footer">
-                            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElement">添加</button>
+                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementbatch" style="float:left">批量添加</button>
+                            <button  data-dismiss="modal"  class="btn btn-default"    type="button">取消</button>
+                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementinsingle">添加</button>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- addElementModal end -->
+            <!-- addElementModalbatch start -->
+            <div class="modal fade" id="addElementModalbatch" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">批量添加元素</h4>
+                        </div>
+                        <div class="modal-body" >
+                            <!-- modal-body start -->
+                            <div class="property">
+                            元素
+                            <a class="btn btn-white btn-sm pull-right" @click="addeleProp($event)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                        </div>
+                        <div class="property">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%"></th>
+                                        <th>元素名</th>
+                                        <th>元素类别</th>
+                                        <th>主属性名</th>
+                                        <th>主属性值</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ElementTbody">
+                                    <tr  >
+                                    	  <td>  <input type="checkbox" name="chk_list" /> </td>
+                                        
+                                        <td contenteditable="true"> </td>
+                                        <td  style="width:125px;"  > 
+                                        			<select class="form-control " style="width:125px;" name="ClassType" id="addEleClassType">
+						                                    <option value="">--选择类型--</option>
+						                                    <option v-for="item in classtypeList" :value="item.className">{{item.className}}</option>
+                                							</select>
+                                				</td>
+                                        <td contenteditable="true"> </td>
+                                         <td contenteditable="true"> </td>
+                                    </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                            <!-- modal-body end -->
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementsingle" style="float:left">单个添加</button>	 
+                            <button  data-dismiss="modal"  class="btn btn-default"  data-toggle="modal" href="#addUIModal type="button">取消</button>
+                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementinbatch">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- addElementModalbatch end -->
         </div>
     </div>
     <!-- <link rel="import" href="./common/copy-right.html?__inline"> -->
@@ -505,6 +577,7 @@ var elementLibrary = Vue.extend({
         UIName: '',
         eleName: '',
         propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
+        elepropTr: '<tr  ><td>  <input type="checkbox" name="chk_list" /> </td> <td contenteditable="true"> </td><td  style="width:125px;"  ><select class="form-control " style="width:125px;" name="ClassType" id="addEleClassType"> <option value="">--选择类型--</option> <option v-for="item in classtypeList" :value="item.className">{{item.className}}</option></select></td> <td contenteditable="true"> </td> <td contenteditable="true"> </td></tr>',
         UILinked: '',
         eleParent: '',
         eleLinked: '',
@@ -936,7 +1009,7 @@ var elementLibrary = Vue.extend({
                 }
             });
         },
-        addElement: function() {
+        addElementinsingle: function() {
             var _this = this;
             var transid = !this.componentMode ?  _this.transactId : _this.transid;
             var ElementName = $("#addElementName").val(),
@@ -970,6 +1043,51 @@ var elementLibrary = Vue.extend({
                     $('#failModalEle').modal();
                 }
             });
+        },
+          addElementinbatch: function() {
+            var _this = this;
+            var transid = !this.componentMode ?  _this.transactId : _this.transid;
+            var ElementName = $("#addElementName").val(),
+                ClassType = $("#classtypeSelect").val(),
+                relateIdentifyObjectId = $("#addEleRelateIdentifyObjectId").val(),
+                relateParentIdentifyObjectId = $("#addEleRelateParentIdentifyObjectId").val(),
+                treeObj = $.fn.zTree.getZTreeObj("elementtree"),
+                nodes = treeObj.getSelectedNodes(),
+                selectedUIName = nodes[0].name;
+            $.ajax({
+                url: address + 'elementlibraryController/insertElement',
+                type: 'post',
+                data: {
+                    "transid": transid,
+                    "UIName": selectedUIName,
+                    "ElementName": ElementName,
+                    "ClassType": ClassType,
+                    "relateIdentifyObjectId": relateIdentifyObjectId,
+                    "relateParentIdentifyObjectId": relateParentIdentifyObjectId
+                },
+                success: function(data) {
+                    console.info(data);
+                    if (data.success) {
+                        $('#successModalEle').modal();
+                        _this.getElementTree();
+                    } else {
+                        $('#failModalEle').modal();
+                    }
+                },
+                error: function() {
+                    $('#failModalEle').modal();
+                }
+            });
+        },
+        addElementbatch : function() {
+            
+           $('#addElementModalbatch').modal();
+                    
+        },
+        addElementsingle : function() {
+            
+           $('#addElementModal').modal();
+                    
         },
         delElement: function() {
             var _this = this;
@@ -1043,6 +1161,18 @@ var elementLibrary = Vue.extend({
                 mainTd = $(this).children();
                 mainName.push(mainTd.eq(1).html()); //主属性名称
                 mainVal.push(mainTd.eq(2).html()); //主属性值
+            });
+            var ElementTd,
+                ElementTdName = [],
+                ElementTdType = [],
+                ElementTdmaname = [],
+                ElementTdmavalue = [];
+            $('#ElementTbody').find('tr').each(function() {
+                ElementTd = $(this).children();
+                ElementTdName.push(ElementTd.eq(1).html()); //主属性名称
+                ElementTdType.push(ElementTd.eq(2).html()); //主属性值
+                ElementTdmaname.push(ElementTd.eq(3).html()); //主属性值
+                ElementTdmavalue.push(ElementTd.eq(4).html()); //主属性值
             });
             //附加属性
             var addiTd,
@@ -1128,21 +1258,54 @@ var elementLibrary = Vue.extend({
             });
         },
         addProp: function(e) {
-            var curTbody = $(e.target).parent().next().find('tbody');
+           var curTbody; 
+        	if($(e.target).context.className=="icon-plus")
+            curTbody = $(e.target).parent().parent().next().find('tbody');
+          else 
+          	curTbody = $(e.target).parent().next().find('tbody');
+          	
+            
+            
             curTbody.children().filter('.text-center').remove();
             curTbody.append(this.propTr);
         },
+        addeleProp: function(e) {
+        	var curTbody;
+        	if($(e.target).context.className=="icon-plus")
+            curTbody = $(e.target).parent().parent().next().find('tbody');
+          else 
+          	curTbody = $(e.target).parent().next().find('tbody');
+          
+            curTbody.children().filter('.text-center').remove(); 
+            curTbody.append(this.elepropTr);
+          
+        },
         delProp: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
-            selectedTr.remove();
+           var selectedTr;
+        
+           if($(e.target).context.className=="icon-minus")
+			     		selectedTr = $(e.target).parent().parent().next().find('input[name="chk_list"]:checked').parent().parent();
+			     else 
+			     		selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
+			     selectedTr.remove();
         },
         addLinked: function(e) {
-            var curTbody = $(e.target).parent().next().find('tbody');
+          var curTbody;
+         
+        	if($(e.target).context.className=="icon-plus")
+            curTbody = $(e.target).parent().parent().next().find('tbody');
+          else 
+          	curTbody = $(e.target).parent().next().find('tbody');
             curTbody.children().filter('.text-center').remove();
             curTbody.append(this.linkedTr);
         },
         delLinked: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
+        	 var selectedTr ;
+        	if($(e.target).context.className=="icon-'minus")
+              selectedTr = $(e.target).parent().parent().next().find('input[name="chk_list"]:checked').parent().parent();
+          else 
+            	selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
+         
             selectedTr.remove();
         },
         //获取关联元素属性
