@@ -513,7 +513,7 @@
                                                 <label class="col-lg-2 control-label">执行者</label>
                                                 <div class="col-lg-4">
                                                     <select class="form-control" name="executor">
-                                                        <option>-- 请选择执行者 --</option>
+                                                        <option value="">-- 请选择执行者 --</option>
                                                         <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
                                                     </select>
                                                 </div>
@@ -548,9 +548,10 @@
                                                 <label class="col-lg-2 control-label">执行方式</label>
                                                 <div class="col-lg-3">
                                                     <select size="1" aria-controls="" class="form-control" name="executemethord">
-                                                        <option value="1">自动化</option>
-                                                        <option value="0">手工</option>
-                                                        <option value="2">配合</option>
+                                                        <option value="">--请选择--</option>
+                                                        <option value="1">手工</option>
+                                                        <option value="2">自动化</option>
+                                                        <option value="3">配合</option>
                                                     </select>
                                                 </div>
                                             </div>
