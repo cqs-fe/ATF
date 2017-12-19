@@ -528,7 +528,8 @@ $(document).ready(function() {
                     var type = 1; // record the type  --  1: normal  2: canshuhua biaozhu
                     for (var paramRow of paramTrs) {
                         var paramName = paramRow.querySelector('.param-name');
-                        if (paramName.innerHTML == '参数化标注') {
+                        // console.log(paramName.innerHTML)
+                        if (paramName.innerHTML.includes('参数化标注')) {
                             type = 2;
                         }
                         var paramTr = paramRow.querySelector('.param-value');
@@ -548,7 +549,7 @@ $(document).ready(function() {
                     } else {
                         string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
                     }
-                    sendDataArray.push(string)
+                    sendDataArray.push(string);
                 }
                 return sendDataArray.join('');
             },
