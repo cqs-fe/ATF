@@ -133,14 +133,16 @@ $(document).ready(function(){
                 data: data,
                 success: function(data, textStatus){
                     if(data.success === true){
-                        $("#successModal").modal("show");
+                        Vac.alert('添加成功！')
                         $("#addModal").modal("hide");
                         updateTableAndPagination(currentPage); 
                     }else{
-                        $("#failModal").modal("show");
+                        Vac.alert('添加失败！')
                     }
+                },
+                error: function() {
+                    Vac.alert('添加失败！')
                 }
-
             });
         });
     })();
@@ -158,12 +160,15 @@ $(document).ready(function(){
                 data: data,
                 success: function(data, textStatus){
                     if(data.success === true){
-                        $("#successModal").modal("show");
+                        Vac.alert('修改成功！')
                         $("#alterModal").modal("hide");
                         updateTableAndPagination(currentPage); 
                     }else{
-                        $("#failModal").modal("show");
+                        Vac.alert('修改失败！')
                     }
+                },
+                error: function() {
+                    Vac.alert('修改失败！')
                 }
 
             });
