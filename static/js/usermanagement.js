@@ -111,8 +111,8 @@ $(document).ready(function() {
         $(".glyphicon").removeClass("show").addClass("hidden");
         $("#alter-password").val("")
         $("#alter-confirmpassword").val("");
-        $("#alter-feedback-password").attr({ "class": "glyphicon hidden", style: "color: #b94a48" });
-        $("#alter-feedback-confirmpassword").attr({ "class": "glyphicon hidden", style: "color: #b94a48" });
+        $("#alter-feedback-password").attr({ "class": "col-sm-1 glyphicon hidden", style: "color: #b94a48" });
+        $("#alter-feedback-confirmpassword").attr({ "class": "col-sm-1 glyphicon hidden", style: "color: #b94a48" });
         $("#btn-alter").prop("disabled", true);
         $("#input-detecting").show();
         $("#input-detecting").text("输入信息不完整");
@@ -282,12 +282,12 @@ $(document).ready(function() {
         $('#telephone').val('');
         $('#email').val('');
         $('#confirm').val('');
-        $("#add-feedback-username").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
-        $("#add-feedback-name").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
-        $("#add-feedback-password").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
-        $("#add-feedback-confirmpassword").attr({ "class": "col-lg-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
-        $("#add-feedback-role").attr({ "class": "col-lg-1 glyphicon hidden", style: "color: #b94a48" });
-        $("#add-feedback-status").attr({ "class": "col-lg-1 glyphicon hidden ", style: "color: #b94a48" });
+        $("#add-feedback-username").attr({ "class": "col-sm-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-name").attr({ "class": "col-sm-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-password").attr({ "class": "col-sm-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-confirmpassword").attr({ "class": "col-sm-1 glyphicon glyphicon-remove ", style: "color: #b94a48" });
+        $("#add-feedback-role").attr({ "class": "col-sm-1 glyphicon hidden", style: "color: #b94a48" });
+        $("#add-feedback-status").attr({ "class": "col-sm-1 glyphicon hidden ", style: "color: #b94a48" });
         $("#btn-add").prop("disabled", true);
         $("#add-input-detecting").show();
         // $("#add-input-detecting").text("输入信息不完整");
@@ -521,12 +521,11 @@ var addModalVue = new Vue({
     },
     ready: function() {
         this.formValidation = new Vac.formValidation()
-        console.log('he')
         this.formValidation.setValidation('username', 'add-icon-username', 'add-tip-username', { required: {message: '用户名不能为空'} })
     },
     methods: {
         addUser: function() {
-            console.log(this.formValidation.validAll())
+            // console.log(this.formValidation.validAll())
         }
     }
 })
