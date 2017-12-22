@@ -156,7 +156,7 @@ var app = new Vue({
             $('#updateForm input[name="transactid"]').val(selectedId);
             $('#updateForm input[name="transactcode"]').val(selectedInput.parent().next().html());
             $('#updateForm input[name="transactname"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().next().html());
         },
         //传递当前页选中的测试系统id和功能点id到元素库页面
         toElementLib: function() {
