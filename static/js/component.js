@@ -7,11 +7,6 @@ var app = new Vue({
         methodName: '方法',
         classPropTr: '<tr><td><input type="radio" name="class"/></td><td ></td><td ></td></tr>',
         methodPropTr: '<tr><td><input type="radio" name="method"/></td><td ></td><td ></td></tr>',
-        supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td></tr>',    
-        runtimeArgsParaTr: '<tr><td><input type="checkbox" name="runtimeArgs_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
-        selfRecParaTr: '<tr><td><input type="checkbox" name="selfRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
-        assistRecParaTr: '<tr><td><input type="checkbox" name="assistRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
-        
         methodParaTr: '<tr><td><input type="checkbox" name="methodPara_check"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         autId: '',
         autName: '被测系统名称',
@@ -147,13 +142,12 @@ var app = new Vue({
 
         },
         //添加参数
-        addPara: function(e) {
-            var curTbody = $(e.target).parent().next().find('tbody');
-            curTbody.append(this.paraTr);
+        addPara: function() {
+            $('#methodPara').append(this.methodParaTr);
         },
         //删除参数
-        delPara: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent();
+        delPara: function() {
+            var selectedTr = $('input[name="methodPara_check"]:checked').parent().parent();
             selectedTr.remove();
         },
         //修改控件类型
@@ -206,9 +200,10 @@ var app = new Vue({
                 r += "},";
                 paraList += r;
             }
-            paraList = paraList.substring(0, paraList.length - 1);
+            if(paraList.length>1){
+                paraList = paraList.substring(0, paraList.length - 1);                
+            }
             paraList += ']';
-            console.log(paraList)
             $.ajax({
                 url: address + 'ommethodController/update',
                 type: 'post',
@@ -232,6 +227,8 @@ var app = new Vue({
                 success: function(data) {
                     if (data.success) {
                         $('#successModal').modal();
+                        $('#methodProp input[name="method"]').parent().next().text(methodname);
+                        $('#methodProp input[name="method"]').parent().next().next().text(methoddescription);
                     } else {
                         $('#failModal').modal();
                     }
@@ -335,6 +332,7 @@ function methodClick(event) {
                 methodid: app.methodId,
             },
             success: function(data) {
+                $('#methodPara').children().remove();
                 var method = data.obj;
                 $('#methodForm input[name="name"]').val(method.mname);
                 $('#methodForm input[name="description"]').val(method.mdesc);
@@ -342,7 +340,6 @@ function methodClick(event) {
                 $('#methodForm input[name="maintainTime"]').val(method.maintainTime);
                 $('#methodForm textarea[name="executecode"]').val(method.executecode);
                 app.paraList = method.argumentslist;
-                console.log(app.paraList);
             }
         });
     }

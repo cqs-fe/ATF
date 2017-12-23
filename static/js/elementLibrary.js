@@ -1274,7 +1274,7 @@ var elementLibrary = Vue.extend({
             var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
             treeObj.cancelSelectedNode();
             $('#UILinkedInput').val('');
-            $('#successModalEle').modal();
+            // $('#successModalEle').modal();
         },
         /*UILinked objecttree end*/
         // 页面初始化获取对象库
@@ -1309,7 +1309,7 @@ var elementLibrary = Vue.extend({
             var treeObj = $.fn.zTree.getZTreeObj("eleParentTree");
             treeObj.cancelSelectedNode();
             $('#eleParentInput').val('');
-            $('#successModalEle').modal();
+            // $('#successModalEle').modal();
         },
         /*eleParent objecttree end*/
         // 页面初始化获取对象库

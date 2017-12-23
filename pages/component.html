@@ -142,8 +142,8 @@
                                     </div>
                                      <div class="property">
                                         参数列表
-                                        <a class="btn btn-white btn-sm pull-right" @click="addPara($event)"><i class="icon-plus"></i></a>
-                                        <a class="btn btn-white btn-sm pull-right" @click="delPara($event)"><i class="icon-minus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="addPara()"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delPara()"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
                                         <table class="table table-bordered" id="pTable">
@@ -159,7 +159,7 @@
                                             <tbody id="methodPara">
                                                 <tr v-for="item in paraList">
                                                     <td>
-                                                        <input type="checkbox" name="chk_list" />
+                                                        <input type="checkbox" name="methodPara_check" />
                                                     </td>
                                                     <td contenteditable="true">{{item.name}}</td>
                                                     <td contenteditable="true">{{item.type}}</td>
