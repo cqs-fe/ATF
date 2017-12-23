@@ -25,7 +25,7 @@ var app = new Vue({
         getAutId() {
             this.autId = sessionStorage.getItem("autId");
         },
-        //添加控件类型
+        //添加控件类
         addClass: function() {
             var classname = $('#addClassForm input[name="classname"]').val(),
                 descname = $('#addClassForm input[name="descname"]').val();
