@@ -227,8 +227,8 @@ var app = new Vue({
                 success: function(data) {
                     if (data.success) {
                         $('#successModal').modal();
-                        getClass();
-                        $('#methodProp').children().remove();
+                        $('#methodProp input[name="method"]').parent().next().text(methodname);
+                        $('#methodProp input[name="method"]').parent().next().next().text(methoddescription);
                     } else {
                         $('#failModal').modal();
                     }

@@ -239,7 +239,7 @@
                                 <tbody id="caseTable">
                                     <tr class="odd gradeX" v-for="transact in transactList" id="{{transact.id}}">
                                         <td>
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{transact.id}}" />
+                                            <input type="radio" v-model="" name="chk_list" id="{{transact.id}}" />
                                         </td>
                                         <td class="center hidden-phone">{{ transact.transcode }}</td>
                                         <td>{{ transact.transname }}</td>

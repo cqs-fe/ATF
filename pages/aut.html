@@ -261,7 +261,7 @@
                                 <thead>
                                     <tr>
                                         <th style="width:8px;">
-                                            <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
+                                            <!-- <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" /> -->
                                         </th>
                                         <th class="hidden-phone text-center" data-order="id" data-sort="asc" onclick="resort(this)">编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center">名称</th>
@@ -272,7 +272,7 @@
                                 <tbody id="autTable">
                                     <tr class="odd gradeX" v-for="aut in autList" id="{{aut.id}}">
                                         <td>
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{aut.id}}" />
+                                            <input type="radio" v-model="" name="chk_list" id="{{aut.id}}" />
                                         </td>
                                         <td class="center hidden-phone" width="20%">{{ aut.autCode }}</td>
                                         <td width="20%">{{ aut.autName }}</td>
