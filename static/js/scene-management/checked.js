@@ -18,7 +18,8 @@ var checkFunction = {
 	setSelect (event){
 		
 		var _this = this;
-		var target  = event.target;
+		var target  = event.currentTarget;
+		console.log(target)
 		if(target.classList.contains('handle')) {
 			return
 		}
@@ -46,7 +47,8 @@ var checkFunction = {
 		event.preventDefault();
 		var selectedRange = [];
 		// 函数节流
-		var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		// var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		var moveFunction = mouseMoveFunction;
 		target.addEventListener('mousemove', moveFunction, false);
 		target.addEventListener('mouseup', (event) => {
 			// this.isSelect = true;
@@ -60,7 +62,7 @@ var checkFunction = {
 
 
 		function mouseMoveFunction(event){
-			console.log(new Date().getSeconds())
+			// console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}

@@ -199,7 +199,8 @@ var checkFunction = {
 		event.preventDefault();
 		var selectedRange = [];
 		// 函数节流
-		var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
+		var moveFunction = mouseMoveFunction;
+		// var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
 		container.addEventListener('mousemove', moveFunction, false);
 		container.addEventListener('mouseup', (event) => {
 			// this.isSelect = true;
