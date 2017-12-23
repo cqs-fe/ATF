@@ -93,6 +93,7 @@ $(document).ready(function() {
             //功能点
             transactSelect: function() {
                 var val = $('#autSelect').val();
+                var _this = this;
                 // var val = sessionStorage.getItem('autId');
                 // console.log(this.autId);
                 $.ajax({
@@ -109,11 +110,13 @@ $(document).ready(function() {
                             str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                         }
                         $('#transactSelect').html(str);
+                        _this.transId = $('#transactSelect').val();
+                        _this.getScriptTemplate()
                     }
                 });
-                this.transId = $('#transactSelect').val();
+                
             },
-            //设置所属测试系统和所属功能点为上级页面选中的值
+            //  值
             setval: function() {
                 this.autId = sessionStorage.getItem("autId");
                 this.transId = sessionStorage.getItem("transactId");
@@ -205,6 +208,7 @@ $(document).ready(function() {
                             aut_id: _this.autId,
                             script_id: _this.templateList[templateId].id
                         }
+                        editDataVue.operationRows = [];
                         $.ajax({
                             url: address + 'scripttemplateController/showScripttemplateTable',
                             data: data,
