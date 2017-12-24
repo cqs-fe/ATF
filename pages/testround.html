@@ -99,7 +99,7 @@
               <button class="btn btn-info" @click="removeSceneAndCase();">移除场景与用例</button>
             </div>
             <div class="main-content2">
-              <div class="case-list-wrapper list-wrapper">
+              <div class="case-list-wrapper list-wrapper" v-if="testCaseList.length" style="padding:10px 20px 10px 20px">
                 <span class="case-list-title list-title">用例列表</span>
                 <button class="hide-case-list btn btn-info" @click="hideCaseList($event)" @mousedown.stop="1"><span>收起</span>&nbsp;&nbsp;<i class="icon-caret-down"></i></button>
                 <div class="case-list">
@@ -153,11 +153,12 @@
                 </div>
               </div>
               <!-- 场景列表 -->
-              <div class="scene-list-wrapper list-wrapper" v-for="scene in testSceneList">
+              <span class="case-list-title list-title" style="margin:10px 20px -10px 20px;" v-if="testSceneList.length">场景列表</span>
+              <div class="scene-list-wrapper list-wrapper" style="padding:0px 20px 10px 20px" v-for="scene in testSceneList">
                 <div class="checkbox-wrapper" style="display: inline-block;vertical-align: top;padding: 2px 5px;" @mousedown.stop="1">
                   <input type="checkbox" :value="scene.sceneId" class="checkscene" v-model="selectedScenes">
                 </div>
-                <span class="scene-list-title list-title">场景{{scene.sceneId}}</span>
+                <span class="scene-list-title list-title">{{scene.sceneName}}</span>
                 <button class="hide-case-list btn btn-info" @click="hideCaseList($event)" @mousedown.stop="1"><span>收起</span>&nbsp;&nbsp;<i class="icon-caret-down"></i></button>
                 <!-- <div class="case-list"> -->
                   <div class="case-list">

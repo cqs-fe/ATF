@@ -18,11 +18,12 @@ var checkFunction = {
 	setSelect (event){
 		
 		var _this = this;
-		var target  = event.currentTarget;
+		var target  = event.target;
 		console.log(target)
 		if(target.classList.contains('handle')) {
 			return
 		}
+		// if (!target.classList.contains('main-content')) { return false; }
 		let container = document.querySelector('.main-content')
 		var fileNodes = document.querySelectorAll(".case .check-case");
 		var startX = event.offsetX + Vac.getOffsetTo(event.target, container).offsetLeft;
@@ -49,14 +50,13 @@ var checkFunction = {
 		// 函数节流
 		// var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
 		var moveFunction = mouseMoveFunction;
-		target.addEventListener('mousemove', moveFunction, false);
-		target.addEventListener('mouseup', (event) => {
+		container.addEventListener('mousemove', moveFunction, false);
+		container.addEventListener('mouseup', (event) => {
 			// this.isSelect = true;
 			if (selDiv){
 				document.querySelector('.main-content').removeChild(selDiv);
 			}
-
-			target.removeEventListener('mousemove', moveFunction, false);
+			container.removeEventListener('mousemove', moveFunction, false);
 			selDiv = null;
 		}, false);
 
@@ -117,7 +117,7 @@ var checkFunction = {
 		};
 	},
 	setSelectListener (){
-		document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
+		// document.querySelector('.main-content').addEventListener('mousedown',this.setSelect,false);
 	},
 	pushNoRepeat (array, value) {
 		array.includes(value)
