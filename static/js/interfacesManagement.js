@@ -270,7 +270,6 @@ var interfacesManagement = Vue.extend({
                         r += "\"},";
                         queryParaList += r;
                     }
-
                 }
                 if(queryParaList.length>1){
                     queryParaList = queryParaList.substring(0, queryParaList.length - 1);                    
@@ -280,14 +279,14 @@ var interfacesManagement = Vue.extend({
 
                 //封装headerParaList
                 var headerParaList = '[',
-                pRow = $('#headerParaListBody .queryParaRow');
+                pRow = $('#headerParaListBody .headerParaRow');
 
                 for (var i = 0; i < pRow.length; i++) {
-                    if($('#headerParaListBody input[name="queryParaName"]')[i].value!==""){
+                    if($('#headerParaListBody input[name="headerParaName"]')[i].value!==""){
                         var r = '{';
-                        r +=  "\"name\":\"" + $('#headerParaListBody input[name="queryParaName"]')[i].value + "\","
-                            + "\"desc\":\"" + $('#headerParaListBody input[name="queryParaDesc"]')[i].value + "\","
-                            + "\"val\":\"" + $('#headerParaListBody input[name="queryParaVal"]')[i].value;
+                        r +=  "\"name\":\"" + $('#headerParaListBody input[name="headerParaName"]')[i].value + "\","
+                            + "\"desc\":\"" + $('#headerParaListBody input[name="headerParaDesc"]')[i].value + "\","
+                            + "\"val\":\"" + $('#headerParaListBody input[name="headerParaVal"]')[i].value;
                             
                         r += "\"},";
                         headerParaList += r;
@@ -302,7 +301,7 @@ var interfacesManagement = Vue.extend({
 
 
                 $.ajax({
-                    url: 'http://10.108.221.75:8080/ATFCloud2.0/interfaceController/update',
+                    url: 'http://10.108.223.23:8080/ATFCloud2.0/interfaceController/update',
                     type: 'post',
                     data: {
                         "id":1,
@@ -320,7 +319,6 @@ var interfacesManagement = Vue.extend({
                         // "maintainerId": $('#intMaintainerNameInput').val(),
                         "method": $('#intMethodSelect').val(),
                         "query": queryParaList,
-                        // "query": [{"name":"id","desc":"","val":""}],
                         "header": headerParaList,
                         "creatorId": 2
 
@@ -466,29 +464,6 @@ function getInterfacesInfo() {
     
             $('input[name="headerParaName"]').last().change(headerParaAdd);
 
-            // "id": 1,
-            // "systemId": 2,
-            // "groupName": "用户管理",
-            // "name": "添加用户",
-            // "protocol": null,
-            // "urlPath": "/userController/insert",
-            // "status": null,
-            // "description": "",
-            // "version": "",
-            // "creatorId": 2,
-            // "maintainerId": null,
-            // "createTime": "2017-11-30 21:26:54",
-            // "modifyTime": "2017-12-01 19:52:59",
-            // "method": null,
-            // "authType": null,
-            // "authContent": "",
-            // "query": "",
-            // "header": "",
-            // "bodyFormat": null,
-            // "rawFormat": null,
-            // "dataDictList": "",
-            // "bodyContent": "",
-            // "preRequestScript": ""
         } 
     });
 }
