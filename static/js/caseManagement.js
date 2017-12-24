@@ -64,7 +64,7 @@ var app = new Vue({
                 },
                 success: function(data) {
                     // console.info(data);
-                    // console.info(data.o.rows);
+                    console.info(data.o.rows);
                     app.caseList = data.o.rows;
                     app.tt = data.o.total;
                     app.totalPage = Math.ceil(app.tt / listnum);
