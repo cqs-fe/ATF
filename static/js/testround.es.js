@@ -218,45 +218,49 @@ var vBody = new Vue({
 			$('#add-modal').modal("show");
 		},
 		removeSceneAndCase: function() {
-			let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
-			let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
-			let sceneCaseList = new Array();
-			let o = {};
-			for (let sceneCase of this.selectedSceneCases) {
-				let arr = sceneCase.split('-');
-				if (arr.length !== 2) {continue;}
-				o[arr[0]] ? o[arr[0]].push(+arr[1]) : o[arr[0]] = [+arr[1]];
-			}
-			for (let key of Object.keys(o)) {
-				sceneCaseList.push({
-					sceneId: +key, 
-					testcaseList: o[key].length === 0 ? '' : o[key]
-				})
-			}
-			sceneCaseList = JSON.stringify(sceneCaseList);
-			let data = {
-				removeFlag: 1,
-				caselibId: this.caselibId,
-				testPhase: this.testphaseValue,
-				testRound: this.testroundValue,
-				sceneList,
-				testcaseList,
-				sceneCaseList
-			}
-			$.ajax({
-				url: address + 'testexecutioninstanceController/delete',
-				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.success){
-						$('#add-modal').modal('hide');
-						Vac.alert('移除成功')
-						this.getCases()
-					}else {
-						Vac.alert("移除失败")
-					}
+			Vac.confirm('', '', '', '确认要移除场景和用例吗？').then(() => {
+				let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
+				let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
+				let sceneCaseList = new Array();
+				let o = {};
+				for (let sceneCase of this.selectedSceneCases) {
+					let arr = sceneCase.split('-');
+					if (arr.length !== 2) {continue;}
+					o[arr[0]] ? o[arr[0]].push(+arr[1]) : o[arr[0]] = [+arr[1]];
 				}
+				for (let key of Object.keys(o)) {
+					sceneCaseList.push({
+						sceneId: +key, 
+						testcaseList: o[key].length === 0 ? '' : o[key]
+					})
+				}
+				sceneCaseList = JSON.stringify(sceneCaseList);
+				let data = {
+					removeFlag: 1,
+					caselibId: this.caselibId,
+					testPhase: this.testphaseValue,
+					testRound: this.testroundValue,
+					sceneList,
+					testcaseList,
+					sceneCaseList
+				}
+				$.ajax({
+					url: address + 'testexecutioninstanceController/delete',
+					data: data,
+					type: 'post',
+					dataType: 'json',
+					success: function(data, statusText){
+						if(data.success){
+							$('#add-modal').modal('hide');
+							Vac.alert('移除成功')
+							this.getCases()
+						}else {
+							Vac.alert("移除失败")
+						}
+					}
+				});
+			}, () => {
+				
 			});
 		},
 		sendSceneData: function(){

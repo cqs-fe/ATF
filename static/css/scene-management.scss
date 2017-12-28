@@ -181,9 +181,12 @@ $okGreen: #66F60C;
 			overflow: auto;
 			background-color: #fff;
 			font-size: 13px;
+			.top-bar {
+				padding: 10px 20px;
+			}
 			.btn {
-				padding: 3px 6px;
-				font-size: 13px;
+				// padding: 3px 6px;
+				// font-size: 13px;
 			}
 			.route-position {
 				flex: 0 0 auto;

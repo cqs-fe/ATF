@@ -40,6 +40,9 @@
 <script type="text/javascript">
     var Vac = Vac || {};
     Vac.confirm = function(divSelector, okSelector, cancelSelector, confirmString) {
+        divSelector = divSelector || '#vac-confirm';
+        okSelector = okSelector || '.okConfirm';
+        cancelSelector = cancelSelector || '.cancelConfirm';
         var confirmDiv = document.querySelector(divSelector);
         if(confirmString) {
             document.querySelector(divSelector + ' ' + ".modal-message").innerHTML = confirmString;

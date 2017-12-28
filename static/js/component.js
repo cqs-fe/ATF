@@ -15,10 +15,10 @@ var app = new Vue({
     ready: function() {
         this.getAutId();
         getClass();
-        $('.2').addClass('open')
-        $('.2 .arrow').addClass('open')
-        $('.2-ul').css({display: 'block'})
-        $('.2-1').css({color: '#ff6c60'})
+        $('.2').addClass('open');
+        $('.2 .arrow').addClass('open');
+        $('.2-ul').css({display: 'block'});
+        $('.2-0').css({color: '#ff6c60'});
     },
     methods: {
         //获取autid

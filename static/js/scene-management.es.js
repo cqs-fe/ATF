@@ -1,5 +1,4 @@
- // 20170829 更改：
- // 暂时注释了html文件的copy-right 和 js 文件的请从场景管理进入的提示，稍后需要更改回来。
+
   __inline('./scene-management/checked.js')
 var vBody = new Vue({
 	el: '#v-body',
@@ -582,30 +581,36 @@ var vBody = new Vue({
 			this.alertShow = false;
 		},
 		removeCases: function(){
-			console.log(this.selectedCases.toString())
 			var _this = this;
-			var data = {
-				sceneid: this.sceneid,
-				caseidList: '[' + this.selectedCases.toString() + ']'
-			};
-			$.ajax({
-				url: address + 'testexecutioninstanceController/deletetestcaseinscene',
-				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.success === true){
-						Vac.alert("删除成功！");
-						_this.selectedCases = [];
-						_this.getCases()
-					}else {
-						Vac.alert('删除失败！');
+			if (!this.selectedCases.length) {
+				Vac.alert('请选择要移除的用例！');
+				return;}
+			Vac.confirm('', '', '', '确认要移除所选用例吗？').then(() => {
+				var data = {
+					sceneid: _this.sceneid,
+					caseidList: '[' + _this.selectedCases.toString() + ']'
+				};
+				$.ajax({
+					url: address + 'testexecutioninstanceController/deletetestcaseinscene',
+					data: data,
+					type: 'post',
+					dataType: 'json',
+					success: function(data, statusText){
+						if(data.success === true){
+							Vac.alert("删除成功！");
+							_this.selectedCases = [];
+							_this.getCases()
+						}else {
+							Vac.alert('删除失败！');
+						}
+					},
+					error: function(){
+						Vac.alert('移除失败，请重新尝试！')
 					}
-				},
-				error: function(){
-					Vac.alert('移除失败，请重新尝试！')
-				}
+				});
 			});
+			
+
 		},
 		// 执行时间规划
 		getExecuteTime: function(){

@@ -477,19 +477,30 @@ $(document).ready(function() {
                this.operationRows.splice(+index+1, 0, { id: Symbol(), operation: { element: '', ui: '', classType: '' }, functions: [], parameters: [] })
             },
             deleteRow: function(index) {
-                this.setChanged()
-                this.operationRows.splice(index, 1)
+                var pro = Vac.confirm('', '', '', '确认要删除吗？');
+                pro.then(() => {
+                    this.setChanged()
+                    this.operationRows.splice(index, 1)
+                }, () => {});
+                
             },
             // remove the row who is checked when 
             removeRow: function(event) {
-                this.setChanged()
-                var parent = $(event.target).closest('.operation-wrapper')
-                var trs = parent.find("tbody input[type='checkbox']:checked").closest('tr')
 
-                for (var tr of trs) {
-                    this.operationRows.splice(tr.getAttribute('data-index'), 1)
-                }
-                mainVue.scriptIsChanged = true
+                var parent = $(event.target).closest('.operation-wrapper')
+                var trs = parent.find("tbody input[type='checkbox']:checked").closest('tr');
+                if (!trs.length) return;
+                Vac.confirm('', '', '', '确认要删除选中项吗？').then(() => {
+                    var arr = [];
+                    for (var tr of trs) {
+                        arr.push(+tr.getAttribute('data-index'));
+                    }
+                    this.operationRows = this.operationRows.filter((item, index) => {
+                        return !arr.includes(index);
+                    });
+                    mainVue.scriptIsChanged = true;
+                })
+                
             },
             moveUp: function(event) {
                 this.setChanged()
@@ -626,12 +637,14 @@ $(document).ready(function() {
                     dataType: 'json',
                     success: (data, statusText) => {
                         if (data && data.success === true && (data.obj instanceof Array)) {
-                            $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+                            var tree = $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+                            tree.expandAll(true);
                             // var da = [{"id":1,"parentid":0,"name":"ui-chai"},{"id":2,"parentid":1,"name":"ele-chai", "classType": 'webedit'}]
                             // $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, da);
                         }
                     }
-                })
+                });
+                return;
                 // 请求函数集
                 // var autId = $("#autSelect").val();
                 $.ajax({
