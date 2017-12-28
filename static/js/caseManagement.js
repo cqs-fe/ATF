@@ -13,8 +13,9 @@ var app = new Vue({
         useStatus: [], // 案例状态
         missionList: [], //测试任务
         testpoint: '', // 测试点
-        author: '', //编写者
-        executor: '', //执行者
+        currentUserId: sessionStorage.getItem('userId'),//当前登录用户id
+        author: false, //编写者
+        executor: false, //执行者
         testdesign: '', //测试意图
         autid: '', //被测系统
         transid: '', //功能码
@@ -64,7 +65,7 @@ var app = new Vue({
                 },
                 success: function(data) {
                     // console.info(data);
-                    // console.info(data.o.rows);
+                    console.info(data.o.rows);
                     app.caseList = data.o.rows;
                     app.tt = data.o.total;
                     app.totalPage = Math.ceil(app.tt / listnum);
@@ -455,8 +456,8 @@ var app = new Vue({
                     'casecode': app.casecode,
                     'informationtype': 'testcase',
                     'testpoint': app.testpoint,
-                    'author': app.author,
-                    'executor': app.executor,
+                    'author': app.author?app.currentUserId:'',
+                    'executor': app.executor?app.currentUserId:'',
                     'testdesign': app.testdesign,
                     'autid': app.autid,
                     'transid': app.transid,

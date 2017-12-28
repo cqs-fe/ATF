@@ -468,7 +468,7 @@
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                         <h4 class="modal-title">导出</h4>
                                     </div>
-                                    <form role="form" id="exportForm" class="form-horizontal" action="http://10.108.226.152:8080/ATFCloud/TestcaseController/exportexcel" method="post">
+                                    <form role="form" id="exportForm" class="form-horizontal" action="http://10.108.223.23:8080/ATFCloud/TestcaseController/exportexcel" method="post">
                                         <div class="modal-body">
                                             <div class="form-group hidden">
                                                 <label class="col-lg-2 control-label">id列表</label>
@@ -771,9 +771,9 @@
                                                         <td class="filter-checkbox">
                                                             其他：
                                                             <label class="checkbox-inline" for="checkbox-18">
-                                                                <input type="checkbox">我编写的</label>
+                                                                <input type="checkbox" v-model="author">我编写的</label>
                                                             <label class="checkbox-inline" for="checkbox-19">
-                                                                <input type="checkbox">我执行的</label>
+                                                                <input type="checkbox" v-model="executor">我执行的</label>
                                                         </td>
                                                     </tr>
                                                     <tr>

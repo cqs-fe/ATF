@@ -168,7 +168,7 @@ var app = new Vue({
             $('input[name="id"]').val(selectedId);
             $('#updateForm input[name="autCode"]').val(selectedInput.parent().next().html());
             $('#updateForm input[name="autName"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm select[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().id);
+            $('#updateForm select[name="abstractarchitecture_id"]').val(selectedInput.parent().next().next().next().data('id'));
             $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
         },
 

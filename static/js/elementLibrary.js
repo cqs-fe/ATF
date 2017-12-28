@@ -1095,6 +1095,8 @@ var elementLibrary = Vue.extend({
                 relatePropName.push(relatePropNameTd.eq(1).html());
                 relatePropVal.push(relatePropNameTd.eq(2).html());
             });
+            console.log("hehe");
+            console.log(relatePropName.join('.'));
             $.ajax({
                 url: address + 'elementlibraryController/updateElement',
                 type: 'post',
@@ -1127,8 +1129,8 @@ var elementLibrary = Vue.extend({
                     //关联元素
                     "relateElementname": relateName.toString(),
                     //关联元素属性
-                    "relemainpropertiesname": relatePropName.toString(),
-                    "relemainpropertiesvalue": relatePropVal.toString(),
+                    "relemainpropertiesname": relatePropName.join('.'),
+                    "relemainpropertiesvalue": relatePropVal.join('.'),
                 },
                 success: function(data) {
                     console.log(data);

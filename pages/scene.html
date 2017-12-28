@@ -297,7 +297,7 @@
                                 <tbody id="sceneTable">
                                     <tr class="odd gradeX" v-for="scene in sceneList" id="{{scene.id}}">
                                         <td width="5%">
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{scene.id}}" />
+                                            <input type="radio" v-model="" name="chk_list" id="{{scene.id}}" />
                                         </td>
                                         <td class="center hidden-phone" width="20%">{{ scene.scenename }}</td>
                                         <td width="55%">{{ scene.description }}</td>
