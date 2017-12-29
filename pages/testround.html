@@ -119,6 +119,9 @@
                             <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
                             <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
                           </div>
+                          <div class="case-main">
+                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 1)">查看</a>
+                          </div>
                           <footer class="case-footer">
                             <!-- <img :src="exeImgs[0]"> -->
                           </footer>
@@ -139,9 +142,9 @@
                             class="check-case flow-node-incaselib" @change="checkChanged($event)" v-model="checkedFlowNodes">
                             <p :title="item.casecode">{{item.casecode}}</p>
                           </div>
-                          <!-- <div class="case-main">
-                            <p>{{item.flowNodeId}}</p>
-                          </div> -->
+                          <div class="case-main">
+                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 2)">查看</a>
+                          </div>
                           <footer class="case-footer">
                             <!-- <img :src="exeImgs[1]"> -->
                           </footer>
@@ -179,10 +182,10 @@
                               <input type="checkbox" v-bind:value="scene.sceneId+'-'+case_wrapper.caseId" class="check-case check-case-inscene" v-model="selectedSceneCases" @change="checkFlowNode($event)">
                               <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
                             </div>
-                            <!-- <div class="case-main">
-                              <p>这是单案例</p>
-                              <span></span>
-                            </div> -->
+                           
+                            <div class="case-main">
+                              <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 1)">查看</a>
+                            </div>
                             <footer class="case-footer">
                               <!-- <img :src="exeImgs[0]"> -->
                             </footer>
@@ -199,11 +202,12 @@
                             <div class="case-header">
                               <input type="checkbox" v-bind:value="scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId"
                               class="check-case check-case-inscene" @change="checkFlowNode($event)" v-model="selectedSceneCases">
-                              <p :title="item.casecode">{{item.casecode}}</p>
+                              <p :title="item.casecode">{{item.casecode}} </p>
+                              
                             </div>
-                            <!-- <div class="case-main">
-                              <p>{{item.flowNodeId}}</p>
-                            </div> -->
+                            <div class="case-main">
+                              <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 2)">查看</a>
+                            </div>
                             <footer class="case-footer">
                               <!-- <img :src="exeImgs[1]"> -->
                             </footer>

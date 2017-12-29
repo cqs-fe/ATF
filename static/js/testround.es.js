@@ -467,6 +467,9 @@ var vBody = new Vue({
 			}
 			this.setBackground(this.selectedSceneCases)
 		},
+		viewCase: function (caseId, type) {
+			window.open('case-operation.html?activeName=exec-record&caseid='+caseId+'&type='+type, 'case_record');
+		},
 		setBackground: checkFunction.setBackground,
 		checkChanged: checkFunction.checkChanged,
 		checkallToggle: checkFunction.checkallToggle,

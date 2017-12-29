@@ -1,12 +1,44 @@
 var execRecord = Vue.extend({
 	template: '#execution-record',
+	props: ['caseid', 'casecompositetype'],
 	data: function () {
 		return {
 			srcDoc: ''
 		}
 	},
 	ready: function() {
-
+		
+	},
+	watch: {
+		queryData: function(newVal, oldVal) {
+			var me = this;
+			if (newVal.caseId && newVal.caseCompositeType) {
+				$.ajax({
+					url: address + 'TestcaseController/selectTestcaseByCaseId',
+					data: me.queryData,
+					type: 'post',
+					dataType: 'json',
+					success: function(data, statusText) {
+						me.srcDoc = data.HTML;
+						console.log(me.srcDoc);
+					}
+				});
+			}
+		}
+	},
+	computed: {
+		queryData: function() {
+			return {
+				caseId: this.caseid,
+				caseCompositeType: this.casecompositetype
+			}
+		},
+		// caseId: function () {
+		// 	return this.caseid
+		// },
+		// caseCompositeType: function() {
+		// 	return this.casecompositetype
+		// }
 	},
 	methods: {
 		changeSrcDoc: function() {
@@ -25,6 +57,7 @@ var execRecord = Vue.extend({
 					<div id="Guid" style="font-size:14pt;display:none">f4e71b6c-60e3-4161-acf2-fad5007a020e</div>  
 					<div id="ReportVersion" style="font-size:14pt;display:none" value="1.0">null,防止简写格式</div>  
 					<div> 
+						<img src="http://10.108.223.23:8080/ATFCloud/timg.jpg">
 						<label style="color:black;font-family:Arial;font-size: 16pt;border:1px solid green;width:100px;"> 
 							<b>案例标识</b> 
 						</label>  

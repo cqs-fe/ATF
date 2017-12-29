@@ -33,33 +33,33 @@
     <section id="main-content">
       <section class="wrapper">
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation">
-            <a href="#home" aria-controls="home" role="tab" data-toggle="tab">对象库</a>
+          <li role="presentation" :class="{active: activeName=='object-rep'}">
+            <a href="#object-rep" aria-controls="object-rep" role="tab" data-toggle="tab">对象库</a>
           </li>
-          <li role="presentation">
-            <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">元素库</a>
+          <li role="presentation" :class="{active: activeName=='element-library'}">
+            <a href="#element-library" aria-controls="element-library" role="tab" data-toggle="tab">元素库</a>
           </li>
-          <li role="presentation" class="active">
+          <li role="presentation" :class="{active: activeName=='messages'}">
             <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">用例数据</a>
           </li>
-          <li role="presentation">
-            <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">执行记录</a>
+          <li role="presentation" :class="{active: activeName=='exec-record'}">
+            <a href="#exec-record" aria-controls="exec-record" role="tab" data-toggle="tab">执行记录</a>
           </li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-          <div role="tabpanel" class="tab-pane" id="home">
+          <div role="tabpanel" class="tab-pane" :class="{active: activeName=='object-rep'}" id="object-rep">
             <object-repo :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></object-repo>
           </div>
-          <div role="tabpanel" class="tab-pane" id="profile">
+          <div role="tabpanel" class="tab-pane" id="element-library" :class="{active: activeName=='element-library'}">
             <element-library :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></element-library>
           </div>
-          <div role="tabpanel" class="tab-pane active" id="messages">
+          <div role="tabpanel" class="tab-pane" id="messages" :class="{active: activeName=='messages'}">
             <case-data></case-data>
           </div>
-          <div role="tabpanel" class="tab-pane" id="settings">
-              <exec-record></exec-record>
+          <div role="tabpanel" class="tab-pane" id="exec-record" :class="{active: activeName=='exec-record'}">
+              <exec-record :caseid="caseId" :casecompositetype="caseCompositeType"></exec-record>
           </div>
         </div>
 
@@ -171,7 +171,7 @@
               </div>
               <div class="text-center">
                 <button type="button" class="btn btn-default " data-dismiss="modal">取 消</button>
-                <button type="submit" class="btn btn-info ">保 存</button>
+                <button type="submit" class="btn btn-info">保 存</button>
               </div>
             </form>
           </div>
@@ -183,7 +183,7 @@
   
   <script type="text/x-template" id="execution-record">
     <div class="tab-content">
-      <button @click="changeSrcDoc()">click me</button>
+      <!-- <button @click="changeSrcDoc()">click me</button> -->
       <iframe class="record-iframe" frameborder="0" :srcdoc="srcDoc"></iframe>
     </div>
   </script>
@@ -208,8 +208,28 @@
     el: '#app1',
     data: function () {
       return {
-        activeName: 'first'
+        activeName: 'object-repo',
+        caseId: '',
+        caseCompositeType: ''
       }
+    },
+    ready: function() {
+      var queryArgs = location.search.slice(1);
+      var o = {};
+      var arr = queryArgs.split('&');
+      for (let item of arr) {
+        let a = item.split('=');
+        o[a[0]] = a[1];
+      }
+      console.log(o);
+      this.activeName = o.activeName;
+      switch(this.activeName) {
+        case 'exec-record': {
+          this.caseId = o.caseid;
+          this.caseCompositeType = o.type;
+        }
+      }
+      // $('#'+this.activeName).tab('show')
     }
   })
 </script>
