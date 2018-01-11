@@ -1,9 +1,11 @@
 var execRecord = Vue.extend({
 	template: '#execution-record',
-	props: ['caseid', 'casecompositetype'],
+	props: ['recorddata'],
 	data: function () {
 		return {
-			srcDoc: ''
+			address: address.slice(0, -10), // address: 10.108.223.23:8080/ATFCloud
+			srcDoc: '',
+			srcs: []
 		}
 	},
 	ready: function() {
@@ -12,15 +14,15 @@ var execRecord = Vue.extend({
 	watch: {
 		queryData: function(newVal, oldVal) {
 			var me = this;
-			if (newVal.caseId && newVal.caseCompositeType) {
+			if (newVal) {
+				var data = JSON.parse(decodeURIComponent(newVal));
 				$.ajax({
-					url: address + 'TestcaseController/selectTestcaseByCaseId',
-					data: me.queryData,
+					url: address + 'testrecordController/selectWithTestcase',
+					data: data,
 					type: 'post',
 					dataType: 'json',
 					success: function(data, statusText) {
-						me.srcDoc = data.HTML;
-						console.log(me.srcDoc);
+						me.srcs = data.map((item) => item.resourcepath);
 					}
 				});
 			}
@@ -28,17 +30,8 @@ var execRecord = Vue.extend({
 	},
 	computed: {
 		queryData: function() {
-			return {
-				caseId: this.caseid,
-				caseCompositeType: this.casecompositetype
-			}
-		},
-		// caseId: function () {
-		// 	return this.caseid
-		// },
-		// caseCompositeType: function() {
-		// 	return this.casecompositetype
-		// }
+			return this.recorddata;
+		}
 	},
 	methods: {
 		changeSrcDoc: function() {

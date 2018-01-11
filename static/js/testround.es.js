@@ -467,8 +467,25 @@ var vBody = new Vue({
 			}
 			this.setBackground(this.selectedSceneCases)
 		},
-		viewCase: function (caseId, type) {
-			window.open('case-operation.html?activeName=exec-record&caseid='+caseId+'&type='+type, 'case_record');
+		viewCase: function (sceneid, caseid,) {
+			// var o = {
+			// 	sceneid, caseid,
+			// 	testphase: this.testphaseValue,
+			// 	testround: this.testroundValue,
+			// 	executeround: this.executionround,
+			// 	sourcechannel: 'PE5',
+			// 	recorderstate: '2'
+			// }
+			var o = {
+				sceneid: '',
+				testphase: '',
+				testround: '',
+				executeround: '',
+				sourcechannel: 'PE5',
+				recorderstate: ''
+			}
+			var args = encodeURIComponent(JSON.stringify(o));
+			window.open('case-operation.html?activeName=exec-record&viewcaseargs='+args, 'case_record');
 		},
 		setBackground: checkFunction.setBackground,
 		checkChanged: checkFunction.checkChanged,

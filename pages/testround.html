@@ -120,7 +120,7 @@
                             <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
                           </div>
                           <div class="case-main">
-                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 1)">查看</a>
+                            <!-- <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 1)">查看</a> -->
                           </div>
                           <footer class="case-footer">
                             <!-- <img :src="exeImgs[0]"> -->
@@ -143,7 +143,7 @@
                             <p :title="item.casecode">{{item.casecode}}</p>
                           </div>
                           <div class="case-main">
-                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 2)">查看</a>
+                            <!-- <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 2)">查看</a> -->
                           </div>
                           <footer class="case-footer">
                             <!-- <img :src="exeImgs[1]"> -->
@@ -184,7 +184,7 @@
                             </div>
                            
                             <div class="case-main">
-                              <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 1)">查看</a>
+                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 1)">查看</a>
                             </div>
                             <footer class="case-footer">
                               <!-- <img :src="exeImgs[0]"> -->
@@ -206,7 +206,7 @@
                               
                             </div>
                             <div class="case-main">
-                              <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 2)">查看</a>
+                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 2)">查看</a>
                             </div>
                             <footer class="case-footer">
                               <!-- <img :src="exeImgs[1]"> -->
