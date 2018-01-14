@@ -79,7 +79,9 @@ var checkFunction = {
 			input.checked = flag
 			flag === true 
 				? Vac.pushNoRepeat(this.selectedSceneCases, input.value) 
-				: this.selectedSceneCases.splice(this.selectedSceneCases.indexOf(input.value), 1)
+				: this.selectedSceneCases.indexOf(input.value) >= 0 
+					? this.selectedSceneCases.splice(this.selectedSceneCases.indexOf(input.value), 1)
+					: 1
 		}
 		this.setBackground()
 	},
@@ -198,9 +200,7 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		// 函数节流
 		var moveFunction = mouseMoveFunction;
-		// var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
 		container.addEventListener('mousemove', moveFunction, false);
 		container.addEventListener('mouseup', (event) => {
 			// this.isSelect = true;
@@ -241,7 +241,6 @@ var checkFunction = {
 		
 
 		function mouseMoveFunction(event){
-			console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}
@@ -261,8 +260,10 @@ var checkFunction = {
 			var _w = selDiv.offsetWidth, _h = selDiv.offsetHeight;
 			
 			for(var i=0; i < fileNodes.length; i++){
-				var inputRight = fileNodes[i].offsetLeft + fileNodes[i].offsetWidth;
-				var inputBottom = fileNodes[i].offsetTop + fileNodes[i].offsetHeight;
+				// var inputRight = fileNodes[i].offsetLeft + fileNodes[i].offsetWidth;
+				// var inputBottom = fileNodes[i].offsetTop + fileNodes[i].offsetHeight;
+				var inputRight = Vac.getOffsetTo(fileNodes[i], container).offsetLeft + fileNodes[i].offsetWidth;
+				var inputBottom = Vac.getOffsetTo(fileNodes[i], container).offsetTop + fileNodes[i].offsetHeight;
 				if( inputRight > _l && inputBottom > _t && fileNodes[i].offsetLeft < _l + _w && fileNodes[i].offsetTop < _t + _h) {
 					if(!selectedRange.includes(fileNodes[i])){
 						selectedRange.push(fileNodes[i]);
@@ -270,10 +271,12 @@ var checkFunction = {
 				}
 			}
 			for(var i=0; i<selectedRange.length; i++){
-				var inputRight = selectedRange[i].offsetLeft + selectedRange[i].offsetWidth;
-				var inputBottom = selectedRange[i].offsetTop + selectedRange[i].offsetHeight;
+				var inputLeft = Vac.getOffsetTo(selectedRange[i], container).offsetLeft;
+				var inputTop = Vac.getOffsetTo(selectedRange[i], container).offsetTop;
+				var inputRight =  inputLeft + selectedRange[i].offsetWidth;
+				var inputBottom = inputTop + selectedRange[i].offsetHeight;
 				let value = selectedRange[i].value
-				if( inputRight > _l && inputBottom > _t && selectedRange[i].offsetLeft < _l + _w && selectedRange[i].offsetTop < _t + _h) {
+				if( inputRight > _l && inputBottom > _t && inputLeft < _l + _w && inputTop < _t + _h) {
 					if ($(selectedRange[i]).hasClass('single-case-incaselib')) {
 						Vac.pushNoRepeat(_this.selectedCases, +value)
 					} else if($(selectedRange[i]).hasClass('flow-node-incaselib')){

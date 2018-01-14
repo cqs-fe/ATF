@@ -646,7 +646,6 @@ $(document).ready(function() {
                 });
                 return;
                 // 请求函数集
-                // var autId = $("#autSelect").val();
                 $.ajax({
                     url: address + 'autController/selectFunctionSet',
                     data: { 'id': mainVue.autId },

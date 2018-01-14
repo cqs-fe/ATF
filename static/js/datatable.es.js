@@ -270,9 +270,11 @@ $(document).ready(function () {
 						(this.afterOperationRows.splice(+index + 1, 0, s))
 				},
 				deleteRow: function (index, type) {
-					type === 1
-						? (this.beforeOperationRows.splice(index, 1))
-						: (this.afterOperationRows.splice(index, 1))
+					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows)
+					var pro = Vac.confirm('', '', '', '确认要删除吗？');
+					pro.then(() => {
+						operationRows.splice(index, 1)
+					}, () => {});
 				},
 				// 显示UI和元素 、函数集
 				showUiAndElement: function (event, type) {
@@ -400,12 +402,24 @@ $(document).ready(function () {
 				// remove the row who is checked when 
 				removeRow: function (event, type) {
 					var parent = $(event.target).closest('.operation-wrapper')
-					var trs = parent.find("tbody input[type='checkbox']:checked").closest('tr')
-
-					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows)
-					for (var tr of trs) {
-						operationRows.splice(tr.getAttribute('data-index'), 1)
-					}
+					var trs = parent.find("tbody input[type='checkbox']:checked").closest('tr');
+					if (!trs.length) return;
+					Vac.confirm('', '', '', '确认要删除选中项吗？').then(() => {
+						var arr = [];
+						for (var tr of trs) {
+							arr.push(+tr.getAttribute('data-index'));
+						}
+						if (type === 1) {
+							this.beforeOperationRows = this.beforeOperationRows.filter((item, index) => {
+								return !arr.includes(index);
+							});
+						} else {
+							this.afterOperationRows =  this.afterOperationRows.filter((item, index) => {
+								return !arr.includes(index);
+							});
+						}
+						
+					})
 				},
 				moveUp: function (event, type) {
 					console.log('moveUp')
@@ -897,8 +911,12 @@ $(document).ready(function () {
 							type: 'post',
 							dataType: "json",
 							success: function (data, textStatus) {
+								if (!data.success) {
+									Vac.alert(data.msg);
+									return;
+								}
 								_this.checkedItems = []
-								if (data.o.length == 0) {
+								if (!data.o || data.o.length == 0) {
 									Vac.alert('未查询到相关测试点！')
 									return
 								}

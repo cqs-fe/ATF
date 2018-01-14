@@ -1,0 +1,30 @@
+{
+  "ommethod": [],
+  "arcmethod": [
+    {
+      "id": 29,
+      "methodname": "set",
+      "methoddescription": "输入",
+      "arcclassid": 13,
+      "objectcode":
+        "objectcode执行目标代码\nvar element = new element(${{输入值}},${{输入值}});\nelement.set();",
+      "parameterlist":
+        "[{\"name\":\"输入值\",\"valueclass\":\"\",\"parameterizedcolumn\":\"{element}\",\"defaultvalue\":\"1\",\"description\":\"\"},{\"name\":\"输入\",\"valueclass\":\"\",\"parameterizedcolumn\":\"{element}\",\"defaultvalue\":\"1\",\"description\":\"\"}]",
+      "isparameter": "1",
+      "waittime": "5s",
+      "timeout": "10s"
+    },
+    {
+      "id": 30,
+      "methodname": "select",
+      "methoddescription": "下拉框",
+      "arcclassid": 13,
+      "objectcode": "objectcode执行目标代码",
+      "parameterlist":
+        "[{\"name\":\"输入值\",\"valueclass\":\"\",\"parameterizedcolumn\":\"{element}\",\"defaultvalue\":\"\",\"description\":\"\"}]",
+      "isparameter": "1",
+      "waittime": "5s",
+      "timeout": null
+    }
+  ]
+}

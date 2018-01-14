@@ -1,3 +1,8 @@
+/*设置recorderStatus的值：recorderStatus＝１，则查询各执行轮次中未激活的记录单；recorderStatus＝２，
+则查询各执行轮次中激活的记录单；recorderStatus＝９则查询各执行轮次中的所有记录单（不包括删除的）。
+（２）设置executeRound，设置完后则查询指定执行轮次的记录单。recorderStatus与executeRound不能同时设置。
+sourchChannel有个特殊用法，若输入“PE4/PE6”则查询sourchChannel=PE4或PE6的所有记录单。
+*/
 var execRecord = Vue.extend({
 	template: '#execution-record',
 	props: ['recorddata'],
@@ -17,12 +22,26 @@ var execRecord = Vue.extend({
 			if (newVal) {
 				var data = JSON.parse(decodeURIComponent(newVal));
 				$.ajax({
-					url: address + 'testrecordController/selectWithTestcase',
+					url: address + 'testrecordController/selectRecordWithTestcaseId',
 					data: data,
 					type: 'post',
 					dataType: 'json',
 					success: function(data, statusText) {
-						me.srcs = data.map((item) => item.resourcepath);
+						if(!data.obj.length) {
+							Vac.alert("未查询到记录单");
+							return;
+						}
+						for (let item of data.obj) {
+							if (item.resourcepath) {
+								me.srcs.push(item.resourcepath)
+							}
+						}
+						me.srcs = [...new Set(me.srcs)];
+						console.log(me.srcs)
+						// me.srcs = data.obj.map((item) => item.resourcepath);
+					},
+					error: function() {
+						Vac.alert("查询失败");
 					}
 				});
 			}
