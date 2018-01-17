@@ -58,11 +58,11 @@ $(document).ready(function () {
 						},
 						data: {
 							key: {
-								name: "methodname",
+								name: "mname",
 							},
 							simpleData: {
 								enable: true,
-								idKey: 'arcclassid',
+								idKey: 'methodid',
 								pIdKey: 'parentid',
 								rootPId: 0
 							}
@@ -90,11 +90,11 @@ $(document).ready(function () {
 						callback: {},
 						data: {
 							key: {
-								name: "methodname",
+								name: "mname",
 							},
 							simpleData: {
 								enable: true,
-								idKey: 'arcclassid',
+								idKey: 'methodid',
 								pIdKey: 'parentid',
 								rootPId: 0
 							}
@@ -176,19 +176,20 @@ $(document).ready(function () {
 					if(cellData.startsWith('@before')) {
 						// 表达式
 						editDataVue.dataType = 4;
-						var beforeStr = cellData.slice(cellData.indexOf('@before') + 6, cellData.indexOf('@value'));
+						var beforeStr = cellData.slice(cellData.indexOf('@before\n') + 7, cellData.indexOf('@value'));
 						var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
 						// console.log('valueStr-->'+valueStr)
-						var afterStr = cellData.slice(cellData.indexOf('@after') + 5);
+						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
 						// console.log('afterStr-->'+afterStr)
 						// 前置操作
-						var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
-						// console.log('beforeArr-->'+beforeArr)
-						this.parseScript(beforeArr, this.beforeOperationRows)
+						// var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
+						var beforeArr = beforeStr.split(';\n');
+						console.log('beforeArr-->'+beforeArr.length)
+						this.parseScript(beforeArr, this.beforeOperationRows, 1)
 
-						var afterArr = afterStr.includes('UI("') ? afterStr.slice(afterStr.indexOf('UI("')).split(';') : [];
-						// console.log('afterArr-->'+afterArr)
-						this.parseScript(afterArr, this.afterOperationRows);
+						var afterArr = afterStr.split(';\n');
+						console.log('afterArr-->'+afterArr.length)
+						this.parseScript(afterArr, this.afterOperationRows, 2);
 
 						let str = valueStr.split('{expr=')[1]
 						var value = str.slice(0, str.indexOf('}'));
@@ -202,31 +203,51 @@ $(document).ready(function () {
 						editDataVue.dataType = 3;
 					}
 				},
-				parseScript: function(strArray, operationRows) {
+				parseScript: function(strArray, operationRows, type) {
+					var length = type === 1 ? strArray.length - 1 : strArray.length;
 					if(strArray.length) {
-						for (let i = 0; i < strArray.length - 1; i++) {
+						for (let i = 0; i < length; i++) {
 							if(!strArray[i].length) return;
 							// @before\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');\n@value\n{expr= }\n@after\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');
-							var script = strArray[i].split(').');
-							var operation = {};
-							var arr = script[1].split('(');
-							// UI('aa'  --> aa
-							operation.ui = script[0].slice(script[0].indexOf('UI(') + 4, -1);
-							// WebElement('bb' --> WebElement  &  bb
-							operation.classType = arr[0];
-							operation.element = arr[1].slice(1, -1);
-							// click('a','b','c') --> click
-							var functions = [];
-							functions.push({mname: script[2].slice(0, script[2].indexOf('('))});
-							// click('a','b','c') --> 'a','b','c' --> ['a', 'b', 'c'] --> parameters: [{ Name: 'para1', Value: 'a' }]
-							var paraArr = script[2].slice(script[2].indexOf('(')+1, -1).split(',');
-							var parameters = [];
-							for (let j = 0; j < paraArr.length; j++) {
-								var o = {}
-								o.Name = 'para' + (j + 1)
-								o.Value = paraArr[j].slice(1, -1)
-								parameters.push(o)
+							if (strArray[i].includes('UI(')) {
+								var script = strArray[i].split(').');
+								var operation = {};
+								var arr = script[1].split('(');
+								// UI('aa'  --> aa
+								operation.ui = script[0].slice(script[0].indexOf('UI(') + 4, -1);
+								// WebElement('bb' --> WebElement  &  bb
+								operation.classType = arr[0];
+								operation.element = arr[1].slice(1, -1);
+								// click('a','b','c') --> click
+								var functions = [];
+								functions.push({name: script[2].slice(0, script[2].indexOf('(')), parameterlist: ''});
+								// click('a','b','c') --> 'a','b','c' --> ['a', 'b', 'c'] --> parameters: [{ Name: 'para1', Value: 'a' }]
+								var paraArr = script[2].slice(script[2].indexOf('(')+1, -1).split(',');
+								var parameters = [];
+								for (let j = 0; j < paraArr.length; j++) {
+									var o = {}
+									o.Name = 'para' + (j + 1)
+									o.Value = paraArr[j].slice(1, -1)
+									parameters.push(o)
+								}
+							} else {
+								var operation = {};
+								operation.ui = '';
+								operation.classType = '';
+								operation.element = '';
+								var index = strArray[i].indexOf('(');
+								var functions = [{name: strArray[i].slice(0, index), parameterlist: ''}];
+								var paraStr = strArray[i].slice(index + 1, -1);
+								var parameters = [];
+								var paraArr = paraStr.split(',');
+								for (let j = 0; j < paraArr.length; j++) {
+									var o = {}
+									o.Name = 'para' + (j + 1)
+									o.Value = paraArr[j].slice(1, -1)
+									parameters.push(o)
+								}
 							}
+
 							operationRows.push({
 								id: Symbol(),
 								operation,
@@ -234,7 +255,6 @@ $(document).ready(function () {
 								parameters
 							})
 						}
-						console.log(operationRows)
 					}
 				},
 				insert: function (type, title) {
@@ -318,8 +338,10 @@ $(document).ready(function () {
 						type: 'post',
 						dataType: 'json',
 						success: (data, statusText) => {
-							if (data.arcmethod) {
-								$.fn.zTree.init($('#functions-ul' + str), setting.functions, data.arcmethod);
+							if (data.success && data.obj) {
+								$.fn.zTree.init($('#functions-ul' + str), setting.functions, data.obj);
+							} else {
+								// Vac.alert('');
 							}
 						}
 					})
@@ -342,7 +364,7 @@ $(document).ready(function () {
 					} else {
 						this.uiOrFunctions.type = 'function'
 						// 获取节点的全部内容
-						this.uiOrFunctions.function = { ...treeNode, mname: treeNode.methodname }
+						this.uiOrFunctions.function = { name: treeNode.mname, parameterlist: treeNode.arguments }
 					}
 					this.uiOrFunctions.changed = true;			// 已经在模态框中点击了树节点
 				},
@@ -468,8 +490,13 @@ $(document).ready(function () {
 						if(paramValues.length === 0) {
 								paramValues = ["\"\""];
 						}
-						var parameterString = paramValues.toString()
-						var string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`
+						var parameterString = paramValues.toString();
+						var string = '';
+						if(UI == '' && classType == '' && element == '') {
+							string = `${method}(${paramValues})`
+						} else {
+							string = `UI("${UI}").${classType}("${element}").${method}(${paramValues})`;
+						}
 						sendDataArray.push(string)
 					}
 					var sendData = sendDataArray.join(';\n')
@@ -523,59 +550,22 @@ $(document).ready(function () {
 								type: 'post',
 								dataType: 'json',
 								success: function (data, statusText) {
-									var ommethod = data.ommethod;
-									operationRows[index].functions = ommethod;
-									_this.updateRow(operationRows, index)
+									var { functions, parameterlist } = _this.setFunctionAndParameter(data);
+									operationRows[index].parameters = parameterlist;
+									operationRows[index].functions = functions;
+									_this.updateRow(operationRows, index);
 									resolve();
 								}
 							})
-						})
-						getFunctions.then(() => {
-							// 获取函数项的值
-							// var mname = $('.functions-select', parentRow).val()
-							var mname = operationRows[index].functions[0].mname
-							var data = {
-								autid: autId,
-								className: editDataVue.uiOrFunctions.classType,
-								methodName: mname
-							}
-							return new Promise((resolve, reject) => {
-								$.ajax({
-									url: address + 'autController/selectParameterlist',
-									data: data,
-									type: 'post',
-									dataType: 'json',
-									success: function (data, statusText) {
-										let paras = JSON.parse(`${data}`);
-										let arr = []
-										for (let para of paras) {
-												arr.push({
-														Name: para.name,
-														Value: ''
-												})
-										}
-										operationRows[index].parameters = arr
-										_this.updateRow(operationRows, index)
-										resolve()
-									}
-								})
-							})
-						}).then(() => {
-							// console.log('success')
-						})
+						});
 					} else {
-						// 清空functions数组并新添加选中的公共方法
-						// operationRows[index].functions = [];
-						// operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
 						operationRows[index].functions = [editDataVue.uiOrFunctions.function]
-						console.log(operationRows[index].functions)
 						var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
 						operationRows[index].parameters = []
 						for (let param of parametersArray) {
 							operationRows[index].parameters.push({
 								Name: param.name,
-								Value: param.defaultvalue,
-								...param
+								Value: ''
 							})
 						}
 					}
@@ -586,6 +576,41 @@ $(document).ready(function () {
 					var cache = rows[index]
 					cache.id = Symbol()
 					rows.splice(index, 1, cache)
+				},
+				setFunctionAndParameter: function (data) {
+					// set functino for ui and element 
+					var operationRows = editDataVue.operationRows;
+					var _this = this;
+					var functions = [];
+					var  parameterlist = [];
+					try {
+					  if (data.ommethod) {
+						for (let m of data.ommethod) {
+						  var o = {};
+						  o.name = m.mname;
+						  o.parameterlist = m.arguments;
+						  functions.push(o);
+						}
+					  }
+					  if (data.arcmethod) {
+						for (let m of data.acrmethod) {
+						  var o = {};
+						  o.name = m.methodname;
+						  o.parameterlist = m.arguments;
+						  functions.push(o);
+						}
+					  }
+					 
+					  if (functions.length) {
+						let paras = JSON.parse(`${functions[0].parameterlist}`);
+						for (let para of paras) {
+							parameterlist.push({ Name: para.name, Value: "" });
+						}
+					  }
+					  return { functions, parameterlist };
+					} catch (e) {
+					  console.error(e);
+					}
 				}
 			}
 		})
@@ -601,7 +626,6 @@ $(document).ready(function () {
 					var uiNodes = uiTree.getCheckedNodes(true);
 					var operationRows = editDataVue.uiOrFunctions.table === 1 ? editDataVue.beforeOperationRows : editDataVue.afterOperationRows;
 					var functionNodes = functionTree && functionTree.getCheckedNodes(true)
-					console.log(functionNodes)
 					for (var node of uiNodes) {
 						if (node.isParent) {
 							continue;
@@ -620,23 +644,9 @@ $(document).ready(function () {
 							type: 'post',
 							dataType: 'json',
 							success: function (data, statusText) {
-								for (var method of data.ommethod) {
-									newRow.functions.push(method)
-								}
-								// data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
-								// 把第一个function的参数取出来，放入
-								if(data.ommethod[0]) {
-									let paras = JSON.parse(`${data.ommethod[0].arguments}`);
-									let arr = []
-									for (let para of paras) {
-											arr.push({
-													Name: para.name,
-													Value: ''
-											})
-									}
-									newRow.parameters = arr
-								}
-								// data.ommethod[0] && (newRow.parameters = JSON.parse(data.ommethod[0].arguments))
+								var { functions, parameterlist } = modalVue.setFunctionAndParameter(data);
+								newRow.functions = functions;
+								newRow.parameters = parameterlist;
 								operationRows.push(newRow)
 							}
 						})
@@ -652,13 +662,13 @@ $(document).ready(function () {
 								classType: ''
 							}
 							newRow.functions = []
-							newRow.functions.push({ ...node, mname: node.methodname })
+							newRow.functions.push({  name: node.mname, parameterlist: node.arguments })
 
 							newRow.parameters = []
 							try {
-								var parameters = JSON.parse(node.parameterlist)
+								var parameters = JSON.parse(node.arguments)
 								for (let param of parameters) {
-									newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+									newRow.parameters.push({ ...param, Name: param.name, Value: '' })
 								}
 							} catch (e) {
 								newRow.parameters = []
@@ -1163,7 +1173,6 @@ $(document).ready(function () {
 		};
 		// 得到数据的表头
 		var getDataKey = function (data) {
-			console.log("getDataKey中的head:" + data);
 			//data = [ ["[待删除]","商品"], ["[待删除]","t1"] ]
 			var dataKey = [];
 			if (data) {

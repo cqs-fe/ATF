@@ -1,19 +1,26 @@
 {
-  "ommethod": [],
-  "arcmethod": [
+  "ommethod": [
     {
-      "id": 29,
-      "methodname": "set",
-      "methoddescription": "输入",
-      "arcclassid": 13,
-      "objectcode":
-        "objectcode执行目标代码\nvar element = new element(${{输入值}},${{输入值}});\nelement.set();",
-      "parameterlist":
-        "[{\"name\":\"输入值\",\"valueclass\":\"\",\"parameterizedcolumn\":\"{element}\",\"defaultvalue\":\"1\",\"description\":\"\"},{\"name\":\"输入\",\"valueclass\":\"\",\"parameterizedcolumn\":\"{element}\",\"defaultvalue\":\"1\",\"description\":\"\"}]",
-      "isparameter": "1",
-      "waittime": "5s",
-      "timeout": "10s"
-    },
+      "methodid": 913,
+      "forClassid": 108,
+      "classMapflag": "webedit.set",
+      "mname": "set",
+      "mdesc": "输入框",
+      "mtype": 1,
+      "arguments":
+        "[{\"name\":\"输入值\",\"type\":\"\",\"parameterizeColumn\":\"{element}\",\"desc\":\"输入值\"}]",
+      "argsCount": 1,
+      "labelArgument": "",
+      "author": 0,
+      "maintainTime": null,
+      "outputvaluedesc": null,
+      "autId": 33,
+      "inputargdesc": null,
+      "executecode":
+        "WebEdit_SeleniumImpl.getInstance().LocateTestObject(${{UI}}, ${{element}}).Set(${{输入值}}); ScriptExecuteTools.Reporter.Log(\"在输入框<\"+${{element}}+\">中输入值:\"+${{输入值}});"
+    }
+  ],
+  "acrmethod": [
     {
       "id": 30,
       "methodname": "select",
@@ -24,7 +31,9 @@
         "[{\"name\":\"输入值\",\"valueclass\":\"\",\"parameterizedcolumn\":\"{element}\",\"defaultvalue\":\"\",\"description\":\"\"}]",
       "isparameter": "1",
       "waittime": "5s",
-      "timeout": null
+      "timeout": null,
+      "arguments":
+        "[{\"name\":\"输入值\",\"valueclass\":\"\",\"parameterizedcolumn\":\"{element}\",\"defaultvalue\":\"\",\"description\":\"\"}]"
     }
   ]
 }

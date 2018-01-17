@@ -233,7 +233,7 @@ $(document).ready(function() {
                                             parameters: []
                                         }
                                         row.id = Symbol()
-                                        row.functions.push({ mname: operationRow.function })
+                                        row.functions.push({ name: operationRow.function, parameterlist: "" })
                                         row.operation.element = operationRow.operator[2]
                                         row.operation.ui = operationRow.operator[0]
                                         row.operation.classType = operationRow.operator[1]
@@ -349,7 +349,7 @@ $(document).ready(function() {
     var editDataVue = new Vue({
         el: '#table2',
         data: {
-            // 保存table中每一行的数据 [{id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[]}}],
+            // 保存table中每一行的数据 [{id:Symbol(), functions: [{mname: '',  arguments: ''}], operation: {element:'', ui: '',parameters:[]}}],
             operationRows: [],//[{id:Symbol(), functions: [], operation: {element:'1', ui: '2', parameters: [{Name: 'name1', Value: ''}]}}],
             // parameterVue: null,
             // ztree的设置项
@@ -369,11 +369,11 @@ $(document).ready(function() {
                     callback: {},
                     data: {
                         key: {
-                            name: "methodname",
+                            name: "mname",
                         },
                         simpleData: {
                             enable: true,
-                            idKey: 'arcclassid',
+                            idKey: 'methodid',
                             pIdKey: 'parentid',
                             rootPId: 0
                         }
@@ -401,11 +401,11 @@ $(document).ready(function() {
                     callback: {},
                     data: {
                         key: {
-                            name: "methodname",
+                            name: "mname",
                         },
                         simpleData: {
                             enable: true,
-                            idKey: 'arcclassid',
+                            idKey: 'methodid',
                             pIdKey: 'parentid',
                             rootPId: 0
                         }
@@ -560,9 +560,17 @@ $(document).ready(function() {
                     var parameterString = paramValues.toString();
                     var string;
                     if (type === 1) {
-                        string = `UI("${UI}").${classType}("${element}").${method}(${parameterString});\n`;
+                        if (UI == '' && classType == '' && element == '') {
+                            string = `${method}(${parameterString});\n`;
+                        } else {
+                            string = `UI("${UI}").${classType}("${element}").${method}(${parameterString});\n`;
+                        }
                     } else {
-                        string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
+                        if (UI == '' && classType == '' && element == '') {
+                            string = `${method}();#${parameterString}\n`;
+                        } else {
+                            string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
+                        }
                     }
                     sendDataArray.push(string);
                 }
@@ -644,7 +652,6 @@ $(document).ready(function() {
                         }
                     }
                 });
-                return;
                 // 请求函数集
                 $.ajax({
                     url: address + 'autController/selectFunctionSet',
@@ -652,8 +659,8 @@ $(document).ready(function() {
                     type: 'post',
                     dataType: 'json',
                     success: (data, statusText) => {
-                        if (data.arcmethod) {
-                            $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.arcmethod);
+                        if (data.obj) {
+                            $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.obj);
                         }
                     }
                 })
@@ -676,10 +683,11 @@ $(document).ready(function() {
                 } else {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
-                    // treeNode:"id":45,"methodname":"click","methoddescription":"点击","arcclassid":27,"objectcode":"132","parameterlist":"[{\"name\":\"11\",\"valueclass\":\"11\",\"parameterizedcolumn\":\"\",\"defaultvalue\":\"\",\"description\":\"\"}
-                    // this.uiOrFunctions.function = {mname: treeNode.methodname};
-                    this.uiOrFunctions.function = {...treeNode, mname: treeNode.methodname }
-                    // console.log(treeNode)
+                    // this.uiOrFunctions.function = {...treeNode, name: treeNode.mname }
+                    var o = {};
+                    o.name = treeNode.mname;
+                    o.parameterlist = treeNode.arguments;
+                    this.uiOrFunctions.function = o;
                 }
                 this.uiOrFunctions.changed = true; // 已经在模态框中点击了树节点
             },
@@ -770,7 +778,6 @@ $(document).ready(function() {
                         id: mainVue.autId, // autid
                         classname: editDataVue.uiOrFunctions.classType, // classname
                     }
-
                     var getFunctions = new Promise((resolve, reject) => {
                         $.ajax({
                             url: address + 'autController/selectMethod',
@@ -778,57 +785,16 @@ $(document).ready(function() {
                             type: 'post',
                             dataType: 'json',
                             success: function(data, statusText) {
-                                var ommethod = data.ommethod;
-                                operationRows[index].functions = ommethod;
-                                _this.updateRow(operationRows, index)
+                                var { functions, parameterlist } = _this.setFunctionAndParameter(data);
+                                operationRows[index].parameters = parameterlist;
+                                operationRows[index].functions = functions;
+                                _this.updateRow(operationRows, index);
                                 resolve();
                             }
                         })
-                    })
-                    getFunctions.then(() => {
-                        // 获取函数项的值
-                        // var mname = $('.functions-select', parentRow).val()
-                        if(!operationRows[index].functions.length) {
-                            return
-                        }
-                        var mname = operationRows[index].functions[0].mname
-                        var data = {
-                            autid: mainVue.autId,
-                            className: editDataVue.uiOrFunctions.classType,
-                            methodName: mname
-                        }
-                        return new Promise((resolve, reject) => {
-                            $.ajax({
-                                url: address + 'autController/selectParameterlist',
-                                data: data,
-                                type: 'post',
-                                dataType: 'json',
-                                success: function(data, statusText) {
-                                    let paras = JSON.parse(`${data}`);
-                                    let arr = []
-                                    for (let para of paras) {
-                                        arr.push({
-                                            Name: para.name,
-                                            Value: ''
-                                        })
-                                    }
-                                    operationRows[index].parameters = arr
-                                    _this.updateRow(operationRows, index)
-                                    resolve()
-                                }
-                            })
-                        })
-                    }).then(() => {
-                        console.log('success')
-                    })
+                    });
                 } else {
-                    // $('.functions-select', parentRow).html(`<option value="${editDataVue.uiOrFunctions.function}">${editDataVue.uiOrFunctions.function}</option>`)
-                    // operationRows[index].functions.push(editDataVue.uiOrFunctions.function)
                     operationRows[index].functions = [editDataVue.uiOrFunctions.function]
-                    // 插入函数集
-                    // 20170901 更改
-                    // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].arguments)
-                    // operationRows[index].parameters = JSON.parse(operationRows[index].functions[0].parameterlist)
                     // parameters: [{"name":"11","valueclass":"11","parameterizedcolumn":"","defaultvalue":"","description":""}]
                     var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
 
@@ -836,21 +802,55 @@ $(document).ready(function() {
                     for(let param of parametersArray) {
                         operationRows[index].parameters.push({
                             Name: param.name,
-                            Value: param.defaultvalue,
-                            ...param
+                            Value: ''
                         })
                     }
-
                     _this.updateRow(operationRows, index)
                     
                 }
                 $('#ui-ele-modal').modal('hide')
+                // editDataVue.uiOrFunctions.changed = false;
             },
             updateRow: function(rows, index) {
                 // 使用splice方法，通过改变数组项的id更新绑定的数组，
                 var cache = rows[index]
                 cache.id = Symbol()
                 rows.splice(index, 1, cache)
+            },
+            setFunctionAndParameter: function (data) {
+                // set functino for ui and element 
+                var operationRows = editDataVue.operationRows;
+                var _this = this;
+                var functions = [];
+                var  parameterlist = [];
+                try {
+                  if (data.ommethod) {
+                    for (let m of data.ommethod) {
+                      var o = {};
+                      o.name = m.mname;
+                      o.parameterlist = m.arguments;
+                      functions.push(o);
+                    }
+                  }
+                  if (data.arcmethod) {
+                    for (let m of data.acrmethod) {
+                      var o = {};
+                      o.name = m.methodname;
+                      o.parameterlist = m.arguments;
+                      functions.push(o);
+                    }
+                  }
+                 
+                  if (functions.length) {
+                    let paras = JSON.parse(`${functions[0].parameterlist}`);
+                    for (let para of paras) {
+                        parameterlist.push({ Name: para.name, Value: "" });
+                    }
+                  }
+                  return { functions, parameterlist };
+                } catch (e) {
+                  console.error(e);
+                }
             }
         }
     })
@@ -871,7 +871,7 @@ $(document).ready(function() {
                     if (node.isParent) {
                         continue;
                     }
-                    let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: '',parameters:[{Name: '', Value: ''}]}}
+                    let newRow = {}; // {id:Symbol(), functions: [], operation: {element:'', ui: ''},parameters:[{Name: '', Value: ''}]}}
                     newRow.id = Symbol()
                     newRow.operation = {
                         ui: node.getParentNode().name,
@@ -885,26 +885,10 @@ $(document).ready(function() {
                         type: 'post',
                         dataType: 'json',
                         success: function(data, statusText) {
-                            for (var method of data.ommethod) {
-                                newRow.functions.push(method)
-                            }
-                            // data.ommethod[0] && (newRow.functions.push(data.ommethod[0]))
-                            // 把第一个function的参数取出来，放入
-                            var arr = [];
-                            try{
-                                if (data.ommethod.length>0) {
-                                    var params = JSON.parse(data.ommethod[0].arguments)
-                                    for (let para of params) {
-                                        arr.push({ Name: para.name,Value: '' });
-                                    }
-                                } else {     
-                                }
-                            } catch(err) {
-                            } finally {
-                                newRow.parameters = arr;
-                                editDataVue.operationRows.push(newRow)
-                            }
-                            
+                            var { functions, parameterlist } = modalVue.setFunctionAndParameter(data);
+                            newRow.functions = functions;
+                            newRow.parameters = parameterlist;
+                            editDataVue.operationRows.push(newRow);
                         }
                     })
                 }
@@ -918,13 +902,13 @@ $(document).ready(function() {
                             classType: ''
                         }
                         newRow.functions = []
-                        newRow.functions.push({ ...node, mname: node.methodname })
+                        newRow.functions.push({ name: node.mname, parameterlist: node.arguments })
 
                         newRow.parameters = []
                         try{
-                            var parameters = JSON.parse(node.parameterlist)
+                            var parameters = JSON.parse(node.arguments)
                             for(let param of parameters) {
-                                newRow.parameters.push({ ...param, Name: param.name, Value: param.defaultvalue })
+                                newRow.parameters.push({Name: param.name, Value: '' })
                             }
                         } catch(e) {
                             newRow.parameters = []

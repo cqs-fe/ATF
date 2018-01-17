@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "msg": "",
+  "obj": [
+    {
+      "methodid": 939,
+      "forClassid": 134,
+      "classMapflag": null,
+      "mname": "addPicture",
+      "mdesc": "截图",
+      "mtype": 1,
+      "arguments":
+        "[{\"name\":\"图片名称\",\"type\":\"\",\"parameterizeColumn\":\"\",\"desc\":\"图片名称\"}]",
+      "argsCount": null,
+      "labelArgument": null,
+      "author": null,
+      "maintainTime": null,
+      "outputvaluedesc": null,
+      "autId": 33,
+      "inputargdesc": null,
+      "executecode":
+        "ScriptExecuteTools.Reporter.LogAddPicture(driver,${{图片名称}});"
+    }
+  ]
+}

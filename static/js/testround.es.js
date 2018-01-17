@@ -91,7 +91,12 @@ var vBody = new Vue({
 							_this.testphaseValue = _this.testphases[0].phasename
 							resolve()
 						}
+					} else {
+						Vac.alert('查询用例失败！');
 					}
+				},
+				error: function() {
+					Vac.alert('查询用例出错！');
 				}
 			});
 		})
@@ -107,8 +112,13 @@ var vBody = new Vue({
 						if(_this.testrounds[0]) {
 							_this.testroundValue = _this.testrounds[0].id
 							resolve()
+						} else {
+							Vac.alert('查询用例失败！');
 						}
 					}
+				},
+				error: function() {
+					Vac.alert('查询用例出错！');
 				}
 			});
 		})
@@ -194,7 +204,7 @@ var vBody = new Vue({
 				testRound: this.testroundValue
 			}
 			$.ajax({
-				url: '/' + 'executeController/t1', // mock
+				url: address + 'executeController/t1', // mock
 				data: data,
 				type: 'post',
 				dataType: 'json',
@@ -221,7 +231,7 @@ var vBody = new Vue({
 				$.ajax({
 					url: address + 'testrecordController/selectByBatchExecuteNo',
 					type: 'post',
-					data: { batchExecuteNo: '1' }, // mock
+					data: { batchExecuteNo }, 
 					success: function(data) {
 						if (data.success) {
 							me.setResultIcon(data.obj);
@@ -239,7 +249,7 @@ var vBody = new Vue({
 								}
 							}
 						} else {
-							Vac.alert('网络错误！请点击重新查询！');
+							Vac.alert('查询出错！请点击重新查询！');
 							// me.queryResultFun = setTimeout(queryAction, me.reQueryInterval);
 						}
 					},
@@ -362,6 +372,9 @@ var vBody = new Vue({
 					}else {
 						Vac.alert("添加失败")
 					}
+				},
+				error: function() {
+					Vac.alert("添加失败");
 				}
 			});
 		},
