@@ -82,8 +82,8 @@ var checkFunction = {
 			var _w = selDiv.offsetWidth, _h = selDiv.offsetHeight;
 			
 			for(var i=0; i < fileNodes.length; i++){
-				var inputRight = fileNodes[i].offsetLeft + fileNodes[i].offsetWidth;
-				var inputBottom = fileNodes[i].offsetTop + fileNodes[i].offsetHeight;
+				var inputRight =  Vac.getOffsetTo(fileNodes[i], container).offsetLeft + fileNodes[i].offsetWidth;
+				var inputBottom = Vac.getOffsetTo(fileNodes[i], container).offsetTop + fileNodes[i].offsetHeight;
 				if( inputRight > _l && inputBottom > _t && fileNodes[i].offsetLeft < _l + _w && fileNodes[i].offsetTop < _t + _h) {
 					if(!selectedRange.includes(fileNodes[i])){
 						selectedRange.push(fileNodes[i]);
@@ -91,10 +91,12 @@ var checkFunction = {
 				}
 			}
 			for(var i=0; i<selectedRange.length; i++){
-				var inputRight = selectedRange[i].offsetLeft + selectedRange[i].offsetWidth;
-				var inputBottom = selectedRange[i].offsetTop + selectedRange[i].offsetHeight;
+				var inputLeft = Vac.getOffsetTo(selectedRange[i], container).offsetLeft;
+				var inputTop = Vac.getOffsetTo(selectedRange[i], container).offsetTop;
+				var inputRight =  inputLeft + selectedRange[i].offsetWidth;
+				var inputBottom = inputTop + selectedRange[i].offsetHeight;
 				let value = selectedRange[i].value
-				if( inputRight > _l && inputBottom > _t && selectedRange[i].offsetLeft < _l + _w && selectedRange[i].offsetTop < _t + _h) {
+				if( inputRight > _l && inputBottom > _t && inputTop < _l + _w && inputTop < _t + _h) {
 					if ($(selectedRange[i]).hasClass('single-case')) {
 						_this.pushNoRepeat(_this.selectedCases, +value)
 					} else {

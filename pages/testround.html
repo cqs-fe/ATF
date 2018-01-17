@@ -97,6 +97,7 @@
               <button class="btn btn-info" @click="getCases()">查询</button>
               <button class="btn btn-info" @click="addScene();">添加场景</button>
               <button class="btn btn-info" @click="removeSceneAndCase();">移除场景与用例</button>
+              <button class="btn btn-info" @click="reQuery();">重新查询执行结果</button>
             </div>
             <div class="main-content2">
               <div class="case-list-wrapper list-wrapper" v-if="testCaseList.length" style="padding:10px 20px 10px 20px">
@@ -116,14 +117,14 @@
                       <div class="case-wrapper">
                         <div class="case" @click="changeCase(case_wrapper.caseId, 1)"  @mousedown.stop="1">
                           <div class="case-header">
-                            <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
+                            <img :src="exeImgs[0]" :id="'img' + '-' + case_wrapper.caseId">
                             <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
+                            <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
                           </div>
                           <div class="case-main">
-                            <!-- <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 1)">查看</a> -->
+                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 'PE4')">查看</a>
                           </div>
                           <footer class="case-footer">
-                            <!-- <img :src="exeImgs[0]"> -->
                           </footer>
                         </div>
                       </div>
@@ -138,15 +139,15 @@
                       <div class="case-wrapper">
                         <div class="case" v-for="item in case_wrapper.flowNodes" @mousedown.stop="1" @click="changeCase(item.flowNodeId, 2)">
                           <div class="case-header">
+                            <img :src="exeImgs[0]" :id="'img' + '-' + item.flowNodeId">
+                            <p :title="item.casecode">{{item.casecode}}</p>
                             <input type="checkbox" v-bind:value="item.flowNodeId"
                             class="check-case flow-node-incaselib" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                            <p :title="item.casecode">{{item.casecode}}</p>
                           </div>
                           <div class="case-main">
-                            <!-- <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 2)">查看</a> -->
+                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 'PE4')">查看</a>
                           </div>
                           <footer class="case-footer">
-                            <!-- <img :src="exeImgs[1]"> -->
                           </footer>
                         </div>
                       </div>
@@ -179,15 +180,14 @@
                         <div class="case-wrapper">
                           <div class="case"  @click="changeCase(scene.sceneId+'-'+case_wrapper.caseId, 3)" @mousedown.stop="1">
                             <div class="case-header">
-                              <input type="checkbox" v-bind:value="scene.sceneId+'-'+case_wrapper.caseId" class="check-case check-case-inscene" v-model="selectedSceneCases" @change="checkFlowNode($event)">
+                              <img :src="exeImgs[0]" :id="'img' + '-' + scene.sceneId+'-'+case_wrapper.caseId">
                               <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
+                              <input type="checkbox" v-bind:value="scene.sceneId+'-'+case_wrapper.caseId" class="check-case check-case-inscene" v-model="selectedSceneCases" @change="checkFlowNode($event)">
                             </div>
-                           
                             <div class="case-main">
-                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 1)">查看</a>
+                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6')">查看</a>
                             </div>
                             <footer class="case-footer">
-                              <!-- <img :src="exeImgs[0]"> -->
                             </footer>
                           </div>
                         </div>
@@ -200,16 +200,15 @@
                         <div class="case-wrapper">
                           <div class="case" v-for="item in case_wrapper.flowNodes"  @mousedown.stop="1" @click="changeCase(scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId, 3)">
                             <div class="case-header">
+                              <img :src="exeImgs[0]" :id="'img' + '-' + scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId">
+                              <p :title="item.casecode">{{item.casecode}} </p>
                               <input type="checkbox" v-bind:value="scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId"
                               class="check-case check-case-inscene" @change="checkFlowNode($event)" v-model="selectedSceneCases">
-                              <p :title="item.casecode">{{item.casecode}} </p>
-                              
                             </div>
                             <div class="case-main">
-                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 2)">查看</a>
+                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6')">查看</a>
                             </div>
                             <footer class="case-footer">
-                              <!-- <img :src="exeImgs[1]"> -->
                             </footer>
                           </div>
                         </div>

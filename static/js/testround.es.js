@@ -51,15 +51,29 @@ var vBody = new Vue({
 		// Scenes in add-scene modal
 		selectedScene: [],	// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
 		exeImgs: {
-			0: __uri('../static/images/waiting.png'),
-			1: __uri('../static/images/running.gif'),
-			2: __uri('../static/images/success.png'),
-			3: __uri('../static/images/failed.png')
+			// 0: __uri('../static/images/waiting.png'),
+			// 1: __uri('../static/images/running.gif'),
+			// 2: __uri('../static/images/success.png'),
+			// 3: __uri('../static/images/failed.png')
+			0: '/public/static/images/waiting.png',
+			1: '/public/static/images/success.png',
+			2: '/public/static/images/failed.png',
+			3: '/public/static/images/warn.png',
+			4: '/public/static/images/running.gif'
 		},
+		// 批量执行相关
+		hasStartExecute: false,
+		batchExecuteNo: null,
+		executeResult : 'fail',
+		queryResultFun: null,
+		queryInterval: 500,
+		reQueryInterval: 2,
+		queryNums: 0,
 
 		// save the string : 展开 and 收起
 		expandString: '展开',
-		unexpandString: '收起'
+		unexpandString: '收起',
+		
 	},
 	created: function(){
 		var _this = this;
@@ -77,7 +91,12 @@ var vBody = new Vue({
 							_this.testphaseValue = _this.testphases[0].phasename
 							resolve()
 						}
+					} else {
+						Vac.alert('查询用例失败！');
 					}
+				},
+				error: function() {
+					Vac.alert('查询用例出错！');
 				}
 			});
 		})
@@ -93,8 +112,13 @@ var vBody = new Vue({
 						if(_this.testrounds[0]) {
 							_this.testroundValue = _this.testrounds[0].id
 							resolve()
+						} else {
+							Vac.alert('查询用例失败！');
 						}
 					}
+				},
+				error: function() {
+					Vac.alert('查询用例出错！');
 				}
 			});
 		})
@@ -155,11 +179,7 @@ var vBody = new Vue({
 				}))
 				{
 					Vac.pushNoRepeat(this.selectedCases, +key)
-				} else 
-				// if(this.flowNodeIds.get(key).every((value) => {
-				// 	return !this.checkedFlowNodes.includes(+value)
-				// }))
-				{
+				} else {
 					let set = new Set(this.selectedCases)
 					set.delete(+key)
 					this.selectedCases = [...set]
@@ -172,7 +192,8 @@ var vBody = new Vue({
 		hideAlert: function(){
 			this.alertShow = false;
 		},
-		executeAll: function(){
+		executeAll: function(){this.startQueryResult(8);
+			var _this = this;
 			var data = {
 				executionround: this.executionround,
 				recordflag: this.recordflag,
@@ -183,13 +204,13 @@ var vBody = new Vue({
 				testRound: this.testroundValue
 			}
 			$.ajax({
-				url: address + 'executeController/t1',
+				url: address + 'executeController/t1', // mock
 				data: data,
 				type: 'post',
 				dataType: 'json',
 				success: function(data, statusText) {
 					if (data.success === true) {
-						Vac.alert('执行成功！')
+						_this.startQueryResult(data.msg);
 					}else {
 						Vac.alert('执行失败！')
 					}
@@ -199,6 +220,67 @@ var vBody = new Vue({
 				}
 			})
 			// 2,2,3,q,2,1,''
+		},
+		startQueryResult: function(batchExecuteNo) {
+			var me = this;
+			this.batchExecuteNo = batchExecuteNo;
+			this.hasStartExecute = true;
+			this.queryResultFun = setTimeout(queryAction, this.queryInterval);
+
+			function queryAction(){
+				$.ajax({
+					url: address + 'testrecordController/selectByBatchExecuteNo',
+					type: 'post',
+					data: { batchExecuteNo }, 
+					success: function(data) {
+						if (data.success) {
+							me.setResultIcon(data.obj);
+							if (me.queryNums === 10) {
+								// 执行完毕
+								me.hasStartExecute = false;
+								me.batchExecuteNo = null;
+								me.queryResultFun = null;
+								Vac.alert('执行完毕！');
+							} else {
+								// 未执行完毕
+								if (me.queryNums < 15) {
+									me.queryResultFun = setTimeout(queryAction, me.queryInterval);
+									me.queryNums++;
+								}
+							}
+						} else {
+							Vac.alert('查询出错！请点击重新查询！');
+							// me.queryResultFun = setTimeout(queryAction, me.reQueryInterval);
+						}
+					},
+					error: function() {
+						Vac.alert('网络错误！请点击重新查询！');
+						// Vac.alert('查询执行结果失败，将在'+ me.reQueryInterval + '毫秒后继续查询');
+						// me.queryResultFun = setTimeout(queryAction, me.reQueryInterval);
+					}
+				});
+			}
+		},
+		reQuery: function() {
+			this.batchExecuteNo && this.startQueryResult(this.batchExecuteNo);
+		},
+		setResultIcon: function(data) {
+			for (let d of data) {
+				if (d.sourcechannel === 'PE4') {
+					if (d.flownodeid) {
+						document.querySelector(`#img-${d.flownodeid}`).src = this.exeImgs[d.resultstatus];
+					} else {
+						document.querySelector(`#img-${d.caseid}`).src = this.exeImgs[d.resultstatus];
+					}
+				} else {
+					if(d.flownodeid) {
+						document.querySelector(`#img-${d.sceneId}-${d.caseid}-${d.flownodeid}`).src = this.exeImgs[d.resultstatus];
+					} else {
+						document.querySelector(`#img-${d.sceneId}-${d.caseid}`).src = this.exeImgs[d.resultstatus];
+					}
+					
+				}
+			}
 		},
 		addScene: function() {
 			var _this = this;
@@ -290,6 +372,9 @@ var vBody = new Vue({
 					}else {
 						Vac.alert("添加失败")
 					}
+				},
+				error: function() {
+					Vac.alert("添加失败");
 				}
 			});
 		},
@@ -467,22 +552,14 @@ var vBody = new Vue({
 			}
 			this.setBackground(this.selectedSceneCases)
 		},
-		viewCase: function (sceneid, caseid,) {
-			// var o = {
-			// 	sceneid, caseid,
-			// 	testphase: this.testphaseValue,
-			// 	testround: this.testroundValue,
-			// 	executeround: this.executionround,
-			// 	sourcechannel: 'PE5',
-			// 	recorderstate: '2'
-			// }
+		viewCase: function (sceneId, caseid, sourcechannel) {
 			var o = {
-				sceneid: '',
-				testphase: '',
-				testround: '',
-				executeround: '',
-				sourcechannel: 'PE5',
-				recorderstate: ''
+				sceneId, caseid,
+				testPhase: this.testphaseValue,
+				testRound: this.testroundValue,
+				executeround: this.executionround,
+				sourcechannel: sourcechannel
+				// recorderStatus: '2'
 			}
 			var args = encodeURIComponent(JSON.stringify(o));
 			window.open('case-operation.html?activeName=exec-record&viewcaseargs='+args, 'case_record');

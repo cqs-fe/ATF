@@ -149,7 +149,7 @@
                 </td>
                 <td class="functions" @mousedown.stop="1">
                   <select class="functions-select form-control" style="width: 90%;">
-                    <option v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
+                    <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
                   </select>
                 </td>
                 <td class="parameters" @mousedown.stop="1">
@@ -248,7 +248,7 @@
                 </td>
                 <td class="functions">
                   <select class="functions-select form-control" style="width: 90%;">
-                    <option v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
+                    <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
                     <!-- <option>lajkj </option>
                     <option>akjla</option> -->
                   </select>

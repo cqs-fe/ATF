@@ -1,7 +1,7 @@
 fis.hook('commonjs');
 
 fis.match('**.{js,scss,png,jpg,map,css,gif,PNG}', {
-	useHash: true,
+	// useHash: true,
 	release: '/public/$0'
 });
 
