@@ -281,7 +281,7 @@ $(document).ready(function() {
                                     parameters: []
                                 }
                                 row.id = Symbol()
-                                row.functions.push({ mname: operationRow.function })
+                                row.functions.push({ name: operationRow.function })
                                 row.operation.element = operationRow.operator[2]
                                 row.operation.ui = operationRow.operator[0]
                                 row.operation.classType = operationRow.operator[1]
@@ -349,7 +349,7 @@ $(document).ready(function() {
     var editDataVue = new Vue({
         el: '#table2',
         data: {
-            // 保存table中每一行的数据 [{id:Symbol(), functions: [{mname: '',  arguments: ''}], operation: {element:'', ui: '',parameters:[]}}],
+            // 保存table中每一行的数据 [{id:Symbol(), functions: [{name: '',  parameterlist: ''}], operation: {element:'', ui: '',parameters:[]}}],
             operationRows: [],//[{id:Symbol(), functions: [], operation: {element:'1', ui: '2', parameters: [{Name: 'name1', Value: ''}]}}],
             // parameterVue: null,
             // ztree的设置项
@@ -543,7 +543,6 @@ $(document).ready(function() {
                     var type = 1; // record the type  --  1: normal  2: canshuhua biaozhu
                     for (var paramRow of paramTrs) {
                         var paramName = paramRow.querySelector('.param-name');
-                        // console.log(paramName.innerHTML)
                         if (paramName.innerHTML.includes('参数化标注')) {
                             type = 2;
                         }
@@ -683,7 +682,6 @@ $(document).ready(function() {
                 } else {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
-                    // this.uiOrFunctions.function = {...treeNode, name: treeNode.mname }
                     var o = {};
                     o.name = treeNode.mname;
                     o.parameterlist = treeNode.arguments;
