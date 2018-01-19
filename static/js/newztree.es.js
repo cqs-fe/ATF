@@ -349,7 +349,7 @@ $(document).ready(function() {
     var editDataVue = new Vue({
         el: '#table2',
         data: {
-            // 保存table中每一行的数据 [{id:Symbol(), functions: [{name: '',  parameterlist: ''}], operation: {element:'', ui: '',parameters:[]}}],
+            // 保存table中每一行的数据 [{id:Symbol(), functions: {{name: '',  parameterlist: ''}], operation: {element:'', ui: '',parameters:[]}}],
             operationRows: [],//[{id:Symbol(), functions: [], operation: {element:'1', ui: '2', parameters: [{Name: 'name1', Value: ''}]}}],
             // parameterVue: null,
             // ztree的设置项
@@ -517,13 +517,29 @@ $(document).ready(function() {
             moveDown: function(event) {
                 console.log(JSON.parse(`[{"Name":"输入值1","Type":"","Desc":"","ParameterizeColumn":"{element}"},{"Name":"输入值2","Type":"","Desc":"","ParameterizeColumn":"{element}"}]`))
                 var _this = this;
-                var operationRows = this.operationRows
+                var operationRows = this.operationRows;
                 var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
                 for (var i = trs.length - 1; i >= 0; i--) {
                     var originIndex = trs[i].getAttribute('data-index')
                     operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
                 }
                 this.setChanged()
+            },
+            // 更改方法时改变参数
+            changeFunction: function(target, index) {
+                var me = this;
+                var selectedIndex = target.selectedIndex;
+                var option = target.options[selectedIndex];
+                var selectedFunction = option.value;
+                var parameters = option.getAttribute('data-parameters');
+                parameters = JSON.parse(parameters);
+                var newRow = this.operationRows[index];
+                newRow.selectedFunc = selectedFunction;
+                newRow.parameters = [];
+                for(let param of parameters) {
+                    newRow.parameters.push({Name: param.name, Value: '' })
+                }
+                // console.log(this.operationRows)
             },
             // 遍历表格，保存脚本内容
             generateScriptString: function(arr){
@@ -550,7 +566,8 @@ $(document).ready(function() {
                         if(paramTr.innerHTML.startsWith('Data.TableColumn')) {
                             paramValues.push(`${paramTr.innerHTML}`); 
                         } else {
-                            paramValues.push(`"${paramTr.innerHTML}"`);
+                            // paramValues.push(`"${paramTr.innerHTML}"`);
+                            paramValues.push(`""`);
                         }
                     }
                     if(paramValues.length === 0) {
@@ -561,14 +578,17 @@ $(document).ready(function() {
                     if (type === 1) {
                         if (UI == '' && classType == '' && element == '') {
                             string = `${method}(${parameterString});\n`;
+                            // string = `${method}();\n`;
                         } else {
                             string = `UI("${UI}").${classType}("${element}").${method}(${parameterString});\n`;
+                            // string = `UI("${UI}").${classType}("${element}").${method}();\n`;
                         }
                     } else {
                         if (UI == '' && classType == '' && element == '') {
                             string = `${method}();#${parameterString}\n`;
                         } else {
                             string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
+                            // string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
                         }
                     }
                     sendDataArray.push(string);
@@ -767,6 +787,7 @@ $(document).ready(function() {
                     };
                     operationRows[index].functions = []
                     operationRows[index].parameters = []
+                    operationRows[index].selectedFunc = '';
 
                     // 使用splice方法，通过改变数组项的id更新绑定的数组，
                     _this.updateRow(operationRows, index);
@@ -786,6 +807,7 @@ $(document).ready(function() {
                                 var { functions, parameterlist } = _this.setFunctionAndParameter(data);
                                 operationRows[index].parameters = parameterlist;
                                 operationRows[index].functions = functions;
+                                operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
                                 _this.updateRow(operationRows, index);
                                 resolve();
                             }
@@ -830,7 +852,7 @@ $(document).ready(function() {
                       functions.push(o);
                     }
                   }
-                  if (data.arcmethod) {
+                  if (data.acrmethod) {
                     for (let m of data.acrmethod) {
                       var o = {};
                       o.name = m.methodname;
@@ -885,6 +907,7 @@ $(document).ready(function() {
                         success: function(data, statusText) {
                             var { functions, parameterlist } = modalVue.setFunctionAndParameter(data);
                             newRow.functions = functions;
+                            newRow.selectedFunc = functions.length ? functions[0].name : '';
                             newRow.parameters = parameterlist;
                             editDataVue.operationRows.push(newRow);
                         }

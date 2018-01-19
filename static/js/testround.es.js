@@ -55,11 +55,11 @@ var vBody = new Vue({
 			// 1: __uri('../static/images/running.gif'),
 			// 2: __uri('../static/images/success.png'),
 			// 3: __uri('../static/images/failed.png')
-			0: '/public/static/images/waiting.png',
-			1: '/public/static/images/success.png',
-			2: '/public/static/images/failed.png',
-			3: '/public/static/images/warn.png',
-			4: '/public/static/images/running.gif'
+			0: '/assets/images/waiting.png',
+			1: '/assets/images/success.png',
+			2: '/assets/images/failed.png',
+			3: '/assets/images/warn.png',
+			4: '/assets/images/running.gif'
 		},
 		// 批量执行相关
 		hasStartExecute: false,
@@ -124,18 +124,20 @@ var vBody = new Vue({
 		})
 		let getCaseId = new Promise((resolve, reject) => {
 			// get caselib id
-			$.ajax({
-				url: address+'testProjectController/selectAll',
-				type: 'GET',
-				data: null,
-				success: function(data) {
-					_this.caselibIds = data.obj;
-					if(_this.caselibIds[0]) {
-						_this.caselibId = _this.caselibIds[0].caselibId
-						resolve()
-					}
-				}
-			});
+			// $.ajax({
+			// 	url: address+'testProjectController/selectAll',
+			// 	type: 'GET',
+			// 	data: null,
+			// 	success: function(data) {
+			// 		_this.caselibIds = data.obj;
+			// 		if(_this.caselibIds[0]) {
+			// 			_this.caselibId = _this.caselibIds[0].caselibId
+			// 			resolve()
+			// 		}
+			// 	}
+			// });
+			_this.caselibId = sessionStorage.getItem('caselibid');
+			resolve();
 		})
 		
 		Promise.all([getPhasePro, getRoundPro, getCaseId])
@@ -300,6 +302,7 @@ var vBody = new Vue({
 			$('#add-modal').modal("show");
 		},
 		removeSceneAndCase: function() {
+			var _this = this;
 			Vac.confirm('', '', '', '确认要移除场景和用例吗？').then(() => {
 				let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
 				let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
@@ -335,7 +338,7 @@ var vBody = new Vue({
 						if(data.success){
 							$('#add-modal').modal('hide');
 							Vac.alert('移除成功')
-							this.getCases()
+							_this.getCases()
 						}else {
 							Vac.alert("移除失败")
 						}
@@ -366,7 +369,7 @@ var vBody = new Vue({
 					if(data.success){
 						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
-						this.getCases()
+						_this.getCases()
 						// _this.alertShow = true;
 						// _this.tooltipMessage = '添加成功';
 					}else {

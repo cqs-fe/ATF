@@ -149,7 +149,11 @@
                 </td>
                 <td class="functions" @mousedown.stop="1">
                   <select class="functions-select form-control" style="width: 90%;">
-                    <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                      <template v-for="function in row.functions"  @change="changeFunction($event.target, index, 1)">
+                          <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+                          <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                      </template>
+                    <!-- <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option> -->
                   </select>
                 </td>
                 <td class="parameters" @mousedown.stop="1">
@@ -248,9 +252,10 @@
                 </td>
                 <td class="functions">
                   <select class="functions-select form-control" style="width: 90%;">
-                    <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
-                    <!-- <option>lajkj </option>
-                    <option>akjla</option> -->
+                    <template v-for="function in row.functions"  @change="changeFunction($event.target, index, 2)">
+                        <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+                        <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                    </template>
                   </select>
                 </td>
                 <td class="parameters" contenteditable="false">

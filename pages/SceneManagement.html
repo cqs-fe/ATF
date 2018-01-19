@@ -229,8 +229,8 @@
                     收起</button>
                 </div>
             </div>
-            <div class="main-content" @mousedown="setSelect">
-              <div class="check-all-case">
+            <div class="main-content" @mousedown="setSelect" style="padding: 5px 15px;">
+              <div class="check-all-case" @mousedown.stop="1">
                 <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">全选
               </div>
               <div id="sortable">
@@ -238,7 +238,9 @@
                   <template v-if="case_wrapper.caseCompositeType == '1'">
                   <div class="checkbox-wrapper">
                     <i class="icon-move handle" style="color: #ff6c60;"></i>
-                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
+                    <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
+                      <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
+                    </div>
                   </div>
                   <div class="case-wrapper">
                     <div class="case"  @click="changeCase(case_wrapper.id, 1)"  @mousedown.stop="1">
@@ -259,8 +261,8 @@
                   <template v-else>
                   <div class="checkbox-wrapper">
                     <i class="icon-move handle" style="color: #ff6c60;"></i>
-                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
-                    @change="checkallToggle($event)">
+                    <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1"><input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
+                    @change="checkallToggle($event)"></div>
                   </div>
                   <div class="case-wrapper">
                     <div class="case" v-for="item in case_wrapper.flowNodeDtos" @mousedown.stop="1"  @click="changeCase(item.id, 2)">
