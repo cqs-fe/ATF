@@ -51,22 +51,18 @@ var vBody = new Vue({
 		// Scenes in add-scene modal
 		selectedScene: [],	// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
 		exeImgs: {
-			// 0: __uri('../static/images/waiting.png'),
-			// 1: __uri('../static/images/running.gif'),
-			// 2: __uri('../static/images/success.png'),
-			// 3: __uri('../static/images/failed.png')
-			0: '/public/static/images/waiting.png',
-			1: '/public/static/images/success.png',
-			2: '/public/static/images/failed.png',
-			3: '/public/static/images/warn.png',
-			4: '/public/static/images/running.gif'
+			0: '/assets/images/waiting.png',
+			1: '/assets/images/success.png',
+			2: '/assets/images/failed.png',
+			3: '/assets/images/warn.png',
+			4: '/assets/images/running.gif'
 		},
 		// 批量执行相关
 		hasStartExecute: false,
 		batchExecuteNo: null,
 		executeResult : 'fail',
 		queryResultFun: null,
-		queryInterval: 500,
+		queryInterval: 1000,
 		reQueryInterval: 2,
 		queryNums: 0,
 
@@ -123,19 +119,8 @@ var vBody = new Vue({
 			});
 		})
 		let getCaseId = new Promise((resolve, reject) => {
-			// get caselib id
-			$.ajax({
-				url: address+'testProjectController/selectAll',
-				type: 'GET',
-				data: null,
-				success: function(data) {
-					_this.caselibIds = data.obj;
-					if(_this.caselibIds[0]) {
-						_this.caselibId = _this.caselibIds[0].caselibId
-						resolve()
-					}
-				}
-			});
+			_this.caselibId = sessionStorage.getItem('caselibid');
+			resolve();
 		})
 		
 		Promise.all([getPhasePro, getRoundPro, getCaseId])
@@ -192,7 +177,9 @@ var vBody = new Vue({
 		hideAlert: function(){
 			this.alertShow = false;
 		},
-		executeAll: function(){this.startQueryResult(8);
+		executeAll: function(){
+			// 20180117154254295845
+			// 20180117153441839537
 			var _this = this;
 			var data = {
 				executionround: this.executionround,
@@ -204,7 +191,7 @@ var vBody = new Vue({
 				testRound: this.testroundValue
 			}
 			$.ajax({
-				url: address + 'executeController/t1', // mock
+				url: address + 'executeController/t1',
 				data: data,
 				type: 'post',
 				dataType: 'json',
@@ -235,7 +222,7 @@ var vBody = new Vue({
 					success: function(data) {
 						if (data.success) {
 							me.setResultIcon(data.obj);
-							if (me.queryNums === 10) {
+							if (data.finished) {
 								// 执行完毕
 								me.hasStartExecute = false;
 								me.batchExecuteNo = null;
@@ -243,10 +230,7 @@ var vBody = new Vue({
 								Vac.alert('执行完毕！');
 							} else {
 								// 未执行完毕
-								if (me.queryNums < 15) {
-									me.queryResultFun = setTimeout(queryAction, me.queryInterval);
-									me.queryNums++;
-								}
+								me.queryResultFun = setTimeout(queryAction, me.queryInterval);
 							}
 						} else {
 							Vac.alert('查询出错！请点击重新查询！');
@@ -300,6 +284,7 @@ var vBody = new Vue({
 			$('#add-modal').modal("show");
 		},
 		removeSceneAndCase: function() {
+			var _this = this;
 			Vac.confirm('', '', '', '确认要移除场景和用例吗？').then(() => {
 				let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
 				let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
@@ -335,7 +320,7 @@ var vBody = new Vue({
 						if(data.success){
 							$('#add-modal').modal('hide');
 							Vac.alert('移除成功')
-							this.getCases()
+							_this.getCases()
 						}else {
 							Vac.alert("移除失败")
 						}
@@ -366,7 +351,7 @@ var vBody = new Vue({
 					if(data.success){
 						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
-						this.getCases()
+						_this.getCases()
 						// _this.alertShow = true;
 						// _this.tooltipMessage = '添加成功';
 					}else {

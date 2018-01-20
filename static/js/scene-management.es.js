@@ -123,15 +123,14 @@ var vBody = new Vue({
 				}))
 				{
 					this.pushNoRepeat(this.selectedCases, +key)
-				} else if(this.flowNodeIds.get(key).every((value) => {
-					return !this.checkedFlowNodes.includes(+value)
-				}))
+				} else
 				{
 					let set = new Set(this.selectedCases)
 					set.delete(+key)
 					this.selectedCases = [...set]
 				}
 			}
+			this.setBackground();
 		}
 	},
 	methods: {
@@ -221,9 +220,6 @@ var vBody = new Vue({
 			let arr = type === 1 ? this.selectedCases : this.checkedFlowNodes;
 			let index = arr.findIndex((value) => { return value === id })
 			index !== -1 ? arr.splice(index, 1) : arr.push(id)
-			// console.log("index:" + index)
-			// console.log("id:" + id)
-			// console.log(this.checkedFlowNodes)
 		},
 		// 点击checkbox
 		checkChanged: checkFunction.checkChanged,

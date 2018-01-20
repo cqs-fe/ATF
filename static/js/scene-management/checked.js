@@ -16,10 +16,8 @@ var checkFunction = {
       	})
 	},
 	setSelect (event){
-		
 		var _this = this;
 		var target  = event.target;
-		console.log(target)
 		if(target.classList.contains('handle')) {
 			return
 		}
@@ -79,24 +77,25 @@ var checkFunction = {
 			selDiv.style.height  = Math.abs(_y - startY) + "px";
 
 			var _l = selDiv.offsetLeft, _t = selDiv.offsetTop;
-			var _w = selDiv.offsetWidth, _h = selDiv.offsetHeight;
+			var _r = selDiv.offsetWidth + _l, _b = selDiv.offsetHeight + _t;
 			
 			for(var i=0; i < fileNodes.length; i++){
-				var inputRight =  Vac.getOffsetTo(fileNodes[i], container).offsetLeft + fileNodes[i].offsetWidth;
-				var inputBottom = Vac.getOffsetTo(fileNodes[i], container).offsetTop + fileNodes[i].offsetHeight;
-				if( inputRight > _l && inputBottom > _t && fileNodes[i].offsetLeft < _l + _w && fileNodes[i].offsetTop < _t + _h) {
-					if(!selectedRange.includes(fileNodes[i])){
-						selectedRange.push(fileNodes[i]);
-					}
+				var inputLeft = Vac.getOffsetTo(fileNodes[i], container).offsetLeft;
+				var inputTop = Vac.getOffsetTo(fileNodes[i], container).offsetTop;
+				var inputRight = inputLeft + fileNodes[i].offsetWidth;
+				var inputBottom = inputTop + fileNodes[i].offsetHeight;
+				if( inputBottom < _b && inputTop > _t && inputLeft > _l && inputRight < _r) {
+					selectedRange.push(fileNodes[i]);
 				}
 			}
+
 			for(var i=0; i<selectedRange.length; i++){
 				var inputLeft = Vac.getOffsetTo(selectedRange[i], container).offsetLeft;
 				var inputTop = Vac.getOffsetTo(selectedRange[i], container).offsetTop;
 				var inputRight =  inputLeft + selectedRange[i].offsetWidth;
 				var inputBottom = inputTop + selectedRange[i].offsetHeight;
-				let value = selectedRange[i].value
-				if( inputRight > _l && inputBottom > _t && inputTop < _l + _w && inputTop < _t + _h) {
+				let value = selectedRange[i].value;
+				if( inputBottom < _b && inputTop > _t && inputLeft > _l && inputRight < _r) {console.log(value);
 					if ($(selectedRange[i]).hasClass('single-case')) {
 						_this.pushNoRepeat(_this.selectedCases, +value)
 					} else {
@@ -113,6 +112,7 @@ var checkFunction = {
 						_this.checkedFlowNodes = [...set]
 					}
 				}
+				_this.setBackground();
 			}
 			event.stopPropagation();
 			event.preventDefault();
@@ -145,7 +145,7 @@ var checkFunction = {
 	checkallToggle (event){
 		var flag = event.target.checked;
 		// console.log(flag)
-		var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
+		var inputs = event.target.parentNode.parentNode.parentNode.getElementsByClassName('check-case');
 		let inputValue = []
 		if(flag) {
 			for(var input of inputs) {
@@ -153,7 +153,6 @@ var checkFunction = {
 				? (this.checkedFlowNodes.push(+input.value))
 				: 1 
 			}
-			 // = [...this.checkedFlowNodes, ...inputValue]
 		} else {
 			for (var input of inputs) {
 				let set = new Set(this.checkedFlowNodes)
@@ -165,6 +164,7 @@ var checkFunction = {
 			}
 		}
 		this.setBackground()
+		console.log(this.checkedFlowNodes);
 	},
 	checkallBox (event){
 		// console.log(this.checkall)

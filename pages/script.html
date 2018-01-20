@@ -272,11 +272,13 @@
                       <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
                       <!-- <input type="text" readonly="true" class="operation-ui" value={{row.operation.ui}}> -->
                     </td>
-                    <td class="functions" @mousedown.stop="1">
-                      <select class="functions-select form-control" style="width: 90%;">
-                        <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
-                        <!-- <option>lajkj </option>
-                        <option>akjla</option> -->
+                    <td class="functions" @mousedown.stop="1" data-index={{index}}>
+                      <select class="functions-select form-control" style="width: 90%;" @change="changeFunction($event.target, index)">
+                        <!-- <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option> -->
+                        <template v-for="function in row.functions">
+                            <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+                            <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                        </template>
                       </select>
                     </td>
                     <td class="parameters" @mousedown.stop="1">

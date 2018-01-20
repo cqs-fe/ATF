@@ -444,7 +444,6 @@ $(document).ready(function () {
 					})
 				},
 				moveUp: function (event, type) {
-					console.log('moveUp')
 					var _this = this;
 					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows)
 					var trs = $(event.target).closest('.operation-wrapper').find(`input[type='checkbox']:checked`).closest('tr')
@@ -461,6 +460,22 @@ $(document).ready(function () {
 					for (var i = trs.length - 1; i >= 0; i--) {
 						var originIndex = trs[i].getAttribute('data-index')
 						operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
+					}
+				},
+				// 更改方法时改变参数
+				changeFunction: function(target, index, type) {
+					var operationRows = (type === 1 ? this.beforeOperationRows : this.afterOperationRows);
+					var me = this;
+					var selectedIndex = target.selectedIndex;
+					var option = target.options[selectedIndex];
+					var selectedFunction = option.value;
+					var parameters = option.getAttribute('data-parameters');
+					parameters = JSON.parse(parameters);
+					var newRow = this.operationRows[index];
+					newRow.selectedFunc = selectedFunction;
+					newRow.parameters = [];
+					for(let param of parameters) {
+						newRow.parameters.push({Name: param.name, Value: '' })
 					}
 				},
 				saveOperation: function (event, type) {
@@ -553,6 +568,7 @@ $(document).ready(function () {
 									var { functions, parameterlist } = _this.setFunctionAndParameter(data);
 									operationRows[index].parameters = parameterlist;
 									operationRows[index].functions = functions;
+									operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
 									_this.updateRow(operationRows, index);
 									resolve();
 								}
@@ -647,6 +663,7 @@ $(document).ready(function () {
 								var { functions, parameterlist } = modalVue.setFunctionAndParameter(data);
 								newRow.functions = functions;
 								newRow.parameters = parameterlist;
+								newRow.selectedFunc = functions.length ? functions[0].name : '';
 								operationRows.push(newRow)
 							}
 						})
