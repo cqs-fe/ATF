@@ -91,30 +91,37 @@ var app = new Vue({
             var scenename = $('#insertForm input[name="scenename"]').val();
             var description = $('#insertForm textarea[name="description"]').val();
             var caselibid=sessionStorage.getItem('caselibid');
-            $.ajax({
-                url: address + 'sceneController/insertSelective',
-                type: 'post',
-                data: {
-                    'scenename': scenename,
-                    'description': description,
-                    'caselibid': caselibid,
-                    'exeStrategyTestcase': '',
-                    'exeStrategyTestcaseaction': '',
-                    'errStrategy': ''
-                },
-                success: function(data) {
-                    console.log(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                        getScene(self.currentPage, self.pageSize, self.order, self.sort);
-                    } else {
+            if(scenename==""){
+                alert("场景名称不能为空");
+            }else if(description==""){
+                alert("场景描述不能为空");
+            }else{
+                $.ajax({
+                    url: address + 'sceneController/insertSelective',
+                    type: 'post',
+                    data: {
+                        'scenename': scenename,
+                        'description': description,
+                        'caselibid': caselibid,
+                        'exeStrategyTestcase': '',
+                        'exeStrategyTestcaseaction': '',
+                        'errStrategy': ''
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        if (data.success) {
+                            $('#successModal').modal();
+                            getScene(self.currentPage, self.pageSize, self.order, self.sort);
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+                });
+            }
+            
         },
         //删除场景
         checkDel:()=>{

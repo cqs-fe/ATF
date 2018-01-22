@@ -142,20 +142,37 @@
                                                     <input type="radio" name="sat" class="ace">
                                                     <span class="lbl">满足任一</span>
                                                 </label>
-                                                <button class="btn btn-primary saveFilter">保存查询条件</button>
+                                                <button class="btn btn-primary saveFilter" data-toggle="modal" href="#saveFilterModal">保存查询条件</button>
                                                 <label>我的查询</label>
                                                 <select class="selectpicker"></select>
                                                 <button class="btn btn-primary" @click="filterCase">查询</button>
                                             </div>
                                             <ul class="filterList">
-                                                <li v-for="item in filterList" track-by="$index">
+                                                <li>
                                                     <label>筛选项目</label>
                                                     <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
                                                         <option value="">请选择</option>
                                                         <option value="priority">优先级</option>
                                                         <option value="executeMethod">执行方式</option>
                                                         <option value="useStatus">用例状态</option>
-                                                        <option value="filterSceneId">所属场景</option>
+                                                        <option value="submissionId">任务编号</option>
+                                                        <option value="autId">被测系统</option>
+                                                        <option value="transId">功能码</option>
+                                                        <option value="caseproperty">用例性质</option>
+                                                        <option value="casetype">测试用例类型</option>
+                                                        <option value="author">作者</option>
+                                                        <option value="reviewer">评审者</option>
+                                                        <option value="executor">执行者</option>
+                                                        <option value="scriptMode">脚本管理方式</option>
+                                                        <option value="scriptModeFlag">所属模板</option>
+                                                        <option value="casecode">用例编号</option>
+                                                        <option value="testpoint">测试点</option>
+                                                        <option value="testdesign">测试意图</option>
+                                                        <option value="prerequisites">前置条件</option>
+                                                        <option value="datarequest">数据需求</option>
+                                                        <option value="teststep">测试步骤</option>
+                                                        <option value="expectresult">预期结果</option>
+                                                        <option value="checkpoint">附加检查点</option>
                                                     </select>                
                                                     <select name="compareType" class="selectpicker compare_select">
                                                         <option value="">请选择</option>
@@ -315,6 +332,37 @@
                             </div>
                         </div>
                         <!-- selectAlertModal end -->
+                        <!-- savaFilterModal start -->
+                        <div class="modal fade" id="saveFilterModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">保存当前查询条件</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="insertForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">查询条件名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" name="filterName" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <a data-dismiss="modal" class="btn btn-success" @click="">保存</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- savaFilterModal end -->
             </section>
             <div class="footer">
                 <link rel="import" href="./common/copy-right.html?__inline">
