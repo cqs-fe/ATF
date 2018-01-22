@@ -88,7 +88,7 @@
         <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
         <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
       </form>
-      <div class="operation-wrapper" v-show="dataType==4">
+      <div class="operation-wrapper" style="margin-top: 30px;">
         <div class="sticky-top">
           <label>前置操作</label>
           <div>
@@ -141,15 +141,27 @@
                 </td>
                 <td class="index" @mousedown.stop="1">{{index + 1}}</td>
                 <td class="operations" @mousedown.stop="1">
-                  <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
-                  <label>UI:</label>
-                  <span class="operation-ui">{{row.operation.ui}}</span>
-                  <label>元素:</label>
-                  <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                        <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                        <label >UI:</label>
+                        <span class="operation-ui">{{row.operation.ui}}</span>
+                        <label>元素:</label>
+                        <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    </template>
+                    <template v-else>
+                        <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                        <label >公共函数:</label>
+                        <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                        <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    </template>
                 </td>
                 <td class="functions" @mousedown.stop="1">
                   <select class="functions-select form-control" style="width: 90%;">
-                    <option v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
+                      <template v-for="function in row.functions"  @change="changeFunction($event.target, index, 1)">
+                          <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+                          <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                      </template>
+                    <!-- <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option> -->
                   </select>
                 </td>
                 <td class="parameters" @mousedown.stop="1">
@@ -172,8 +184,7 @@
                           <td class="param-value" contenteditable="true">{{parameter.Value}}</td>
                         </tr>
                         <tr>
-                          <td><button @click="cancelEditParam($event, 1)">取消</button></td>
-                          <td><button @click="saveParam($event, 1)">保存</button></td>
+                          <td colspan="2"><button @click="cancelEditParam($event, 1)">取消</button><button style="matgin-left: 10px;" @click="saveParam($event, 1)">保存</button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -187,6 +198,7 @@
             </tbody>
           </table>
         </div>
+        <div style="margin: 30px;"></div>
         <div class="sticky-top">
           <label>后置操作</label>
           <div>
@@ -240,17 +252,26 @@
                 </td>
                 <td class="index">{{index + 1}}</td>
                 <td class="operations">
-                  <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
-                  <label>UI:</label>
-                  <span class="operation-ui">{{row.operation.ui}}</span>
-                  <label>元素:</label>
-                  <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                      <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
+                      <label >UI:</label>
+                      <span class="operation-ui">{{row.operation.ui}}</span>
+                      <label>元素:</label>
+                      <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  </template>
+                  <template v-else>
+                      <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
+                      <label >公共函数:</label>
+                      <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                      <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  </template>
                 </td>
                 <td class="functions">
                   <select class="functions-select form-control" style="width: 90%;">
-                    <option v-for="function in row.functions" :value="function.mname">{{function.mname}}</option>
-                    <!-- <option>lajkj </option>
-                    <option>akjla</option> -->
+                    <template v-for="function in row.functions"  @change="changeFunction($event.target, index, 2)">
+                        <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+                        <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                    </template>
                   </select>
                 </td>
                 <td class="parameters" contenteditable="false">
@@ -274,8 +295,7 @@
                           <td class="param-value" contenteditable="true">{{parameter.Value}}</td>
                         </tr>
                         <tr class="bottom-row">
-                          <td> <button @click="cancelEditParam($event, 2)">取消</button></td>
-                          <td> <button @click="saveParam($event, 2)">保存</button></td>
+                          <td colspan="2"> <button @click="cancelEditParam($event, 2)">取消</button> <button  style="matgin-left: 10px;" @click="saveParam($event, 2)">保存</button></td>
                         </tr>
                       </tbody>
                     </table>

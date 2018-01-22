@@ -33,8 +33,7 @@ var checkFunction = {
 	},
 	checkallToggle (event){
 		var flag = event.target.checked;
-		// console.log(flag)
-		var inputs = event.target.parentNode.parentNode.getElementsByClassName('check-case');
+		var inputs = event.target.parentNode.parentNode.parentNode.getElementsByClassName('check-case');
 		let inputValue = []
 		if(flag) {
 			for(var input of inputs) {
@@ -79,14 +78,16 @@ var checkFunction = {
 			input.checked = flag
 			flag === true 
 				? Vac.pushNoRepeat(this.selectedSceneCases, input.value) 
-				: this.selectedSceneCases.splice(this.selectedSceneCases.indexOf(input.value), 1)
+				: this.selectedSceneCases.indexOf(input.value) >= 0 
+					? this.selectedSceneCases.splice(this.selectedSceneCases.indexOf(input.value), 1)
+					: 1
 		}
 		this.setBackground()
 	},
 	checkAllFlowNodes (event) {
 		var _this = this
 		let flag = event.target.checked
-		let caseLibDiv = event.target.parentNode.parentNode
+		let caseLibDiv = event.target.parentNode.parentNode.parentNode;
 		let caseListDiv = caseLibDiv.parentNode.parentNode
 		var inputs = Array.from(caseLibDiv.querySelectorAll('.check-case'))
 		if( flag === true ) {
@@ -168,10 +169,8 @@ var checkFunction = {
 		this.setBackground()
 	},
 	setSelect (event){
-		
 		var _this = this;
 		var target  = event.target;
-		console.log(target)
 		if(target.classList.contains('handle1') || target.classList.contains('handle')) {
 			return
 		}
@@ -198,9 +197,7 @@ var checkFunction = {
 		event.stopPropagation();
 		event.preventDefault();
 		var selectedRange = [];
-		// 函数节流
 		var moveFunction = mouseMoveFunction;
-		// var moveFunction = Vac.throttle(mouseMoveFunction, 30, _this)
 		container.addEventListener('mousemove', moveFunction, false);
 		container.addEventListener('mouseup', (event) => {
 			// this.isSelect = true;
@@ -224,7 +221,6 @@ var checkFunction = {
 				}
 			}
 			for (let caseId of _this.sceneCaseIds) {
-				// console.log(caseId)
 				if(_this.flowNodesMap.get(caseId).every((value) => {
 					return _this.selectedSceneCases.includes(value)
 				})) {
@@ -241,7 +237,6 @@ var checkFunction = {
 		
 
 		function mouseMoveFunction(event){
-			console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}
@@ -250,30 +245,32 @@ var checkFunction = {
 			// 获取鼠标移动后的位置
 			_x = startX - moveBeforeX + moveAfterX;
 			_y = startY - moveBeforeY + moveAfterY;
-			// console.log("_X:" + _x + "-- _Y:" + _y);
+
 			selDiv.style.left = Math.min(_x, startX) + "px";
 			selDiv.style.top = Math.min(_y, startY) + "px";
-			// console.log("Left:" + selDiv.style.left + "-- Top:" + selDiv.style.top);
 			selDiv.style.width = Math.abs(_x - startX) + "px";
 			selDiv.style.height  = Math.abs(_y - startY) + "px";
 
 			var _l = selDiv.offsetLeft, _t = selDiv.offsetTop;
-			var _w = selDiv.offsetWidth, _h = selDiv.offsetHeight;
+			var _r = selDiv.offsetWidth + _l, _b = selDiv.offsetHeight + _t;
 			
 			for(var i=0; i < fileNodes.length; i++){
-				var inputRight = fileNodes[i].offsetLeft + fileNodes[i].offsetWidth;
-				var inputBottom = fileNodes[i].offsetTop + fileNodes[i].offsetHeight;
-				if( inputRight > _l && inputBottom > _t && fileNodes[i].offsetLeft < _l + _w && fileNodes[i].offsetTop < _t + _h) {
-					if(!selectedRange.includes(fileNodes[i])){
-						selectedRange.push(fileNodes[i]);
-					}
+				var inputLeft = Vac.getOffsetTo(fileNodes[i], container).offsetLeft;
+				var inputTop = Vac.getOffsetTo(fileNodes[i], container).offsetTop;
+				var inputRight = inputLeft + fileNodes[i].offsetWidth;
+				var inputBottom = inputTop + fileNodes[i].offsetHeight;
+				if (inputBottom < _b && inputTop > _t && inputLeft > _l && inputRight < _r) {
+					// selectedRange.push(fileNodes[i]);
+					Vac.pushNoRepeat(selectedRange, fileNodes[i]);
 				}
 			}
 			for(var i=0; i<selectedRange.length; i++){
-				var inputRight = selectedRange[i].offsetLeft + selectedRange[i].offsetWidth;
-				var inputBottom = selectedRange[i].offsetTop + selectedRange[i].offsetHeight;
+				var inputLeft = Vac.getOffsetTo(selectedRange[i], container).offsetLeft;
+				var inputTop = Vac.getOffsetTo(selectedRange[i], container).offsetTop;
+				var inputRight =  inputLeft + selectedRange[i].offsetWidth;
+				var inputBottom = inputTop + selectedRange[i].offsetHeight;
 				let value = selectedRange[i].value
-				if( inputRight > _l && inputBottom > _t && selectedRange[i].offsetLeft < _l + _w && selectedRange[i].offsetTop < _t + _h) {
+				if( inputRight > _l && inputBottom > _t && inputLeft < _r && inputTop < _b) {
 					if ($(selectedRange[i]).hasClass('single-case-incaselib')) {
 						Vac.pushNoRepeat(_this.selectedCases, +value)
 					} else if($(selectedRange[i]).hasClass('flow-node-incaselib')){

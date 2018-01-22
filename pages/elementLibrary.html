@@ -72,7 +72,7 @@
                                         <div class="col-xs-12">
                                             <a class="btn btn-info btn-sm" data-toggle="modal" href="#addUIModal">添加UI</a>
                                             <a class="btn btn-info btn-sm" @click="delUI">删除UI</a>
-                                            <a class="btn btn-info btn-sm" data-toggle="modal" href="#addElementModal">添加元素</a>
+                                            <a class="btn btn-info btn-sm" data-toggle="modal" @click="checkAddElement">添加元素</a>
                                             <a class="btn btn-info btn-sm" @click="delElement">删除元素</a>
                                         </div>
                                     </div>
@@ -396,6 +396,24 @@
                                 </div>
                             </div>
                             <!-- failModalEle end -->
+                            <!-- elementAlertModal start -->
+                            <div class="modal fade" id="elementAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">操作失败</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4>请先选中UI！</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- elementAlertModal end -->
                         </div>
                     </div>
                     <!-- <link rel="import" href="./common/copy-right.html?__inline"> -->
@@ -962,6 +980,15 @@ var app = new Vue({
                 }
             });
         },
+        checkAddElement(){
+            let treeObj = $.fn.zTree.getZTreeObj("elementtree"),
+                nodes = treeObj.getSelectedNodes();
+            if(nodes.length==0){
+                $('#elementAlertModal').modal();
+            }else{
+                $('#addElementModal').modal();
+            }
+        },
         addElement: function() {
             var _this = this;
             var transid = !this.componentMode ? _this.transactId : _this.transid;
@@ -972,30 +999,30 @@ var app = new Vue({
                 treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes(),
                 selectedUIName = nodes[0].name;
-            $.ajax({
-                url: address + 'elementlibraryController/insertElement',
-                type: 'post',
-                data: {
-                    "transid": transid,
-                    "UIName": selectedUIName,
-                    "ElementName": ElementName,
-                    "ClassType": ClassType,
-                    "relateIdentifyObjectId": relateIdentifyObjectId,
-                    "relateParentIdentifyObjectId": relateParentIdentifyObjectId
-                },
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModalEle').modal();
-                        _this.getElementTree();
-                    } else {
+                $.ajax({
+                    url: address + 'elementlibraryController/insertElement',
+                    type: 'post',
+                    data: {
+                        "transid": transid,
+                        "UIName": selectedUIName,
+                        "ElementName": ElementName,
+                        "ClassType": ClassType,
+                        "relateIdentifyObjectId": relateIdentifyObjectId,
+                        "relateParentIdentifyObjectId": relateParentIdentifyObjectId
+                    },
+                    success: function(data) {
+                        console.info(data);
+                        if (data.success) {
+                            $('#successModalEle').modal();
+                            _this.getElementTree();
+                        } else {
+                            $('#failModalEle').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModalEle').modal();
                     }
-                },
-                error: function() {
-                    $('#failModalEle').modal();
-                }
-            });
+                });
         },
         delElement: function() {
             var _this = this;

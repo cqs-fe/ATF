@@ -1,6 +1,11 @@
 fis.hook('commonjs');
 
-fis.match('**.{js,scss,png,jpg,map,css,gif,PNG}', {
+fis.match('/static/**.{js,scss,png,jpg,map,css,gif,PNG}', {
+	useHash: true,
+	release: '/public/$0'
+});
+
+fis.match('/lib/*.js', {
 	useHash: true,
 	release: '/public/$0'
 });

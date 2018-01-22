@@ -97,11 +97,12 @@
               <button class="btn btn-info" @click="getCases()">查询</button>
               <button class="btn btn-info" @click="addScene();">添加场景</button>
               <button class="btn btn-info" @click="removeSceneAndCase();">移除场景与用例</button>
+              <button class="btn btn-info" @click="reQuery();">重新查询执行结果</button>
             </div>
             <div class="main-content2">
               <div class="case-list-wrapper list-wrapper" v-if="testCaseList.length" style="padding:10px 20px 10px 20px">
                 <span class="case-list-title list-title">用例列表</span>
-                <button class="hide-case-list btn btn-info" @click="hideCaseList($event)" @mousedown.stop="1"><span>收起</span>&nbsp;&nbsp;<i class="icon-caret-down"></i></button>
+                <button class="hide-case-list btn btn-info" @click="hideCaseList($event)" style="padding: 3px 6px; margin:5px 10px;" @mousedown.stop="1"><span>收起</span>&nbsp;&nbsp;<i class="icon-caret-down"></i></button>
                 <div class="case-list">
                   <div class="check-all-case" v-if="testCaseList.length">全选
                     <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">
@@ -111,19 +112,22 @@
                       <template v-if="case_wrapper.caseCompositeType == '1'">
                       <div class="checkbox-wrapper">
                         <i class="icon-move handle" style="color: #ff6c60;"></i>
-                        <input type="checkbox" :value="case_wrapper.caseId" @change="checkallToggle($event)" class="checkall" v-model="selectedCases">
+                        <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
+                          <input type="checkbox" :value="case_wrapper.caseId" @mousedown.stop="1" @change="checkallToggle($event)" class="checkall" v-model="selectedCases">
+                        </div>
+                      </div>
                       </div>
                       <div class="case-wrapper">
                         <div class="case" @click="changeCase(case_wrapper.caseId, 1)"  @mousedown.stop="1">
                           <div class="case-header">
-                            <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
+                            <img :src="exeImgs[0]" :id="'img' + '-' + case_wrapper.caseId">
                             <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
+                            <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
                           </div>
                           <div class="case-main">
-                            <!-- <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 1)">查看</a> -->
+                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 'PE4')">查看</a>
                           </div>
                           <footer class="case-footer">
-                            <!-- <img :src="exeImgs[0]"> -->
                           </footer>
                         </div>
                       </div>
@@ -132,21 +136,22 @@
                       <template v-else>
                       <div class="checkbox-wrapper">
                         <i class="icon-move handle" style="color: #ff6c60;"></i>
+                        <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
                         <input type="checkbox" :value="case_wrapper.caseId" class="checkall" v-model="selectedCases"
-                        @change="checkallToggle($event)">
+                        @change="checkallToggle($event)" @mousedown.stop="1"></div>
                       </div>
                       <div class="case-wrapper">
                         <div class="case" v-for="item in case_wrapper.flowNodes" @mousedown.stop="1" @click="changeCase(item.flowNodeId, 2)">
                           <div class="case-header">
+                            <img :src="exeImgs[0]" :id="'img' + '-' + item.flowNodeId">
+                            <p :title="item.casecode">{{item.casecode}}</p>
                             <input type="checkbox" v-bind:value="item.flowNodeId"
                             class="check-case flow-node-incaselib" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                            <p :title="item.casecode">{{item.casecode}}</p>
                           </div>
                           <div class="case-main">
-                            <!-- <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 2)">查看</a> -->
+                            <a class="view-case" @click.stop="viewCase(case_wrapper.caseId, 'PE4')">查看</a>
                           </div>
                           <footer class="case-footer">
-                            <!-- <img :src="exeImgs[1]"> -->
                           </footer>
                         </div>
                       </div>
@@ -174,20 +179,21 @@
                         <template v-if="case_wrapper.caseCompositeType == '1'">
                         <div class="checkbox-wrapper">
                           <i class="icon-move handle1" style="color: #ff6c60;"></i>
-                          <input type="checkbox" :value="scene.sceneId+'-'+case_wrapper.caseId" class="check-flownodes" v-model="selectedSceneCases" @change="checkAllFlowNodes($event)">
+                          <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
+                              <input type="checkbox" :value="scene.sceneId+'-'+case_wrapper.caseId" class="check-flownodes" v-model="selectedSceneCases" @change="checkAllFlowNodes($event)">
+                          </div>
                         </div>
                         <div class="case-wrapper">
                           <div class="case"  @click="changeCase(scene.sceneId+'-'+case_wrapper.caseId, 3)" @mousedown.stop="1">
                             <div class="case-header">
-                              <input type="checkbox" v-bind:value="scene.sceneId+'-'+case_wrapper.caseId" class="check-case check-case-inscene" v-model="selectedSceneCases" @change="checkFlowNode($event)">
+                              <img :src="exeImgs[0]" :id="'img' + '-' + scene.sceneId+'-'+case_wrapper.caseId">
                               <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
+                              <input type="checkbox" v-bind:value="scene.sceneId+'-'+case_wrapper.caseId" class="check-case check-case-inscene" v-model="selectedSceneCases" @change="checkFlowNode($event)">
                             </div>
-                           
                             <div class="case-main">
-                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 1)">查看</a>
+                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6')">查看</a>
                             </div>
                             <footer class="case-footer">
-                              <!-- <img :src="exeImgs[0]"> -->
                             </footer>
                           </div>
                         </div>
@@ -195,21 +201,22 @@
                         <template v-else>
                         <div class="checkbox-wrapper">
                           <i class="icon-move handle1" style="color: #ff6c60;"></i>
-                          <input type="checkbox" :value="scene.sceneId+'-'+case_wrapper.caseId" class="check-flownodes" @change="checkAllFlowNodes($event)" v-model="selectedSceneCases">
+                          <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
+                            <input type="checkbox" :value="scene.sceneId+'-'+case_wrapper.caseId" class="check-flownodes" @change="checkAllFlowNodes($event)" v-model="selectedSceneCases">
+                          </div>
                         </div>
                         <div class="case-wrapper">
                           <div class="case" v-for="item in case_wrapper.flowNodes"  @mousedown.stop="1" @click="changeCase(scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId, 3)">
                             <div class="case-header">
+                              <img :src="exeImgs[0]" :id="'img' + '-' + scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId">
+                              <p :title="item.casecode">{{item.casecode}} </p>
                               <input type="checkbox" v-bind:value="scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId"
                               class="check-case check-case-inscene" @change="checkFlowNode($event)" v-model="selectedSceneCases">
-                              <p :title="item.casecode">{{item.casecode}} </p>
-                              
                             </div>
                             <div class="case-main">
-                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 2)">查看</a>
+                              <a class="view-case" @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6')">查看</a>
                             </div>
                             <footer class="case-footer">
-                              <!-- <img :src="exeImgs[1]"> -->
                             </footer>
                           </div>
                         </div>

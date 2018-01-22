@@ -229,8 +229,8 @@
                     收起</button>
                 </div>
             </div>
-            <div class="main-content" @mousedown="setSelect">
-              <div class="check-all-case">
+            <div class="main-content" @mousedown="setSelect" style="padding: 5px 15px;">
+              <div class="check-all-case" @mousedown.stop="1">
                 <input type="checkbox"  @change="checkallBox($event)" v-model="checkall">全选
               </div>
               <div id="sortable">
@@ -238,13 +238,15 @@
                   <template v-if="case_wrapper.caseCompositeType == '1'">
                   <div class="checkbox-wrapper">
                     <i class="icon-move handle" style="color: #ff6c60;"></i>
-                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
+                    <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
+                      <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
+                    </div>
                   </div>
                   <div class="case-wrapper">
                     <div class="case"  @click="changeCase(case_wrapper.id, 1)"  @mousedown.stop="1">
                       <div class="case-header">
+                        <p :title="case_wrapper.casecode" style="margin-left: 5px;">{{case_wrapper.casecode}}</p>
                         <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
-                        <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
                       </div>
                       <!-- <div class="case-main">
                         <p>{{case_wrapper.casecode}}</p>
@@ -259,15 +261,15 @@
                   <template v-else>
                   <div class="checkbox-wrapper">
                     <i class="icon-move handle" style="color: #ff6c60;"></i>
-                    <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
-                    @change="checkallToggle($event)">
+                    <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1"><input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
+                    @change="checkallToggle($event)"></div>
                   </div>
                   <div class="case-wrapper">
                     <div class="case" v-for="item in case_wrapper.flowNodeDtos" @mousedown.stop="1"  @click="changeCase(item.id, 2)">
                       <div class="case-header">
+                        <p :title="item.casecode" style="margin-left: 5px;">{{item.casecode}}</p>
                         <input type="checkbox" v-bind:value="item.id"
                         class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                        <p :title="item.casecode">{{item.casecode}}</p>
                       </div>
                       <!-- <div class="case-main">
                         <p>{{item.casecode}}</p>

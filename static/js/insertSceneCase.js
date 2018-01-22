@@ -37,7 +37,7 @@ var app = new Vue({
         sceneList:[],
         sceneid: '',
         scenename: '场景名称',
-        url_parameter: ''
+        url_parameter: '',
     },
     ready: function() {
         this.setVal();
@@ -49,6 +49,267 @@ var app = new Vue({
         $('.3 .arrow').addClass('open')
         $('.3-ul').css({display: 'block'})
         $('.3-4').css({color: '#ff6c60'})
+        // 删除筛选条件
+        $('.filterList').delegate('button.btn-danger','click',function(){
+            $(event.target).closest('li').remove();
+        });
+        // 筛选案例select option
+        // let that=this;
+        $('.filterList').delegate('select[name="propertyName"]', 'change', function() {
+            let selectedProp=$(event.target).val();
+            if(selectedProp=='priority'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $(event.target).parent().next().next().next().children('select').append('<option value="1">1级</option><option value="2">2级</option><option value="3">3级</option><option value="4">4级</option><option value="5">5级</option><option value="6">6级</option><option value="7">7级</option><option value="8">8级</option><option value="9">9级</option>');
+                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+            }else if(selectedProp=='executeMethod'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $(event.target).parent().next().next().next().children('select').append('<option value="1">手工</option><option value="2">自动化</option><option value="3">配合</option>');
+                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+            }else if(selectedProp=='useStatus'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $(event.target).parent().next().next().next().children('select').append('<option value="1">新增</option><option value="2">评审通过</option>');
+                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+            }else if(selectedProp=='submissionId'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"missionController/selectAll",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let submissionList=data.obj;
+                            for(let item of submissionList){
+                                console.log('hehe')
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}">${item.missionName}</option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+
+                        }
+                    }
+                });   
+            }else if(selectedProp=='autId'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"autController/selectAll",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let autList=data.obj;
+                            for(let item of autList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='transId'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let transList=data.obj;
+                            for(let item of transList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='caseproperty'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $(event.target).parent().next().next().next().children('select').append('<option value="">正常值</option><option value="">错误值</option><option value="">边界值</option><option value="">要素级</option><option value="">流程级</option>');
+                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');   
+            }else if(selectedProp=='casetype'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $(event.target).parent().next().next().next().children('select').append('<option value="">联机</option><option value="">批量</option><option value="">接口</option>');
+                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');   
+            }else if(selectedProp=='author'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"userController/selectAll",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let userList=data.obj;
+                            for(let item of userList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='reviewer'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"userController/selectAll",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let userList=data.obj;
+                            for(let item of userList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='executor'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"userController/selectAll",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let userList=data.obj;
+                            for(let item of userList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='scriptMode'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');   
+            }else if(selectedProp=='scriptModeFlag'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"scripttemplateController/selectAll",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let scriptModeFlagList=data.obj;
+                            for(let item of scriptModeFlagList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}">${item.name}</option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='casecode'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"TestcaseController/selectAll",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let caseList=data.o;
+                            for(let item of caseList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}">${item.casecode}</option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='testpoint'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let testpointList=data.obj;
+                            for(let item of testpointList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='testdesign'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let testdesignList=data.obj;
+                            for(let item of testdesignList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='prerequisites'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let prerequisitesList=data.obj;
+                            for(let item of prerequisitesList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='datarequest'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let datarequestList=data.obj;
+                            for(let item of datarequestList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='teststep'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let teststepList=data.obj;
+                            for(let item of teststepList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='expectresult'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let expectresultList=data.obj;
+                            for(let item of expectresultList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }else if(selectedProp=='checkpoint'){
+                $(event.target).parent().next().next().next().children('select').children().remove();
+                $.ajax({
+                    url: address+"",
+                    type: 'get',
+                    success:function(data){
+                        if(data.success){
+                            let checkpointList=data.obj;
+                            for(let item of checkpointList){
+                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                            }
+                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                        }
+                    }
+                });   
+            }
+        });
     },
     methods: {
         //获取上级页面选中的场景id和名称
@@ -63,72 +324,33 @@ var app = new Vue({
         //添加场景案例
         insert: function() {
             this.getIds();
-            $.ajax({
-                url: address + 'testexecutioninstanceController/inserttestcasetoscene',
-                type: 'post',
-                data: {
-                    'sceneid': this.sceneid,
-                    'caseidList': '['+this.ids+']',
-                },
-                success: function(data) {
-                    if (data.success) {
-                        $('#successModal').modal();
-                    } else {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                let that=this;
+                $.ajax({
+                    url: address + 'testexecutioninstanceController/inserttestcasetoscene',
+                    type: 'post',
+                    data: {
+                        'sceneid': that.sceneid,
+                        'caseidList': '['+that.ids+']',
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            location.href = "SceneManagement.html?sceneid=" + that.sceneid + "&" + "scenename=" + that.scenename;
+                            $('#successModal').modal();
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+                });
+            }
         },
-        // //获取流程节点
-        // getSubCase: function(e) {
-        //     var flowId = $(e.target).parent().parent().attr('id'),
-        //         flowTr = $(e.target).parent().parent();
-        //     console.log(flowId);
-        //     if ($(e.target).attr("class") === "icon-angle-right") {
-        //         $.ajax({
-        //             url: address + 'TestcaseController/testcaseactionquery',
-        //             type: 'post',
-        //             data: { 'testcaseid': flowId },
-        //             success: function(data) {
-        //                 this.subCaseList = data.obj;
-        //                 console.log(this.subCaseList);
-        //                 for (var i = 0; i < this.subCaseList.length; i++) {
-        //                     var subTr = $("<tr class='subShow'></tr>"),
-        //                         iconTd = $("<td></td>"),
-        //                         checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
-        //                         codeTd = $("<td></td>"),
-        //                         autTd = $("<td></td>"),
-        //                         transTd = $("<td></td>"),
-        //                         compositeTd = $("<td></td>"),
-        //                         useTd = $("<td></td>"),
-        //                         authorTd = $("<td></td>"),
-        //                         executorTd = $("<td></td>"),
-        //                         executeMethodTd = $("<td></td>");
-        //                     codeTd.html(this.subCaseList[i].subcasecode);
-        //                     autTd.html(this.subCaseList[i].autId);
-        //                     compositeTd.html(this.subCaseList[i].caseCompositeType);
-        //                     useTd.html(this.subCaseList[i].useStatus);
-        //                     authorTd.html(this.subCaseList[i].author);
-        //                     executorTd.html(this.subCaseList[i].executor);
-        //                     executeMethodTd.html(this.subCaseList[i].executeMethod);
-        //                     subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, authorTd, executorTd, executeMethodTd);
-        //                     flowTr.after(subTr);
-        //                 }
-
-        //             }
-        //         });
-        //         $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
-        //     } else {
-        //         $(".subShow").css("display", "none");
-        //         $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
-        //     }
-
-
-        // },
-
+        
         //获取选中的id
         getIds: function() {
             var id_array = new Array();
@@ -163,24 +385,6 @@ var app = new Vue({
             //页数变化时的回调
             getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-        // 流程案例添加节点案例
-        // addCaseNode: function() {
-        //     this.caseNodeNum++;
-        //     var cNode = $('<h3>流程节点案例' + this.caseNodeNum + this.caseNode);
-        //     var element = $("#addCaseNode").append(cNode);
-        //     this.$compile(element.get(0));
-        //     getUsers();
-        //     diyi(); //第一级函数
-        //     dier(); //第二级函数
-        //     disan(); //第三极函数
-        //     $('select[name="subautid"]').change(function() {
-        //         dier();
-        //         disan();
-        //     });
-        //     $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').change(function() {
-        //         disan();
-        //     });
-        // },
         //搜索案例
         searchCase: function(id) {
             $.ajax({
@@ -191,9 +395,82 @@ var app = new Vue({
                     this.$data.caseList = data.o;
                 }
             });
+        },
+        // 添加筛选
+        addFilter(){
+            // this.filterList.push('c');
+            let liStr=`<li>
+                                                    <label>筛选项目</label>
+                                                    <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
+                                                        <option value="">请选择</option>
+                                                        <option value="priority">优先级</option>
+                                                        <option value="executeMethod">执行方式</option>
+                                                        <option value="useStatus">用例状态</option>
+                                                        <option value="submissionId">任务编号</option>
+                                                        <option value="autId">被测系统</option>
+                                                        <option value="transId">功能码</option>
+                                                        <option value="caseproperty">用例性质</option>
+                                                        <option value="casetype">测试用例类型</option>
+                                                        <option value="author">作者</option>
+                                                        <option value="reviewer">评审者</option>
+                                                        <option value="executor">执行者</option>
+                                                        <option value="scriptMode">脚本管理方式</option>
+                                                        <option value="scriptModeFlag">所属模板</option>
+                                                        <option value="casecode">用例编号</option>
+                                                        <option value="testpoint">测试点</option>
+                                                        <option value="testdesign">测试意图</option>
+                                                        <option value="prerequisites">前置条件</option>
+                                                        <option value="datarequest">数据需求</option>
+                                                        <option value="teststep">测试步骤</option>
+                                                        <option value="expectresult">预期结果</option>
+                                                        <option value="checkpoint">附加检查点</option>
+                                                    </select>                
+                                                    <select name="compareType" class="selectpicker compare_select">
+                                                        <option value="">请选择</option>
+                                                        <option>属于</option>
+                                                        <option>不属于</option>
+                                                        <option>等于</option>
+                                                        <option>大于</option>
+                                                        <option>小于</option>
+                                                    </select> 
+                                                    <label>值</label>
+                                                    <select name="propertyValue" class="selectpicker val_select" multiple>
+                                                    </select>
+                                                    <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button> 
+                                                </li>`;
+            $('.filterList').append(liStr);
+            Vue.nextTick(function(){
+                $('.selectpicker').selectpicker('refresh')
+            });
+        },
+        //筛选案例
+        filterCase(){
+                let data=[];
+                let listItem={};
+                let list=$(".filterList>li");
+                console.log(list)
+                for(let i=0;i<list.length;i++){
+                    listItem.propertyName=$(list[i]).children('select[name="propertyName"]').val();
+                    listItem.compareType=$(list[i]).children('select[name="compareType"]').val();
+                    listItem.propertyValue='';
+                    listItem.propertyValues=$(list[i]).children('select[name="propertyValue"]').val();
+                    data.push(listItem);
+                }
+                console.log(data)
+                $.ajax({
+                    url:address+'TestcaseController/testcaseFilter',
+                    data:{
+                        filterConditionDtoList:JSON.stringify(data)
+                     },
+                    type:'get',
+                    dataType:"json",
+                    success:function(res){
+                        console.log(res)
+                    }
+
+                });
         }
     },
-
 });
 //获取案例
 function getCase(currentPage, listnum, order, sort) {
@@ -253,40 +530,7 @@ function queryCase() {
         }
     });
 }
-//筛选案例
-function filterCase(){
-        var data=[{
-        "propertyName": "priority",
-        "compareType": "in",
-        "propertyValue": "",
-        "propertyValues": app.priority,
-        "propertyValueList": ''
-    }, {
-            "propertyName": "executeMethod",
-            "compareType": "in",
-            "propertyValue": "",
-            "propertyValues": app.executeMethod,
-            "propertyValueList": ''
-        },{
-            "propertyName": "caseCompositeType",
-            "compareType": "in",
-            "propertyValue": "",
-            "propertyValues": app.caseCompositeType,
-            "propertyValueList": ''
-        },{
-            "propertyName": "useStatus",
-            "compareType": "in",
-            "propertyValue": "",
-            "propertyValues": app.useStatus,
-            "propertyValueList": ''
-        },{
-            "propertyName": "sceneId",
-            "compareType": "in",
-            "propertyValue": "",
-            "propertyValues": app.filterSceneId,
-            "propertyValueList": ''
-        }];
-}
+
 //获取场景
 function getScene(){
     $.ajax({

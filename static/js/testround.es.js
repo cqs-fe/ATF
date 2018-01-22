@@ -51,15 +51,25 @@ var vBody = new Vue({
 		// Scenes in add-scene modal
 		selectedScene: [],	// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
 		exeImgs: {
-			0: __uri('../static/images/waiting.png'),
-			1: __uri('../static/images/running.gif'),
-			2: __uri('../static/images/success.png'),
-			3: __uri('../static/images/failed.png')
+			0: '/assets/images/waiting.png',
+			1: '/assets/images/success.png',
+			2: '/assets/images/failed.png',
+			3: '/assets/images/warn.png',
+			4: '/assets/images/running.gif'
 		},
+		// 批量执行相关
+		hasStartExecute: false,
+		batchExecuteNo: null,
+		executeResult : 'fail',
+		queryResultFun: null,
+		queryInterval: 1000,
+		reQueryInterval: 2,
+		queryNums: 0,
 
 		// save the string : 展开 and 收起
 		expandString: '展开',
-		unexpandString: '收起'
+		unexpandString: '收起',
+		
 	},
 	created: function(){
 		var _this = this;
@@ -77,7 +87,12 @@ var vBody = new Vue({
 							_this.testphaseValue = _this.testphases[0].phasename
 							resolve()
 						}
+					} else {
+						Vac.alert('查询用例失败！');
 					}
+				},
+				error: function() {
+					Vac.alert('查询用例出错！');
 				}
 			});
 		})
@@ -93,25 +108,19 @@ var vBody = new Vue({
 						if(_this.testrounds[0]) {
 							_this.testroundValue = _this.testrounds[0].id
 							resolve()
+						} else {
+							Vac.alert('查询用例失败！');
 						}
 					}
+				},
+				error: function() {
+					Vac.alert('查询用例出错！');
 				}
 			});
 		})
 		let getCaseId = new Promise((resolve, reject) => {
-			// get caselib id
-			$.ajax({
-				url: address+'testProjectController/selectAll',
-				type: 'GET',
-				data: null,
-				success: function(data) {
-					_this.caselibIds = data.obj;
-					if(_this.caselibIds[0]) {
-						_this.caselibId = _this.caselibIds[0].caselibId
-						resolve()
-					}
-				}
-			});
+			_this.caselibId = sessionStorage.getItem('caselibid');
+			resolve();
 		})
 		
 		Promise.all([getPhasePro, getRoundPro, getCaseId])
@@ -155,11 +164,7 @@ var vBody = new Vue({
 				}))
 				{
 					Vac.pushNoRepeat(this.selectedCases, +key)
-				} else 
-				// if(this.flowNodeIds.get(key).every((value) => {
-				// 	return !this.checkedFlowNodes.includes(+value)
-				// }))
-				{
+				} else {
 					let set = new Set(this.selectedCases)
 					set.delete(+key)
 					this.selectedCases = [...set]
@@ -173,6 +178,9 @@ var vBody = new Vue({
 			this.alertShow = false;
 		},
 		executeAll: function(){
+			// 20180117154254295845
+			// 20180117153441839537
+			var _this = this;
 			var data = {
 				executionround: this.executionround,
 				recordflag: this.recordflag,
@@ -189,7 +197,7 @@ var vBody = new Vue({
 				dataType: 'json',
 				success: function(data, statusText) {
 					if (data.success === true) {
-						Vac.alert('执行成功！')
+						_this.startQueryResult(data.msg);
 					}else {
 						Vac.alert('执行失败！')
 					}
@@ -199,6 +207,64 @@ var vBody = new Vue({
 				}
 			})
 			// 2,2,3,q,2,1,''
+		},
+		startQueryResult: function(batchExecuteNo) {
+			var me = this;
+			this.batchExecuteNo = batchExecuteNo;
+			this.hasStartExecute = true;
+			this.queryResultFun = setTimeout(queryAction, this.queryInterval);
+
+			function queryAction(){
+				$.ajax({
+					url: address + 'testrecordController/selectByBatchExecuteNo',
+					type: 'post',
+					data: { batchExecuteNo }, 
+					success: function(data) {
+						if (data.success) {
+							me.setResultIcon(data.obj);
+							if (data.finished) {
+								// 执行完毕
+								me.hasStartExecute = false;
+								me.batchExecuteNo = null;
+								me.queryResultFun = null;
+								Vac.alert('执行完毕！');
+							} else {
+								// 未执行完毕
+								me.queryResultFun = setTimeout(queryAction, me.queryInterval);
+							}
+						} else {
+							Vac.alert('查询出错！请点击重新查询！');
+							// me.queryResultFun = setTimeout(queryAction, me.reQueryInterval);
+						}
+					},
+					error: function() {
+						Vac.alert('网络错误！请点击重新查询！');
+						// Vac.alert('查询执行结果失败，将在'+ me.reQueryInterval + '毫秒后继续查询');
+						// me.queryResultFun = setTimeout(queryAction, me.reQueryInterval);
+					}
+				});
+			}
+		},
+		reQuery: function() {
+			this.batchExecuteNo && this.startQueryResult(this.batchExecuteNo);
+		},
+		setResultIcon: function(data) {
+			for (let d of data) {
+				if (d.sourcechannel === 'PE4') {
+					if (d.flownodeid) {
+						document.querySelector(`#img-${d.flownodeid}`).src = this.exeImgs[d.resultstatus];
+					} else {
+						document.querySelector(`#img-${d.caseid}`).src = this.exeImgs[d.resultstatus];
+					}
+				} else {
+					if(d.flownodeid) {
+						document.querySelector(`#img-${d.sceneId}-${d.caseid}-${d.flownodeid}`).src = this.exeImgs[d.resultstatus];
+					} else {
+						document.querySelector(`#img-${d.sceneId}-${d.caseid}`).src = this.exeImgs[d.resultstatus];
+					}
+					
+				}
+			}
 		},
 		addScene: function() {
 			var _this = this;
@@ -218,6 +284,7 @@ var vBody = new Vue({
 			$('#add-modal').modal("show");
 		},
 		removeSceneAndCase: function() {
+			var _this = this;
 			Vac.confirm('', '', '', '确认要移除场景和用例吗？').then(() => {
 				let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
 				let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
@@ -253,7 +320,7 @@ var vBody = new Vue({
 						if(data.success){
 							$('#add-modal').modal('hide');
 							Vac.alert('移除成功')
-							this.getCases()
+							_this.getCases()
 						}else {
 							Vac.alert("移除失败")
 						}
@@ -284,12 +351,15 @@ var vBody = new Vue({
 					if(data.success){
 						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
-						this.getCases()
+						_this.getCases()
 						// _this.alertShow = true;
 						// _this.tooltipMessage = '添加成功';
 					}else {
 						Vac.alert("添加失败")
 					}
+				},
+				error: function() {
+					Vac.alert("添加失败");
 				}
 			});
 		},
@@ -467,22 +537,14 @@ var vBody = new Vue({
 			}
 			this.setBackground(this.selectedSceneCases)
 		},
-		viewCase: function (sceneid, caseid,) {
-			// var o = {
-			// 	sceneid, caseid,
-			// 	testphase: this.testphaseValue,
-			// 	testround: this.testroundValue,
-			// 	executeround: this.executionround,
-			// 	sourcechannel: 'PE5',
-			// 	recorderstate: '2'
-			// }
+		viewCase: function (sceneId, caseid, sourcechannel) {
 			var o = {
-				sceneid: '',
-				testphase: '',
-				testround: '',
-				executeround: '',
-				sourcechannel: 'PE5',
-				recorderstate: ''
+				sceneId, caseid,
+				testPhase: this.testphaseValue,
+				testRound: this.testroundValue,
+				executeround: this.executionround,
+				sourcechannel: sourcechannel
+				// recorderStatus: '2'
 			}
 			var args = encodeURIComponent(JSON.stringify(o));
 			window.open('case-operation.html?activeName=exec-record&viewcaseargs='+args, 'case_record');

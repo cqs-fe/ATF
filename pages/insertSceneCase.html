@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" href="../static/css/fileinput.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap-select.min.css">
     <!-- pagination css -->
     <title>添加场景用例</title>
     <style type="text/css">
@@ -16,6 +17,51 @@
         .filterScene{
             display: inline-block;
             float: left;
+        }
+        .panel-body{
+            padding: 0 15px 15px 15px;
+        }
+        .panel-body>label{
+            margin-bottom: 10px; 
+        }
+        select[multiple], select[size] {
+            height: 34px;
+        }
+        .form-group {
+            margin-bottom: 5px;
+        }
+        .filterButtons{
+            margin-bottom: 10px;
+        }
+        .btn-default {
+            color: #333;
+            background-color: #fff;
+            border-color: #ccc;
+        }
+        .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+            color: #333;
+            background-color: #ebebeb;
+            border-color: #adadad;
+        }
+        .filterList{
+            list-style: none;
+        }
+        .filterList>li{
+            display: inline-block;
+            margin-left: 5px;
+            margin-bottom: 5px;
+        }
+        .prop_select{
+            width: 100px !important;
+        }
+        .compare_select{
+            width: 80px !important;
+        }
+        .val_select{
+            width: 150px !important;
+        }
+        .saveFilter{
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -59,21 +105,15 @@
                                                   <a class="btn btn-white" v-on:click="isShow=!isShow, iconflag=!iconflag">
                                                       <span v-if="iconflag">显示筛选</span>
                                                       <span v-else>收起筛选</span>
-                                                      <i :class="{'icon-angle-down':iconflag, 'icon-angle-up':!iconflag}"></i>
+                                                       <i :class="{'icon-angle-down':iconflag, 'icon-angle-up':!iconflag}"></i>
                                                   </a>
                                             </h4>
                                         </div>
                                     </div>
                                     <form class="form-horizontal col-lg-10">
                                         <div class="form-group">
-                                            <!-- <label class="col-lg-1 control-label">搜索</label> -->
-                                            <div class="col-lg-2">
-                                                <input type="text" aria-controls="sample_1" class="form-control" placeholder="请输入案例编号" name="casecode" v-model="casecode">
-                                            </div>
-                                            <div class="col-lg-1">
-                                                <a class="btn btn-white" onclick="queryCase()">搜索</a>
-                                            </div>
-                                            <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
+                                            
+                                            <label class="col-lg-2 col-lg-offset-6 control-label">展示条目</label>
                                             <div class="col-lg-2">
                                                 <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
                                                     <option value="5" selected>5</option>
@@ -93,82 +133,62 @@
                                 <div class="col-lg-12">
                                     <div id="collapse1" class="panel-collapse collpase">
                                         <div class="panel-body">
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            优先级：
-                                                            <label class="checkbox-inline">
-                                                                <input type="checkbox" v-model="priority" value="1">1级</label>
-                                                            <label class="checkbox-inline">
-                                                                <input type="checkbox" v-model="priority" value="2">2级</label>
-                                                            <label class="checkbox-inline">
-                                                                <input type="checkbox" v-model="priority" value="3">3级</label>
-                                                            <label class="checkbox-inline" for="checkbox-04">
-                                                                <input type="checkbox" v-model="priority" value="4">4级</label>
-                                                            <label class="checkbox-inline" for="checkbox-05">
-                                                                <input type="checkbox" v-model="priority" value="5">5级</label>
-                                                            <label class="checkbox-inline" for="checkbox-06">
-                                                                <input type="checkbox" v-model="priority" value="6">6级</label>
-                                                            <label class="checkbox-inline" for="checkbox-07">
-                                                                <input type="checkbox" v-model="priority" value="7">7级</label>
-                                                            <label class="checkbox-inline" for="checkbox-08">
-                                                                <input type="checkbox" v-model="priority" value="8">8级</label>
-                                                            <label class="checkbox-inline" for="checkbox-09">
-                                                                <input type="checkbox" v-model="priority" value="9">9级</label>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            执行方式：
-                                                            <label class="checkbox-inline" for="checkbox-10">
-                                                                <input type="checkbox" v-model="executeMethod" value="1">手工</label>
-                                                            <label class="checkbox-inline" for="checkbox-11">
-                                                                <input type="checkbox" v-model="executeMethod" value="2">自动化</label>
-                                                            <label class="checkbox-inline" for="checkbox-12">
-                                                                <input type="checkbox" v-model="executeMethod" value="3">配合</label>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            案例类型：
-                                                            <label class="checkbox-inline" for="checkbox-13">
-                                                                <input type="checkbox" v-model="caseCompositeType" value="1">单案例</label>
-                                                            <label class="checkbox-inline" for="checkbox-14">
-                                                                <input type="checkbox" v-model="caseCompositeType" value="2">流程案例</label>
-                                                        
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="filter-checkbox">
-                                                            案例状态：
-                                                            <label class="checkbox-inline" for="checkbox-16">
-                                                                <input type="checkbox" v-model="useStatus" value="1">新增</label>
-                                                            <label class="checkbox-inline" for="checkbox-17">
-                                                                <input type="checkbox" v-model="useStatus" value="2">评审通过</label>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="filter-checkbox">
-                                                            
-                                                            <!-- <label class="checkbox-inline" for="checkbox-18">
-                                                                <input type="checkbox">我编写的</label>
-                                                            <label class="checkbox-inline" for="checkbox-19">
-                                                                <input type="checkbox">我执行的</label> -->
-                                                            <span class="filterScene">所属场景：</span>
-                                                            <div class="col-lg-2 filterScene">
-                                                                <select class="form-control" v-model="filterSceneId">
-                                                                <option v-for="item in sceneList" value="{{item.id}}">{{item.scenename}}</option>
-                                                            </select>
-                                                            </div>
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><a class="btn btn-primary" onclick="filterCase()">筛选</a></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <div class="filterButtons">
+                                                <label>
+                                                    <input type="radio" name="sat" class="ace">
+                                                    <span class="lbl">满足所有</span>
+                                                </label>
+                                                 <label>
+                                                    <input type="radio" name="sat" class="ace">
+                                                    <span class="lbl">满足任一</span>
+                                                </label>
+                                                <button class="btn btn-primary saveFilter" data-toggle="modal" href="#saveFilterModal">保存查询条件</button>
+                                                <label>我的查询</label>
+                                                <select class="selectpicker"></select>
+                                                <button class="btn btn-primary" @click="filterCase">查询</button>
+                                            </div>
+                                            <ul class="filterList">
+                                                <li>
+                                                    <label>筛选项目</label>
+                                                    <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
+                                                        <option value="">请选择</option>
+                                                        <option value="priority">优先级</option>
+                                                        <option value="executeMethod">执行方式</option>
+                                                        <option value="useStatus">用例状态</option>
+                                                        <option value="submissionId">任务编号</option>
+                                                        <option value="autId">被测系统</option>
+                                                        <option value="transId">功能码</option>
+                                                        <option value="caseproperty">用例性质</option>
+                                                        <option value="casetype">测试用例类型</option>
+                                                        <option value="author">作者</option>
+                                                        <option value="reviewer">评审者</option>
+                                                        <option value="executor">执行者</option>
+                                                        <option value="scriptMode">脚本管理方式</option>
+                                                        <option value="scriptModeFlag">所属模板</option>
+                                                        <option value="casecode">用例编号</option>
+                                                        <option value="testpoint">测试点</option>
+                                                        <option value="testdesign">测试意图</option>
+                                                        <option value="prerequisites">前置条件</option>
+                                                        <option value="datarequest">数据需求</option>
+                                                        <option value="teststep">测试步骤</option>
+                                                        <option value="expectresult">预期结果</option>
+                                                        <option value="checkpoint">附加检查点</option>
+                                                    </select>                
+                                                    <select name="compareType" class="selectpicker compare_select">
+                                                        <option value="">请选择</option>
+                                                        <option>属于</option>
+                                                        <option>不属于</option>
+                                                        <option>等于</option>
+                                                        <option>大于</option>
+                                                        <option>小于</option>
+                                                    </select> 
+                                                    <label>值</label>
+                                                    <select name="propertyValue" class="selectpicker val_select" multiple>
+                                                    </select>
+                                                    <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button> 
+                                                </li>
+                                            </ul>
+                                            <button class="btn btn-primary btn-xs" @click="addFilter()" id="add_btn"><i class="icon-plus"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -312,6 +332,37 @@
                             </div>
                         </div>
                         <!-- selectAlertModal end -->
+                        <!-- savaFilterModal start -->
+                        <div class="modal fade" id="saveFilterModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">保存当前查询条件</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="insertForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">查询条件名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" name="filterName" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <a data-dismiss="modal" class="btn btn-success" @click="">保存</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- savaFilterModal end -->
             </section>
             <div class="footer">
                 <link rel="import" href="./common/copy-right.html?__inline">
@@ -325,5 +376,7 @@
 <link rel="import" href="./common/footer.html?__inline">
 <!--script for this page only-->
 <script src="../lib/vue-resource.min.js"></script>
+<script type="text/javascript" src="../lib/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="../static/js/insertSceneCase.js"></script>
+
 

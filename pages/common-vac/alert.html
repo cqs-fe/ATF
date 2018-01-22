@@ -41,5 +41,11 @@
 	Vac.alert = function(message) {
 		$('.vac-alert .modal-message').html(message);
 		$('#vac-alert').modal('show');
+		return this;
 	};
+	Vac.removeAlert = function(msec) {
+		setTimeout(function() {
+			$('#vac-alert').modal('hide');
+		}, msec);
+	}
 </script>
