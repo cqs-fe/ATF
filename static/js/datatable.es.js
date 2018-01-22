@@ -178,9 +178,7 @@ $(document).ready(function () {
 						editDataVue.dataType = 4;
 						var beforeStr = cellData.slice(cellData.indexOf('@before\n') + 7, cellData.indexOf('@value'));
 						var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
-						// console.log('valueStr-->'+valueStr)
 						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
-						// console.log('afterStr-->'+afterStr)
 						// 前置操作
 						// var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
 						var beforeArr = beforeStr.split(';\n');
@@ -261,19 +259,28 @@ $(document).ready(function () {
 					insertDivVue.show(type, title);
 				},
 				saveEditData: function () {
-					var inputValue;
-					if(this.dataType == 1) {
-						inputValue= document.getElementById("input" + this.dataType).value;
-					} else if (this.dataType == 2) {
-						inputValue = 'nil';
-					} else if (this.dataType == 3) {
-						inputValue = '';
-					} else {
-						var inputStr = document.getElementById("input" + this.dataType).value;
-						var beforeStr = this.saveOperation(null, 1);
-						var afterStr = this.saveOperation(null, 2);
-						inputValue = `@before\n${beforeStr}\n@value\n{expr=${inputStr}}\n@after\n${afterStr}`;
+					var inputValue = ['', '', ''];
+					var inputStr = document.getElementById("input" + this.dataType).value;
+					var beforeStr = this.saveOperation(null, 1);
+					var afterStr = this.saveOperation(null, 2);
+					if (beforeStr.length) {
+						inputValue[0] =  `@before\n${beforeStr}\n`;
+						inputValue[1] = `@value\n`;
 					}
+					if (afterStr.length) {
+						inputValue[2] = `@after\n${afterStr}`;
+						inputValue[1] = `@value\n`;
+					}
+					if(this.dataType == 1) {
+						inputValue[1] += `${inputStr}\n`;
+					} else if (this.dataType == 2) {
+						inputValue[1] += `nil\n`;
+					} else if (this.dataType == 3) {
+						inputValue[1] += `\n`;
+					} else {
+						inputValue[1] += `{expr=${inputStr}}\n`;
+					}
+					inputValue = inputValue.join('');
 					handsontable.setDataAtCell(this.selection.start.row, this.selection.start.col, inputValue);
 					handsontable.render();
 				},
