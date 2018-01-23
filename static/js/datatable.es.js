@@ -8,20 +8,25 @@ $(document).ready(function () {
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
 	var transid = '',
 		autId ='';
-	(function () {
-
-		var tooltipwindow = new Vue({
-			el: '#tooltipwindow',
-			data: {
-				flag: true
-			},
-			methods: {
-				toggle: function () {
-					this.flag = !this.flag;
-				}
+	var tooltipwindow = new Vue({
+		el: '#tooltipwindow',
+		data: {
+			flag: true,
+			data: [],
+			scriptSelected: false,
+			testPoint:'',
+			executor:79,
+			caselibId:14,
+			autId:33,
+			transId:80,
+			scriptId:1193
+		},
+		methods: {
+			toggle: function () {
+				this.flag = !this.flag;
 			}
-		});
-	})();
+		}
+	});
 	(function () {
 		var editDataVue = new Vue({
 			el: '#editData',
@@ -881,6 +886,10 @@ $(document).ready(function () {
 						dataType: "json",
 						data: data,
 						success: function (data, textStatus) {
+							if (!data.success) {
+								Vac.alert(data.msg);
+								return;
+							}
 							var treeData = [];
 							if (data.o.length == 0) {
 								Vac.alert('返回结果为空！')
@@ -1032,41 +1041,45 @@ $(document).ready(function () {
 						data: _this.systemInfo,
 						// data: dataMock,
 						success: function (data, textStatus) {
-							var treeData = [];
-							if (data.o.length == 0) {
-								Vac.alert('该测试点下未查询到相关数据！')
-								return
-							}
-							data.o.forEach((value) => {
-								var item = {};  //解构第一层
-								item.open = true;
-								item.children = [];
-								value.children.forEach((value) => {
-									var subData = {};  //解构第二层
-									subData.children = [];
-									subData.open = true;
-									({
-										transactid: subData.id,
-										name: subData.name,
-									} = value);
-									value.children.forEach((value => {
-										var ssubData = {};
+							if (data.success) {
+								var treeData = [];
+								if (data.o.length == 0) {
+									Vac.alert('该测试点下未查询到相关数据！')
+									return
+								}
+								data.o.forEach((value) => {
+									var item = {};  //解构第一层
+									item.open = true;
+									item.children = [];
+									value.children.forEach((value) => {
+										var subData = {};  //解构第二层
+										subData.children = [];
+										subData.open = true;
 										({
-											scriptid: ssubData.id,
-											name: ssubData.name
+											transactid: subData.id,
+											name: subData.name,
 										} = value);
-										subData.children.push(ssubData);
-									}));
-									item.children.push(subData);
+										value.children.forEach((value => {
+											var ssubData = {};
+											({
+												scriptid: ssubData.id,
+												name: ssubData.name
+											} = value);
+											subData.children.push(ssubData);
+										}));
+										item.children.push(subData);
+									});
+									({
+										autid: item.id,
+										name: item.name,
+									} = value);
+									treeData.push(item);
 								});
-								({
-									autid: item.id,
-									name: item.name,
-								} = value);
-								treeData.push(item);
-							});
-							console.log(treeData)
-							zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+								zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+							} else {
+								Vac.alert(data.msg);
+							}
+							
 						}
 					});
 				}
@@ -1248,17 +1261,6 @@ $(document).ready(function () {
 				autId = treeNode.getParentNode().getParentNode().id;
 				transid = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
-				// var testpoint = ''
-				// 将autid transId以及scriptid拼接起来，去testpointsMap中寻找testpoint
-				// var string = `${autId}-${transId}-${scriptId}`
-				// for (let key of sub.testpointsMap.keys()){
-				// 	let set = sub.testpointsMap.get(key)
-				// 	if(set.has(string)) {
-				// 		testpoint = key
-				// 		break
-				// 	}
-				// }
-				// console.log(sub.systemInfo.testpoints)
 				var data = {
 					testpoint: sub.checkedArray[0],
 					// script_mode: sub.systemInfo.script_mode,
@@ -1269,6 +1271,13 @@ $(document).ready(function () {
 					transId: transid,
 					scriptId: scriptId
 				};
+				tooltipwindow.scriptSelected = true;
+				tooltipwindow.testPoint = sub.checkedArray[0];
+				tooltipwindow.executor = sub.systemInfo.executor;
+				tooltipwindow.caselibId = sub.systemInfo.caseLib_id;
+				tooltipwindow.autId = autId;
+				tooltipwindow.transId = transid;
+				tooltipwindow.scriptId = scriptId;
 				$.ajax({
 					url: address + "scripttemplateController/searchScripttemplateInf",
 					data: data,
@@ -1554,9 +1563,39 @@ $(document).ready(function () {
 				}
 			});
 		};
+		// 查看脚本
+		document.getElementById('viewScript').onclick = function () {
+			
+			if (!tooltipwindow.scriptSelected) {
+				Vac.alert('请在左侧树形结构中选择脚本');
+				return;
+			}
+			var data = {
+				scriptId: tooltipwindow.scriptId,
+				caseId: tooltipwindow.caseId
+			};
+
+			$.ajax({
+				url: address + 'getTestcaseScript',
+				data: data,
+				type: 'post',
+				dataType: 'json',
+				success: function (data, statusText) {
+					tooltipwindow.flag = false;
+					if (!data.success) {
+						Vac.alert(data.msg || '查询失败');
+						return;
+					}
+					tooltipwindow.data = data.obj;
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
+				}
+			});
+		}
 		//双击单元格，跳出编辑数据框
 		document.querySelectorAll('.dbclick').onDblClick = function () {
-			console.log('niah');
+			// console.log('niah');
 		};
 		//渲染第0列的内容
 		function colHeadersRenderer(col) {

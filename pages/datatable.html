@@ -439,7 +439,7 @@
             <button class="btn btn-white">
               <i class="icon-wrench"></i>
               调试</button> -->
-            <button class="btn btn-white">
+            <button class="btn btn-white" id="viewScript">
               <i class="icon-list-alt"></i>
               查看脚本</button>
             <button class="btn btn-white" id="saveAll">
@@ -460,7 +460,51 @@
               </button>
             </div>
             <div class="panel-body">
-             
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>操作项</th>
+                      <th>方法</th>
+                      <th>参数</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in data">
+                      <td class="index">{{ +row.index + 1 }}</td>
+                      <td class="operations">
+                          <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                              <label >UI:</label>
+                              <span class="operation-ui">{{row.ui}}</span>
+                              <label>元素:</label>
+                              <span class="operation-element" :data-classtype="row.classType">{{row.operation.element}}</span>
+                          </template>
+                          <template v-else>
+                              <label >公共函数:</label>
+                              <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                              <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                          </template>
+                      </td>
+                      <td class="functions">{{ row.method }}</td>
+                      <td class="parameters">
+                        <table class="param-table table table-condensed table-bordered">
+                            <thead>
+                              <tr>
+                                <td>名称</td>
+                                <td>参数值</td>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr v-for="parameter in row.parameters" class="param-row">
+                                <td class="param-name">{{parameter.name || '参数'}}</td>
+                                <td class="param-value" contenteditable="true">{{parameter.value}}</td>
+                              </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
             </div>
           </div>
         </main>
@@ -527,6 +571,8 @@
   </div>
   <link rel="import" href="./common/header.html?__inline">
   <link rel="import" href="./noLoginAlert.html?__inline">
+  <link rel="import" href="./common-vac/alert.html?__inline">
+  <link rel="import" href="./common-vac/confirm.html?__inline">
   <!--content end -->
   <script src="../static/js/config.js"></script>
   <script src="../static/js/vac-functions.es.js"></script>

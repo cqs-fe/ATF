@@ -128,8 +128,12 @@ $(document).ready(function() {
                 if(_this.scriptIsChanged) {
                     var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
                     promise.then(() => {
+                        editDataVue.tableSave();
+                        getTemplate();
+                        _this.scriptIsChanged = false
                     }, () => {
                         getTemplate();
+                        _this.scriptIsChanged = false
                     })
                 } else {
                     getTemplate();
@@ -143,7 +147,7 @@ $(document).ready(function() {
                             _this.templateList = data.o;
                             _this.checkedTemplate = [];
                             editDataVue.selectedScript = 0
-                            _this.scriptIsChanged = false
+                            
                         }
                     });
                 }
@@ -157,9 +161,14 @@ $(document).ready(function() {
                     if(this.scriptIsChanged) {
                         var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
                         promise.then(() => {
-                            this.checkedTemplate = this.checkedTemplate.slice(0, -1)
+                            editDataVue.tableSave();
+                            // this.checkedTemplate = this.checkedTemplate.slice(0, -1)
+                            // event.preventDefault()
+                            // return
+                            _this.scriptIsChanged = false
+                            _this.checkedTemplate = [+value]
+                            process(value)
                             event.preventDefault()
-                            return
                         }, () => {
                             _this.scriptIsChanged = false
                             _this.checkedTemplate = [+value]
@@ -175,9 +184,14 @@ $(document).ready(function() {
                     if(this.scriptIsChanged) {
                         var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "编辑后的基础脚本未保存，是否保存？");
                         promise.then(() => {
-                            this.checkedTemplate = this.checkedTemplate.slice(0)
-                            this.checkedTemplate = [+value]
-                            return
+                            editDataVue.tableSave();
+                            // this.checkedTemplate = this.checkedTemplate.slice(0)
+                            // this.checkedTemplate = [+value]
+                            // return
+                            _this.scriptIsChanged = false
+                            _this.checkedTemplate = []
+                            editDataVue.selectedScript = 0;
+                            event.target.checked = false;
                         }, () => {
                             _this.scriptIsChanged = false
                             _this.checkedTemplate = []
