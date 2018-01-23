@@ -173,33 +173,66 @@ $(document).ready(function () {
 					document.getElementById("input1").value = ''
 					document.getElementById("input4").value = ''
 					var cellData = $.trim(handsontable.getDataAtCell(this.selection.start.row, this.selection.start.col))
-					if(cellData.startsWith('@before')) {
-						// 表达式
-						editDataVue.dataType = 4;
+
+					this.beforeOperationRows = [];
+					this.afterOperationRows = [];
+					if (cellData.includes('@before')) {
 						var beforeStr = cellData.slice(cellData.indexOf('@before\n') + 7, cellData.indexOf('@value'));
-						var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
-						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
-						// 前置操作
-						// var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
 						var beforeArr = beforeStr.split(';\n');
-						console.log('beforeArr-->'+beforeArr.length)
 						this.parseScript(beforeArr, this.beforeOperationRows, 1)
-
+					}
+					if (cellData.includes('@after')) {
+						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
 						var afterArr = afterStr.split(';\n');
-						console.log('afterArr-->'+afterArr.length)
 						this.parseScript(afterArr, this.afterOperationRows, 2);
-
+					}
+					var valueStr;
+					if (cellData.includes('@value')) {
+						var endIndex = cellData.includes('@after') ? cellData.indexOf('@after') : cellData.length;
+						valueStr = cellData.slice(cellData.indexOf('@value') + 6, endIndex).replace(/^\s$/g, '');
+					} else {
+						valueStr = cellData;
+					}
+					if (valueStr.replace(/^\s$/g, '') == '') {
+						editDataVue.dataType = 3;
+					} else if (valueStr.replace(/^\s$/g, '') == 'nil') {
+						editDataVue.dataType = 2;
+					} else if (valueStr.includes('{expr=')) {
+						editDataVue.dataType = 4;
 						let str = valueStr.split('{expr=')[1]
 						var value = str.slice(0, str.indexOf('}'));
 						$('#input4').val(value);
-					} else if( cellData != '' && cellData != 'nil'){
-						editDataVue.dataType = 1;
-						$('#input1').val(cellData);
-					} else if( cellData == 'nil') {
-						editDataVue.dataType = 2;
 					} else {
-						editDataVue.dataType = 3;
+						editDataVue.dataType = 1;
+						$('#input1').val(valueStr);
 					}
+					// if(cellData.startsWith('@before')) {
+					// 	// 表达式
+					// 	editDataVue.dataType = 4;
+					// 	var beforeStr = cellData.slice(cellData.indexOf('@before\n') + 7, cellData.indexOf('@value'));
+					// 	var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
+					// 	var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
+					// 	// 前置操作
+					// 	// var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
+					// 	var beforeArr = beforeStr.split(';\n');
+					// 	console.log('beforeArr-->'+beforeArr.length)
+					// 	this.parseScript(beforeArr, this.beforeOperationRows, 1)
+
+					// 	var afterArr = afterStr.split(';\n');
+					// 	console.log('afterArr-->'+afterArr.length)
+					// 	this.parseScript(afterArr, this.afterOperationRows, 2);
+
+					// 	let str = valueStr.split('{expr=')[1]
+					// 	var value = str.slice(0, str.indexOf('}'));
+					// 	$('#input4').val(value);
+					// } else if( cellData != '' && cellData != 'nil'){
+					// 	editDataVue.dataType = 1;
+					// 	$('#input1').val(cellData);
+					// } else if( cellData == 'nil') {
+					// 	editDataVue.dataType = 2;
+					// } else {
+					// 	editDataVue.dataType = 3;
+					// }
 				},
 				parseScript: function(strArray, operationRows, type) {
 					var length = type === 1 ? strArray.length - 1 : strArray.length;
@@ -332,7 +365,8 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: (data, statusText) => {
 							if (data && data.success === true && (data.obj instanceof Array)) {
-								$.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+								var ztreeUI = $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+								ztreeUI.expandAll(true);
 								// var da = [{ "id": 1, "parentid": 0, "name": "ui-chai" }, { "id": 2, "parentid": 1, "name": "ele-chai", "classType": 'webedit' }]
 							}
 						}
@@ -346,7 +380,8 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: (data, statusText) => {
 							if (data.success && data.obj) {
-								$.fn.zTree.init($('#functions-ul' + str), setting.functions, data.obj);
+								var ztreeFunc = $.fn.zTree.init($('#functions-ul' + str), setting.functions, data.obj);
+								ztreeFunc.expandAll(true);
 							} else {
 								// Vac.alert('');
 							}
@@ -583,6 +618,7 @@ $(document).ready(function () {
 						});
 					} else {
 						operationRows[index].functions = [editDataVue.uiOrFunctions.function]
+						operationRows[index].operation = { ui: '', element: '', classType: '' };
 						var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
 						operationRows[index].parameters = []
 						for (let param of parametersArray) {
