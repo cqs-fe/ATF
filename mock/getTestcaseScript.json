@@ -1,0 +1,13 @@
+{
+    "success": true,
+    "msg": "查询成功",
+    "obj": [
+        {
+            "ui": "这个可以再调整",
+            "element": "element-name",
+            "classType": "classType",
+            "method": "function-name",
+            "parameters": [ "1","2"]
+        }
+    ]
+}

@@ -8,20 +8,25 @@ $(document).ready(function () {
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
 	var transid = '',
 		autId ='';
-	(function () {
-
-		var tooltipwindow = new Vue({
-			el: '#tooltipwindow',
-			data: {
-				flag: true
-			},
-			methods: {
-				toggle: function () {
-					this.flag = !this.flag;
-				}
+	var tooltipwindow = new Vue({
+		el: '#tooltipwindow',
+		data: {
+			flag: true,
+			data: [],
+			scriptSelected: false,
+			testPoint:'',
+			executor:79,
+			caselibId:14,
+			autId:33,
+			transId:80,
+			scriptId:1193
+		},
+		methods: {
+			toggle: function () {
+				this.flag = !this.flag;
 			}
-		});
-	})();
+		}
+	});
 	(function () {
 		var editDataVue = new Vue({
 			el: '#editData',
@@ -173,35 +178,66 @@ $(document).ready(function () {
 					document.getElementById("input1").value = ''
 					document.getElementById("input4").value = ''
 					var cellData = $.trim(handsontable.getDataAtCell(this.selection.start.row, this.selection.start.col))
-					if(cellData.startsWith('@before')) {
-						// 表达式
-						editDataVue.dataType = 4;
+
+					this.beforeOperationRows = [];
+					this.afterOperationRows = [];
+					if (cellData.includes('@before')) {
 						var beforeStr = cellData.slice(cellData.indexOf('@before\n') + 7, cellData.indexOf('@value'));
-						var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
-						// console.log('valueStr-->'+valueStr)
-						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
-						// console.log('afterStr-->'+afterStr)
-						// 前置操作
-						// var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
 						var beforeArr = beforeStr.split(';\n');
-						console.log('beforeArr-->'+beforeArr.length)
 						this.parseScript(beforeArr, this.beforeOperationRows, 1)
-
+					}
+					if (cellData.includes('@after')) {
+						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
 						var afterArr = afterStr.split(';\n');
-						console.log('afterArr-->'+afterArr.length)
 						this.parseScript(afterArr, this.afterOperationRows, 2);
-
+					}
+					var valueStr;
+					if (cellData.includes('@value')) {
+						var endIndex = cellData.includes('@after') ? cellData.indexOf('@after') : cellData.length;
+						valueStr = cellData.slice(cellData.indexOf('@value') + 6, endIndex).replace(/^\s$/g, '');
+					} else {
+						valueStr = cellData;
+					}
+					if (valueStr.replace(/^\s$/g, '') == '') {
+						editDataVue.dataType = 3;
+					} else if (valueStr.replace(/^\s$/g, '') == 'nil') {
+						editDataVue.dataType = 2;
+					} else if (valueStr.includes('{expr=')) {
+						editDataVue.dataType = 4;
 						let str = valueStr.split('{expr=')[1]
 						var value = str.slice(0, str.indexOf('}'));
 						$('#input4').val(value);
-					} else if( cellData != '' && cellData != 'nil'){
-						editDataVue.dataType = 1;
-						$('#input1').val(cellData);
-					} else if( cellData == 'nil') {
-						editDataVue.dataType = 2;
 					} else {
-						editDataVue.dataType = 3;
+						editDataVue.dataType = 1;
+						$('#input1').val(valueStr);
 					}
+					// if(cellData.startsWith('@before')) {
+					// 	// 表达式
+					// 	editDataVue.dataType = 4;
+					// 	var beforeStr = cellData.slice(cellData.indexOf('@before\n') + 7, cellData.indexOf('@value'));
+					// 	var valueStr = cellData.slice(cellData.indexOf('@value') + 5, cellData.indexOf('@after'));
+					// 	var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
+					// 	// 前置操作
+					// 	// var beforeArr = beforeStr.includes('UI("') ? beforeStr.slice(beforeStr.indexOf('UI("')).split(';') : [];
+					// 	var beforeArr = beforeStr.split(';\n');
+					// 	console.log('beforeArr-->'+beforeArr.length)
+					// 	this.parseScript(beforeArr, this.beforeOperationRows, 1)
+
+					// 	var afterArr = afterStr.split(';\n');
+					// 	console.log('afterArr-->'+afterArr.length)
+					// 	this.parseScript(afterArr, this.afterOperationRows, 2);
+
+					// 	let str = valueStr.split('{expr=')[1]
+					// 	var value = str.slice(0, str.indexOf('}'));
+					// 	$('#input4').val(value);
+					// } else if( cellData != '' && cellData != 'nil'){
+					// 	editDataVue.dataType = 1;
+					// 	$('#input1').val(cellData);
+					// } else if( cellData == 'nil') {
+					// 	editDataVue.dataType = 2;
+					// } else {
+					// 	editDataVue.dataType = 3;
+					// }
 				},
 				parseScript: function(strArray, operationRows, type) {
 					var length = type === 1 ? strArray.length - 1 : strArray.length;
@@ -261,19 +297,28 @@ $(document).ready(function () {
 					insertDivVue.show(type, title);
 				},
 				saveEditData: function () {
-					var inputValue;
-					if(this.dataType == 1) {
-						inputValue= document.getElementById("input" + this.dataType).value;
-					} else if (this.dataType == 2) {
-						inputValue = 'nil';
-					} else if (this.dataType == 3) {
-						inputValue = '';
-					} else {
-						var inputStr = document.getElementById("input" + this.dataType).value;
-						var beforeStr = this.saveOperation(null, 1);
-						var afterStr = this.saveOperation(null, 2);
-						inputValue = `@before\n${beforeStr}\n@value\n{expr=${inputStr}}\n@after\n${afterStr}`;
+					var inputValue = ['', '', ''];
+					var inputStr = document.getElementById("input" + this.dataType).value;
+					var beforeStr = this.saveOperation(null, 1);
+					var afterStr = this.saveOperation(null, 2);
+					if (beforeStr.length) {
+						inputValue[0] =  `@before\n${beforeStr}\n`;
+						inputValue[1] = `@value\n`;
 					}
+					if (afterStr.length) {
+						inputValue[2] = `@after\n${afterStr}`;
+						inputValue[1] = `@value\n`;
+					}
+					if(this.dataType == 1) {
+						inputValue[1] += `${inputStr}\n`;
+					} else if (this.dataType == 2) {
+						inputValue[1] += `nil\n`;
+					} else if (this.dataType == 3) {
+						inputValue[1] += `\n`;
+					} else {
+						inputValue[1] += `{expr=${inputStr}}\n`;
+					}
+					inputValue = inputValue.join('');
 					handsontable.setDataAtCell(this.selection.start.row, this.selection.start.col, inputValue);
 					handsontable.render();
 				},
@@ -325,7 +370,8 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: (data, statusText) => {
 							if (data && data.success === true && (data.obj instanceof Array)) {
-								$.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+								var ztreeUI = $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+								ztreeUI.expandAll(true);
 								// var da = [{ "id": 1, "parentid": 0, "name": "ui-chai" }, { "id": 2, "parentid": 1, "name": "ele-chai", "classType": 'webedit' }]
 							}
 						}
@@ -339,7 +385,8 @@ $(document).ready(function () {
 						dataType: 'json',
 						success: (data, statusText) => {
 							if (data.success && data.obj) {
-								$.fn.zTree.init($('#functions-ul' + str), setting.functions, data.obj);
+								var ztreeFunc = $.fn.zTree.init($('#functions-ul' + str), setting.functions, data.obj);
+								ztreeFunc.expandAll(true);
 							} else {
 								// Vac.alert('');
 							}
@@ -576,6 +623,7 @@ $(document).ready(function () {
 						});
 					} else {
 						operationRows[index].functions = [editDataVue.uiOrFunctions.function]
+						operationRows[index].operation = { ui: '', element: '', classType: '' };
 						var parametersArray = JSON.parse(operationRows[index].functions[0].parameterlist)
 						operationRows[index].parameters = []
 						for (let param of parametersArray) {
@@ -838,6 +886,10 @@ $(document).ready(function () {
 						dataType: "json",
 						data: data,
 						success: function (data, textStatus) {
+							if (!data.success) {
+								Vac.alert(data.msg);
+								return;
+							}
 							var treeData = [];
 							if (data.o.length == 0) {
 								Vac.alert('返回结果为空！')
@@ -989,41 +1041,45 @@ $(document).ready(function () {
 						data: _this.systemInfo,
 						// data: dataMock,
 						success: function (data, textStatus) {
-							var treeData = [];
-							if (data.o.length == 0) {
-								Vac.alert('该测试点下未查询到相关数据！')
-								return
-							}
-							data.o.forEach((value) => {
-								var item = {};  //解构第一层
-								item.open = true;
-								item.children = [];
-								value.children.forEach((value) => {
-									var subData = {};  //解构第二层
-									subData.children = [];
-									subData.open = true;
-									({
-										transactid: subData.id,
-										name: subData.name,
-									} = value);
-									value.children.forEach((value => {
-										var ssubData = {};
+							if (data.success) {
+								var treeData = [];
+								if (data.o.length == 0) {
+									Vac.alert('该测试点下未查询到相关数据！')
+									return
+								}
+								data.o.forEach((value) => {
+									var item = {};  //解构第一层
+									item.open = true;
+									item.children = [];
+									value.children.forEach((value) => {
+										var subData = {};  //解构第二层
+										subData.children = [];
+										subData.open = true;
 										({
-											scriptid: ssubData.id,
-											name: ssubData.name
+											transactid: subData.id,
+											name: subData.name,
 										} = value);
-										subData.children.push(ssubData);
-									}));
-									item.children.push(subData);
+										value.children.forEach((value => {
+											var ssubData = {};
+											({
+												scriptid: ssubData.id,
+												name: ssubData.name
+											} = value);
+											subData.children.push(ssubData);
+										}));
+										item.children.push(subData);
+									});
+									({
+										autid: item.id,
+										name: item.name,
+									} = value);
+									treeData.push(item);
 								});
-								({
-									autid: item.id,
-									name: item.name,
-								} = value);
-								treeData.push(item);
-							});
-							console.log(treeData)
-							zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+								zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+							} else {
+								Vac.alert(data.msg);
+							}
+							
 						}
 					});
 				}
@@ -1205,17 +1261,6 @@ $(document).ready(function () {
 				autId = treeNode.getParentNode().getParentNode().id;
 				transid = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
-				// var testpoint = ''
-				// 将autid transId以及scriptid拼接起来，去testpointsMap中寻找testpoint
-				// var string = `${autId}-${transId}-${scriptId}`
-				// for (let key of sub.testpointsMap.keys()){
-				// 	let set = sub.testpointsMap.get(key)
-				// 	if(set.has(string)) {
-				// 		testpoint = key
-				// 		break
-				// 	}
-				// }
-				// console.log(sub.systemInfo.testpoints)
 				var data = {
 					testpoint: sub.checkedArray[0],
 					// script_mode: sub.systemInfo.script_mode,
@@ -1226,6 +1271,13 @@ $(document).ready(function () {
 					transId: transid,
 					scriptId: scriptId
 				};
+				tooltipwindow.scriptSelected = true;
+				tooltipwindow.testPoint = sub.checkedArray[0];
+				tooltipwindow.executor = sub.systemInfo.executor;
+				tooltipwindow.caselibId = sub.systemInfo.caseLib_id;
+				tooltipwindow.autId = autId;
+				tooltipwindow.transId = transid;
+				tooltipwindow.scriptId = scriptId;
 				$.ajax({
 					url: address + "scripttemplateController/searchScripttemplateInf",
 					data: data,
@@ -1511,9 +1563,39 @@ $(document).ready(function () {
 				}
 			});
 		};
+		// 查看脚本
+		document.getElementById('viewScript').onclick = function () {
+			
+			if (!tooltipwindow.scriptSelected) {
+				Vac.alert('请在左侧树形结构中选择脚本');
+				return;
+			}
+			var data = {
+				scriptId: tooltipwindow.scriptId,
+				caseId: tooltipwindow.caseId
+			};
+
+			$.ajax({
+				url: address + 'getTestcaseScript',
+				data: data,
+				type: 'post',
+				dataType: 'json',
+				success: function (data, statusText) {
+					tooltipwindow.flag = false;
+					if (!data.success) {
+						Vac.alert(data.msg || '查询失败');
+						return;
+					}
+					tooltipwindow.data = data.obj;
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
+				}
+			});
+		}
 		//双击单元格，跳出编辑数据框
 		document.querySelectorAll('.dbclick').onDblClick = function () {
-			console.log('niah');
+			// console.log('niah');
 		};
 		//渲染第0列的内容
 		function colHeadersRenderer(col) {

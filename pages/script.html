@@ -271,6 +271,20 @@
                       <label>元素:</label>
                       <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
                       <!-- <input type="text" readonly="true" class="operation-ui" value={{row.operation.ui}}> -->
+
+                      <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                          <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                          <label >UI:</label>
+                          <span class="operation-ui">{{row.operation.ui}}</span>
+                          <label>元素:</label>
+                          <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                      </template>
+                      <template v-else>
+                          <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                          <label >公共函数:</label>
+                          <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                          <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                      </template>
                     </td>
                     <td class="functions" @mousedown.stop="1" data-index={{index}}>
                       <select class="functions-select form-control" style="width: 90%;" @change="changeFunction($event.target, index)">
@@ -307,8 +321,7 @@
                                       <td class="param-value" contenteditable="true">ggggggggggg</td>
                                     </tr> -->
                                     <tr class="bottom-row">
-                                      <td><button @click="cancelEditParam($event)">取消</button></td>
-                                      <td><button @click="saveParam($event)">保存</button></td>
+                                      <td colspan="2"><button @click="cancelEditParam($event)">取消</button><button  style="matgin-left: 10px;" @click="saveParam($event)">保存</button></td>
                                     </tr>
                             </tbody>
                         </table>

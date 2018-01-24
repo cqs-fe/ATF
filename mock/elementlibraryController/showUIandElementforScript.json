@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "msg": "",
+  "obj": [
+    { "id": 1, "parentid": 0, "name": "登录界面", "classType": null },
+    { "id": 2, "parentid": 1, "name": "用户名", "classType": "webedit" },
+    { "id": 3, "parentid": 1, "name": "密码", "classType": "webedit" },
+    { "id": 4, "parentid": 1, "name": "登录", "classType": "webbutton" }
+  ]
+}

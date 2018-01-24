@@ -88,7 +88,7 @@
         <button class="btn btn-primary insert-data" v-show="dataType==4" type="button" @click="insert(1,'插入数据')">插入数据</button>
         <button class="btn btn-primary insert-function" type="button" v-show="dataType==4" @click="insert(2,'插入函数')">插入函数</button>
       </form>
-      <div class="operation-wrapper" v-show="dataType==4">
+      <div class="operation-wrapper" style="margin-top: 30px;">
         <div class="sticky-top">
           <label>前置操作</label>
           <div>
@@ -141,11 +141,19 @@
                 </td>
                 <td class="index" @mousedown.stop="1">{{index + 1}}</td>
                 <td class="operations" @mousedown.stop="1">
-                  <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
-                  <label>UI:</label>
-                  <span class="operation-ui">{{row.operation.ui}}</span>
-                  <label>元素:</label>
-                  <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                        <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                        <label >UI:</label>
+                        <span class="operation-ui">{{row.operation.ui}}</span>
+                        <label>元素:</label>
+                        <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    </template>
+                    <template v-else>
+                        <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                        <label >公共函数:</label>
+                        <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                        <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    </template>
                 </td>
                 <td class="functions" @mousedown.stop="1">
                   <select class="functions-select form-control" style="width: 90%;">
@@ -176,8 +184,7 @@
                           <td class="param-value" contenteditable="true">{{parameter.Value}}</td>
                         </tr>
                         <tr>
-                          <td><button @click="cancelEditParam($event, 1)">取消</button></td>
-                          <td><button @click="saveParam($event, 1)">保存</button></td>
+                          <td colspan="2"><button @click="cancelEditParam($event, 1)">取消</button><button style="matgin-left: 10px;" @click="saveParam($event, 1)">保存</button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -191,6 +198,7 @@
             </tbody>
           </table>
         </div>
+        <div style="margin: 30px;"></div>
         <div class="sticky-top">
           <label>后置操作</label>
           <div>
@@ -244,11 +252,19 @@
                 </td>
                 <td class="index">{{index + 1}}</td>
                 <td class="operations">
-                  <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
-                  <label>UI:</label>
-                  <span class="operation-ui">{{row.operation.ui}}</span>
-                  <label>元素:</label>
-                  <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                      <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
+                      <label >UI:</label>
+                      <span class="operation-ui">{{row.operation.ui}}</span>
+                      <label>元素:</label>
+                      <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  </template>
+                  <template v-else>
+                      <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
+                      <label >公共函数:</label>
+                      <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                      <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  </template>
                 </td>
                 <td class="functions">
                   <select class="functions-select form-control" style="width: 90%;">
@@ -279,8 +295,7 @@
                           <td class="param-value" contenteditable="true">{{parameter.Value}}</td>
                         </tr>
                         <tr class="bottom-row">
-                          <td> <button @click="cancelEditParam($event, 2)">取消</button></td>
-                          <td> <button @click="saveParam($event, 2)">保存</button></td>
+                          <td colspan="2"> <button @click="cancelEditParam($event, 2)">取消</button> <button  style="matgin-left: 10px;" @click="saveParam($event, 2)">保存</button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -422,34 +437,76 @@
               <i class="icon-cog"></i>
               构建</button>
             <button class="btn btn-white">
-              <i class="icon-list-alt"></i>
-              代码查看</button>
-            <button class="btn btn-white">
               <i class="icon-wrench"></i>
               调试</button> -->
+            <button class="btn btn-white" id="viewScript">
+              <i class="icon-list-alt"></i>
+              查看脚本</button>
             <button class="btn btn-white" id="saveAll">
               <i class="icon-save"></i>
               保存</button>
           </div>
           <div class="dataTable-wrapper">
-
             <div id="handsontable">
-
             </div>
           </div>
-          <!-- <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':flag,'height200px':!flag}">
-            <div class="panel-heading">调试结果
+          <div class="script-wrapper">
+
+          </div>
+          <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':flag,'height200px':!flag}">
+            <div class="panel-heading">脚本
               <button type="button" class="close" id="btn-closetooltip" @click="toggle">
                 <i :class="{'icon-resize-full':flag,'icon-resize-small':!flag}"></i>
               </button>
             </div>
             <div class="panel-body">
-              举头望明月，低头思故乡</br>
-              窗前明月光，疑是地上霜</br>
-              举头望明月，低头思故乡</br>
-              窗前明月光，疑是地上霜
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>操作项</th>
+                      <th>方法</th>
+                      <th>参数</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in data">
+                      <td class="index">{{ +row.index + 1 }}</td>
+                      <td class="operations">
+                          <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                              <label >UI:</label>
+                              <span class="operation-ui">{{row.ui}}</span>
+                              <label>元素:</label>
+                              <span class="operation-element" :data-classtype="row.classType">{{row.operation.element}}</span>
+                          </template>
+                          <template v-else>
+                              <label >公共函数:</label>
+                              <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                              <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                          </template>
+                      </td>
+                      <td class="functions">{{ row.method }}</td>
+                      <td class="parameters">
+                        <table class="param-table table table-condensed table-bordered">
+                            <thead>
+                              <tr>
+                                <td>名称</td>
+                                <td>参数值</td>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr v-for="parameter in row.parameters" class="param-row">
+                                <td class="param-name">{{parameter.name || '参数'}}</td>
+                                <td class="param-value" contenteditable="true">{{parameter.value}}</td>
+                              </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
             </div>
-          </div> -->
+          </div>
         </main>
       </section>
     </section>
@@ -514,6 +571,8 @@
   </div>
   <link rel="import" href="./common/header.html?__inline">
   <link rel="import" href="./noLoginAlert.html?__inline">
+  <link rel="import" href="./common-vac/alert.html?__inline">
+  <link rel="import" href="./common-vac/confirm.html?__inline">
   <!--content end -->
   <script src="../static/js/config.js"></script>
   <script src="../static/js/vac-functions.es.js"></script>
