@@ -124,7 +124,7 @@
                                         <div class="col-lg-3">
                                             <select class="form-control" name="dname">
                                                 <option value="">-- 请选择方法 --</option>
-                                                <option v-for='item in methodList' value="item.id">{{item.methodname}}</option>
+                                                <option v-for='item in methodList' :value="item.id">{{item.methodname}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -350,6 +350,7 @@
                                                     <textarea class="form-control" rows="4" name="description"></textarea>
                                                 </div>
                                             </div>
+                                            <input type="reset" name="reset" style="display: none;">
                                         </form>
                                     </section>
                                     <!-- modal-body end -->
@@ -407,6 +408,7 @@
                                                     <textarea class="form-control" rows="4" name="description"></textarea>
                                                 </div>
                                             </div>
+                                            <input type="reset" name="reset" style="display: none;">
                                         </form>
                                     </section>
                                     <!-- modal-body end -->
@@ -443,14 +445,7 @@
                                                     <input type="text" class="form-control" name="cclassname" id="">
                                                 </div>
                                             </div>
-                                            <!-- <div class="form-group">
-                                                <label class="col-lg-3 control-label">默认方法名称</label>
-                                                <div class="col-lg-5">
-                                                    <select class="form-control">
-                                                        <option v-for="item in methodList" value="item.id">{{item.methodname}}</option>
-                                                    </select>
-                                                </div>
-                                            </div> -->
+                                           <input type="reset" name="reset" style="display: none;">
                                         </form>
                                     </section>
                                     <!-- modal-body end -->
@@ -512,6 +507,7 @@
                                                     <textarea class="form-control" rows="10" name="objectcode"></textarea>
                                                 </div>
                                             </div>
+                                            <input type="reset" name="reset" style="display: none;">
                                         </form>
                                     </section>
                                     <!-- modal-body end -->

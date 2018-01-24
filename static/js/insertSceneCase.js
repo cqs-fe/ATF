@@ -71,6 +71,7 @@ var app = new Vue({
                 $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
             }else if(selectedProp=='submissionId'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"missionController/selectAll",
                     type: 'get',
@@ -78,16 +79,16 @@ var app = new Vue({
                         if(data.success){
                             let submissionList=data.obj;
                             for(let item of submissionList){
-                                console.log('hehe')
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}">${item.missionName}</option>');
+                                target.parent().next().next().next().children('select').append(`<option value="${item.id}">${item.missionName}</option>`);
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
 
                         }
                     }
                 });   
             }else if(selectedProp=='autId'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"autController/selectAll",
                     type: 'get',
@@ -95,14 +96,15 @@ var app = new Vue({
                         if(data.success){
                             let autList=data.obj;
                             for(let item of autList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                                target.parent().next().next().next().children('select').append('<option value=""></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='transId'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -110,9 +112,9 @@ var app = new Vue({
                         if(data.success){
                             let transList=data.obj;
                             for(let item of transList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                                target.parent().next().next().next().children('select').append('<option value=""></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
@@ -126,6 +128,7 @@ var app = new Vue({
                 $(event.target).parent().next().next().next().children('select').selectpicker('refresh');   
             }else if(selectedProp=='author'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"userController/selectAll",
                     type: 'get',
@@ -133,14 +136,15 @@ var app = new Vue({
                         if(data.success){
                             let userList=data.obj;
                             for(let item of userList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                                target.parent().next().next().next().children('select').append('<option value=""></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='reviewer'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"userController/selectAll",
                     type: 'get',
@@ -148,14 +152,15 @@ var app = new Vue({
                         if(data.success){
                             let userList=data.obj;
                             for(let item of userList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                                target.parent().next().next().next().children('select').append('<option value=""></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='executor'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"userController/selectAll",
                     type: 'get',
@@ -163,9 +168,9 @@ var app = new Vue({
                         if(data.success){
                             let userList=data.obj;
                             for(let item of userList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value=""></option>');
+                                target.parent().next().next().next().children('select').append('<option value=""></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
@@ -175,6 +180,7 @@ var app = new Vue({
                 $(event.target).parent().next().next().next().children('select').selectpicker('refresh');   
             }else if(selectedProp=='scriptModeFlag'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"scripttemplateController/selectAll",
                     type: 'get',
@@ -182,14 +188,15 @@ var app = new Vue({
                         if(data.success){
                             let scriptModeFlagList=data.obj;
                             for(let item of scriptModeFlagList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}">${item.name}</option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}">${item.name}</option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='casecode'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"TestcaseController/selectAll",
                     type: 'get',
@@ -197,14 +204,15 @@ var app = new Vue({
                         if(data.success){
                             let caseList=data.o;
                             for(let item of caseList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}">${item.casecode}</option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}">${item.casecode}</option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='testpoint'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -212,14 +220,15 @@ var app = new Vue({
                         if(data.success){
                             let testpointList=data.obj;
                             for(let item of testpointList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='testdesign'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -227,14 +236,15 @@ var app = new Vue({
                         if(data.success){
                             let testdesignList=data.obj;
                             for(let item of testdesignList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='prerequisites'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -242,14 +252,15 @@ var app = new Vue({
                         if(data.success){
                             let prerequisitesList=data.obj;
                             for(let item of prerequisitesList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='datarequest'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -257,14 +268,15 @@ var app = new Vue({
                         if(data.success){
                             let datarequestList=data.obj;
                             for(let item of datarequestList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='teststep'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -272,14 +284,15 @@ var app = new Vue({
                         if(data.success){
                             let teststepList=data.obj;
                             for(let item of teststepList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='expectresult'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -287,14 +300,15 @@ var app = new Vue({
                         if(data.success){
                             let expectresultList=data.obj;
                             for(let item of expectresultList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
             }else if(selectedProp=='checkpoint'){
                 $(event.target).parent().next().next().next().children('select').children().remove();
+                let target=$(event.target);
                 $.ajax({
                     url: address+"",
                     type: 'get',
@@ -302,9 +316,9 @@ var app = new Vue({
                         if(data.success){
                             let checkpointList=data.obj;
                             for(let item of checkpointList){
-                                $(event.target).parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
+                                target.parent().next().next().next().children('select').append('<option value="${item.id}"></option>');
                             }
-                            $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
+                            target.parent().next().next().next().children('select').selectpicker('refresh');
                         }
                     }
                 });   
@@ -434,7 +448,7 @@ var app = new Vue({
                                                         <option>小于</option>
                                                     </select> 
                                                     <label>值</label>
-                                                    <select name="propertyValue" class="selectpicker val_select" multiple>
+                                                    <select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple>
                                                     </select>
                                                     <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button> 
                                                 </li>`;
@@ -446,14 +460,14 @@ var app = new Vue({
         //筛选案例
         filterCase(){
                 let data=[];
-                let listItem={};
                 let list=$(".filterList>li");
                 console.log(list)
                 for(let i=0;i<list.length;i++){
-                    listItem.propertyName=$(list[i]).children('select[name="propertyName"]').val();
-                    listItem.compareType=$(list[i]).children('select[name="compareType"]').val();
+                    let listItem={};
+                    listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
+                    listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
                     listItem.propertyValue='';
-                    listItem.propertyValues=$(list[i]).children('select[name="propertyValue"]').val();
+                    listItem.propertyValues=$(list[i]).find('select[name="propertyValue"]').val();
                     data.push(listItem);
                 }
                 console.log(data)

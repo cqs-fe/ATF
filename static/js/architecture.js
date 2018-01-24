@@ -43,9 +43,11 @@ var app = new Vue({
                     } else {
                         $('#failModal').modal();
                     }
+                    $('input[type="reset"]').trigger('click');                    
                 },
                 error: function() {
                     $('#failModal').modal();
+                    $('input[type="reset"]').trigger('click');                    
                 }
             });
         },
@@ -73,9 +75,11 @@ var app = new Vue({
                         } else {
                             $('#failModal').modal();
                         }
+                        $('input[type="reset"]').trigger('click');                    
                     },
                     error: function() {
                         $('#failModal').modal();
+                        $('input[type="reset"]').trigger('click');                    
                     }
                 });
             }
@@ -107,9 +111,11 @@ var app = new Vue({
                     } else {
                         $('#failModal').modal();
                     }
+                    $('input[type="reset"]').trigger('click');                    
                 },
                 error: function() {
                     $('#failModal').modal();
+                    $('input[type="reset"]').trigger('click');                    
                 }
             });
         },
@@ -131,34 +137,79 @@ var app = new Vue({
                 treeObj = $.fn.zTree.getZTreeObj("archiTree"),
                 nodes = treeObj.getSelectedNodes(true),
                 arcid = nodes[0].id;
-            $.ajax({
-                url: address+'classController/insert',
-                type: 'post',
-                data: {
-                    "eclassname": eclassname,
-                    "cclassname": cclassname,
-                    "defaultmethodname": '',
-                    "arcid": arcid,
-                    "supportparameterlist": ''
+            if(eclassname==""){
+                alert('英文名称不能为空');
+            }else if(cclassname==''){
+                alert('中文名称不能为空');
+            }else{
+                $.ajax({
+                    url: address+'classController/insert',
+                    type: 'post',
+                    data: {
+                        "eclassname": eclassname,
+                        "cclassname": cclassname,
+                        "defaultmethodname": '',
+                        "arcid": arcid,
+                        "supportparameterlist": ''
 
-                },
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        window.location.reload();
-                    } else {
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            // window.location.reload();
+                            var treeObj = $.fn.zTree.getZTreeObj("archiTree");
+                            var nodes = treeObj.getSelectedNodes();
+                            var arcid=nodes[0].id;
+                            //查询class
+                            $.ajax({
+                                url: address+'classController/classquery',
+                                type: 'post',
+                                data: {
+                                    "arcid": arcid,
+                                    "eclassname": '',
+                                    "cclassname": '',
+                                    "defaultmethodname": ''
+                                },
+                                success: function(data) {
+                                    //控件类型
+                                    var classList = data.obj;
+                                    if (classList.length !== 0) {
+                                        $('#classProp').children().remove();
+                                        for (var i = 0; i < classList.length; i++) {
+                                            var classTr = $('<tr></tr>'),
+                                                classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
+                                                eclassNameTd = $('<td ></td>'),
+                                                cclassNameTd = $('<td ></td>');
+                                            classTr.attr('id', classList[i].id);
+                                            eclassNameTd.html(classList[i].eclassname);
+                                            cclassNameTd.html(classList[i].cclassname);
+                                            classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
+                                            $('#classProp').append(classTr);
+                                        }
+                                    } else {
+                                        $('#classProp').children().remove();
+                                        $('#classProp').append(app.propTr);
+                                    }
+
+                                },
+                                error: function() {
+                                    $('#failModal').modal();
+                                }
+                            });
+                        } else {
+                            $('#failModal').modal();
+                        }
+                        $('input[type="reset"]').trigger('click');                    
+                    },
+                    error: function() {
                         $('#failModal').modal();
+                        $('input[type="reset"]').trigger('click');                    
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-
+                });
+            }
         },
         //删除控件类型
-        delClass: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent(),
+        delClass: function() {
+            var selectedTr = $('input[name="class"]:checked').parent().parent(),
                 id = selectedTr.attr('id');
             if (id === undefined) {
                 $('#selectAlertModal').modal();
@@ -173,6 +224,46 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
+                            var treeObj = $.fn.zTree.getZTreeObj("archiTree");
+                            var nodes = treeObj.getSelectedNodes();
+                            var arcid=nodes[0].id;
+                            //查询class
+                            $.ajax({
+                                url: address+'classController/classquery',
+                                type: 'post',
+                                data: {
+                                    "arcid": arcid,
+                                    "eclassname": '',
+                                    "cclassname": '',
+                                    "defaultmethodname": ''
+                                },
+                                success: function(data) {
+                                    //控件类型
+                                    var classList = data.obj;
+                                    if (classList.length !== 0) {
+                                        $('#classProp').children().remove();
+                                        for (var i = 0; i < classList.length; i++) {
+                                            var classTr = $('<tr></tr>'),
+                                                classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
+                                                eclassNameTd = $('<td ></td>'),
+                                                cclassNameTd = $('<td ></td>');
+                                            classTr.attr('id', classList[i].id);
+                                            eclassNameTd.html(classList[i].eclassname);
+                                            cclassNameTd.html(classList[i].cclassname);
+                                            classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
+                                            $('#classProp').append(classTr);
+                                        }
+                                    } else {
+                                        $('#classProp').children().remove();
+                                        $('#classProp').append(app.propTr);
+                                    }
+
+                                },
+                                error: function() {
+                                    $('#failModal').modal();
+                                }
+                            });
+
                         } else {
                             $('#failModal').modal();
                         }
@@ -182,17 +273,7 @@ var app = new Vue({
                     }
                 });
             }
-
         },
-        //获取控件类型默认方法下拉列表
-        // getMethod(){
-        //     $.ajax({
-        //         url:address+"methodController/selectAll",
-        //         success:function(data){
-        //             this.methodList=data.obj;
-        //         }
-        //     })
-        // },
         //添加方法
         addMethod: function() {
             var methodname = $('#addMethodForm input[name="methodname"]').val(),
@@ -201,6 +282,7 @@ var app = new Vue({
                 isparameter = $('#addMethodForm select[name="isparameter"]').val(),
                 waittime = $('#addMethodForm input[name="waittime"]').val(),
                 timeout = $('#addMethodForm input[name="timeout"]').val();
+            var that=this;
             $.ajax({
                 url: address+'methodController/insert',
                 type: 'post',
@@ -209,7 +291,7 @@ var app = new Vue({
                     "methoddescription": methoddescription,
                     "parameterlist": '',
                     "objectcode": objectcode,
-                    "arcclassid": app.classId,
+                    "arcclassid": that.classId,
                     "isparameter": isparameter,
                     "waittime": waittime,
                     "timeout": timeout
@@ -217,20 +299,50 @@ var app = new Vue({
                 success: function(data) {
                     if (data.success) {
                         $('#successModal').modal();
+                        //查询当前构件类型对应的方法
+                        that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
+                        $.ajax({
+                            url: address+'methodController/methodquery',
+                            type: 'post',
+                            data: {
+                                arcclassid: that.classId,
+                                methodname: '',
+                                methoddescription: ''
+                            },
+                            success: function(data) {
+                                $('#methodProp').children().remove();
+                                var methodList = data.obj;
+                                that.methodList=methodList;
+                                for (var i = 0; i < methodList.length; i++) {
+                                    var methodTr = $('<tr></tr>'),
+                                        methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event)'/></td>"),
+                                        methodNameTd = $('<td ></td>'),
+                                        methodDescriptionTd = $('<td ></td>');
+                                    methodTr.attr('id', methodList[i].id);
+                                    methodNameTd.html(methodList[i].methodname);
+                                    methodDescriptionTd.html(methodList[i].methoddescription);
+                                    methodTr.append(methodCheckTd, methodNameTd, methodDescriptionTd);
+                                    $('#methodProp').append(methodTr);
+                                }
+                            }
+                        });
                     } else {
                         $('#failModal').modal();
                     }
+                    $('input[type="reset"]').trigger('click');                    
                 },
                 error: function() {
                     $('#failModal').modal();
+                    $('input[type="reset"]').trigger('click');                    
                 }
             });
 
         },
         //删除方法
         delMethod: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="chk_list"]:checked').parent().parent(),
+            var selectedTr = $('input[name="method"]:checked').parent().parent(),
                 id = selectedTr.attr('id');
+            var that=this;
             if (id === undefined) {
                 $('#selectAlertModal').modal();
             } else {
@@ -244,6 +356,34 @@ var app = new Vue({
                         console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
+                            //查询当前构件类型对应的方法
+                            that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
+                            $.ajax({
+                                url: address+'methodController/methodquery',
+                                type: 'post',
+                                data: {
+                                    arcclassid: that.classId,
+                                    methodname: '',
+                                    methoddescription: ''
+                                },
+                                success: function(data) {
+                                    $('#methodProp').children().remove();
+                                    var methodList = data.obj;
+                                    that.methodList=methodList;
+                                    for (var i = 0; i < methodList.length; i++) {
+                                        var methodTr = $('<tr></tr>'),
+                                            methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event)'/></td>"),
+                                            methodNameTd = $('<td ></td>'),
+                                            methodDescriptionTd = $('<td ></td>');
+                                        methodTr.attr('id', methodList[i].id);
+                                        methodNameTd.html(methodList[i].methodname);
+                                        methodDescriptionTd.html(methodList[i].methoddescription);
+                                        methodTr.append(methodCheckTd, methodNameTd, methodDescriptionTd);
+                                        $('#methodProp').append(methodTr);
+                                    }
+                                }
+                            });
+                            $('#methodForm')[0].reset();
                         } else {
                             $('#failModal').modal();
                         }
@@ -286,7 +426,46 @@ var app = new Vue({
                 },
                 success: function(data) {
                     if (data.success) {
-                       $('#successModal').modal();
+                        $('#successModal').modal();
+                        var treeObj = $.fn.zTree.getZTreeObj("archiTree");
+                        var nodes = treeObj.getSelectedNodes();
+                        var arcid = nodes[0].id;
+                        //查询class
+                        $.ajax({
+                            url: address + 'classController/classquery',
+                            type: 'post',
+                            data: {
+                                "arcid": arcid,
+                                "eclassname": '',
+                                "cclassname": '',
+                                "defaultmethodname": ''
+                            },
+                            success: function(data) {
+                                //控件类型
+                                var classList = data.obj;
+                                if (classList.length !== 0) {
+                                    $('#classProp').children().remove();
+                                    for (var i = 0; i < classList.length; i++) {
+                                        var classTr = $('<tr></tr>'),
+                                            classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
+                                            eclassNameTd = $('<td ></td>'),
+                                            cclassNameTd = $('<td ></td>');
+                                        classTr.attr('id', classList[i].id);
+                                        eclassNameTd.html(classList[i].eclassname);
+                                        cclassNameTd.html(classList[i].cclassname);
+                                        classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
+                                        $('#classProp').append(classTr);
+                                    }
+                                } else {
+                                    $('#classProp').children().remove();
+                                    $('#classProp').append(app.propTr);
+                                }
+
+                            },
+                            error: function() {
+                                $('#failModal').modal();
+                            }
+                        });
                     } else {
                         $('#failModal').modal();
                     }
@@ -322,11 +501,12 @@ var app = new Vue({
                paraList = paraList.substring(0, paraList.length - 1); 
             }
             paraList += "]";
+            var that=this;
             $.ajax({
                 url: address+'methodController/update',
                 type: 'post',
                 data: {
-                    "id": app.methodId,
+                    "id": that.methodId,
                     "methodname": methodname,
                     "methoddescription": methoddescription,
                     "parameterlist": paraList,
@@ -339,7 +519,34 @@ var app = new Vue({
                 success: function(data) {
                     if (data.success) {
                         // window.location.reload();
-                         $('#successModal').modal();
+                        $('#successModal').modal();
+                        //查询当前构件类型对应的方法
+                        that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
+                        $.ajax({
+                            url: address + 'methodController/methodquery',
+                            type: 'post',
+                            data: {
+                                arcclassid: that.classId,
+                                methodname: '',
+                                methoddescription: ''
+                            },
+                            success: function(data) {
+                                $('#methodProp').children().remove();
+                                var methodList = data.obj;
+                                that.methodList = methodList;
+                                for (var i = 0; i < methodList.length; i++) {
+                                    var methodTr = $('<tr></tr>'),
+                                        methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event)'/></td>"),
+                                        methodNameTd = $('<td ></td>'),
+                                        methodDescriptionTd = $('<td ></td>');
+                                    methodTr.attr('id', methodList[i].id);
+                                    methodNameTd.html(methodList[i].methodname);
+                                    methodDescriptionTd.html(methodList[i].methoddescription);
+                                    methodTr.append(methodCheckTd, methodNameTd, methodDescriptionTd);
+                                    $('#methodProp').append(methodTr);
+                                }
+                            }
+                        });
                     } else {
                         $('#failModal').modal();
                     }
@@ -436,7 +643,7 @@ var setting1 = {
                         $('#classProp').children().remove();
                         for (var i = 0; i < classList.length; i++) {
                             var classTr = $('<tr></tr>'),
-                                classCheckTd = $("<td><input type='radio' name='chk_list' onclick='classClick(event)'/></td>"),
+                                classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
                                 eclassNameTd = $('<td ></td>'),
                                 cclassNameTd = $('<td ></td>');
                             classTr.attr('id', classList[i].id);
@@ -593,7 +800,7 @@ function classClick(event) {
                 app.methodList=methodList;
                 for (var i = 0; i < methodList.length; i++) {
                     var methodTr = $('<tr></tr>'),
-                        methodCheckTd = $("<td><input type='radio' name='chk_list' onclick='methodClick(event)'/></td>"),
+                        methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event)'/></td>"),
                         methodNameTd = $('<td ></td>'),
                         methodDescriptionTd = $('<td ></td>');
                     methodTr.attr('id', methodList[i].id);

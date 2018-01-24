@@ -29,28 +29,33 @@ var app = new Vue({
         addClass: function() {
             var classname = $('#addClassForm input[name="classname"]').val(),
                 descname = $('#addClassForm input[name="descname"]').val();
-            $.ajax({
-                url: address + 'omclassController/insertSelective',
-                type: 'post',
-                data: {
-                    "classname": classname,
-                    "descname": descname,
-                    "autId": this.autId
-                },
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                        getClass();
-                    } else {
+            if(classname==''){
+                alert('名称不能为空');
+            }else if(descname==''){
+                alert('描述不能为空');
+            }else{
+                $.ajax({
+                    url: address + 'omclassController/insertSelective',
+                    type: 'post',
+                    data: {
+                        "classname": classname,
+                        "descname": descname,
+                        "autId": this.autId
+                    },
+                    success: function(data) {
+                        console.info(data);
+                        if (data.success) {
+                            $('#successModal').modal();
+                            getClass();
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-
+                });
+            }
         },
         //删除控件类型
         delClass: function(e) {
@@ -85,38 +90,70 @@ var app = new Vue({
         addMethod: function() {
             var methodname = $('#addMethodForm input[name="methodname"]').val(),
                 methoddesc = $('#addMethodForm input[name="methoddesc"]').val();
-            $.ajax({
-                url: address + 'ommethodController/insertSelective',
-                type: 'post',
-                data: {
-                    "forClassid": this.classId,
-                    "mname": methodname,
-                    "mdesc": methoddesc,
-                    "mtype": '',
-                    "argsCount": '',
-                    "labelArgument": '',
-                    'author': '',
-                    "maintainTime": '',
-                    "outputvaluedesc": '',
-                    "inputargdesc": ''
-                },
-                success: function(data) {
-                    if (data.success) {
-                         $('#successModal').modal();
-                    } else {
+            let that=this;
+            if(methodname==''){
+                alert('名称不能为空');
+            }else if(methoddesc==''){
+                alert('描述不能为空');
+            }else{
+                $.ajax({
+                    url: address + 'ommethodController/insertSelective',
+                    type: 'post',
+                    data: {
+                        "forClassid": that.classId,
+                        "mname": methodname,
+                        "mdesc": methoddesc,
+                        "mtype": '',
+                        "argsCount": '',
+                        "labelArgument": '',
+                        'author': '',
+                        "maintainTime": '',
+                        "outputvaluedesc": '',
+                        "inputargdesc": ''
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                             $('#successModal').modal();
+                             //查询当前构件类型对应的方法
+                            that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
+                            $.ajax({
+                                url: address + 'ommethodController/selectByClassId',
+                                type: 'post',
+                                data: {
+                                    forClassid: that.classId,
+                                },
+                                success: function(data) {
+                                    $('#methodProp').children().remove();
+                                    var methodList = data.obj;
+                                    for (var i = 0; i < methodList.length; i++) {
+                                        var methodTr = $('<tr></tr>'),
+                                            methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event)'/></td>"),
+                                            methodNameTd = $('<td ></td>'),
+                                            methodDescriptionTd = $('<td ></td>');
+                                        methodTr.attr('id', methodList[i].methodid);
+                                        methodNameTd.html(methodList[i].mname);
+                                        methodDescriptionTd.html(methodList[i].mdesc);
+                                        methodTr.append(methodCheckTd, methodNameTd, methodDescriptionTd);
+                                        $('#methodProp').append(methodTr);
+                                    }
+                                }
+                            });
+
+                        } else {
+                            $('#failModal').modal();
+                        }
+                    },
+                    error: function() {
                         $('#failModal').modal();
                     }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-
+                });
+            }
         },
         //删除方法
-        delMethod: function(e) {
-            var selectedTr = $(e.target).parent().next().find('input[name="method"]:checked').parent().parent(),
+        delMethod: function() {
+            var selectedTr = $('input[name="method"]:checked').parent().parent(),
                 methodid = selectedTr.attr('id');
+            let that=this;
             if (methodid === undefined) {
                 $('#selectAlertModal').modal();
             } else {
@@ -127,9 +164,32 @@ var app = new Vue({
                         "methodid": methodid,
                     },
                     success: function(data) {
-                        console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
+                             //查询当前构件类型对应的方法
+                            that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
+                            $.ajax({
+                                url: address + 'ommethodController/selectByClassId',
+                                type: 'post',
+                                data: {
+                                    forClassid: that.classId,
+                                },
+                                success: function(data) {
+                                    $('#methodProp').children().remove();
+                                    var methodList = data.obj;
+                                    for (var i = 0; i < methodList.length; i++) {
+                                        var methodTr = $('<tr></tr>'),
+                                            methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event)'/></td>"),
+                                            methodNameTd = $('<td ></td>'),
+                                            methodDescriptionTd = $('<td ></td>');
+                                        methodTr.attr('id', methodList[i].methodid);
+                                        methodNameTd.html(methodList[i].mname);
+                                        methodDescriptionTd.html(methodList[i].mdesc);
+                                        methodTr.append(methodCheckTd, methodNameTd, methodDescriptionTd);
+                                        $('#methodProp').append(methodTr);
+                                    }
+                                }
+                            });
                         } else {
                             $('#failModal').modal();
                         }

@@ -792,7 +792,7 @@
                                         <th style="width:8px;">
                                             <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                         </th>
-                                        <th></th>
+                                        <!-- <th></th> -->
                                         <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
@@ -809,7 +809,7 @@
                                         <td>
                                             <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
                                         </td>
-                                        <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td>
+                                        <!-- <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td> -->
                                         <td class="center hidden-phone">{{ case.casecode }}</td>
                                         <td>{{ case.autId }}</td>
                                         <td class="hidden-phone">{{ case.transId }}</td>

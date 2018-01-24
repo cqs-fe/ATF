@@ -882,30 +882,34 @@ var app = new Vue({
             var UIName = $("#addUIName").val(),
                 relateIdentifyObjectId = $("#addRelateIdentifyObjectId").val(),
                 relateParentIdentifyObjectId = $("#addRelateParentIdentifyObjectId").val();
-            $.ajax({
-                url: address + 'elementlibraryController/insertUI',
-                type: 'post',
-                data: {
-                    "UIName": UIName,
-                    "transid": transid,
-                    "relateIdentifyObjectId": relateIdentifyObjectId,
-                    "relateParentIdentifyObjectId": relateParentIdentifyObjectId
-                },
-                success: function(data) {
-                    if (data.success) {
-                        $('#successModalEle').modal('show');
-                        _this.getElementTree();
-                        $("#addUIName").val('');
-                    } else {
+            if(UIName==''){
+                alert('UI名称不能为空');
+            }else{
+                $.ajax({
+                    url: address + 'elementlibraryController/insertUI',
+                    type: 'post',
+                    data: {
+                        "UIName": UIName,
+                        "transid": transid,
+                        "relateIdentifyObjectId": relateIdentifyObjectId,
+                        "relateParentIdentifyObjectId": relateParentIdentifyObjectId
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            $('#successModalEle').modal('show');
+                            _this.getElementTree();
+                            $("#addUIName").val('');
+                        } else {
+                            $('#failModalEle').modal('show');
+                            $("#addUIName").val('');
+                        }
+                    },
+                    error: function() {
                         $('#failModalEle').modal('show');
                         $("#addUIName").val('');
                     }
-                },
-                error: function() {
-                    $('#failModalEle').modal('show');
-                    $("#addUIName").val('');
-                }
-            });
+                });
+            }
         },
         delUI: function() {
             var _this = this;
@@ -999,6 +1003,9 @@ var app = new Vue({
                 treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes(),
                 selectedUIName = nodes[0].name;
+            if(ElementName==''){
+                alert('元素名称不能为空');
+            }else{
                 $.ajax({
                     url: address + 'elementlibraryController/insertElement',
                     type: 'post',
@@ -1023,6 +1030,7 @@ var app = new Vue({
                         $('#failModalEle').modal();
                     }
                 });
+            }
         },
         delElement: function() {
             var _this = this;
