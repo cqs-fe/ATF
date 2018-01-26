@@ -1188,10 +1188,11 @@ $(document).ready(function () {
 		];
 		const columnsOptions = [
 			{
-				data: "",
+				data: "testcaseId",
 				renderer: function (instance, td, row, col, prop, value, cellProperties) {
 					td.style.textAlign = 'center';
-					td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">";
+					td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">"+
+						'<button onclick="viewScript(event)" data-id="'+ value +'">查看脚本</button>';
 					return td;
 				},
 				readOnly: true
@@ -1564,15 +1565,11 @@ $(document).ready(function () {
 			});
 		};
 		// 查看脚本
-		document.getElementById('viewScript').onclick = function () {
+		// document.getElementById('viewScript').onclick = function () {
+		function viewScript (event) {
+			var testcaseId = event.target.getAttribute('data-id');
 			
-			if (!tooltipwindow.scriptSelected) {
-				Vac.alert('请在左侧树形结构中选择脚本');
-				return;
-			}
-			var data = {
-				scriptId: tooltipwindow.scriptId,
-				caseId: tooltipwindow.caseId
+			var data = { testcaseId
 			};
 
 			$.ajax({
