@@ -1,3 +1,29 @@
+// 查看脚本
+// document.getElementById('viewScript').onclick = function () {
+	var tooltipwindow;
+function viewScript (event) {
+	var testcaseId = event.target.getAttribute('data-id');
+	var data = { testcaseId
+	};
+
+	$.ajax({
+		url: address + 'antlr/getTestcaseScript',
+		data: data,
+		type: 'post',
+		dataType: 'json',
+		success: function (data, statusText) {
+			tooltipwindow.flag = false;
+			if (!data.success) {
+				Vac.alert(data.msg || '查询失败');
+				return;
+			}
+			tooltipwindow.data = data.obj;
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
+		}
+	});
+}
 $(document).ready(function () {
 	$('.3').addClass('open');
 	$('.3 .arrow').addClass('open');
@@ -8,7 +34,7 @@ $(document).ready(function () {
 	// document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
 	var transid = '',
 		autId ='';
-	var tooltipwindow = new Vue({
+	tooltipwindow = new Vue({
 		el: '#tooltipwindow',
 		data: {
 			flag: true,
@@ -1192,7 +1218,7 @@ $(document).ready(function () {
 				renderer: function (instance, td, row, col, prop, value, cellProperties) {
 					td.style.textAlign = 'center';
 					td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">"+
-						'<button onclick="viewScript(event)" data-id="'+ value +'">查看脚本</button>';
+						'<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
 					return td;
 				},
 				readOnly: true
@@ -1565,31 +1591,6 @@ $(document).ready(function () {
 			});
 		};
 		// 查看脚本
-		// document.getElementById('viewScript').onclick = function () {
-		function viewScript (event) {
-			var testcaseId = event.target.getAttribute('data-id');
-			
-			var data = { testcaseId
-			};
-
-			$.ajax({
-				url: address + 'getTestcaseScript',
-				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function (data, statusText) {
-					tooltipwindow.flag = false;
-					if (!data.success) {
-						Vac.alert(data.msg || '查询失败');
-						return;
-					}
-					tooltipwindow.data = data.obj;
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {
-					Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
-				}
-			});
-		}
 		//双击单元格，跳出编辑数据框
 		document.querySelectorAll('.dbclick').onDblClick = function () {
 			// console.log('niah');
