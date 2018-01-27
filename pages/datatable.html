@@ -439,9 +439,6 @@
             <button class="btn btn-white">
               <i class="icon-wrench"></i>
               调试</button> -->
-            <button class="btn btn-white" id="viewScript">
-              <i class="icon-list-alt"></i>
-              查看脚本</button>
             <button class="btn btn-white" id="saveAll">
               <i class="icon-save"></i>
               保存</button>
@@ -470,19 +467,19 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="row in data">
-                      <td class="index">{{ +row.index + 1 }}</td>
+                    <tr v-for="(index, row) in data">
+                      <td class="index">{{ +index + 1 }}</td>
                       <td class="operations">
-                          <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                          <template v-if="row.ui != '' && row.element != ''">
                               <label >UI:</label>
                               <span class="operation-ui">{{row.ui}}</span>
                               <label>元素:</label>
-                              <span class="operation-element" :data-classtype="row.classType">{{row.operation.element}}</span>
+                              <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
                           </template>
                           <template v-else>
                               <label >公共函数:</label>
-                              <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
-                              <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                              <span class="operation-ui" style="display: none;">{{row.ui}}</span>
+                              <span class="operation-element"  style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
                           </template>
                       </td>
                       <td class="functions">{{ row.method }}</td>
@@ -495,9 +492,9 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr v-for="parameter in row.parameters" class="param-row">
-                                <td class="param-name">{{parameter.name || '参数'}}</td>
-                                <td class="param-value" contenteditable="true">{{parameter.value}}</td>
+                              <tr v-for="(index,parameter) in row.parameters" class="param-row">
+                                <td class="param-name">参数{{index+1}}</td>
+                                <td class="param-value">{{parameter}}</td>
                               </tr>
                           </tbody>
                         </table>
