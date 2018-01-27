@@ -58,6 +58,7 @@
             width: 80px !important;
         }
         .val_select{
+            display: inline;
             width: 150px !important;
         }
         .saveFilter{
@@ -152,20 +153,11 @@
                                                     <label>筛选项目</label>
                                                     <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
                                                         <option value="">请选择</option>
-                                                        <option value="priority">优先级</option>
-                                                        <option value="executeMethod">执行方式</option>
-                                                        <option value="useStatus">用例状态</option>
-                                                        <option value="submissionId">任务编号</option>
-                                                        <option value="autId">被测系统</option>
-                                                        <option value="transId">功能码</option>
-                                                        <option value="caseproperty">用例性质</option>
-                                                        <option value="casetype">测试用例类型</option>
-                                                        <option value="author">作者</option>
-                                                        <option value="reviewer">评审者</option>
-                                                        <option value="executor">执行者</option>
-                                                        <option value="scriptMode">脚本管理方式</option>
-                                                        <option value="scriptModeFlag">所属模板</option>
+                                                        <option value="caseCompositeType">用例组成类型</option>
                                                         <option value="casecode">用例编号</option>
+                                                        <option value="submissionId">测试任务</option>
+                                                        <option value="autId">被测系统</option>
+                                                        <option value="transId">功能点</option>
                                                         <option value="testpoint">测试点</option>
                                                         <option value="testdesign">测试意图</option>
                                                         <option value="prerequisites">前置条件</option>
@@ -173,17 +165,21 @@
                                                         <option value="teststep">测试步骤</option>
                                                         <option value="expectresult">预期结果</option>
                                                         <option value="checkpoint">附加检查点</option>
+                                                        <option value="caseproperty">用例性质</option>
+                                                        <option value="casetype">测试用例类型</option>
+                                                        <option value="priority">优先级</option>
+                                                        <option value="author">作者</option>
+                                                        <option value="reviewer">评审者</option>
+                                                        <option value="executor">执行者</option>
+                                                        <option value="executeMethod">执行方式</option>
+                                                        <option value="scriptMode">脚本管理方式</option>
+                                                        <option value="scriptModeFlag">所属模板</option>
+                                                        <option value="sceneId">所属场景</option>    
                                                     </select>
                                                     <select name="compareType" class="selectpicker compare_select">
-                                                        <option value="">请选择</option>
-                                                        <option>属于</option>
-                                                        <option>不属于</option>
-                                                        <option>等于</option>
-                                                        <option>大于</option>
-                                                        <option>小于</option>
                                                     </select>
                                                     <label>值</label>
-                                                    <select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple>
+                                                    <select name="propertyValue" class="selectpicker val_select">
                                                     </select>
                                                     <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button>
                                                 </li>
