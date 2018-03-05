@@ -92,7 +92,7 @@ var app = new Vue({
             }else if(selectedProp=='priority'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -112,7 +112,7 @@ var app = new Vue({
             }else if(selectedProp=='executeMethod'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -129,10 +129,6 @@ var app = new Vue({
                         $(this).parent().next().next().selectpicker('refresh');                    
                     }
                 });            
-            }else if(selectedProp=='useStatus'){
-                $(event.target).parent().next().next().next().children('select').children().remove();
-                $(event.target).parent().next().next().next().children('select').append('<option value="1">新增</option><option value="2">评审通过</option>');
-                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
             }else if(selectedProp=='submissionId'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
@@ -193,13 +189,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
-                            url: address+"",
+                            url: address+"autController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
                                     let submissionList=data.obj;
                                     for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                        target.parent().next().next().next().children('select').append(`<option value="${item.id}">${item.autName}</option>`);
                                     }
                                     target.parent().next().next().next().children('select').selectpicker('refresh');
 
@@ -211,13 +207,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"",
+                            url: address+"autController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
                                     let submissionList=data.obj;
                                     for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                        target.parent().next().next().next().children('select').append(`<option value="${item.id}">${item.autName}</option>`);
                                     }
                                     target.parent().next().next().next().children('select').selectpicker('refresh');
 
