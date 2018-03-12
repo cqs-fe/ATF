@@ -450,7 +450,7 @@
           <div class="script-wrapper">
 
           </div>
-          <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':flag,'height200px':!flag}">
+          <div class="panel panel-default" style="display: none;" id="tooltipwindow" :class="{'height43px':flag,'height200px':!flag}">
             <div class="panel-heading">脚本
               <button type="button" class="close" id="btn-closetooltip" @click="toggle">
                 <i :class="{'icon-resize-full':flag,'icon-resize-small':!flag}"></i>
@@ -484,7 +484,11 @@
                       </td>
                       <td class="functions">{{ row.method }}</td>
                       <td class="parameters">
-                        <table class="param-table table table-condensed table-bordered">
+                          <div class="param-show">
+                              <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}: <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
+                              <!-- <span>参数1:<b> 1223 </b>;&nbsp;&nbsp;</span> -->
+                            </div>
+                        <!-- <table class="param-table table table-condensed table-bordered">
                             <thead>
                               <tr>
                                 <td>名称</td>
@@ -497,7 +501,7 @@
                                 <td class="param-value">{{parameter}}</td>
                               </tr>
                           </tbody>
-                        </table>
+                        </table> -->
                       </td>
                     </tr>
                   </tbody>

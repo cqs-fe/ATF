@@ -181,6 +181,9 @@ var vBody = new Vue({
 			// 20180117154254295845
 			// 20180117153441839537
 			var _this = this;
+			if(!this.executionround) {
+				Vac.alert('请填写执行轮次');return;
+			}
 			var data = {
 				executionround: this.executionround,
 				recordflag: this.recordflag,

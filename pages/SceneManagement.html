@@ -285,7 +285,54 @@
             </div>
           </main>
         </section>
-        <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':tooltipFlag, 'height200px': !tooltipFlag}">
+        <style>
+          .tooltipwindow-top {
+            position: relative;
+            color: red;
+            font-size: 15px;
+          }
+          .tooltipwindow-top i {
+            position: absolute;
+            left: 50%;
+          }
+          .icon-angle-up {
+            top: -1px;
+          }
+          .icon-angle-down {
+            top: 7px;
+          }
+        </style>
+        <!-- <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':tooltipFlag, 'height200px': !tooltipFlag}"> -->
+          <div class="panel panel-default" id="tooltipwindow" :style="panelHeight">
+            <div class="tooltipwindow-top" style="width: 100%;height: 5px; cursor: n-resize; user-select: none;" id="tooltipwindow-top" title="点击鼠标拖动，以调整大小">
+              <i class="icon-angle-up"></i><i class="icon-angle-down"></i>
+            </div>
+            <script>
+              var anchor = document.querySelector('#tooltipwindow-top');
+              var tooltipwindow = document.querySelector('#tooltipwindow');
+              // var Y, originHeight;
+              var y, _y;
+              anchor.addEventListener('mousedown', function(e) {
+                y = e.pageY;
+                _y = e.pageY;
+                document.addEventListener('mousemove', moveHandle);
+                document.addEventListener('mouseup', function(){
+                  document.removeEventListener('mousemove', moveHandle);
+                });
+              });
+              function moveHandle (e) {
+                // console.log(e.pageY)
+                _y = e.pageY;
+                var offsetY = _y - y;
+                console.log(offsetY)
+                y = _y;
+                var height = Math.min(tooltipwindow.style.height.slice(0, -2) - offsetY, +tooltipwindow.style.height.slice(0, -2));
+                tooltipwindow.style.height = `${tooltipwindow.style.height.slice(0, -2) - offsetY}px`
+                // console.log(tooltipwindow.style.height.slice(0, -2) - offsetY)
+                // console.log(tooltipwindow.clientHeight);  
+                // tooltipwindow  
+              }
+            </script>
           <div class="panel-heading">
             <span v-show="tooltipType===1">执行时间规划</span>
             <span v-show="tooltipType===2">触发器设置</span>

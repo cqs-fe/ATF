@@ -3,26 +3,9 @@
 	var tooltipwindow;
 function viewScript (event) {
 	var testcaseId = event.target.getAttribute('data-id');
-	var data = { testcaseId
-	};
-
-	$.ajax({
-		url: address + 'antlr/getTestcaseScript',
-		data: data,
-		type: 'post',
-		dataType: 'json',
-		success: function (data, statusText) {
-			tooltipwindow.flag = false;
-			if (!data.success) {
-				Vac.alert(data.msg || '查询失败');
-				return;
-			}
-			tooltipwindow.data = data.obj;
-		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
-		}
-	});
+	// var data = { testcaseId
+	// };
+	window.open('case-operation.html?activeName=view-script&testcaseId='+testcaseId);
 }
 $(document).ready(function () {
 	$('.3').addClass('open');

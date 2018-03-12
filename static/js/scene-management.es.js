@@ -83,6 +83,11 @@ var vBody = new Vue({
 		exeScope: null,
 		isDebugInfoShow: false
 	},
+	computed: {
+		panelHeight: function(){
+			return { height: (this.tooltipFlag	? 0 : 200 ) + 'px' };
+		}
+	},
 	ready:function(){
 		this.setVal();
 		var _this = this;

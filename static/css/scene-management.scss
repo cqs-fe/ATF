@@ -382,7 +382,7 @@ $okGreen: #66F60C;
 		margin-right: 5px;
 		margin-bottom: 0;
 		overflow: hidden;
-		transition: 0.5s height;
+		// transition: 0.5s height;
 		z-index: 3;
 		.panel-heading{
 			height: 34px;
@@ -394,7 +394,7 @@ $okGreen: #66F60C;
 			padding:5px 10px;
 		}
 		.panel-body{
-			height: 166px;
+			// height: 166px;
 			overflow: auto;
 			button {
 				// background-color: #ccc;
