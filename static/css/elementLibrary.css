@@ -4,7 +4,7 @@
 }
 
 #menuContent {
-    height: 400px;
+    height: 70vh;
     overflow: auto;
     overflow-x: hidden;
 }
@@ -22,7 +22,7 @@
 }
 
 .elementContent {
-    height: 400px;
+    height: 70vh;
     overflow: auto;
     overflow-x: hidden;
     border: 1px solid rgb(170, 170, 170);
