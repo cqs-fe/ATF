@@ -1,5 +1,6 @@
-body {
-  width: 1200px; }
+/* body {
+  width: 1200px;
+ } */
 
 .breadcrumb {
   margin: 0 0 5px 0; }
@@ -14,9 +15,9 @@ body {
   .top-form label {
     font-weight: normal; }
 
-#top_table {
+/* #top_table {
   width: 800px;
-  margin-left: 20px; }
+ } */
   #top_table .index {
     width: 50px; }
   #top_table .number {

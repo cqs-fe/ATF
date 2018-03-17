@@ -502,10 +502,10 @@ html, body{
 			}
 		}
 		.close1{
-			animation: 0.5s 0s close linear 1 forwards normal;
+			animation: 0.1s 0s close linear 1 forwards normal;
 		}
 		.open2{
-			animation: 0.5s 0s open linear 1 forwards normal;
+			animation: 0.1s 0s open linear 1 forwards normal;
 		}
 		.main{
 			position: relative;
@@ -529,6 +529,19 @@ html, body{
 				.handsontable{
 					// height: 100%;
 					margin: 0;
+					thead th > div {
+						min-width: 100px;
+					}
+					thead th:nth-of-type(-n+8) > div {
+						height: 100%;
+						position: relative;
+						& > span {
+							display: inline-block;
+							position: absolute;
+							top: 50%;left: 50%;
+							transform: translate(-50%, -50%);
+						}
+					}
 					
 					tr:nth-of-type(2n+1){
 						// background-color: #eeee11;

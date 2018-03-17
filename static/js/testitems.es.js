@@ -659,7 +659,7 @@ function createTable(dataSet){
     let tdName = $(`<td class="td-name"></td>`).text(value.testProjectName);  // 编号
     let tdType = $(`<td class="td-type"></td>`).text(value.type); // 项目id
     let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.testProjectCode);    // 名称
-    let tdOperation = $(`<td class="td-operation"><a data-toggle="modal" class="btn btn-view btn-white" onclick="showViewModal(this);" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
+    let tdOperation = $(`<td class="td-operation" style="padding-bottom: 7px;padding-top: 7px;"><a data-toggle="modal" class="btn btn-view btn-white" onclick="showViewModal(this);" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
     tr.append(tdId, tdName, tdType, tdProjectCode,tdOperation);
     tbody.append(tr);
     });

@@ -35,14 +35,14 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="breadcrumb">
-                            <li><a href="#"><i class="icon-home"></i> 系统管理</a></li>
-                            <li class="active"><a href="#"> 任务管理</a></li>
+                            <li><a href="#"><i class="icon-home"></i> 项目测试</a></li>
+                            <li class="active"><a href="#">测试任务</a></li>
                             <!-- <li class="active"> 对象库</li> -->
                         </ul>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 top-btn">
+                    <div class="col-lg-12 top-btn" style="width: auto;">
                         <a class="btn btn-white" data-toggle="modal" id="addModalBtn"><i class="icon-plus"></i>添加</a>
                         <div class="modal fade " id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -88,16 +88,38 @@
                     </div>
                     <!--topbutton end-->
                     <!-- table start -->
-                    <div class="col-lg-12 panel" style="overflow: scroll;">
-                        <div class="table-tool container">
-                            <form class="table-search col-lg-6">
-                                <select id="search-type" class="form-control inline-block">
-                                    <option value="missionName">测试任务名称</option>
-                                    <option value="missionCode">测试任务编号</option>
-                                    <option value="testProjectId">测试项目编号</option>
-                                </select>
-                                <input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
-                                <button type="button" class="btn btn-white inline-block" id="btn-search">搜索</button>
+                    <div class="col-lg-12 panel" style="margin-left: 15px;margin-right: 15px;padding: 0; width: auto;">
+                        <div class="table-tool container row">
+                            <form class="table-search col-lg-6"style="padding: 0;">
+                                <div class="col-lg-4">
+                                    <select
+                                        id="search-type"
+                                        class="form-control inline-block"
+                                        style="width: 100%;"
+                                    >
+                                        <option value="missionName">测试任务名称</option>
+                                        <option value="missionCode">测试任务编号</option>
+                                        <option value="testProjectId">测试项目编号</option>
+                                        </select>
+                                </div>
+                                
+                                <div class="col-lg-4">
+                                    <input
+                                        type="text"
+                                        placeholder="请输入关键字"
+                                        class="form-control inline-block"
+                                        id="searchKey"
+                                        style="width: 150px;"
+                                    >
+                                </div>
+                                <div class="col-lg-4">
+                                    <button
+                                        type="button"
+                                        class="btn btn-white inline-block"
+                                        id="btn-search"
+                                    >搜索</button>
+                                </div>
+                                
                             </form>
                             <div class="display-items col-lg-2 col-lg-offset-3">
                                 <label class="inline-block">展示条目</label>
@@ -111,14 +133,17 @@
                                 <button type="button" class="btn btn-white" onclick="updateTableAndPagination(1); ">刷新</button>
                             </div>
                         </div>
-                        <table id="example" class="table  table-bordered table-striped">
+                        <table id="example" class="table  table-bordered table-striped" >
+                            <style>
+                                
+                            </style>
                             <thead>
                                 <tr>
-                                    <th data-order="id" data-sort="desc" onclick="resort(this);">测试任务id&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
-                                    <th data-order="type" data-sort="desc">测试任务编号&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>测试项目编号&nbsp;<span class="" aria-hidden="true"></span></th>
-                                     <th>测试任务名称&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>操作&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th style="width: 20%;" data-ordfiser="id" data-sort="desc" onclick="resort(this);">测试任务id&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
+                                    <th style="width: 20%;" data-order="type" data-sort="desc">测试任务编号&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th style="width: 20%;" >测试项目编号&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th style="width: 30%;" >测试任务名称&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th style="width: 10%;" >操作&nbsp;<span class="" aria-hidden="true"></span></th>
                                 </tr>
                             </thead>
                             <tbody>

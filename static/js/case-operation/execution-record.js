@@ -27,11 +27,11 @@ var execRecord = Vue.extend({
 					type: 'post',
 					dataType: 'json',
 					success: function(data, statusText) {
-						if(!data.obj.length) {
+						if(!data.length) {
 							Vac.alert("未查询到记录单");
 							return;
 						}
-						for (let item of data.obj) {
+						for (let item of data) {
 							if (item.resourcepath) {
 								me.srcs.push(item.resourcepath)
 							}

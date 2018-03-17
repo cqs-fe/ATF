@@ -386,7 +386,7 @@ function createTable(dataArray){
         var tdDept = $(`<td class="td-dept"></td>`).text(value.dept);
         var tdTel = $(`<td class="td-tel"></td>`).text(value.tel);
         var tdState = $(`<td class="td-state"></td>`).text(value.role);
-        var tdOperation = $(`<td class="td-operation"><a class="btn btn-view btn-white" onclick="showViewModal(this);" data-toggle="modal" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
+        var tdOperation = $(`<td class="td-operation" style="padding-bottom: 7px;padding-top: 7px;"><a class="btn btn-view btn-white" onclick="showViewModal(this);" data-toggle="modal" href=''>查看</a><a class="btn btn-alter btn-white" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
         tr.append(tdId, tdUsername, tdReallyname, tdrole, tdDept, tdTel, tdState,tdOperation);
         tbody.append(tr);
     });
