@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <ul class="breadcrumb">
-                                <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
+                                <li><a href="aut.html"><i class="icon-home"></i> 被测系统管理</a></li>
                                 <li><a href="transact.html">功能点</a></li>
                                 <li class="active">元素库</li>
                             </ul>
@@ -1064,10 +1064,14 @@ var app = new Vue({
             var _this = this;
             var transid = !this.componentMode ? this.transactId : this.transid;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
-                nodes = treeObj.getSelectedNodes(),
-                UIName = nodes[0].getParentNode().name,
-                eleName = nodes[0].name,
-                rEleName = $('#rEleName').val(),
+                nodes = treeObj.getSelectedNodes();
+            if(nodes.length==0){
+                alert('请先选中元素');
+            }else{
+                var UIName = nodes[0].getParentNode().name,
+                    eleName = nodes[0].name;
+            }
+            var rEleName = $('#rEleName').val(),
                 LtreeObj = $.fn.zTree.getZTreeObj("eleLinkedTree");
             var Lnodes, relateIdentifyObjectId;
             if (LtreeObj) {
@@ -1175,10 +1179,11 @@ var app = new Vue({
                     "relemainpropertiesvalue": relatePropVal.join('.'),
                 },
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     if (data.success) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
+                        treeObj.selectNode(nodes[0]);
                     } else {
                         $('#failModalEle').modal();
                     }

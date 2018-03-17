@@ -60,21 +60,21 @@ var app = new Vue({
             if(selectedProp=='caseCompositeType'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" multiple></select>')
-                        $(this).parent().next().next().append('<option value="1">单用例</option><option value="2">流程用例</option><option value="3">节点用例</option>');
-                        $(this).parent().next().next().selectpicker('refresh');
+                        $(this).parent().next().after('<select name="propertyValue" id="cctVal" class="selectpicker val_select" multiple></select>');
+                        $('#cctVal').append('<option value="1">单用例</option><option value="2">流程用例</option><option value="3">节点用例</option>');
+                        $('#cctVal').selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select"></select>')
-                        $(this).parent().next().next().append('<option value="1">单用例</option><option value="2">流程用例</option><option value="3">节点用例</option>');
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        $(this).parent().next().after('<select name="propertyValue" id="cctVal" class="selectpicker val_select"></select>')
+                        $('#cctVal').append('<option value="1">单用例</option><option value="2">流程用例</option><option value="3">节点用例</option>');
+                        $('#cctVal').selectpicker('refresh');                    
                     }
                 });
             }else if(selectedProp=='casecode'){
@@ -92,59 +92,54 @@ var app = new Vue({
             }else if(selectedProp=='priority'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" multiple></select>');
-                        $(this).parent().next().next().append('<option value="1">1级</option><option value="2">2级</option><option value="3">3级</option><option value="4">4级</option><option value="5">5级</option><option value="6">6级</option><option value="7">7级</option><option value="8">8级</option><option value="9">9级</option>');
-                        $(this).parent().next().next().selectpicker('refresh');
+                        $(this).parent().next().after('<select name="propertyValue" id="priorityVal" class="selectpicker val_select" multiple></select>');
+                        $('#priorityVal').append('<option value="1">1级</option><option value="2">2级</option><option value="3">3级</option><option value="4">4级</option><option value="5">5级</option><option value="6">6级</option><option value="7">7级</option><option value="8">8级</option><option value="9">9级</option>');
+                        $('#priorityVal').selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select"></select>');
-                        $(this).parent().next().next().append('<option value="1">1级</option><option value="2">2级</option><option value="3">3级</option><option value="4">4级</option><option value="5">5级</option><option value="6">6级</option><option value="7">7级</option><option value="8">8级</option><option value="9">9级</option>');
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        $(this).parent().next().after('<select name="propertyValue" id="priorityVal" class="selectpicker val_select"></select>');
+                        $('#priorityVal').append('<option value="1">1级</option><option value="2">2级</option><option value="3">3级</option><option value="4">4级</option><option value="5">5级</option><option value="6">6级</option><option value="7">7级</option><option value="8">8级</option><option value="9">9级</option>');
+                        $('#priorityVal').selectpicker('refresh');                    
                     }
                 });
             }else if(selectedProp=='executeMethod'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" multiple></select>');
-                        $(this).parent().next().next().append('<option value="1">手工</option><option value="2">自动化</option><option value="3">配合</option>');
-                        $(this).parent().next().next().selectpicker('refresh');
+                        $(this).parent().next().after('<select name="propertyValue" id="propertyVal" class="selectpicker val_select" multiple></select>');
+                        $('#propertyVal').append('<option value="1">手工</option><option value="2">自动化</option><option value="3">配合</option>');
+                        $('#propertyVal').selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select"></select>');
-                        $(this).parent().next().next().append('<option value="1">手工</option><option value="2">自动化</option><option value="3">配合</option>');
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        $(this).parent().next().after('<select name="propertyValue" id="propertyVal" class="selectpicker val_select"></select>');
+                        $('#propertyVal').append('<option value="1">手工</option><option value="2">自动化</option><option value="3">配合</option>');
+                        $('#propertyVal').selectpicker('refresh');                    
                     }
                 });            
-            }else if(selectedProp=='useStatus'){
-                $(event.target).parent().next().next().next().children('select').children().remove();
-                $(event.target).parent().next().next().next().children('select').append('<option value="1">新增</option><option value="2">评审通过</option>');
-                $(event.target).parent().next().next().next().children('select').selectpicker('refresh');
             }else if(selectedProp=='submissionId'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
                             url: address+"missionController/selectAll",
                             type: 'get',
@@ -152,17 +147,15 @@ var app = new Vue({
                                 if(data.success){
                                     let submissionList=data.obj;
                                     for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value="${item.id}">${item.missionName}</option>`);
+                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#missVal').selectpicker('refresh');
                                 }
                             }
                         });
-                        $(this).parent().next().next().selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
                             url: address+"missionController/selectAll",
                             type: 'get',
@@ -170,406 +163,380 @@ var app = new Vue({
                                 if(data.success){
                                     let submissionList=data.obj;
                                     for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value="${item.id}">${item.missionName}</option>`);
+                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#missVal').selectpicker('refresh');
                                 }
                             }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        });                  
                     }
                 });                 
             }else if(selectedProp=='autId'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
-                            url: address+"",
+                            url: address+"autController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let autList=data.obj;
+                                    for(let item of autList){
+                                        $('#autVal').append(`<option value="${item.id}">${item.autName}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#autVal').selectpicker('refresh');
                                 }
                             }
                         });
-                        $(this).parent().next().next().selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"",
+                            url: address+"autController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let autList=data.obj;
+                                    for(let item of autList){
+                                        $('#autVal').append(`<option value="${item.id}">${item.autName}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#autVal').selectpicker('refresh');
                                 }
                             }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        });                  
                     }
                 });   
-            }else if(selectedProp=='transId'){
+            }
+            // else if(selectedProp=='transId'){
+            //     // compare select
+            //     $(event.target).parent().next().children('select').children().remove();
+            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+            //     $(event.target).parent().next().children('select').selectpicker('refresh');
+            //     // value select
+            //     let compareSelect=$(event.target).parent().next().children('select');
+            //     let target=$(event.target);
+            //     $(compareSelect).on('change',function(){
+            //         if($(this).val()=='contain'||$(this).val()=='without'){
+            //             $(this).parent().next().next().remove();
+            //             $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
+            //             $.ajax({
+            //                 url: address+"",
+            //                 type: 'get',
+            //                 success:function(data){
+            //                     if(data.success){
+            //                         let submissionList=data.obj;
+            //                         for(let item of submissionList){
+            //                             target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+            //                         }
+            //                         target.parent().next().next().next().children('select').selectpicker('refresh');
+
+            //                     }
+            //                 }
+            //             });
+            //             $(this).parent().next().next().selectpicker('refresh');
+            //         }else{
+            //             $(this).parent().next().next().remove();
+            //             $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
+            //             $.ajax({
+            //                 url: address+"",
+            //                 type: 'get',
+            //                 success:function(data){
+            //                     if(data.success){
+            //                         let submissionList=data.obj;
+            //                         for(let item of submissionList){
+            //                             target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+            //                         }
+            //                         target.parent().next().next().next().children('select').selectpicker('refresh');
+
+            //                     }
+            //                 }
+            //             });
+            //             $(this).parent().next().next().selectpicker('refresh');                    
+            //         }
+            //     });  
+            // }
+            else if(selectedProp=='caseproperty'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
-                        $.ajax({
-                            url: address+"",
-                            type: 'get',
-                            success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
-                                    }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
-                                }
-                            }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');
-                    }else{
-                        $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
-                        $.ajax({
-                            url: address+"",
-                            type: 'get',
-                            success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
-                                    }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
-                                }
-                            }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
-                    }
-                });  
-            }else if(selectedProp=='caseproperty'){
-                // compare select
-                $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
-                $(event.target).parent().next().children('select').selectpicker('refresh');
-                // value select
-                let compareSelect=$(event.target).parent().next().children('select');
-                $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
-                        $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" multiple></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="cpVal" class="selectpicker val_select" multiple></select>')
                         $(this).parent().next().next().append('<option value="">正常值</option><option value="">错误值</option><option value="">边界值</option><option value="">要素级</option><option value="">流程级</option>');
                         $(this).parent().next().next().selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select"></select>')
-                        $(this).parent().next().next().append('<option value="">正常值</option><option value="">错误值</option><option value="">边界值</option><option value="">要素级</option><option value="">流程级</option>');
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        $(this).parent().next().after('<select name="propertyValue" id="cpVal" class="selectpicker val_select"></select>')
+                        $('#cpVal').append('<option value="">正常值</option><option value="">错误值</option><option value="">边界值</option><option value="">要素级</option><option value="">流程级</option>');
+                        $('#cpVal').selectpicker('refresh');                    
                     }
                 });
             }else if(selectedProp=='casetype'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" multiple></select>');
-                        $(this).parent().next().next().append('<option value="1">联机</option><option value="2">批量</option><option value="3">接口</option>');
-                        $(this).parent().next().next().selectpicker('refresh');
+                        $(this).parent().next().after('<select name="propertyValue" id="ctVal" class="selectpicker val_select" multiple></select>');
+                        $('#ctVal').append('<option value="1">联机</option><option value="2">批量</option><option value="3">接口</option>');
+                        $('#ctVal').selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select"></select>');
-                        $(this).parent().next().next().append('<option value="1">联机</option><option value="2">批量</option><option value="3">接口</option>');
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        $(this).parent().next().after('<select name="propertyValue" id="ctVal" class="selectpicker val_select"></select>');
+                        $('#ctVal').append('<option value="1">联机</option><option value="2">批量</option><option value="3">接口</option>');
+                        $('#ctVal').selectpicker('refresh');                    
                     }
                 });
             }else if(selectedProp=='author'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
                             url: address+"userController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let userList=data.obj;
+                                    for(let item of userList){
+                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#authorVal').selectpicker('refresh');
                                 }
                             }
                         });
-                        $(this).parent().next().next().selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
                             url: address+"userController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let userList=data.obj;
+                                    for(let item of userList){
+                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#authorVal').selectpicker('refresh');
                                 }
                             }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        });                  
                     }
                 });  
             }else if(selectedProp=='reviewer'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
                             url: address+"userController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let userList=data.obj;
+                                    for(let item of userList){
+                                        $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#reviewerVal').selectpicker('refresh');
                                 }
                             }
                         });
-                        $(this).parent().next().next().selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
                             url: address+"userController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let userList=data.obj;
+                                    for(let item of userList){
+                                        $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#reviewerVal').selectpicker('refresh');
                                 }
                             }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        });                  
                     }
-                });  
+                });   
             }else if(selectedProp=='executor'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
                             url: address+"userController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let userList=data.obj;
+                                    for(let item of userList){
+                                        $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#executorVal').selectpicker('refresh');
                                 }
                             }
                         });
-                        $(this).parent().next().next().selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
                             url: address+"userController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let userList=data.obj;
+                                    for(let item of userList){
+                                        $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#executorVal').selectpicker('refresh');
                                 }
                             }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        });                  
                     }
                 });  
             }else if(selectedProp=='scriptMode'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" multiple></select>');
-                        $(this).parent().next().next().append('<option value="1">模板</option><option value="2">自由编写</option>');
-                        $(this).parent().next().next().selectpicker('refresh');
+                        $(this).parent().next().after('<select name="propertyValue" id="scriptModeVal" class="selectpicker val_select" multiple></select>');
+                        $('#scriptModeVal').append('<option value="1">模板</option><option value="2">自由编写</option>');
+                        $('#scriptModeVal').selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select"></select>');
-                        $(this).parent().next().next().append('<option value="1">模板</option><option value="2">自由编写</option>');
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        $(this).parent().next().after('<select name="propertyValue" id="scriptModeVal" class="selectpicker val_select"></select>');
+                        $('#scriptModeVal').append('<option value="1">模板</option><option value="2">自由编写</option>');
+                        $('#scriptModeVal').selectpicker('refresh');                    
                     }
                 });               
-            }else if(selectedProp=='scriptModeFlag'){
-                // compare select
-                $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
-                $(event.target).parent().next().children('select').selectpicker('refresh');
-                // value select
-                let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
-                $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
-                        $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
-                        $.ajax({
-                            url: address+"",
-                            type: 'get',
-                            success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
-                                    }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
-                                }
-                            }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');
-                    }else{
-                        $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
-                        $.ajax({
-                            url: address+"",
-                            type: 'get',
-                            success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
-                                    }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
-                                }
-                            }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
-                    }
-                });  
-            }else if(selectedProp=='testpoint'){
-                // compare select
-                $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="">属于</option><option value="">不属于</option><option value="contain">包含</option><option value="without">不包含</option>');
-                $(event.target).parent().next().children('select').selectpicker('refresh');
-                // value select
-                let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
-                $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
-                        $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
-                        $.ajax({
-                            url: address+"",
-                            type: 'get',
-                            success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
-                                    }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
-                                }
-                            }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');
-                    }else{
-                        $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
-                        $.ajax({
-                            url: address+"",
-                            type: 'get',
-                            success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
-                                    }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
-                                }
-                            }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
-                    }
-                });
-            }else if(selectedProp=='testdesign'){
+            }
+            // else if(selectedProp=='scriptModeFlag'){
+            //     // compare select
+            //     $(event.target).parent().next().children('select').children().remove();
+            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+            //     $(event.target).parent().next().children('select').selectpicker('refresh');
+            //     // value select
+            //     let compareSelect=$(event.target).parent().next().children('select');
+            //     $(compareSelect).on('change',function(){
+            //         if($(this).val()=='in'||$(this).val()=='notin'){
+            //             $(this).parent().next().next().remove();
+            //             $(this).parent().next().after('<select name="propertyValue" id="smfVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
+            //             $.ajax({
+            //                 url: address+"",
+            //                 type: 'get',
+            //                 success:function(data){
+            //                     if(data.success){
+            //                         let submissionList=data.obj;
+            //                         for(let item of submissionList){
+            //                             $('#smfVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+            //                         }
+            //                         $('#smfVal').selectpicker('refresh');
+            //                     }
+            //                 }
+            //             });
+            //         }else{
+            //             $(this).parent().next().next().remove();
+            //             $(this).parent().next().after('<select name="propertyValue" id="smfVal" class="selectpicker val_select" data-live-search="true"></select>')
+            //             $.ajax({
+            //                 url: address+"",
+            //                 type: 'get',
+            //                 success:function(data){
+            //                     if(data.success){
+            //                         let submissionList=data.obj;
+            //                         for(let item of submissionList){
+            //                             $('#smfVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+            //                         }
+            //                         $('#smfVal').selectpicker('refresh');
+            //                     }
+            //                 }
+            //             });                  
+            //         }
+            //     });  
+            // }
+            // else if(selectedProp=='testpoint'){
+            //     // compare select
+            //     $(event.target).parent().next().children('select').children().remove();
+            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option><option value="contain">包含</option><option value="without">不包含</option>');
+            //     $(event.target).parent().next().children('select').selectpicker('refresh');
+            //     // value select
+            //     let compareSelect=$(event.target).parent().next().children('select');
+            //     $(compareSelect).on('change',function(){
+            //         if($(this).val()=='in'||$(this).val()=='notin'){
+            //             $(this).parent().next().next().remove();
+            //             $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
+            //             $.ajax({
+            //                 url: address+"",
+            //                 type: 'get',
+            //                 success:function(data){
+            //                     if(data.success){
+            //                         let submissionList=data.obj;
+            //                         for(let item of submissionList){
+            //                             $('#executorVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+            //                         }
+            //                         $('#executorVal').selectpicker('refresh');
+            //                     }
+            //                 }
+            //             });
+            //         }else{
+            //             $(this).parent().next().next().remove();
+            //             $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true"></select>')
+            //             $.ajax({
+            //                 url: address+"",
+            //                 type: 'get',
+            //                 success:function(data){
+            //                     if(data.success){
+            //                         let submissionList=data.obj;
+            //                         for(let item of submissionList){
+            //                             $('#executorVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+            //                         }
+            //                         $('#executorVal').selectpicker('refresh');
+            //                     }
+            //                 }
+            //             });                  
+            //         }
+            //     });
+            // }
+            else if(selectedProp=='testdesign'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
                 $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="contain">包含</option><option value="without">不包含</option>');
@@ -644,48 +611,43 @@ var app = new Vue({
             }else if(selectedProp=='sceneId'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">属于</option><option value="without">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
-                let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='contain'||$(this).val()=='without'){
+                    if($(this).val()=='in'||$(this).val()=='notin'){
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"",
+                            url: address+"sceneController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let sceneList=data.obj;
+                                    for(let item of sceneList){
+                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#sceneVal').selectpicker('refresh');
                                 }
                             }
                         });
-                        $(this).parent().next().next().selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
-                        $(this).parent().next().after('<select name="propertyValue" class="selectpicker val_select" data-live-search="true"></select>')
+                        $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"",
+                            url: address+"sceneController/selectAll",
                             type: 'get',
                             success:function(data){
                                 if(data.success){
-                                    let submissionList=data.obj;
-                                    for(let item of submissionList){
-                                        target.parent().next().next().next().children('select').append(`<option value=""></option>`);
+                                    let sceneList=data.obj;
+                                    for(let item of sceneList){
+                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
                                     }
-                                    target.parent().next().next().next().children('select').selectpicker('refresh');
-
+                                    $('#sceneVal').selectpicker('refresh');
                                 }
                             }
-                        });
-                        $(this).parent().next().next().selectpicker('refresh');                    
+                        });                  
                     }
                 });
             }
@@ -828,7 +790,12 @@ var app = new Vue({
                     listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
                     listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
                     listItem.propertyValue='';
-                    listItem.propertyValues=$(list[i]).find('.val_select').val();
+                    let valType=$(list[i]).find('.val_select')[0].tagName;
+                    if(valType==='INPUT'){
+                        listItem.propertyValues=$(list[i]).find('input.val_select').val();
+                    }else{
+                        listItem.propertyValues=$(list[i]).find('select.val_select').val();
+                    }
                     data.push(listItem);
                 }
                 console.log(data)

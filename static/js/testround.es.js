@@ -551,9 +551,9 @@ var vBody = new Vue({
 				sceneId, caseid,
 				testPhase: this.testphaseValue,
 				testRound: this.testroundValue,
-				executeround: this.executionround,
-				sourcechannel: sourcechannel
-				// recorderStatus: '2'
+				// executeround: this.executionround,
+				sourcechannel: sourcechannel,
+				recorderStatus: '2'
 			}
 			var args = encodeURIComponent(JSON.stringify(o));
 			window.open('case-operation.html?activeName=exec-record&viewcaseargs='+args, 'case_record');
