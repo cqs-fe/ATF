@@ -20,6 +20,16 @@
         <!--main content start-->
         <section id="main-content">
             <section class="wrapper">
+                <!-- breadcrumb start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="breadcrumb">
+                            <li><a href="#"><i class="icon-home"></i> 项目测试</a></li>
+                            <li class="active"><a href="#"> 测试场景</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- breadcrumb end -->
                 <!--top-button start-->
                 <div class="row">
                     <div class="col-lg-12 top-btn">
@@ -301,7 +311,7 @@
                                         </td>
                                         <td class="center hidden-phone" width="20%">{{ scene.scenename }}</td>
                                         <td width="55%">{{ scene.description }}</td>
-                                        <td class="hidden-phone" width="20%"><a class="btn btn-primary" @click="toSceneManagement($event)">管理</a></td>
+                                        <td class="hidden-phone" width="20%"><a class="btn btn-primary btn-xs" @click="toSceneManagement($event)">管理</a></td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -3,7 +3,7 @@ var template_obj = `
     <div class="row" v-if="breadShow">
         <div class="col-xs-12">
             <ul class="breadcrumb">
-                <li><a href="aut.html"><i class="icon-home"></i> 测试系统</a></li>
+                <li><a href="aut.html"><i class="icon-home"></i> 被测系统管理</a></li>
                 <li><a href="transact.html"> 功能点</a></li>
                 <li class="active"> 对象库</li>
             </ul>
@@ -34,7 +34,7 @@ var template_obj = `
     <div class="row">
         <div class="col-xs-4">
             <section class="panel tree-panel">
-                <header class="panel-heading"  v-if="top-select">
+                <header class="panel-heading"  v-if="topSelect">
                     对象库
                 </header>
                 <div id="menuContent" class="menuContent treeMenu">
@@ -56,10 +56,10 @@ var template_obj = `
         </div>
         <div class="col-xs-8">
             <section class="panel" id="">
+                <header class="panel-heading" v-if="topSelect">
+                    {{objName}}
+                </header>
                 <div class="elementContent">
-                     <header class="panel-heading" v-if="topSelect">
-                        {{objName}}
-                     </header>
                     <form class="form-horizontal panel-pad" id="objForm">
                         <div class="form-group">
                             <label class="col-xs-2 control-label">名称</label>
@@ -254,7 +254,7 @@ var objectRepo =  Vue.extend({
             autId: '',
             transactId: '',
             objId: '',
-            objName: '',
+            objName: '对象名称',
             propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             classtypeList: [],
             /*objtree start*/

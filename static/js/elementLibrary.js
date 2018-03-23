@@ -467,7 +467,7 @@ var elementLibrary = Vue.extend({
         return {
         autId: '',
         transactId: '',
-        UIName: '',
+        UIName: 'UI',
         eleName: '',
         UILinked: '',
         eleParent: '',

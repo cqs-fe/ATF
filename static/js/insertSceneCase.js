@@ -784,12 +784,12 @@ var app = new Vue({
         filterCase(){
                 let data=[];
                 let list=$(".filterList>li");
+                let that=this;
                 console.log(list)
                 for(let i=0;i<list.length;i++){
                     let listItem={};
                     listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
                     listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
-                    listItem.propertyValue='';
                     let valType=$(list[i]).find('.val_select')[0].tagName;
                     if(valType==='INPUT'){
                         listItem.propertyValues=$(list[i]).find('input.val_select').val();
@@ -802,12 +802,18 @@ var app = new Vue({
                 $.ajax({
                     url:address+'TestcaseController/testcaseFilter',
                     data:{
-                        filterConditionDtoList:JSON.stringify(data)
+                        'filterConditionDtoList':JSON.stringify(data),
+                        'page': 1,
+                        'rows': 10
                      },
-                    type:'get',
+                    type:'post',
                     dataType:"json",
                     success:function(res){
-                        console.log(res)
+                        // console.log(res)
+                        that.caseList = res.obj;
+                        that.tt = res.obj.length;
+                        that.totalPage = Math.ceil(that.tt / that.listnum);
+                        that.pageSize = that.listnum;
                     }
 
                 });
