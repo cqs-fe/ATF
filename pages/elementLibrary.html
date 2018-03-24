@@ -58,7 +58,7 @@
                     <div class="row">
                         <div class="col-xs-4">
                             <section class="panel tree-panel">
-                                <header class="panel-heading" v-if="topSelect">
+                                <header class="panel-heading">
                                     元素库
                                 </header>
                                 <div id="menuContent" class="menuContent treeMenu">
@@ -82,10 +82,10 @@
                         </div>
                         <div class="col-xs-8">
                             <section class="panel" id="UI">
-                                <div class="elementContent">
-                                    <header class="panel-heading" v-if="topSelect">
+                                <header class="panel-heading">
                                         {{UIName}}
-                                    </header>
+                                </header>
+                                <div class="elementContent">
                                     <form class="form-horizontal panel-pad" id="UIForm">
                                         <div class="form-group">
                                             <label class="col-xs-2 control-label">UI名称：</label>
@@ -504,7 +504,7 @@ var app = new Vue({
         return {
             autId: '',
             transactId: '',
-            UIName: '',
+            UIName: 'UI',
             eleName: '',
             UILinked: '',
             eleParent: '',

@@ -569,7 +569,7 @@ var setting1 = {
     },
     check: {
         enable: true,
-        chkStyle: "checkbox",
+        chkStyle: "radio",
         chkboxType: { "Y": "s", "N": "ps" }
     },
     data: {
