@@ -42,18 +42,6 @@
           <!--top-button start-->
           <div class="row">
             <form class="form-inline top-form" style="margin-bottom: 15px;">
-              <div class="form-group">
-                <label class="">所属被测系统</label>
-                <select type="text" class="form-control" id="autSelect" name="autid" v-model="autId" @change="transactSelect()">
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label"> 所属功能点</label>
-                <select type="text" class="form-control" id="transactSelect" name="" v-model="transId" @change="getScriptTemplate()">
-                </select>
-              </div>
-
               <a class="btn btn-white" id="template_add" data-toggle="modal" href="#addtemplateModal">
                 <i class="icon-plus"></i> 新增模板</a>
               <a class="btn btn-white" id="template_remove" @click="deleteTemplate();">
@@ -65,6 +53,75 @@
           <div class="row">
             <div class="col-xs-12">
               <section class="panel">
+                  <header class="panel-heading">
+                      脚本模板
+                  </header>
+                  <div>
+                    <div class="row">
+                      <form action="" class="form-horizontal col-lg-12">
+                          <div class="form-group">
+                            <label class="col-lg-2 control-label">所属被测系统</label>
+                            <div class="col-lg-3">
+                              <select
+                                type="text"
+                                class="form-control"
+                                id="autSelect"
+                                name="autid"
+                                v-model="autId"
+                                @change="transactSelect()"
+                              >
+                                </select>
+                            </div>
+                            <label class="col-lg-2 control-label">所属功能点</label>
+                            <div class="col-lg-3">
+                              <select
+                                type="text"
+                                class="form-control"
+                                id="transactSelect"
+                                name=""
+                                v-model="transId"
+                                @change="getScriptTemplate()"
+                              >
+                                </select>
+                            </div>
+                            <div class="col-lg-1">
+                              <a
+                                class="btn btn-white"
+                                onclick="queryTransact()"
+                              >刷新</a>
+                            </div>
+                          </div>
+                        
+                        
+                        <!-- <div class="form-group">
+                          <label class="">所属被测系统</label>
+                          <select
+                            type="text"
+                            class="form-control"
+                            id="autSelect"
+                            name="autid"
+                            v-model="autId"
+                            @change="transactSelect()"
+                          >
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                          <label class="control-label"> 所属功能点</label>
+                          <select
+                            type="text"
+                            class="form-control"
+                            id="transactSelect"
+                            name=""
+                            v-model="transId"
+                            @change="getScriptTemplate()"
+                          >
+                            </select>
+                        </div> -->
+                      </form>
+                    </div>
+                  </div>
+
                 <table id="top_table" style="margin-left: 0; width: 100%;" class="table table-bordered text-center table-striped">
                   <thead>
                     <tr>
@@ -248,9 +305,12 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="panel">
-                <div id="table2" class="table-wrapper operation-wrapper" style="margin-top: 20px;">
+                <header class="panel-heading">
+                    脚本数据
+                </header>
+                <div id="table2" class="table-wrapper operation-wrapper" style="margin-top: 0px;">
                     <div v-show="selectedScript>0">
-                      <div class="row" style="margin-bottom: 15px;">
+                      <div class="row" style="margin-bottom: 15px;padding: 0 15px;">
                         <div class="col-xs-12 top-btn">
                           <a class="btn btn-white" data-toggle="modal" @click="showUIModal();">
                             <i class="icon-plus"></i> 添加多项</a>

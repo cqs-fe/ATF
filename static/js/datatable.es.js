@@ -837,6 +837,7 @@ $(document).ready(function () {
 			data: {
 				flag: true,
 				selectItems: [],
+				selectType: '1',
 				// checkedItems: [{value: 1,name: '登陆'},{value: 2,name: '注册'}],
 				checkedItems: [],
 				// 保存点击后的复选框
@@ -868,6 +869,7 @@ $(document).ready(function () {
 				];
 				_this.selectItems = data;
 				_this.getInfo();
+				_this.changeSelect({target: {value: 1 }});
 			},
 			watch: {
 				checkedArray(newVal, oldVal) {
@@ -1192,7 +1194,8 @@ $(document).ready(function () {
 		};
 		/// 2017-08-25 删除行号这一列
 		const columnsHeaders = [
-			"<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">",  // "行号",
+			// "<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">",  // "行号",
+			"查看脚本",
 			"案例编号", "测试点", "测试意图", "测试步骤", "预期结果", "检查点"
 		];
 		const columnsOptions = [
@@ -1200,8 +1203,9 @@ $(document).ready(function () {
 				data: "testcaseId",
 				renderer: function (instance, td, row, col, prop, value, cellProperties) {
 					td.style.textAlign = 'center';
-					td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">"+
-						'<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
+					// td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">"+
+					// 	'<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
+					td.innerHTML = '<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
 					return td;
 				},
 				readOnly: true
@@ -1581,7 +1585,8 @@ $(document).ready(function () {
 		//渲染第0列的内容
 		function colHeadersRenderer(col) {
 			if (parseInt(col) === 0) {
-				return "<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">";
+				// return "<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">";
+				return '查看脚本'
 			} else {
 				return totalColumnsHeaders[col];
 			}

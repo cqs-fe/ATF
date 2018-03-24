@@ -21,6 +21,9 @@ var viewScript = Vue.extend({
 	},
 	methods: {
     query: function() {
+      if(!this.queryData) {
+        return;
+      }
       var _this = this;
       var data = {testcaseId: this.queryData };
       $.ajax({
