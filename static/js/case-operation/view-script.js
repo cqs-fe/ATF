@@ -7,15 +7,16 @@ var viewScript = Vue.extend({
 		}
 	},
 	ready: function() {
-		// this.query();
+    // this.query();
+    console.log('view script ready')
 	},
 	watch: {
-    queryData: function() {
+    queryData: function() {console.log('watch');
       this.query();
     }
 	},
 	computed: {
-    queryData: function() {
+    queryData: function() {console.log('computed')
       return this.testcaseid
     }
 	},

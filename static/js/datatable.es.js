@@ -1,12 +1,27 @@
 // 查看脚本
 // document.getElementById('viewScript').onclick = function () {
 	var tooltipwindow;
-function viewScript (event) {
+function viewScriptHandler (event) {
 	var testcaseId = event.target.getAttribute('data-id');
+	
 	// var data = { testcaseId
 	// };
-	window.open('case-operation.html?activeName=view-script&testcaseId='+testcaseId);
+	// window.open('case-operation.html?activeName=view-script&testcaseId='+testcaseId);
+	view.viewScriptTestcaseId  = testcaseId;
+	// $('#tabs a[href="view-script"]').tab('show');
+	$('#exec-record').removeClass('active');
+	$('#data-tab').removeClass('active');
+	$('#view-script').addClass('active');
+	$('#view-script-tab').addClass('active');
+	// event.stopPropagation();
 }
+var view = new Vue({
+	el: '#view-script',
+	data: {
+		viewScriptTestcaseId: '326'
+	}
+});
+
 $(document).ready(function () {
 	$('.3').addClass('open');
 	$('.3 .arrow').addClass('open');
@@ -1205,7 +1220,7 @@ $(document).ready(function () {
 					td.style.textAlign = 'center';
 					// td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">"+
 					// 	'<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
-					td.innerHTML = '<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
+					td.innerHTML = '<button onclick="viewScriptHandler(event)" style="padding: 3px 5px;" class="btn btn-xs btn-primary" data-id="'+ value +'">查看脚本</button>';
 					return td;
 				},
 				readOnly: true
@@ -1303,12 +1318,12 @@ $(document).ready(function () {
 							if (data.o.tableHead) {
 								// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
 								dataKey = getDataKey(data.o.tableHead);
-								console.log("dataKey:" + dataKey);
 							}
 							var destrutData = [];
 							if (data.o.tableDatas) {
 								if (data.o.tableDatas.length == 0) {
 									Vac.alert('该脚本下未查询到相关数据！')
+									$('#no-data-tip').css({display: 'block'});
 								}
 								data.o.tableDatas.forEach((value) => {
 									var data = {};
@@ -1324,7 +1339,6 @@ $(document).ready(function () {
 									dataKey.forEach((key) => {
 										data[key] = value[key];
 									});
-									console.log(data)
 									destrutData.push(data);
 								});
 							}
@@ -1407,6 +1421,7 @@ $(document).ready(function () {
 									},
 								});
 								// handsontable.updateSettings(contextMenuObj);
+								$('#no-data-tip').css({display: 'none'});
 							}
 							else {
 								handsontable.updateSettings({
@@ -1415,6 +1430,7 @@ $(document).ready(function () {
 									colHeaders: colHeadersRenderer
 								});
 								handsontable.render();
+								$('#no-data-tip').css({display: 'none'});
 							}
 						} else {
 							Vac.alert(data.msg);
@@ -1422,6 +1438,7 @@ $(document).ready(function () {
 					},
 					error: function () {
 						Vac.alert('获取数据失败，请确认该脚本中含有数据！')
+						$('#no-data-tip').css({display: 'block'});
 					}
 				}); //aj
 			}

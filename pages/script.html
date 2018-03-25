@@ -91,38 +91,11 @@
                               >刷新</a>
                             </div>
                           </div>
-                        
-                        
-                        <!-- <div class="form-group">
-                          <label class="">所属被测系统</label>
-                          <select
-                            type="text"
-                            class="form-control"
-                            id="autSelect"
-                            name="autid"
-                            v-model="autId"
-                            @change="transactSelect()"
-                          >
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                          <label class="control-label"> 所属功能点</label>
-                          <select
-                            type="text"
-                            class="form-control"
-                            id="transactSelect"
-                            name=""
-                            v-model="transId"
-                            @change="getScriptTemplate()"
-                          >
-                            </select>
-                        </div> -->
                       </form>
                     </div>
                   </div>
 
-                <table id="top_table" style="margin-left: 0; width: 100%;" class="table table-bordered text-center table-striped">
+                <table v-if="templateList.length" id="top_table" style="margin-left: 0; width: 100%;" class="table table-bordered text-center table-striped">
                   <thead>
                     <tr>
                       <th class="index" style="text-align: center;">选择</th>
@@ -140,7 +113,7 @@
                     </tr>
                   </tbody>
                 </table>
-                
+                <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
               </section>
               
             </div>
@@ -326,7 +299,7 @@
                             <i class="icon-retweet"></i> 参数化</a>
                         </div>
                       </div>
-                      <table class="newtable table table-bordered table-condensed" id="newtable" style="width: 100%;">
+                      <table v-if="operationRows.length" class="newtable table table-bordered table-condensed table-striped" id="newtable" style="width: 100%;">
                         <thead>
                           <tr>
                             <th class="move">排序</th>
@@ -342,9 +315,6 @@
                           </tr>
                         </thead>
                         <tbody class="ui-sortable" id="sortable">
-                          <tr v-if="operationRows.length===0" @mousedown.stop="1">
-                            <td colspan="7">未查询到数据</td>
-                          </tr>
                           <tr v-for="(index, row) in operationRows" class="before-operation-row ui-sortable-handle" track-by="id" data-index={{index}}>
                             <td class="move">
                               <span class="icon-move"></span>
@@ -354,11 +324,11 @@
                             </td>
                             <td class="index">{{index + 1}}</td>
                             <td class="operations" @mousedown.stop="1">
-                              <i class="icon-edit" @click="showUiAndElement($event)" style="color: #ff6c60;"></i>
+                              <!-- <i class="icon-edit" @click="showUiAndElement($event)" style="color: #ff6c60;"></i>
                               <label>UI:</label>
                               <span class="operation-ui">{{row.operation.ui}}</span>
                               <label>元素:</label>
-                              <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                              <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span> -->
           
                               <template v-if="row.operation.ui != '' && row.operation.element != ''">
                                 <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
@@ -418,7 +388,9 @@
                           </tr>
                         </tbody>
                       </table>
+                      <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
                     </div>
+                    <div v-show="selectedScript<=0" style="text-align: center;margin: 20px auto;">请选择脚本！</div>
                   </div>
             </div>
           </div>
