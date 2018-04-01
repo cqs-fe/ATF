@@ -11,7 +11,7 @@
 </head>
 
 <body id="v-demo" style="width: 100%;">
-  <div class="content">
+  <div class="content" style="overflow: auto;">
     <!--header start-->
     <link rel="import" href="./common/header-guide.html?__inline">
     <!--header end-->
@@ -20,7 +20,7 @@
     <!--sidebar end-->
     <!--main content start-->
     <section id="main-content">
-      <section class="wrapper">
+      <section class="wrapper" style="display: flex; flex-direction: column;padding-top: 75px;margin-top: 0;">
         <div id="main">
           <!--top-navi start-->
           <!-- breadcrumb start -->
@@ -395,7 +395,7 @@
             </div>
           </div>
         </div>
-       
+       <div style="flex: 1 1 auto;"></div>
         <!-- table end -->
         <link rel="import" href="./common/copy-right.html?__inline">
       </section>

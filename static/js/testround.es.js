@@ -53,7 +53,7 @@ var vBody = new Vue({
 		exeImgs: {
 			0: '/assets/images/waiting.png',
 			1: '/assets/images/success.png',
-			2: '/assets/images/failed.png',
+			2: '/assets/images/error.png',
 			3: '/assets/images/warn.png',
 			4: '/assets/images/running.gif'
 		},
@@ -202,14 +202,15 @@ var vBody = new Vue({
 					if (data.success === true) {
 						_this.startQueryResult(data.msg);
 					}else {
-						Vac.alert('执行失败！')
+						Vac.alert('执行失败！');
+						_this.setResultIcon();
 					}
 				},
 				error: function(){
-					Vac.alert('执行失败！')
+					Vac.alert('执行失败！');
+					_this.setResultIcon();
 				}
 			})
-			// 2,2,3,q,2,1,''
 		},
 		startQueryResult: function(batchExecuteNo) {
 			var me = this;
@@ -252,6 +253,12 @@ var vBody = new Vue({
 			this.batchExecuteNo && this.startQueryResult(this.batchExecuteNo);
 		},
 		setResultIcon: function(data) {
+			if(!data) {
+				[...document.querySelectorAll('img[id^="img-"]')].forEach((item) => {
+					item.src = this.exeImgs['2'];
+				});
+				return;
+			}
 			for (let d of data) {
 				if (d.sourcechannel === 'PE4') {
 					if (d.flownodeid) {
