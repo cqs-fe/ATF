@@ -55,9 +55,17 @@ var template_obj = `
             </section>
         </div>
         <div class="col-xs-8">
-            <section class="panel" id="">
+            <section class="panel" id="blank">
+                <header class="panel-heading">
+                    对象名称
+                 </header>
+                 <div class="elementContent">
+                    <p class="chooseTip">请选择对象</p>
+                 </div>
+            </section>
+            <section class="panel" id="obj" style="display:none;">
                 <header class="panel-heading" v-if="topSelect">
-                    {{objName}}
+                    {{objTitle}}
                 </header>
                 <div class="elementContent">
                     <form class="form-horizontal panel-pad" id="objForm">
@@ -254,7 +262,8 @@ var objectRepo =  Vue.extend({
             autId: '',
             transactId: '',
             objId: '',
-            objName: '对象名称',
+            objName: '',
+            objTitle: '对象',
             propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             classtypeList: [],
             /*objtree start*/
@@ -287,9 +296,11 @@ var objectRepo =  Vue.extend({
                     // 禁止拖拽
                     beforeDrag: _this.zTreeBeforeDrag,
                     onClick: function(event, treeId, treeNode, clickFlag) {
-                        console.log('kkkk')
+                        $('#obj').css('display','block');
+                        $('#blank').css('display','none');
                         $('classtypeSelect').val('');
                         _this.objName = treeNode.name;
+                        _this.objTitle = treeNode.name;
                         $('#objForm input[name="name"]').val(treeNode.name);
                         _this.objId = treeNode.id;
                         var transid = !_this.componentMode ? _this.transactId : _this.transid;
@@ -647,6 +658,8 @@ var objectRepo =  Vue.extend({
                     if (data.success) {
                         $('#successModal').modal();
                         _this.updateObjTree();
+                        $('#obj').css('display','none');
+                        $('#blank').css('display','block');
                         // updateProp();
                     } else {
                         $('#failModal').modal();

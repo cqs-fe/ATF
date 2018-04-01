@@ -62,7 +62,7 @@ var template_ele = `
             <section class="panel" id="UI">
                 <div class="elementContent">
                     <header class="panel-heading" v-if="topSelect">
-                        {{UIName}}
+                        {{UITitle}}
                     </header>
                     <form class="form-horizontal panel-pad" id="UIForm">
                         <div class="form-group">
@@ -467,7 +467,8 @@ var elementLibrary = Vue.extend({
         return {
         autId: '',
         transactId: '',
-        UIName: 'UI',
+        UIName: '',
+        UITitle: 'UI',
         eleName: '',
         UILinked: '',
         eleParent: '',
@@ -524,6 +525,7 @@ var elementLibrary = Vue.extend({
                         $(':input', '#UIForm').val('');
                         _this.getUILinkedObjectTree();
                         _this.UIName = treeNode.name;
+                        _this.UITitle = treeNode.name;
                         $('#UIForm input[name="UIName"]').val(treeNode.name);
                         $('#UI').css('display', 'block');
                         $('#ele').css('display', 'none');

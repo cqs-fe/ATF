@@ -81,9 +81,17 @@
                             </section>
                         </div>
                         <div class="col-xs-8">
-                            <section class="panel" id="UI">
+                            <section class="panel" id="blank">
                                 <header class="panel-heading">
-                                        {{UIName}}
+                                        名称
+                                </header>
+                                <div class="elementContent">
+                                    <p class="chooseTip">请选择UI或元素</p>
+                                </div>
+                            </section>
+                            <section class="panel" id="UI" style="display: none;">
+                                <header class="panel-heading">
+                                        {{UITitle}}
                                 </header>
                                 <div class="elementContent">
                                     <form class="form-horizontal panel-pad" id="UIForm">
@@ -504,7 +512,8 @@ var app = new Vue({
         return {
             autId: '',
             transactId: '',
-            UIName: 'UI',
+            UIName: '',
+            UITitle: 'UI',
             eleName: '',
             UILinked: '',
             eleParent: '',
@@ -561,7 +570,9 @@ var app = new Vue({
                             $(':input', '#UIForm').val('');
                             _this.getUILinkedObjectTree();
                             _this.UIName = treeNode.name;
+                            _this.UITitle = treeNode.name;
                             $('#UIForm input[name="UIName"]').val(treeNode.name);
+                            $('#blank').css('display', 'none');
                             $('#UI').css('display', 'block');
                             $('#ele').css('display', 'none');
                             $.ajax({
@@ -598,6 +609,7 @@ var app = new Vue({
                             $("#assiTbody").children().remove();
                             $("#relateNameTbody").children().remove();
                             $("#relatePropTbody").children().remove();
+                            $('#blank').css('display', 'none');
                             $('#UI').css('display', 'none');
                             $('#ele').css('display', 'block');
                             var transid = !_this.componentMode ? _this.transactId : _this.transid;
@@ -975,12 +987,18 @@ var app = new Vue({
                     if (data.success) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
+                        $('#blank').css('display', 'block');
+                        $('#UI').css('display', 'none');
+                        $('#ele').css('display', 'none');
                     } else {
                         $('#failModalEle').modal();
                     }
                 },
                 error: function() {
                     $('#failModalEle').modal();
+                    $('#blank').css('display', 'block');
+                    $('#UI').css('display', 'none');
+                    $('#ele').css('display', 'none');
                 }
             });
         },
@@ -1183,13 +1201,19 @@ var app = new Vue({
                     if (data.success) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
-                        treeObj.selectNode(nodes[0]);
+                        // treeObj.selectNode(nodes[0]);
+                        $('#blank').css('display', 'block');
+                        $('#UI').css('display', 'none');
+                        $('#ele').css('display', 'none');
                     } else {
                         $('#failModalEle').modal();
                     }
                 },
                 error: function() {
                     $('#failModalEle').modal();
+                    $('#blank').css('display', 'block');
+                    $('#UI').css('display', 'none');
+                    $('#ele').css('display', 'none');
                 }
             });
         },

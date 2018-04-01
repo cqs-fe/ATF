@@ -127,3 +127,9 @@
 .pagination>li {
     display: inline;
 }
+
+.num{
+    display: inline-block;
+    position: relative;
+    top: -29px;
+}

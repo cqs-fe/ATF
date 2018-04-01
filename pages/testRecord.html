@@ -227,23 +227,11 @@
                                                     <option value="2">激活</option>
                                                     <option value="1">未激活</option>
                                                     <!-- <option value="3">所有状态</option> -->
-                                                </select>
+                                                </select>  
                                             </div>
                                             <div class="col-lg-1">
                                                 <a class="btn btn-primary" onclick="queryRecord()">查询</a>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-lg-2  col-lg-offset-8 control-label">展示条目</label>
-                                            <div class="col-lg-1">
-                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                                                    <option value="5" selected>5</option>
-                                                    <option value="10">10</option>
-                                                    <option value="20">20</option>
-                                                    <option value="50">50</option>
-                                                </select>
-                                            </div>
-                                            <!--  <div class="col-lg-1"><a class="btn btn-white" onclick="getRecord(1, {{pageSize}}, 'id', 'asc')">刷新</a></div> -->
                                         </div>
                                     </form>
                                 </div>
@@ -285,6 +273,14 @@
                             <div class="row">
                                 <div class="col-lg-12 text-center">
                                     <div class="pagination-wrap" v-if="totalPage!=0">
+                                        <div class="num">
+                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
+                                                    <option value="5" selected>5条/页</option>
+                                                    <option value="10">10条/页</option>
+                                                    <option value="20">20条/页</option>
+                                                    <option value="50">50条/页</option>
+                                                </select> 
+                                        </div>
                                         <ul class="pagination">
                                             <li :class="currentPage==1?'disabled':''"><a href="javascript:;" @click="turnToPage(1)">首页</a></li>
                                             <li :class="currentPage==1?'disabled':''"><a @click="turnToPage(currentPage-1)" href="javascript:;">上一页</a></li>
