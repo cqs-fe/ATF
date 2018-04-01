@@ -16,7 +16,6 @@
     <script src="//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js"></script>
     <title>Case Manager</title>
     <style>
-
     </style>
 </head>
 
@@ -34,16 +33,22 @@
                 <!-- breadcrumb start -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <ul class="breadcrumb">
-                            <li><a href="#"><i class="icon-home"></i> 系统管理</a></li>
-                            <li class="active"><a href="#"> 任务管理</a></li>
+                        <ul class="breadcrumb" style="margin-bottom: 15px;">
+                            <li>
+                                <a href="#">
+                                    <i class="icon-home"></i> 项目测试</a>
+                            </li>
+                            <li class="active">
+                                <a href="#">测试任务</a>
+                            </li>
                             <!-- <li class="active"> 对象库</li> -->
                         </ul>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 top-btn">
-                        <a class="btn btn-white" data-toggle="modal" id="addModalBtn"><i class="icon-plus"></i>添加</a>
+                    <div class="col-lg-12 top-btn" style="width: auto;">
+                        <a class="btn btn-white" data-toggle="modal" id="addModalBtn">
+                            <i class="icon-plus"></i> 添加</a>
                         <div class="modal fade " id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -63,10 +68,10 @@
                                             <div class="form-group">
                                                 <label for="createUser" class="col-lg-3 control-label">测试任务编号</label>
                                                 <div class="col-lg-8">
-                                                   <input type="text" name="missionCode" class="form-control" id="createUser" value="">
+                                                    <input type="text" name="missionCode" class="form-control" id="createUser" value="">
                                                 </div>
                                             </div>
-                                             <div class="form-group">
+                                            <div class="form-group">
                                                 <label for="projectCode" class="control-label col-lg-3">测试项目编号</label>
                                                 <div class="col-lg-8">
                                                     <input type="text" class="form-control" name="testProjectId" id="projectCode">
@@ -88,20 +93,76 @@
                     </div>
                     <!--topbutton end-->
                     <!-- table start -->
-                    <div class="col-lg-12 panel" style="overflow: scroll;">
-                        <div class="table-tool container">
-                            <form class="table-search col-lg-6">
-                                <select id="search-type" class="form-control inline-block">
-                                    <option value="missionName">测试任务名称</option>
-                                    <option value="missionCode">测试任务编号</option>
-                                    <option value="testProjectId">测试项目编号</option>
-                                </select>
-                                <input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
-                                <button type="button" class="btn btn-white inline-block" id="btn-search">搜索</button>
+                    <div class="col-lg-12 panel" style="margin-left: 15px;margin-right: 15px;padding: 0; width: auto;">
+                        <header class="panel-heading">
+                            测试任务
+                        </header>
+                        <div class="row">
+                            <form action="" class="form-horizontal col-lg-12" style="margin-top: 15px;">
+                                <div class="form-group" style="padding: 0 15px;margin-bottom: 15px;">
+                                    <div class="col-lg-2">
+                                        <select id="search-type" class="form-control" style="width: 100%;">
+                                            <option value="missionName">测试任务名称</option>
+                                            <option value="missionCode">测试任务编号</option>
+                                            <option value="testProjectId">测试项目编号</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input type="text" placeholder="请输入关键字" class="form-control" id="searchKey" style="">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button type="button" class="btn btn-white " id="btn-search">搜索</button>
+                                    </div>
+                                    <div class="col-lg-2" style="text-align: right;">
+                                        <label class="control-label" style="font-size: 14px; font-weight: 300;">展示条目</label>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <select class="form-control " id="showRows">
+                                            <option value="5">05</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button type="button" class="btn btn-white" onclick="updateTableAndPagination(1); ">刷新</button>
+                                    </div>
+                                </div>
                             </form>
-                            <div class="display-items col-lg-2 col-lg-offset-3">
-                                <label class="inline-block">展示条目</label>
-                                <select class="form-control inline-block" id="showRows">
+                        </div>
+                        <!-- <div class="table-tool container row">
+                            <form class="table-search col-lg-6"style="padding: 0;">
+                                <div class="col-lg-4">
+                                    <select
+                                        id="search-type"
+                                        class="form-control inline-block"
+                                        style="width: 100%;"
+                                    >
+                                        <option value="missionName">测试任务名称</option>
+                                        <option value="missionCode">测试任务编号</option>
+                                        <option value="testProjectId">测试项目编号</option>
+                                        </select>
+                                </div>
+                                
+                                <div class="col-lg-4">
+                                    <input
+                                        type="text"
+                                        placeholder="请输入关键字"
+                                        class="form-control inline-block"
+                                        id="searchKey"
+                                        style="width: 150px;"
+                                    >
+                                </div>
+                                <div class="col-lg-4">
+                                    <button
+                                        type="button"
+                                        class="btn btn-white "
+                                        id="btn-search"
+                                    >搜索</button>
+                                </div>
+                            </form>
+                            <div class="display-items col-lg-2 col-lg-offset-1">
+                                <label class="control-label">展示条目</label>
+                                <select class="form-control " id="showRows">
                                     <option value="5">05</option>
                                     <option value="20">20</option>
                                     <option value="50">50</option>
@@ -110,15 +171,27 @@
                             <div class="col-lg-1">
                                 <button type="button" class="btn btn-white" onclick="updateTableAndPagination(1); ">刷新</button>
                             </div>
-                        </div>
+                        </div> -->
                         <table id="example" class="table  table-bordered table-striped">
+                            <style>
+                            </style>
                             <thead>
                                 <tr>
-                                    <th data-order="id" data-sort="desc" onclick="resort(this);">测试任务id&nbsp;<span class="icon-sort-up" aria-hidden="true"></span></th>
-                                    <th data-order="type" data-sort="desc">测试任务编号&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>测试项目编号&nbsp;<span class="" aria-hidden="true"></span></th>
-                                     <th>测试任务名称&nbsp;<span class="" aria-hidden="true"></span></th>
-                                    <th>操作&nbsp;<span class="" aria-hidden="true"></span></th>
+                                    <th style="width: 20%;" data-ordfiser="id" data-sort="desc" onclick="resort(this);">测试任务id&nbsp;
+                                        <span class="icon-sort-up" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;" data-order="type" data-sort="desc">测试任务编号&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;">测试项目编号&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;">测试任务名称&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="">操作&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,15 +200,19 @@
                         </table>
                         <div class="col-lg-12 col-md-12 text-center">
                             <ul class="pagination " id="pagination">
-                                <li><a href="javascript:void(0)" id="firstPage">首页</a></li>
-                                <li><a href="javascript:void(0)" id="previousPage">上一页</a></li>
-                                <li><a href="javascript:void(0)" id="nextPage">下一页</a></li>
-                                <li><a href="javascript:void(0)" id="lastPage">尾页</a></li>
+                                <li>
+                                    <a href="javascript:void(0)" id="firstPage">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" id="previousPage">上一页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" id="nextPage">下一页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" id="lastPage">尾页</a>
+                                </li>
                             </ul>
-                            <small class="page-tooltip">
-                                当前第<span id="currentPageId">1</span>页,
-                                共有<span id="totalPages">4</span>页
-                            </small>
                             <div class="go">
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="gotoPage" min="1">
@@ -144,7 +221,11 @@
                                     </span>
                                 </div>
                             </div>
-
+                            <small class="page-tooltip">
+                                    当前第
+                                    <span id="currentPageId">1</span>页, 共有
+                                    <span id="totalPages">4</span>页
+                                </small>
                         </div>
                         <div class="col-lg-12">
                             <!-- viewModal start -->
@@ -194,52 +275,52 @@
                             <!-- viewModal end -->
                             <!-- alterModal start -->
                             <div class="modal fade " id="alterModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">修改任务</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form class="form-horizontal " role="form" id="alterForm">
-                                            <div class="form-group">
-                                                <label class="col-lg-3 control-label" for="alter-itemname">测试任务编号</label>
-                                                <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="alter-itemname" name="missionCode">
-                                                    <!-- <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-itemname" style="color: #468847;"></span> -->
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-itemtype" class="col-lg-3 control-label">测试项目编号</label>
-                                                <div class="col-lg-8">
-                                                     <input type="text" required class="form-control" id="alter-itemtype" name="testProjectId">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="alter-projectCode" class="control-label col-lg-3">测试任务名称</label>
-                                                <div class="col-lg-8">
-                                                    <input type="text" name="missionName" id="alter-projectCode" class="form-control">
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <div class="alert alert-danger hide" style="margin-bottom: 0;" id="alter-input-detecting">
-                                            输入信息不完整！
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">修改任务</h4>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                        <button class="btn btn-success" type="button" id="btn-alter">修改</button>
+                                        <div class="modal-body">
+                                            <form class="form-horizontal " role="form" id="alterForm">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label" for="alter-itemname">测试任务编号</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" required class="form-control" id="alter-itemname" name="missionCode">
+                                                        <!-- <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-itemname" style="color: #468847;"></span> -->
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="alter-itemtype" class="col-lg-3 control-label">测试项目编号</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" required class="form-control" id="alter-itemtype" name="testProjectId">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="alter-projectCode" class="control-label col-lg-3">测试任务名称</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" name="missionName" id="alter-projectCode" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="alert alert-danger hide" style="margin-bottom: 0;" id="alter-input-detecting">
+                                                输入信息不完整！
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                            <button class="btn btn-success" type="button" id="btn-alter">修改</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                             <!-- alterModal end -->
                         </div>
                     </div>
                     <!-- table end -->
                 </div>
             </section>
-             <link rel="import" href="./common/copy-right.html?__inline">
+            <link rel="import" href="./common/copy-right.html?__inline">
         </section>
         <!--main content end-->
 

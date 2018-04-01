@@ -502,10 +502,10 @@ html, body{
 			}
 		}
 		.close1{
-			animation: 0.5s 0s close linear 1 forwards normal;
+			animation: 0.1s 0s close linear 1 forwards normal;
 		}
 		.open2{
-			animation: 0.5s 0s open linear 1 forwards normal;
+			animation: 0.1s 0s open linear 1 forwards normal;
 		}
 		.main{
 			position: relative;
@@ -513,11 +513,31 @@ html, body{
 			flex-direction: column;
 			flex: 1 1 auto;
 			overflow: auto;
+			.nav {
+				flex: 0 0 auto;
+			}
+			.tab-content {
+				flex: 1 0 auto;
+				display: flex;
+				flex-direction: column;
+				.tab-pane {
+					flex: 1 1 auto;
+					flex-direction: column;
+					.panel-content {
+						flex: 1 1 auto;
+						display: flex;
+						flex-direction: column;
+					}
+				}
+			}
+			.tab-content>.active, .pill-content>.active {
+				display: flex;
+			}
 			.top-bar{
-				flex: 0 0 53px;
+				flex: 0 0 64px;
 				width: 100%;
-				height: 53px;
-				padding: 10px 20px;
+				height: 64px;
+				padding: 15px 15px;
 			}
 			.dataTable-wrapper{
 				position: relative;
@@ -529,6 +549,19 @@ html, body{
 				.handsontable{
 					// height: 100%;
 					margin: 0;
+					thead th > div {
+						min-width: 100px;
+					}
+					thead th:nth-of-type(-n+8) > div {
+						height: 100%;
+						position: relative;
+						& > span {
+							display: inline-block;
+							position: absolute;
+							top: 50%;left: 50%;
+							transform: translate(-50%, -50%);
+						}
+					}
 					
 					tr:nth-of-type(2n+1){
 						// background-color: #eeee11;

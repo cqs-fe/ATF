@@ -31,7 +31,7 @@
 			<section class="wrapper">
 				<div class="row">
 					<!-- breadcrumb start -->
-					<div class="row">
+					<!-- <div class="row"> -->
 						<div class="col-xs-12">
 							<ul class="breadcrumb">
 								<li><a href="aut.html"><i class="icon-home"></i> 系统管理</a></li>
@@ -39,41 +39,49 @@
 								<!-- <li class="active"> 对象库</li> -->
 							</ul>
 						</div>
-					</div>
-
-					<!-- <div class="col-xs-12 top-btn">
-						
-						<a href="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-minus"></i> 删除</a>
-					</div> -->
-					<!--topbutton end-->
-					<!-- table start -->
-					<div class="col-xs-12 panel" style="overflow: scroll;">
+							<div class="col-xm-12" style="margin-bottom: 15px; padding: 0 15px;">
+									<a class="btn btn-white" data-toggle="modal" href="#addModal" ><i class="icon-plus"></i> 添加</a>
+							</div>
+					<!-- </div> -->
+					<div class="col-xs-12 panel" style="margin: 0 15px; padding: 0; width: auto;">
+						<header class="panel-heading">
+							用户管理
+						</header>
 						<div class="table-responsive">
-						   <div class="table-tool container">
-							<form class="table-search col-xs-6">
-								<select id="search-type" class="form-control inline-block">
-									<option value="username">用户名</option>
-									<option value="reallyname">姓名</option>
-									<option value="role">角色</option>
-									<option value="tel">固定电话</option>
-									<option value="dept">部门</option>
-								</select>
-								<input type="text" placeholder="请输入关键字" class="form-control inline-block" id="searchKey">
-								<button type="button" class="btn btn-white inline-block" id="btn-search">搜索</button>
-							</form>
-							<div class="display-items col-xs-2 col-xs-offset-3">
-								<label class="inline-block">展示条目</label>
-								<select class="form-control inline-block" id="showRows">
-									<option value="5">05</option>
-									<option value="20">20</option>
-									<option value="50">50</option>
-								</select>
+							<div class="row">
+								<form class="form-horizontal col-lg-12" style="padding: 0 0px;">
+									<div class="form-group" style="margin: 15px 0;padding-left: 15px;padding-right: 15px;">
+										<div class="col-lg-2">
+												<select id="search-type" class="form-control">
+														<option value="username">用户名</option>
+														<option value="reallyname">姓名</option>
+														<option value="role">角色</option>
+														<option value="tel">固定电话</option>
+														<option value="dept">部门</option>
+													</select>
+										</div>
+										<div class="col-lg-2">
+												<input type="text" placeholder="请输入关键字" class="form-control " id="searchKey">
+										</div>
+										<div class="col-lg-1">
+												<button type="button" class="btn btn-white " id="btn-search">搜索</button>
+										</div>
+										<div class="col-lg-2" style="text-align: right;">
+												<label class="control-label" style="font-size: 14px; font-weight: 300;">展示条目</label>
+										</div>
+										<div class="col-lg-2">
+												<select class="form-control" id="showRows">
+														<option value="5">05</option>
+														<option value="20">20</option>
+														<option value="50">50</option>
+													</select>
+										</div>
+										<div class="col-lg-3">
+												<button type="button" id="btn-freshTable" class="btn btn-white"> 刷新</button>
+										</div>
+									</div>
+								</form>
 							</div>
-							<div class="col-xs-4">
-								<button type="button" id="btn-freshTable" class="btn btn-white"><i class="icon-refresh"></i> 刷新</button>
-								<a class="btn btn-white" data-toggle="modal" href="#addModal" ><i class="icon-plus"></i> 添加</a>
-							</div>
-						</div>
 							<table id="example" class=" table table-striped table-bordered">
 								<thead>
 									<tr>
@@ -98,10 +106,6 @@
 									<li><a href="javascript:void(0)" id="nextPage">下一页</a></li>
 									<li><a href="javascript:void(0)" id="lastPage">尾页</a></li>
 								</ul>
-								<small class="page-tooltip">
-									当前第<span id="currentPageId">1</span>页,
-									共有<span id="totalPages">4</span>页
-								</small>
 								<div class="go">
 									<div class="input-group">
 										<input type="number" class="form-control" id="gotoPage" min="1">
@@ -110,6 +114,10 @@
 										</span>
 									</div>
 								</div>
+								<small class="page-tooltip">
+										当前第<span id="currentPageId">1</span>页,
+										共有<span id="totalPages">4</span>页
+									</small>
 							</div>
 						</div>
 						<div class="col-xs-12">

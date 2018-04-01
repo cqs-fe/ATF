@@ -1,29 +1,27 @@
 // 查看脚本
 // document.getElementById('viewScript').onclick = function () {
 	var tooltipwindow;
-function viewScript (event) {
+function viewScriptHandler (event) {
 	var testcaseId = event.target.getAttribute('data-id');
-	var data = { testcaseId
-	};
-
-	$.ajax({
-		url: address + 'antlr/getTestcaseScript',
-		data: data,
-		type: 'post',
-		dataType: 'json',
-		success: function (data, statusText) {
-			tooltipwindow.flag = false;
-			if (!data.success) {
-				Vac.alert(data.msg || '查询失败');
-				return;
-			}
-			tooltipwindow.data = data.obj;
-		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
-		}
-	});
+	
+	// var data = { testcaseId
+	// };
+	// window.open('case-operation.html?activeName=view-script&testcaseId='+testcaseId);
+	view.viewScriptTestcaseId  = testcaseId;
+	// $('#tabs a[href="view-script"]').tab('show');
+	$('#exec-record').removeClass('active');
+	$('#data-tab').removeClass('active');
+	$('#view-script').addClass('active');
+	$('#view-script-tab').addClass('active');
+	// event.stopPropagation();
 }
+var view = new Vue({
+	el: '#view-script',
+	data: {
+		viewScriptTestcaseId: '326'
+	}
+});
+
 $(document).ready(function () {
 	$('.3').addClass('open');
 	$('.3 .arrow').addClass('open');
@@ -854,6 +852,7 @@ $(document).ready(function () {
 			data: {
 				flag: true,
 				selectItems: [],
+				selectType: '1',
 				// checkedItems: [{value: 1,name: '登陆'},{value: 2,name: '注册'}],
 				checkedItems: [],
 				// 保存点击后的复选框
@@ -885,6 +884,7 @@ $(document).ready(function () {
 				];
 				_this.selectItems = data;
 				_this.getInfo();
+				_this.changeSelect({target: {value: 1 }});
 			},
 			watch: {
 				checkedArray(newVal, oldVal) {
@@ -1209,7 +1209,8 @@ $(document).ready(function () {
 		};
 		/// 2017-08-25 删除行号这一列
 		const columnsHeaders = [
-			"<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">",  // "行号",
+			// "<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">",  // "行号",
+			"查看脚本",
 			"案例编号", "测试点", "测试意图", "测试步骤", "预期结果", "检查点"
 		];
 		const columnsOptions = [
@@ -1217,8 +1218,9 @@ $(document).ready(function () {
 				data: "testcaseId",
 				renderer: function (instance, td, row, col, prop, value, cellProperties) {
 					td.style.textAlign = 'center';
-					td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">"+
-						'<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
+					// td.innerHTML = "<input type='checkbox' data-index='" + row + "' class='checker' " + (rowSelectFlags[row] ? "checked='checked'" : "") + ">"+
+					// 	'<button onclick="viewScript(event)" style="padding: 3px 5px;" class="btn btn-primary" data-id="'+ value +'">查看脚本</button>';
+					td.innerHTML = '<button onclick="viewScriptHandler(event)" style="padding: 3px 5px;" class="btn btn-xs btn-primary" data-id="'+ value +'">查看脚本</button>';
 					return td;
 				},
 				readOnly: true
@@ -1316,12 +1318,12 @@ $(document).ready(function () {
 							if (data.o.tableHead) {
 								// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
 								dataKey = getDataKey(data.o.tableHead);
-								console.log("dataKey:" + dataKey);
 							}
 							var destrutData = [];
 							if (data.o.tableDatas) {
 								if (data.o.tableDatas.length == 0) {
 									Vac.alert('该脚本下未查询到相关数据！')
+									$('#no-data-tip').css({display: 'block'});
 								}
 								data.o.tableDatas.forEach((value) => {
 									var data = {};
@@ -1337,7 +1339,6 @@ $(document).ready(function () {
 									dataKey.forEach((key) => {
 										data[key] = value[key];
 									});
-									console.log(data)
 									destrutData.push(data);
 								});
 							}
@@ -1420,6 +1421,7 @@ $(document).ready(function () {
 									},
 								});
 								// handsontable.updateSettings(contextMenuObj);
+								$('#no-data-tip').css({display: 'none'});
 							}
 							else {
 								handsontable.updateSettings({
@@ -1428,6 +1430,7 @@ $(document).ready(function () {
 									colHeaders: colHeadersRenderer
 								});
 								handsontable.render();
+								$('#no-data-tip').css({display: 'none'});
 							}
 						} else {
 							Vac.alert(data.msg);
@@ -1435,6 +1438,7 @@ $(document).ready(function () {
 					},
 					error: function () {
 						Vac.alert('获取数据失败，请确认该脚本中含有数据！')
+						$('#no-data-tip').css({display: 'block'});
 					}
 				}); //aj
 			}
@@ -1598,7 +1602,8 @@ $(document).ready(function () {
 		//渲染第0列的内容
 		function colHeadersRenderer(col) {
 			if (parseInt(col) === 0) {
-				return "<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">";
+				// return "<input type='checkbox' class='header-checker' " + (selectAllFlag ? "checked='checked'" : "") + ">";
+				return '查看脚本'
 			} else {
 				return totalColumnsHeaders[col];
 			}
