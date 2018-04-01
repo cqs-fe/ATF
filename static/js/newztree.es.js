@@ -356,7 +356,15 @@ $(document).ready(function() {
                         Vac.alert('删除失败！')
                     }
                 })
-            }
+            },
+            // 跳转到元素库页面配置上级页面选中的功能点的元素库
+            toElementLib: function() {
+                location.href = "elementLibrary.html";
+            },
+            // 跳转到对象库页面配置上级页面选中的功能点的对象库
+            toObjectRepo: function() {
+                location.href = "objectRepo.html";
+            },
         }
     })
 

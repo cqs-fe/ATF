@@ -15,16 +15,18 @@ var template_obj = `
                 <!-- select start -->
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label">所属被测系统</label>
+                        <label class="col-xs-1 control-label">被测系统</label>
                         <div class="col-xs-2">
                             <select class="form-control" id="autSelect">
                             </select>
                         </div>
-                        <label class="col-xs-2 control-label">所属功能点</label>
+                        <label class="col-xs-1 control-label">功能点</label>
                         <div class="col-xs-2">
                             <select class="form-control" id="transactSelect" v-model="transid">
                             </select>
                         </div>
+                        <a class="btn btn-white"  @click="toElementLib"><i class="icon-cog"></i> 元素库</a>
+                        <a class="btn btn-white" @click="toScript"><i class="icon-cog"></i> 基础脚本</a>
                     </div>
                 </form>
                 <!-- select end -->
@@ -792,8 +794,15 @@ var objectRepo =  Vue.extend({
                     $('#failModal').modal();
                 }
             });
-        }
-
+        },
+        // 跳转到元素库页面配置上级页面选中的功能点的元素库
+        toElementLib: function() {
+            location.href = "elementLibrary.html";
+        },
+        // 跳转到基础脚本页面配置上级页面选中的功能点的基础脚本
+        toScript: function() {
+            location.href = "script.html";
+        },
     },
 });
 Vue.component('object-repo', objectRepo)

@@ -9,6 +9,26 @@
     <!-- <link rel="stylesheet" href="../static/css/fileinput.min.css"> -->
     <!-- pagination css -->
     <title>Case Management</title>
+    <style type="text/css">
+        @media (max-width: 1768px){
+            .table-responsive {
+            width: 100%;
+            margin-bottom: 15px;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            border: 1px solid #ddd;
+            }
+            .table-responsive > .table > thead > tr > th,
+            .table-responsive > .table > tbody > tr > th,
+            .table-responsive > .table > tfoot > tr > th,
+            .table-responsive > .table > thead > tr > td,
+            .table-responsive > .table > tbody > tr > td,
+            .table-responsive > .table > tfoot > tr > td {
+            white-space: nowrap;
+            }
+        }  
+
+    </style>
 </head>
 
 <body id="caseManagement" v-cloak>
@@ -796,42 +816,50 @@
                                 </div>
                             </div>
                             <!-- 表格 -->
-                            <table class="table table-striped table-bordered border-top text-center" id="sample_1">
-                                <thead>
-                                    <tr>
-                                        <th style="width:8px;">
-                                            <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
-                                        </th>
-                                        <!-- <th></th> -->
-                                        <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="caseCompositeType" data-sort="desc" onclick="resort(this)">案例组成类型 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="useStatus" data-sort="desc" onclick="resort(this)">状态 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)">关联脚本名称 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="author" data-sort="desc" onclick="resort(this)">脚本编辑者 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="executor" data-sort="desc" onclick="resort(this)">执行者 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="executeMethod" data-sort="desc" onclick="resort(this)">执行方式 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="caseTable">
-                                    <tr class="odd gradeX" v-for="case in caseList" id="{{case.id}}">
-                                        <td>
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
-                                        </td>
-                                        <!-- <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td> -->
-                                        <td class="center hidden-phone">{{ case.casecode }}</td>
-                                        <td>{{ case.autId }}</td>
-                                        <td class="hidden-phone">{{ case.transId }}</td>
-                                        <td class="hidden-phone">{{ case.caseCompositeType }}</td>
-                                        <td class="center hidden-phone">{{ case.useStatus }}</td>
-                                        <td class="center">{{case.scriptModeFlag}}</td>
-                                        <td class="center hidden-phone">{{ case.author }}</td>
-                                        <td class="center hidden-phone">{{ case.executor }}</td>
-                                        <td class="center hidden-phone">{{ case.executeMethod }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered border-top text-center" id="sample_1">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:8px;">
+                                                <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
+                                            </th>
+                                            <!-- <th></th> -->
+                                            <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="caseCompositeType" data-sort="desc" onclick="resort(this)">案例组成类型 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="useStatus" data-sort="desc" onclick="resort(this)">状态 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)">关联脚本名称 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="author" data-sort="desc" onclick="resort(this)">脚本编辑者 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="executor" data-sort="desc" onclick="resort(this)">执行者 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="executeMethod" data-sort="desc" onclick="resort(this)">执行方式 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="submissionId" data-sort="desc" onclick="resort(this)">测试任务 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="priority" data-sort="desc" onclick="resort(this)">优先级 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="caseTable">
+                                        <tr class="odd gradeX" v-for="case in caseList" id="{{case.id}}">
+                                            <td >
+                                                <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
+                                            </td>
+                                            <!-- <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td> -->
+                                            <td class="center hidden-phone">{{ case.casecode }}</td>
+                                            <td>{{ case.autId }}</td>
+                                            <td class="hidden-phone">{{ case.transId }}</td>
+                                            <td class="hidden-phone">{{ case.caseCompositeType }}</td>
+                                            <td class="center hidden-phone">{{ case.useStatus }}</td>
+                                            <td class="center">{{case.scriptModeFlag}}</td>
+                                            <td class="center hidden-phone">{{ case.author }}</td>
+                                            <td class="center hidden-phone">{{ case.executor }}</td>
+                                            <td class="center hidden-phone">{{ case.executeMethod }}</td>
+                                            <td class="center">{{ case.submissionId }}</td>
+                                            <td class="center">{{ case.priority }}</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table> 
+                            </div>
+                            
                             <!-- 分页 -->
                             <div class="row">
                                 <div class="col-lg-12 text-center">
@@ -874,7 +902,7 @@
                                                 <input class="form-control" type="number" v-model="goToPage" min="1"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
                                             </div>
                                         </div>
-                                        <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>
+                                        <p class="page-info nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</p>
                                     </div>
                                 </div>
                             </div>

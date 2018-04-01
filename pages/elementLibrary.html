@@ -39,16 +39,18 @@
                                 <!-- select start -->
                                 <form class="form-horizontal">
                                     <div class="form-group">
-                                        <label class="col-xs-2 control-label">所属被测系统</label>
+                                        <label class="col-xs-1 control-label">被测系统</label>
                                         <div class="col-xs-2">
                                             <select class="form-control" id="autSelect">
                                             </select>
                                         </div>
-                                        <label class="col-xs-2 control-label">所属功能点</label>
+                                        <label class="col-xs-1 control-label">功能点</label>
                                         <div class="col-xs-2">
                                             <select class="form-control" id="transactSelect" v-model="transid">
                                             </select>
                                         </div>
+                                        <a class="btn btn-white" @click="toObjectRepo"><i class="icon-cog"></i> 对象库</a>
+                                        <a class="btn btn-white" @click="toScript"><i class="icon-cog"></i> 基础脚本</a>
                                     </div>
                                 </form>
                                 <!-- select end -->
@@ -1408,7 +1410,15 @@ var app = new Vue({
         //勾选关联元素名称
         relateNameClick: function(event) {
             if ($(event.target).attr('checked')) {}
-        }
+        },
+        // 跳转到对象库页面配置上级页面选中的功能点的对象库
+        toObjectRepo: function() {
+            location.href = "objectRepo.html";
+        },
+        // 跳转到基础脚本页面配置上级页面选中的功能点的基础脚本
+        toScript: function() {
+            location.href = "script.html";
+        },
     }
 });
 //获取关联元素属性
