@@ -62,9 +62,9 @@ $(document).ready(function() {
             if(parseInt(page) > totalPage){return;}
             sendQuery(page,updatePagination); 
         };
-        document.getElementById("btn-freshTable").onclick = function(){
-            sendQuery(1,updatePagination); 
-        };
+        // document.getElementById("btn-freshTable").onclick = function(){
+        //     sendQuery(1,updatePagination); 
+        // };
         document.getElementById("showRows").onchange = function(event){
             showRows = event.target.value;
             sendQuery(1,updatePagination); 

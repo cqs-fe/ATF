@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/testitems.scss">
+    
     <!--dataTables libs start-->
     <!-- <link rel="stylesheet" type="text/css" href="../static/css/jquery.dataTables.min.css"> -->
     <script src="../lib/jquery.js"></script>
@@ -113,19 +114,12 @@
                                     <div class="col-lg-1">
                                         <button type="button" class="btn btn-white " id="btn-search">搜索</button>
                                     </div>
-                                    <div class="col-lg-2" style="text-align: right;">
+                                    <!-- <div class="col-lg-2" style="text-align: right;">
                                         <label class="control-label" style="font-size: 14px; font-weight: 300;">展示条目</label>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <select class="form-control " id="showRows">
-                                            <option value="5">05</option>
-                                            <option value="20">20</option>
-                                            <option value="50">50</option>
-                                        </select>
                                     </div>
                                     <div class="col-lg-1">
                                         <button type="button" class="btn btn-white" onclick="updateTableAndPagination(1); ">刷新</button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </form>
                         </div>
@@ -199,6 +193,15 @@
                             </tbody>
                         </table>
                         <div class="col-lg-12 col-md-12 text-center">
+                            <div class="pagination-wrap">
+                            <div class="num" style="top: -30px;">
+                                <select class="form-control" size="1" id="showRows">
+                                    <option value="5">5条 / 页</option>
+                                    <option value="10">10条 / 页</option>
+                                    <option value="20">20条 / 页</option>
+                                    <option value="50">50条 / 页</option>
+                                </select>
+                            </div>
                             <ul class="pagination " id="pagination">
                                 <li>
                                     <a href="javascript:void(0)" id="firstPage">首页</a>
@@ -215,17 +218,25 @@
                             </ul>
                             <div class="go">
                                 <div class="input-group">
+                                    <input class="form-control" type="number"  id="gotoPage" min="1"><a href="javascript:;" id="btn-gotoPage" class="input-group-btn input-group-addon">Go</a>
+                                </div>
+                            </div>
+                            <!-- <div class="go">
+                                <div class="input-group">
                                     <input type="number" class="form-control" id="gotoPage" min="1">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" id="btn-gotoPage" type="button">Go</button>
                                     </span>
                                 </div>
-                            </div>
-                            <small class="page-tooltip">
+                            </div> -->
+                            <p class="page-info nowrap"> 当前第 <span class="text-primary" id="currentPageId">1</span> / <span class="text-primary" ></span>页，共有 <span class="text-primary" id="totalPages"></span> 条</p>
+                            <!-- <small class="page-tooltip">
                                     当前第
                                     <span id="currentPageId">1</span>页, 共有
                                     <span id="totalPages">4</span>页
-                                </small>
+                                </small> -->
+                        
+                            </div>
                         </div>
                         <div class="col-lg-12">
                             <!-- viewModal start -->

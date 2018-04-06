@@ -66,19 +66,19 @@
 										<div class="col-lg-1">
 												<button type="button" class="btn btn-white " id="btn-search">搜索</button>
 										</div>
-										<div class="col-lg-2" style="text-align: right;">
+										<!-- <div class="col-lg-2" style="text-align: right;">
 												<label class="control-label" style="font-size: 14px; font-weight: 300;">展示条目</label>
-										</div>
-										<div class="col-lg-2">
+										</div> -->
+										<!-- <div class="col-lg-2">
 												<select class="form-control" id="showRows">
 														<option value="5">05</option>
 														<option value="20">20</option>
 														<option value="50">50</option>
 													</select>
-										</div>
-										<div class="col-lg-3">
+										</div> -->
+										<!-- <div class="col-lg-3">
 												<button type="button" id="btn-freshTable" class="btn btn-white"> 刷新</button>
-										</div>
+										</div> -->
 									</div>
 								</form>
 							</div>
@@ -100,6 +100,15 @@
 								</tbody>
 							</table>
 							<div class="col-xs-12 col-md-12 text-center">
+								<div class="pagination-wrap">
+								<div  class="num" style="top: -30px;">
+										<select class="form-control" id="showRows" size="1">
+												<option value="5">5条 / 页</option>
+												<option value="10">10条 / 页</option>
+												<option value="20">20条 / 页</option>
+												<option value="50">50条 / 页</option>
+											</select>
+								</div>
 								<ul class="pagination " id="pagination">
 									<li><a href="javascript:void(0)" id="firstPage">首页</a></li>
 									<li><a href="javascript:void(0)" id="previousPage">上一页</a></li>
@@ -114,10 +123,12 @@
 										</span>
 									</div>
 								</div>
-								<small class="page-tooltip">
+								<p class="page-info nowrap"> 当前第 <span class="text-primary" id="currentPageId">1</span> / <span class="text-primary" ></span>页，共有 <span class="text-primary" id="totalPages"></span> 条</p>
+								<!-- <small class="page-tooltip">
 										当前第<span id="currentPageId">1</span>页,
 										共有<span id="totalPages">4</span>页
-									</small>
+									</small> -->
+								</div>
 							</div>
 						</div>
 						<div class="col-xs-12">
