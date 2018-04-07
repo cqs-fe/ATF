@@ -179,7 +179,7 @@ $okGreen: #66F60C;
 			flex-direction: column;
 			flex: 1 1 auto;
 			overflow: auto;
-			background-color: #fff;
+			// background-color: #fff;
 			font-size: 13px;
 			.top-bar {
 				padding: 10px 20px;
@@ -264,8 +264,7 @@ $okGreen: #66F60C;
 						height: 100%;
 						// width: 30px;
 						vertical-align: top;
-						// padding: 0px 0px 0px 8px;
-						padding: 5px;
+						padding: 9px 5px 0px 5px;
 						input {
 							float: left;
 							margin: 0;
@@ -382,7 +381,7 @@ $okGreen: #66F60C;
 		margin-right: 5px;
 		margin-bottom: 0;
 		overflow: hidden;
-		transition: 0.5s height;
+		// transition: 0.5s height;
 		z-index: 3;
 		.panel-heading{
 			height: 34px;
@@ -394,7 +393,7 @@ $okGreen: #66F60C;
 			padding:5px 10px;
 		}
 		.panel-body{
-			height: 166px;
+			// height: 166px;
 			overflow: auto;
 			button {
 				// background-color: #ccc;

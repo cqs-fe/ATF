@@ -5,7 +5,7 @@
   <link rel="import" href="./common/header.html?__inline">
   <!-- css for this page only -->
   <!-- 引入样式 -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css"> -->
   <link rel="stylesheet" type="text/css" href="../static/css/index.css">
   <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
   <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
@@ -22,7 +22,7 @@
 </head>
 
 <body id="" v-cloak>
-  <div class="content" id="app1">
+  <di class="content" id="app1">
     <!--header start-->
     <link rel="import" href="./common/header-guide.html?__inline">
     <!--header end-->
@@ -33,7 +33,7 @@
     <section id="main-content">
       <section class="wrapper">
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" :class="{active: activeName=='object-rep'}">
+          <!-- <li role="presentation" :class="{active: activeName=='object-rep'}">
             <a href="#object-rep" aria-controls="object-rep" role="tab" data-toggle="tab">对象库</a>
           </li>
           <li role="presentation" :class="{active: activeName=='element-library'}">
@@ -41,14 +41,17 @@
           </li>
           <li role="presentation" :class="{active: activeName=='messages'}">
             <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">用例数据</a>
-          </li>
+          </li> -->
           <li role="presentation" :class="{active: activeName=='exec-record'}">
             <a href="#exec-record" aria-controls="exec-record" role="tab" data-toggle="tab">执行记录</a>
+          </li>
+          <li role="presentation" :class="{active: activeName=='view-script'}">
+              <a href="#view-script" aria-controls="view-script" role="tab" data-toggle="tab">查看脚本</a>
           </li>
         </ul>
 
         <!-- Tab panes -->
-        <div class="tab-content">
+        <di class="tab-content">
           <div role="tabpanel" class="tab-pane" :class="{active: activeName=='object-rep'}" id="object-rep">
             <object-repo :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></object-repo>
           </div>
@@ -59,9 +62,12 @@
             <case-data></case-data>
           </div>
           <div role="tabpanel" class="tab-pane" id="exec-record" :class="{active: activeName=='exec-record'}">
-              <exec-record :recorddata="recordData"></exec-record>
+            <exec-record :recorddata="recordData"></exec-record>
           </div>
-        </div>
+          <di role="tabpanel" class="tab-pane" id="view-script" :class="{active: activeName=='view-script'}">
+            <view-script :testcaseid="viewScriptTestcaseId"></view-script>
+          </di>
+        </di>
 
         <!-- <el-tab-pane label="对象库" name="first"><object-repo></object-repo></el-tab-pane> -->
         <!-- <el-tab-pane label="元素库" name="second"><element-library></element-library></el-tab-pane> -->
@@ -75,7 +81,7 @@
     <div class="footer">
       <link rel="import" href="./common/copy-right.html?__inline">
     </div>
-  </div>
+  </di>
 
 <script type="text/x-template" id="case-data">
 	<div class="tab-content">
@@ -179,15 +185,55 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 	</div>
-  </script>
+</script>
+<script type="text/x-template" id="view-script-template">
+  <div class="tab-content">
+      <table class="table table-bordered" v-if="tableData.length">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>操作项</th>
+              <th>方法</th>
+              <th>参数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(index, row) in tableData">
+              <td class="index">{{ +index + 1 }}</td>
+              <td class="operations">
+                  <template v-if="row.ui != '' && row.element != ''">
+                      <label >UI:</label>
+                      <span class="operation-ui">{{row.ui}}</span>
+                      <label>元素:</label>
+                      <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
+                  </template>
+                  <template v-else>
+                      <label >公共函数:</label>
+                      <span class="operation-ui" style="display: none;">{{row.ui}}</span>
+                      <span class="operation-element"  style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
+                  </template>
+              </td>
+              <td class="functions">{{ row.method }}</td>
+              <td class="parameters">
+                  <div class="param-show">
+                    <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}: <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
+                  </div>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+      <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
+  </div>
+</script>
   
-  <script type="text/x-template" id="execution-record">
-    <div class="tab-content" style="display: flex; flex-direction: column;">
-      <!-- <iframe src="http://10.108.223.23:8080/ATFCloud/Record/reporter.html" frameborder="0" style="width: 100%; height: 300px;"></iframe> -->
-      <!-- <iframe class="record-iframe" frameborder="0" :srcdoc="srcDoc"></iframe> -->
-      <iframe v-for="src in srcs" :src="address+src" frameborder="0" style="width: 100%; height: 300px; flex: 1 0 auto"></iframe>
-    </div>
-  </script>
+<script type="text/x-template" id="execution-record">
+  <div class="tab-content" style="display: flex; flex-direction: column;">
+    <!-- <iframe src="http://10.108.223.23:8080/ATFCloud/Record/reporter.html" frameborder="0" style="width: 100%; height: 300px;"></iframe> -->
+    <!-- <iframe class="record-iframe" frameborder="0" :srcdoc="srcDoc"></iframe> -->
+    <iframe v-for="src in srcs" :src="address+src" frameborder="0" style="width: 100%; height: 300px; flex: 1 0 auto"></iframe>
+  </div>
+</script>
+
 </body>
 
 </html>
@@ -199,9 +245,14 @@
 <script type="text/javascript" src="../static/js/elementLibrary.js"></script>
 <script type="text/javascript" src="../static/js/case-operation/case-data.js"></script>
 <script type="text/javascript" src="../static/js/case-operation/execution-record.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/view-script.js"></script>
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+<link rel="import" href="./common-vac/alert.html?__inline">
+<link rel="import" href="./common-vac/confirm.html?__inline">
+<script src="../static/js/config.js"></script>
+<script src="../static/js/vac-functions.es.js"></script>
 <!-- 引入组件库 -->
 <!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
 <script>
@@ -210,7 +261,8 @@
     data: function () {
       return {
         activeName: 'object-repo',
-        recordData: ''
+        recordData: '',
+        viewScriptTestcaseId: ''
       }
     },
     ready: function() {
@@ -222,17 +274,14 @@
         o[a[0]] = a[1];
       }
       this.recordData = o.viewcaseargs ?  o.viewcaseargs : '';
-      // if (o.viewcaseargs) {
-      //   // 如果存在viewcaseargs
-      //   this.recordData = o.
-      //   
-      //   console.log(data)
-      // }
       this.activeName = o.activeName;
       switch(this.activeName) {
         case 'exec-record': {
           this.caseId = o.caseid;
           this.caseCompositeType = o.type;
+        }
+        case 'view-script': {
+          this.viewScriptTestcaseId = o.testcaseId;
         }
       }
       // $('#'+this.activeName).tab('show')

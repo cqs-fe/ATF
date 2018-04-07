@@ -59,7 +59,6 @@ $(document).ready(function() {
                                 var transactList = data.o;
                                 var str = "";
                                 for (var i = 0; i < transactList.length; i++) {
-
                                     str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
                                 }
                                 $('#transactSelect').html(str);
@@ -145,9 +144,18 @@ $(document).ready(function() {
                         type: "POST",
                         success: function(data) {
                             _this.templateList = data.o;
-                            _this.checkedTemplate = [];
-                            editDataVue.selectedScript = 0
-                            
+                            // _this.checkedTemplate = [];
+                            if (_this.templateList.length > 0) {
+                                _this.checkedTemplate = [0];
+                                _this.showScripttemplateTable({
+                                    "aut_id": $('#autSelect').val(), 
+                                    "script_id": _this.templateList[0].id
+                                });
+                                editDataVue.selectedScript = 1;
+                            } else {
+                                _this.checkedTemplate = [];
+                                editDataVue.selectedScript = 0;
+                            }
                         }
                     });
                 }

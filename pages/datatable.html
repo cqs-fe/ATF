@@ -3,9 +3,11 @@
 
 <head>
   <meta charset="utf-8">
+  
   <link rel="stylesheet" type="text/css" href="../static/css/index.css">
   <link rel="stylesheet" type="text/css" href="../static/css/handsontable.full.css">
   <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
+  <!-- <link rel="stylesheet" type="text/css" href="../static/css/base/bootstrap.min.css"> -->
   <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
   <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
   <link rel="stylesheet" type="text/css" href="../static/css/datatable.scss">
@@ -533,7 +535,7 @@
           <div class="selectDiv">
             <div>
               <label>筛选类型</label>
-              <select @change="changeSelect($event)">
+              <select @change="changeSelect($event)" v-model="selectType">
                 <option style="color: #ccc;">请选择</option>
                 <option v-for="item in selectItems" v-bind:value="item.value">{{item.name}}</option>
               </select>
@@ -546,7 +548,9 @@
               </label>
             </div>
           </div>
-          <div class="tree-wrapper ztree" id="tree-wrapper">
+          <div v-show="!checkedArray.length" style="font-size: 13px; padding: 5px 0 0 30px;">请在上方选择数据</div>
+          <div class="tree-wrapper ztree" id="tree-wrapper" v-show="checkedArray.length">
+
           </div>
           <button type="button" id="btn-menu" class="btn-toggle" @click="toggle">
             <i :class="{'icon-chevron-left': flag, 'icon-chevron-right': !flag}">
@@ -557,33 +561,58 @@
           <!-- breadcrumb start -->
           <div class="row" style="margin-top: 10px;margin-bottom: 10px; height: auto; margin-right: 0;">
             <div class="col-lg-12">
-              <ul class="breadcrumb" style="margin-bottom: 0;">
+              <ul class="breadcrumb" style="margin-bottom: 0; margin-left: 15px;">
+                  <li>
+                      <a>
+                        <i class="icon-home"></i> 项目测试</a>
+                    </li>
                 <li>
-                  <a href="#">
-                    <i class="icon-home"></i> 数据中心</a>
+                  <a href="#" class="active">
+                     测试资源管理</a>
                 </li>
               </ul>
             </div>
           </div>
-          <div class="top-bar">
-            <!-- <button class="btn btn-white">
-              <i class="icon-cog"></i>
-              构建</button>
-            <button class="btn btn-white">
-              <i class="icon-wrench"></i>
-              调试</button> -->
-            <button class="btn btn-white" id="saveAll">
-              <i class="icon-save"></i>
-              保存</button>
-          </div>
-          <div class="dataTable-wrapper">
+          <ul class="nav nav-tabs" role="tablist" id="tabs" style="margin: 0 15px;">
+            <li role="presentation" class="active" id="data-tab">
+              <a href="#exec-record" aria-controls="exec-record" role="tab" data-toggle="tab">脚本数据</a>
+            </li>
+            <li role="presentation" id="view-script-tab">
+              <a href="#view-script" aria-controls="view-script" role="tab" data-toggle="tab">查看脚本</a>
+            </li>
+          </ul>
+          <di class="tab-content" style="margin: 0 15px;">
+            <div role="tabpanel" class="tab-pane active" id="exec-record" >
+              <div class="panel-content">
+                  <div class="top-bar">
+                      <button class="btn btn-white" id="saveAll">
+                        <i class="icon-save"></i>
+                        保存</button>
+                    </div>
+                  <div class="dataTable-wrapper" style="margin-left: 0px;margin-right: 0px; padding: 0;">
+                      <div id="no-data-tip" style="text-align: center;margin: 20px auto;">请双击脚本获取数据</div>
+                      <div id="handsontable">
+                      </div>
+                    </div>
+              </div>
+                
+            </div>
+            <di role="tabpanel" class="tab-pane" id="view-script">
+                <div class="panel-content">
+                    <view-script :testcaseid="viewScriptTestcaseId"></view-script>
+                </div>
+            </di>
+            
+          </di>
+         
+          <!-- <div class="dataTable-wrapper" style="margin-left: 15px;margin-right: 15px; padding: 0;">
             <div id="handsontable">
             </div>
-          </div>
+          </div> -->
           <div class="script-wrapper">
 
           </div>
-          <div class="panel panel-default" id="tooltipwindow" :class="{'height43px':flag,'height200px':!flag}">
+          <div class="panel panel-default" style="display: none;" id="tooltipwindow" :class="{'height43px':flag,'height200px':!flag}">
             <div class="panel-heading">脚本
               <button type="button" class="close" id="btn-closetooltip" @click="toggle">
                 <i :class="{'icon-resize-full':flag,'icon-resize-small':!flag}"></i>
@@ -617,20 +646,9 @@
                       </td>
                       <td class="functions">{{ row.method }}</td>
                       <td class="parameters">
-                        <table class="param-table table table-condensed table-bordered">
-                            <thead>
-                              <tr>
-                                <td>名称</td>
-                                <td>参数值</td>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr v-for="(index,parameter) in row.parameters" class="param-row">
-                                <td class="param-name">参数{{index+1}}</td>
-                                <td class="param-value">{{parameter}}</td>
-                              </tr>
-                          </tbody>
-                        </table>
+                          <div class="param-show">
+                              <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}: <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
+                            </div>
                       </td>
                     </tr>
                   </tbody>
@@ -699,6 +717,46 @@
     </div>
     <!-- modal end -->
   </div>
+  <script type="text/x-template" id="view-script-template">
+    <div class="tab-content">
+        <table class="table table-bordered table-striped" v-if="tableData.length">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>操作项</th>
+                <th>方法</th>
+                <th>参数</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(index, row) in tableData">
+                <td class="index">{{ +index + 1 }}</td>
+                <td class="operations">
+                    <template v-if="row.ui != '' && row.element != ''">
+                        <label >UI:</label>
+                        <span class="operation-ui">{{row.ui}}</span>
+                        <label>元素:</label>
+                        <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
+                    </template>
+                    <template v-else>
+                        <label >公共函数:</label>
+                        <span class="operation-ui" style="display: none;">{{row.ui}}</span>
+                        <span class="operation-element"  style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
+                    </template>
+                </td>
+                <td class="functions">{{ row.method }}</td>
+                <td class="parameters">
+                    <div class="param-show">
+                      <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}: <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+        <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
+    </div>
+  </script>
+  
   <link rel="import" href="./common/header.html?__inline">
   <link rel="import" href="./noLoginAlert.html?__inline">
   <link rel="import" href="./common-vac/alert.html?__inline">
@@ -706,7 +764,11 @@
   <!--content end -->
   <script src="../static/js/config.js"></script>
   <script src="../static/js/vac-functions.es.js"></script>
+  <script type="text/javascript" src="../static/js/case-operation/view-script.js"></script>
   <script src="../static/js/datatable.es.js"></script>
+
+  <script>
+  </script>
   <script src="../../lib/common-scripts.js"></script>
   <script type="text/javascript" src="../lib/bootstrap-select.min.js"></script>
   <!-- 使用其表格拖拽功能 -->
