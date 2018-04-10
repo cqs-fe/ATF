@@ -3,22 +3,41 @@
 	var tooltipwindow;
 function viewScriptHandler (event) {
 	var testcaseId = event.target.getAttribute('data-id');
-	
 	// var data = { testcaseId
 	// };
 	// window.open('case-operation.html?activeName=view-script&testcaseId='+testcaseId);
-	view.viewScriptTestcaseId  = testcaseId;
-	// $('#tabs a[href="view-script"]').tab('show');
-	$('#exec-record').removeClass('active');
-	$('#data-tab').removeClass('active');
-	$('#view-script').addClass('active');
-	$('#view-script-tab').addClass('active');
-	// event.stopPropagation();
+	// view.viewScriptTestcaseId  = testcaseId;
+	view.getData(testcaseId);
+	event.stopPropagation();
 }
 var view = new Vue({
-	el: '#view-script',
+	el: '#script-modal',
 	data: {
-		viewScriptTestcaseId: '326'
+		viewScriptTestcaseId: '326',
+		tableData: []
+	},
+	methods: {
+		getData: function(testcaseId) {
+			var _this = this;
+			var data = {testcaseId: testcaseId };$('#view-script').modal('show');
+      $.ajax({
+        url: address + 'antlr/getTestcaseScript',
+        data: data,
+        type: 'post',
+        dataType: 'json',
+        success: function (data, statusText) {
+          if (!data.success) {
+            Vac.alert(data.msg || '查询失败');
+            return;
+          }
+					
+					_this.tableData = data.obj;
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
+        }
+      });
+		}
 	}
 });
 
@@ -297,7 +316,7 @@ $(document).ready(function () {
 								operation.element = '';
 								var index = strArray[i].indexOf('(');
 								var functions = [{name: strArray[i].slice(0, index), parameterlist: ''}];
-								var paraStr = strArray[i].slice(index + 1, -1);
+								var paraStr = strArray[i].slice(index + 1, -2);
 								var parameters = [];
 								var paraArr = paraStr.split(',');
 								for (let j = 0; j < paraArr.length; j++) {
