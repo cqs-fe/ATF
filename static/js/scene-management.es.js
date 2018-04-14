@@ -36,14 +36,14 @@ var vBody = new Vue({
 		// 保存执行策略的数据
 		exe_strategy: {
 			// sceneId: '3',
-			exe_strategy1_status: '',
-			exe_strategy2_start: '',
-			exe_strategy2_order: '',
-			exe_strategy2_status: '',
-			exe_strategy3_start: '',
-			exe_strategy3_order: '',
-			exe_strategy3_status: '',
-			exe_strategy_err: ''
+			exe_strategy1_status: '1',
+			exe_strategy2_start: '1',
+			exe_strategy2_order: '1',
+			exe_strategy2_status: '1',
+			exe_strategy3_start: '1',
+			exe_strategy3_order: '1',
+			exe_strategy3_status: '1',
+			exe_strategy_err: '1'
 		},
 
 		checkall: false,
