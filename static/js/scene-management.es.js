@@ -45,7 +45,14 @@ var vBody = new Vue({
 			exe_strategy3_status: '1',
 			exe_strategy_err: '1'
 		},
-
+		exe_strategy1_status: '1',
+			exe_strategy2_start: '1',
+			exe_strategy2_order: '1',
+			exe_strategy2_status: '1',
+			exe_strategy3_start: '1',
+			exe_strategy3_order: '1',
+			exe_strategy3_status: '1',
+			exe_strategy_err: '1',
 		checkall: false,
 		// save the selected cases
 		selectedCases: [],
@@ -122,7 +129,7 @@ var vBody = new Vue({
 			this.setBackground()
 		},
 		"checkedFlowNodes": function(value, oldVal) {
-			// console.log(this.flowNodeIds)
+			
 			for(let key of this.flowNodeIds.keys()) {
 				if(this.flowNodeIds.get(key).every((value) => {
 					return this.checkedFlowNodes.includes(value)
@@ -201,28 +208,39 @@ var vBody = new Vue({
 									group.push(o);
 								}
 						}
-						console.log(caseGroup)
+						
 						for (var group in caseGroup) {
 							for (var i = 0; i < caseGroup[group].length; i++) {
 								for (var time in  caseGroup[group][i]){
 									caseMaxLength[time] = caseMaxLength[time] === undefined ? 0 : Math.max(caseGroup[group][i][time].length, caseMaxLength[time]);
 								}
 							}
-						}console.log(caseMaxLength)
+						}
 						_this.caseMaxLength = caseMaxLength;
 						data.obj.caseGroup = caseGroup;
 						_this.sceneInfo = data.obj;
-						({
-							exeStrategy1Status: _this.exe_strategy.exe_strategy1_status,
-							exeStrategy2Start:_this.exe_strategy.exe_strategy2_start,
-							exeStrategy2Order: _this.exe_strategy.exe_strategy2_order,
-							exeStrategy2Status: _this.exe_strategy.exe_strategy2_status,
-							exeStrategy3Start: _this.exe_strategy.exe_strategy3_start,
-							exeStrategy3Order: _this.exe_strategy.exe_strategy3_order,
-							exeStrategy3Status: _this.exe_strategy.exe_strategy3_status,
-							exeStrategyErr: _this.exe_strategy.exe_strategy_err
-						} = data.obj);
-
+						// var o = {
+							_this.exeStrategy1Status= data.obj.exe_strategy1_status || 1;
+							_this.exeStrategy2Start=data.obj.exe_strategy2_start || '1';
+							_this.exeStrategy2Order= data.obj.exe_strategy2_order || '1';
+							_this.exeStrategy2Status= data.obj.exe_strategy2_status || '1';
+							_this.exeStrategy3Start= data.obj.exe_strategy3_start || '1';
+							_this.exeStrategy3Order= data.obj.exe_strategy3_order || '1';
+							_this.exeStrategy3Status= data.obj.exe_strategy3_status || '1';
+							_this.exeStrategyErr= data.obj.exe_strategy_err || '1';
+						// };
+						// ({
+						// 	exeStrategy1Status: _this.exe_strategy.exe_strategy1_status || '1';
+						// 	exeStrategy2Start:_this.exe_strategy.exe_strategy2_start || '1',
+						// 	exeStrategy2Order: _this.exe_strategy.exe_strategy2_order || '1',
+						// 	exeStrategy2Status: _this.exe_strategy.exe_strategy2_status || '1',
+						// 	exeStrategy3Start: _this.exe_strategy.exe_strategy3_start || '1',
+						// 	exeStrategy3Order: _this.exe_strategy.exe_strategy3_order || '1',
+						// 	exeStrategy3Status: _this.exe_strategy.exe_strategy3_status || '1',
+						// 	exeStrategyErr: _this.exe_strategy.exe_strategy_err || '1'
+						// } = data.obj);
+						// _this.exe_strategy = o;
+						console.log(_this.exe_strategy)
 						if(!(data.obj.caseDtos && data.obj.caseDtos.length)) {
 							Vac.alert('未查询到相关的用例信息')
 						}
@@ -330,7 +348,6 @@ var vBody = new Vue({
 								conditions: _this.editTriggerData.conditions,
 								actions: _this.editTriggerData.actions
 							} = data.obj);
-							console.log(_this.editTriggerData);
 
 							var tbody = $('#conditionsBody');
 							var conditions = data.obj.conditions;
@@ -351,9 +368,8 @@ var vBody = new Vue({
 							// 	}
 							// }
 							var trs = $('#conditionsBody tr');
-							console.log(trs)
 							for(var i=0; i<trs.length;i++){
-								console.log(trs[i])
+								
 								$('.objectName',trs[i]).val(conditions[i].objectName);
 								$('.matchType',trs[i]).val(conditions[i].matchType);
 								$('.value',trs[i]).val(conditions[i].value);
@@ -393,7 +409,7 @@ var vBody = new Vue({
 			var _this = this;
 			if(this.triggerInfo.selectedTrigger.length > 0){
 				var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm');
-				console.log(promise)
+				
 				promise.then(() => {
 					$.ajax({
 						url: address + 'trigerController/delete',
@@ -432,7 +448,7 @@ var vBody = new Vue({
 		removeTriggerCondition: function(event){
 			// event.target.click(null);
 			var deleteTr = event.target.parentNode.parentNode;
-			console.log(deleteTr)
+			
 			deleteTr.parentNode.removeChild(deleteTr);
 			deleteTr = null;
 		},
@@ -476,7 +492,7 @@ var vBody = new Vue({
 				var obj = getDataInTable(1);
 				data.conditions = obj.conditions;
 				data.actions = obj.actions;
-				// console.log(data);
+				
 				$.ajax({
 					url: address + 'trigerController/insert',
 					data: data,
@@ -502,7 +518,7 @@ var vBody = new Vue({
 
 			// 修改保存
 			function save2(){
-				console.log( _this.triggerInfo.selectedTrigger[0])
+				
 				var data = {
 					triggerId: _this.triggerInfo.selectedTrigger[0],
 					name: _this.editTriggerData.name,
@@ -515,7 +531,7 @@ var vBody = new Vue({
 				var obj = getDataInTable(2);
 				data.conditions = obj.conditions;
 				data.actions = obj.actions;
-				console.log(data);
+				
 				$.ajax({
 					url: address + 'trigerController/update',
 					data: data,
@@ -574,7 +590,7 @@ var vBody = new Vue({
 			for(var i=0;i<trs.length;i++){
 				var item = {};
 				item.id = trs[i].querySelector('input').value;
-				// console.log(item.id)
+				
 				item.state = trs[i].querySelector('select').value;
 				dataArray.push(JSON.stringify(item))
 			}
@@ -600,7 +616,7 @@ var vBody = new Vue({
 			}
 		},
 		saveStrategy: function(){
-			console.log('he');
+			
 			var _this = this;
 			_this.exe_strategy.sceneId = _this.sceneid;
 			$.ajax({
@@ -847,7 +863,7 @@ var vBody = new Vue({
 			// 删除选中的案例中节点案例,并生成要发送的数据
 			let sendData = []
 			let flowCases = [...this.flowNodeIds.keys()]
-			console.log(flowCases)
+			
 			let set = new Set(this.selectedCases)
 			for(let caseId of set) {
 				if(flowCases.includes(caseId)) {
@@ -869,7 +885,7 @@ var vBody = new Vue({
 				sendData.push(obj)
 			}
 			var _this = this
-			console.log(typeof _this.exeScope)
+			
 			var data = {
 				debuground: _this.debugRound,
 				sceneId: _this.sceneid,
