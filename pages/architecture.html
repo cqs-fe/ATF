@@ -38,8 +38,8 @@
                                 开发架构
                                 <div class="archi-btn">
                                     <a class="btn btn-white btn-sm" data-toggle="modal" href="#addArchModal"><i class="icon-plus" @click="getArchiList"></i></a>
-                                    <a class="btn btn-white btn-sm " @click="delArchi"><i class="icon-remove"></i></a>
-                                    <a class="btn btn-white btn-sm " data-toggle="modal" href="#updateArchModal"><i class="icon-edit"></i></a>
+                                    <!-- <a class="btn btn-white btn-sm " @click="delArchi"><i class="icon-remove"></i></a>
+ -->                                    <a class="btn btn-white btn-sm " data-toggle="modal" href="#updateArchModal"><i class="icon-edit"></i></a>
                                 </div>
                             </header>
                             <div id="menuContent" class="menuContent treeMenu">
@@ -60,7 +60,7 @@
                                     <div class="property">
                                         控件类型
                                         <a class="btn btn-white btn-sm pull-right" data-toggle="modal" href="#addClassModal"><i class="icon-plus"></i></a>
-                                        <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a>
+                                        <!-- <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a> -->
                                     </div>
                                     <div class="property">
                                         <table class="table table-bordered">
@@ -327,16 +327,16 @@
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">编码</label>
                                                 <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="architecturecode" id="">
+                                                    <input type="text" class="form-control" name="code" id="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">中文名称</label>
                                                 <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="architecturename" id="">
+                                                    <input type="text" class="form-control" name="name" id="">
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label class="col-lg-3 control-label">类型</label>
                                                 <div class="col-lg-5">
                                                     <select class="form-control">
@@ -344,20 +344,21 @@
                                                         <option>全局方法</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">父架构</label>
                                                 <div class="col-lg-5">
-                                                    <select class="form-control" name="inherit">
+                                                    <select class="form-control" name="parentArcId">
                                                         <option value=''>-- 请选择父架构 --</option>
                                                         <option v-for="item in archiList" value="item.id">{{item.name}}</option>
                                                     </select>
                                                 </div>
                                             </div>
+
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">描述</label>
                                                 <div class="col-lg-5">
-                                                    <textarea class="form-control" rows="4" name="description"></textarea>
+                                                    <textarea class="form-control" rows="4" name="descShort"></textarea>
                                                 </div>
                                             </div>
                                             <input type="reset" name="reset" style="display: none;">
@@ -446,13 +447,13 @@
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">英文名称</label>
                                                 <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="eclassname" id="">
+                                                    <input type="text" class="form-control" name="name" id="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">中文名称</label>
                                                 <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="cclassname" id="">
+                                                    <input type="text" class="form-control" name="chsName" id="">
                                                 </div>
                                             </div>
                                            <input type="reset" name="reset" style="display: none;">

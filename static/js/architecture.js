@@ -1,3 +1,5 @@
+var baseUrl='http://10.108.223.23:8080/atfcloud1.0a';
+// var baseUrl='http://10.210.81.107:8080/atfcloud';
 var app = new Vue({
     el: '#architecture',
     data: {
@@ -22,22 +24,25 @@ var app = new Vue({
     },
     methods: {
         addArchi: function() {
-            var architecturecode = $('#addArchForm input[name="architecturecode"]').val(),
-                architecturename = $('#addArchForm input[name="architecturename"]').val(),
-                inherit = $('#addArchForm select[name="inherit"]').val(),
-                description = $('#addArchForm textarea[name="description"]').val();
+            var code = $('#addArchForm input[name="code"]').val(),
+                name = $('#addArchForm input[name="name"]').val(),
+                parentArcId = $('#addArchForm select[name="parentArcId"]').val(),
+                creatorId = sessionStorage.getItem('userId'),
+                descShort = $('#addArchForm textarea[name="descShort"]').val();
             $.ajax({
-                url: address+'abstractarchitectureController/insert',
+                url: baseUrl+'/abstractArchitecture/addAbstractArchitecture',
                 type: 'post',
-                data: {
-                    "architecturecode": architecturecode,
-                    "architecturename": architecturename,
-                    "inherit": inherit,
-                    "description": description
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "code": code,
+                    "name": name,
+                    "parentArcId": parentArcId,
+                    "descShort": descShort,
+                    "creatorId": creatorId
+                }),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode=="0000") {
                        $('#successModal').modal();
                        getArchiTree();
                     } else {
@@ -51,61 +56,63 @@ var app = new Vue({
                 }
             });
         },
-        delArchi: function() {
-            var treeObj = $.fn.zTree.getZTreeObj("archiTree");
-            var nodes = treeObj.getCheckedNodes(true);
-            var ids;
-            if (nodes.length === 0) {
-                $('#selectAlertModal').modal();
-            } else {
-                for (var i = 0; i < nodes.length; i++) {
-                    ids = nodes[i].id;
-                }
-                $.ajax({
-                    url: address+'abstractarchitectureController/delete',
-                    type: 'post',
-                    data: {
-                        "id": ids,
-                    },
-                    success: function(data) {
-                        console.info(data);
-                        if (data.success) {
-                            $('#successModal').modal();
-                            getArchiTree();
-                        } else {
-                            $('#failModal').modal();
-                        }
-                        $('input[type="reset"]').trigger('click');                    
-                    },
-                    error: function() {
-                        $('#failModal').modal();
-                        $('input[type="reset"]').trigger('click');                    
-                    }
-                });
-            }
-
-        },
+        // delArchi: function() {
+        //     var treeObj = $.fn.zTree.getZTreeObj("archiTree");
+        //     var nodes = treeObj.getCheckedNodes(true);
+        //     var ids;
+        //     if (nodes.length === 0) {
+        //         $('#selectAlertModal').modal();
+        //     } else {
+        //         for (var i = 0; i < nodes.length; i++) {
+        //             ids = nodes[i].id;
+        //         }
+        //         $.ajax({
+        //             url: baseUrl+'/abstractarchitectureController/delete',
+        //             type: 'post',
+        //             data: {
+        //                 "id": ids,
+        //             },
+        //             success: function(data) {
+        //                 console.info(data);
+        //                 if (data.success) {
+        //                     $('#successModal').modal();
+        //                     getArchiTree();
+        //                 } else {
+        //                     $('#failModal').modal();
+        //                 }
+        //                 $('input[type="reset"]').trigger('click');                    
+        //             },
+        //             error: function() {
+        //                 $('#failModal').modal();
+        //                 $('input[type="reset"]').trigger('click');                    
+        //             }
+        //         });
+        //     }
+        // },
         updateArchi: function() {
-            var architecturecode = $('#updateArchForm input[name="architecturecode"]').val(),
-                architecturename = $('#updateArchForm input[name="architecturename"]').val(),
-                inherit = $('#updateArchForm select[name="inherit"]').val(),
-                description = $('#updateArchForm textarea[name="description"]').val(),
+            var code = $('#updateArchForm input[name="code"]').val(),
+                architecturename = $('#updateArchForm input[name="name"]').val(),
+                parentArcId = $('#updateArchForm select[name="parentArcId"]').val(),
+                descShort = $('#updateArchForm textarea[name="descShort"]').val(),
+                modifierId=sessionStorage.getItem('userId'),
                 treeObj = $.fn.zTree.getZTreeObj("archiTree"),
                 nodes = treeObj.getCheckedNodes(true),
                 id = nodes[0].id;
             $.ajax({
-                url: address+'abstractarchitectureController/update',
+                url: baseUrl+'/abstractArchitecture/modifyAbstractArchitecture',
                 type: 'post',
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     "id": id,
                     "architecturecode": architecturecode,
                     "architecturename": architecturename,
-                    "inherit": inherit,
-                    "description": description
-                },
+                    "parentArcId": parentArcId,
+                    "descShort": descShort,
+                    "modifierId": modifierId
+                }),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode=="0000") {
                         $('#successModal').modal();
                         getArchiTree();
                     } else {
@@ -122,7 +129,8 @@ var app = new Vue({
         //获取增加开发架构modal中父架构list
         getArchiList(){
             $.ajax({
-                url:address+"abstractarchitectureController/showarchitecture",
+                url:baseUrl+"/abstractArchitecture/queryArchitectureList",
+                contentType: 'application/json',
                 success:function(data){
                     this.archiList=data.obj;
                     console.log(this.archiList)
@@ -131,47 +139,51 @@ var app = new Vue({
         },
         //添加控件类型
         addClass: function() {
-            var eclassname = $('#addClassForm input[name="eclassname"]').val(),
-                cclassname = $('#addClassForm input[name="cclassname"]').val(),
+            var name = $('#addClassForm input[name="name"]').val(),
+                chsName = $('#addClassForm input[name="chsName"]').val(),
                 // defaultmethodname = $('#addClassForm select[name="defaultmethodname"]').val(),
                 treeObj = $.fn.zTree.getZTreeObj("archiTree"),
                 nodes = treeObj.getSelectedNodes(true),
-                arcid = nodes[0].id;
-            if(eclassname==""){
+                arcId = nodes[0].id;
+            if(name==""){
                 alert('英文名称不能为空');
-            }else if(cclassname==''){
+            }else if(chsName==''){
                 alert('中文名称不能为空');
             }else{
                 $.ajax({
-                    url: address+'classController/insert',
+                    url: baseUrl+'/arcClass/addSingleArcOmClass',
                     type: 'post',
-                    data: {
-                        "eclassname": eclassname,
-                        "cclassname": cclassname,
-                        "defaultmethodname": '',
-                        "arcid": arcid,
-                        "supportparameterlist": ''
-
-                    },
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "name": name,
+                        "chsName": chsName,
+                        "descShort": '',
+                        "defaultMethod": '',
+                        "arcId": arcId,
+                        "supportedRecognitionPros": '',
+                        "runtimeArgs": '',
+                        "selfRecognitionPros": '',
+                        "assistRecognitionPros": '',
+                        "overideFlag": '',
+                        "visibilityFlag": ''
+                    }),
                     success: function(data) {
-                        if (data.success) {
+                        if (data.respCode=="0000") {
                             // window.location.reload();
                             var treeObj = $.fn.zTree.getZTreeObj("archiTree");
                             var nodes = treeObj.getSelectedNodes();
-                            var arcid=nodes[0].id;
+                            var arcId=nodes[0].id;
                             //查询class
                             $.ajax({
-                                url: address+'classController/classquery',
+                                url: baseUrl+'/arcClass/queryArcDirectOmClasses',
                                 type: 'post',
-                                data: {
-                                    "arcid": arcid,
-                                    "eclassname": '',
-                                    "cclassname": '',
-                                    "defaultmethodname": ''
-                                },
-                                success: function(data) {
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    "id": arcId
+                                }),
+                                 success: function(data) {
                                     //控件类型
-                                    var classList = data.obj;
+                                    var classList = data.arcClassRespDTOList;
                                     if (classList.length !== 0) {
                                         $('#classProp').children().remove();
                                         for (var i = 0; i < classList.length; i++) {
@@ -180,8 +192,8 @@ var app = new Vue({
                                                 eclassNameTd = $('<td ></td>'),
                                                 cclassNameTd = $('<td ></td>');
                                             classTr.attr('id', classList[i].id);
-                                            eclassNameTd.html(classList[i].eclassname);
-                                            cclassNameTd.html(classList[i].cclassname);
+                                            eclassNameTd.html(classList[i].name);
+                                            cclassNameTd.html(classList[i].chsName);
                                             classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
                                             $('#classProp').append(classTr);
                                         }
@@ -208,107 +220,119 @@ var app = new Vue({
             }
         },
         //删除控件类型
-        delClass: function() {
-            var selectedTr = $('input[name="class"]:checked').parent().parent(),
-                id = selectedTr.attr('id');
-            if (id === undefined) {
-                $('#selectAlertModal').modal();
-            } else {
-                $.ajax({
-                    url: address+'classController/delete',
-                    type: 'post',
-                    data: {
-                        "id": id,
-                    },
-                    success: function(data) {
-                        console.info(data);
-                        if (data.success) {
-                            $('#successModal').modal();
-                            var treeObj = $.fn.zTree.getZTreeObj("archiTree");
-                            var nodes = treeObj.getSelectedNodes();
-                            var arcid=nodes[0].id;
-                            //查询class
-                            $.ajax({
-                                url: address+'classController/classquery',
-                                type: 'post',
-                                data: {
-                                    "arcid": arcid,
-                                    "eclassname": '',
-                                    "cclassname": '',
-                                    "defaultmethodname": ''
-                                },
-                                success: function(data) {
-                                    //控件类型
-                                    var classList = data.obj;
-                                    if (classList.length !== 0) {
-                                        $('#classProp').children().remove();
-                                        for (var i = 0; i < classList.length; i++) {
-                                            var classTr = $('<tr></tr>'),
-                                                classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
-                                                eclassNameTd = $('<td ></td>'),
-                                                cclassNameTd = $('<td ></td>');
-                                            classTr.attr('id', classList[i].id);
-                                            eclassNameTd.html(classList[i].eclassname);
-                                            cclassNameTd.html(classList[i].cclassname);
-                                            classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
-                                            $('#classProp').append(classTr);
-                                        }
-                                    } else {
-                                        $('#classProp').children().remove();
-                                        $('#classProp').append(app.propTr);
-                                    }
+        // delClass: function() {
+        //     var selectedTr = $('input[name="class"]:checked').parent().parent(),
+        //         id = selectedTr.attr('id');
+        //     if (id === undefined) {
+        //         $('#selectAlertModal').modal();
+        //     } else {
+        //         $.ajax({
+        //             url: baseUrl+'classController/delete',
+        //             type: 'post',
+        //             data: {
+        //                 "id": id,
+        //             },
+        //             success: function(data) {
+        //                 console.info(data);
+        //                 if (data.success) {
+        //                     $('#successModal').modal();
+        //                     var treeObj = $.fn.zTree.getZTreeObj("archiTree");
+        //                     var nodes = treeObj.getSelectedNodes();
+        //                     var arcid=nodes[0].id;
+        //                     //查询class
+        //                     $.ajax({
+        //                         url: baseUrl+'classController/classquery',
+        //                         type: 'post',
+        //                         data: {
+        //                             "arcid": arcid,
+        //                             "eclassname": '',
+        //                             "cclassname": '',
+        //                             "defaultmethodname": ''
+        //                         },
+        //                         success: function(data) {
+        //                             //控件类型
+        //                             var classList = data.obj;
+        //                             if (classList.length !== 0) {
+        //                                 $('#classProp').children().remove();
+        //                                 for (var i = 0; i < classList.length; i++) {
+        //                                     var classTr = $('<tr></tr>'),
+        //                                         classCheckTd = $("<td><input type='radio' name='class' onclick='classClick(event)'/></td>"),
+        //                                         eclassNameTd = $('<td ></td>'),
+        //                                         cclassNameTd = $('<td ></td>');
+        //                                     classTr.attr('id', classList[i].id);
+        //                                     eclassNameTd.html(classList[i].eclassname);
+        //                                     cclassNameTd.html(classList[i].cclassname);
+        //                                     classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
+        //                                     $('#classProp').append(classTr);
+        //                                 }
+        //                             } else {
+        //                                 $('#classProp').children().remove();
+        //                                 $('#classProp').append(app.propTr);
+        //                             }
 
-                                },
-                                error: function() {
-                                    $('#failModal').modal();
-                                }
-                            });
+        //                         },
+        //                         error: function() {
+        //                             $('#failModal').modal();
+        //                         }
+        //                     });
 
-                        } else {
-                            $('#failModal').modal();
-                        }
-                    },
-                    error: function() {
-                        $('#failModal').modal();
-                    }
-                });
-            }
-        },
+        //                 } else {
+        //                     $('#failModal').modal();
+        //                 }
+        //             },
+        //             error: function() {
+        //                 $('#failModal').modal();
+        //             }
+        //         });
+        //     }
+        // },
         //添加方法
         addMethod: function() {
-            var methodname = $('#addMethodForm input[name="methodname"]').val(),
-                methoddescription = $('#addMethodForm input[name="methoddescription"]').val(),
+            var name = $('#addMethodForm input[name="methodname"]').val(),
+                descShort = $('#addMethodForm input[name="methoddescription"]').val(),
                 objectcode = $('#addMethodForm textarea[name="objectcode"]').val(),
                 isparameter = $('#addMethodForm select[name="isparameter"]').val(),
                 waittime = $('#addMethodForm input[name="waittime"]').val(),
-                timeout = $('#addMethodForm input[name="timeout"]').val();
+                timeout = $('#addMethodForm input[name="timeout"]').val(),
+                treeObj = $.fn.zTree.getZTreeObj("archiTree"),
+                nodes = treeObj.getSelectedNodes(true),
+                arcId = nodes[0].id;
             var that=this;
             $.ajax({
-                url: address+'methodController/insert',
+                url: baseUrl+'/arcMethod/addSingleArcOmMethod',
                 type: 'post',
-                data: {
-                    "methodname": methodname,
-                    "methoddescription": methoddescription,
-                    "parameterlist": '',
-                    "objectcode": objectcode,
-                    "arcclassid": that.classId,
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "arcId": arcId,
+                    "mtype": '',
+                    "name": name,
+                    "descShort": descShort,
+                    "overrideFlag": '',
+                    "arguments": '',
+                    "argsCount": '',
+                    "labelArgument": '',
+                    "inputArgsDesc": '',
+                    "outputArgsDesc": '',
+                    "classId": that.classId,
                     "isparameter": isparameter,
                     "waittime": waittime,
-                    "timeout": timeout
-                },
+                    "timeout": timeout,
+                    "visibilityFlag": '',
+                    "targetCodeContent": objectcode,
+                    'creatorId': sessionStorage.getItem('userId')
+                }),
                 success: function(data) {
                     if (data.success) {
                         $('#successModal').modal();
                         //查询当前构件类型对应的方法
                         that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
                         $.ajax({
-                            url: address+'methodController/methodquery',
+                            url: baseUrl+'/arcMethod/queryArcDirectOmMethods',
                             type: 'post',
-                            data: {
-                                arcclassid: that.classId,
-                                methodname: '',
-                                methoddescription: ''
-                            },
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                id: that.classId
+                            }),
                             success: function(data) {
                                 $('#methodProp').children().remove();
                                 var methodList = data.obj;
@@ -347,11 +371,12 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: address+'methodController/delete',
+                    url: baseUrl+'/arcMethod/deleteSingleArcOmMethod',
                     type: 'post',
-                    data: {
+                    contentType: 'application/json',
+                    data: JSON.stringify({
                         "id": id,
-                    },
+                    }),
                     success: function(data) {
                         console.info(data);
                         if (data.success) {
@@ -359,13 +384,14 @@ var app = new Vue({
                             //查询当前构件类型对应的方法
                             that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
                             $.ajax({
-                                url: address+'methodController/methodquery',
+                                url: baseUrl+'methodController/methodquery',
                                 type: 'post',
-                                data: {
+                                contentType: 'application/json',
+                                data: JSON.stringify({
                                     arcclassid: that.classId,
                                     methodname: '',
                                     methoddescription: ''
-                                },
+                                }),
                                 success: function(data) {
                                     $('#methodProp').children().remove();
                                     var methodList = data.obj;
@@ -407,39 +433,44 @@ var app = new Vue({
         },
         //修改控件类型
         updateClass: function() {
-            var eclassname = $('#classForm input[name="ename"]').val(),
-                cclassname = $('#classForm input[name="cname"]').val(),
-                defaultmethodname = $('#classForm select[name="dname"]').val(),
+            var name = $('#classForm input[name="ename"]').val(),
+                chsName = $('#classForm input[name="cname"]').val(),
+                defaultMethod = $('#classForm select[name="dname"]').val(),
                 treeObj = $.fn.zTree.getZTreeObj("archiTree"),
                 nodes = treeObj.getSelectedNodes(true),
-                arcid = nodes[0].id;
+                arcId = nodes[0].id;
             $.ajax({
-                url: address+'classController/update',
+                url: baseUrl+'/arcClass/modifySingleArcOmClass',
                 type: 'post',
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     "id": app.classId,
-                    "eclassname": eclassname,
-                    "cclassname": cclassname,
-                    "defaultmethodname": defaultmethodname,
-                    "arcid": arcid,
-                    "supportparameterlist": ''
-                },
+                    "name": name,
+                    "chsName": chsName,
+                    "defaultMethod": defaultMethod,
+                    "arcId": arcId,
+                    "supportedRecognitionPros": '',
+                    "runtimeArgs": '',
+                    "selfRecognitionPros": '',
+                    "assistRecognitionPros": '',
+                    "overideFlag": '',
+                    "visibilityFlag": '',
+                    "modifierId": sessionStorage.getItem('userId')
+                }),
                 success: function(data) {
                     if (data.success) {
                         $('#successModal').modal();
                         var treeObj = $.fn.zTree.getZTreeObj("archiTree");
                         var nodes = treeObj.getSelectedNodes();
-                        var arcid = nodes[0].id;
+                        var arcId = nodes[0].id;
                         //查询class
                         $.ajax({
-                            url: address + 'classController/classquery',
+                            url: baseUrl + '/arcClass/queryArcDirectOmClasses',
                             type: 'post',
-                            data: {
-                                "arcid": arcid,
-                                "eclassname": '',
-                                "cclassname": '',
-                                "defaultmethodname": ''
-                            },
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "arcId": arcId,
+                            }),
                             success: function(data) {
                                 //控件类型
                                 var classList = data.obj;
@@ -503,9 +534,10 @@ var app = new Vue({
             paraList += "]";
             var that=this;
             $.ajax({
-                url: address+'methodController/update',
+                url: baseUrl+'methodController/update',
                 type: 'post',
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     "id": that.methodId,
                     "methodname": methodname,
                     "methoddescription": methoddescription,
@@ -515,7 +547,7 @@ var app = new Vue({
                     "isparameter": isparameter,
                     "waittime": waittime,
                     "timeout": timeout
-                },
+                }),
                 success: function(data) {
                     if (data.success) {
                         // window.location.reload();
@@ -523,13 +555,14 @@ var app = new Vue({
                         //查询当前构件类型对应的方法
                         that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
                         $.ajax({
-                            url: address + 'methodController/methodquery',
+                            url: baseUrl + 'methodController/methodquery',
                             type: 'post',
-                            data: {
+                            contentType: 'application/json',
+                            data: JSON.stringify({
                                 arcclassid: that.classId,
                                 methodname: '',
                                 methoddescription: ''
-                            },
+                            }),
                             success: function(data) {
                                 $('#methodProp').children().remove();
                                 var methodList = data.obj;
@@ -576,11 +609,11 @@ var setting1 = {
         simpleData: {
             enable: true,
             idKey: 'id', //id编号命名
-            pIdKey: 'inherit', //父id编号命名
+            pIdKey: 'parentArcId', //父id编号命名
             rootPId: 0
         },
         key: {
-            name: 'architecturename'
+            name: 'name'
         }
     },
     edit: {
@@ -594,51 +627,49 @@ var setting1 = {
         beforeDrag: zTreeBeforeDrag,
         onCheck: function(event, treeId, treeNode) {
             //查询抽象架构
-            $.ajax({
-                url: address+'abstractarchitectureController/abstractarchitecturequery',
-                type: 'post',
-                data: {
-                    "id": treeNode.id,
-                    "architecturecode": '',
-                    "architecturename": '',
-                    "inherit": '',
-                    "description": ''
-                },
-                success: function(data) {
-                    $('#updateArchForm input[name="architecturecode"]').val('');
-                    $('#updateArchForm input[name="architecturename"]').val('');
-                    $('#updateArchForm select[name="inherit"]').val('');
-                    $('#updateArchForm textarea[name="description"]').val('');
-                    var archList = data.obj,
-                        architecturecode = archList[0].architecturecode,
-                        architecturename = archList[0].architecturename,
-                        inherit = archList[0].inherit,
-                        description = archList[0].description;
-                    $('#updateArchForm input[name="architecturecode"]').val(architecturecode);
-                    $('#updateArchForm input[name="architecturename"]').val(architecturename);
-                    $('#updateArchForm select[name="inherit"]').val(inherit);
-                    $('#updateArchForm textarea[name="description"]').val(description);
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+            // $.ajax({
+            //     url: baseUrl+'/abstractarchitectureController/abstractarchitecturequery',
+            //     type: 'post',
+            //     data: {
+            //         "id": treeNode.id,
+            //         "architecturecode": '',
+            //         "architecturename": '',
+            //         "inherit": '',
+            //         "description": ''
+            //     },
+            //     success: function(data) {
+            //         $('#updateArchForm input[name="architecturecode"]').val('');
+            //         $('#updateArchForm input[name="architecturename"]').val('');
+            //         $('#updateArchForm select[name="inherit"]').val('');
+            //         $('#updateArchForm textarea[name="description"]').val('');
+            //         var archList = data.obj,
+            //             architecturecode = archList[0].architecturecode,
+            //             architecturename = archList[0].architecturename,
+            //             inherit = archList[0].inherit,
+            //             description = archList[0].description;
+            //         $('#updateArchForm input[name="architecturecode"]').val(architecturecode);
+            //         $('#updateArchForm input[name="architecturename"]').val(architecturename);
+            //         $('#updateArchForm select[name="inherit"]').val(inherit);
+            //         $('#updateArchForm textarea[name="description"]').val(description);
+            //     },
+            //     error: function() {
+            //         $('#failModal').modal();
+            //     }
+            // });
         },
         onClick: function(event, treeId, treeNode, clickFlag) {
             app.archiName = treeNode.architecturename;
             //查询class
             $.ajax({
-                url: address+'classController/classquery',
+                url: baseUrl+'/arcClass/queryArcDirectOmClasses',
                 type: 'post',
-                data: {
-                    "arcid": treeNode.id,
-                    "eclassname": '',
-                    "cclassname": '',
-                    "defaultmethodname": ''
-                },
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "id": treeNode.id
+                }),
                 success: function(data) {
                     //控件类型
-                    var classList = data.obj;
+                    var classList = data.arcClassRespDTOList;
                     if (classList.length !== 0) {
                         $('#classProp').children().remove();
                         for (var i = 0; i < classList.length; i++) {
@@ -647,8 +678,8 @@ var setting1 = {
                                 eclassNameTd = $('<td ></td>'),
                                 cclassNameTd = $('<td ></td>');
                             classTr.attr('id', classList[i].id);
-                            eclassNameTd.html(classList[i].eclassname);
-                            cclassNameTd.html(classList[i].cclassname);
+                            eclassNameTd.html(classList[i].name);
+                            cclassNameTd.html(classList[i].chsName);
                             classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
                             $('#classProp').append(classTr);
                         }
@@ -663,46 +694,47 @@ var setting1 = {
                 }
             });
             //查询抽象架构
-            $.ajax({
-                url: address+'abstractarchitectureController/abstractarchitecturequery',
-                type: 'post',
-                data: {
-                    "id": treeNode.id,
-                    "architecturecode": '',
-                    "architecturename": '',
-                    "inherit": '',
-                    "description": ''
-                },
-                success: function(data) {
-                    $('#updateArchForm input[name="architecturecode"]').val('');
-                    $('#updateArchForm input[name="architecturename"]').val('');
-                    $('#updateArchForm select[name="inherit"]').val('');
-                    $('#updateArchForm textarea[name="description"]').val('');
-                    var archList = data.obj,
-                        architecturecode = archList[0].architecturecode,
-                        architecturename = archList[0].architecturename,
-                        inherit = archList[0].inherit,
-                        description = archList[0].description;
-                    $('#updateArchForm input[name="architecturecode"]').val(architecturecode);
-                    $('#updateArchForm input[name="architecturename"]').val(architecturename);
-                    $('#updateArchForm select[name="inherit"]').val(inherit);
-                    $('#updateArchForm textarea[name="description"]').val(description);
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
+            // $.ajax({
+            //     url: baseUrl+'/abstractarchitectureController/abstractarchitecturequery',
+            //     type: 'post',
+            //     data: {
+            //         "id": treeNode.id,
+            //         "architecturecode": '',
+            //         "architecturename": '',
+            //         "inherit": '',
+            //         "description": ''
+            //     },
+            //     success: function(data) {
+            //         $('#updateArchForm input[name="architecturecode"]').val('');
+            //         $('#updateArchForm input[name="architecturename"]').val('');
+            //         $('#updateArchForm select[name="inherit"]').val('');
+            //         $('#updateArchForm textarea[name="description"]').val('');
+            //         var archList = data.obj,
+            //             architecturecode = archList[0].architecturecode,
+            //             architecturename = archList[0].architecturename,
+            //             inherit = archList[0].inherit,
+            //             description = archList[0].description;
+            //         $('#updateArchForm input[name="architecturecode"]').val(architecturecode);
+            //         $('#updateArchForm input[name="architecturename"]').val(architecturename);
+            //         $('#updateArchForm select[name="inherit"]').val(inherit);
+            //         $('#updateArchForm textarea[name="description"]').val(description);
+            //     },
+            //     error: function() {
+            //         $('#failModal').modal();
+            //     }
+            // });
         }
     }
 };
 // 页面初始化获取抽象架构
 function getArchiTree() {
     $.ajax({
-        url: address+'abstractarchitectureController/selectAll',
+        url: baseUrl+'/abstractArchitecture/queryArchitectureList',
         type: 'post',
+        contentType: 'application/json',
         success: function(data) {
             if (data !== null) {
-                $.fn.zTree.init($("#archiTree"), setting1, data.obj);
+                $.fn.zTree.init($("#archiTree"), setting1, data.architectureRespDTOList);
             }
         }
     });
@@ -710,8 +742,9 @@ function getArchiTree() {
 //页面初始化获取默认方法名称列表
 function getDefMethod() {
     $.ajax({
-        url: address+'methodController/selectAll',
+        url: baseUrl+'methodController/selectAll',
         type: 'post',
+        contentType: 'application/json',
         success: function(data) {
             var methodList = data.obj;
             var str = "";
@@ -787,13 +820,14 @@ function classClick(event) {
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: address+'methodController/methodquery',
+            url: baseUrl+'methodController/methodquery',
             type: 'post',
-            data: {
+            contentType: 'application/json',
+            data: JSON.stringify({
                 arcclassid: app.classId,
                 methodname: '',
                 methoddescription: ''
-            },
+            }),
             success: function(data) {
                 $('#methodProp').children().remove();
                 var methodList = data.obj;
@@ -812,15 +846,16 @@ function classClick(event) {
             }
         });
         $.ajax({
-            url: address+'classController/classquery',
+            url: baseUrl+'classController/classquery',
             type: 'post',
-            data: {
+            contentType: 'application/json',
+            data: JSON.stringify({
                 id: app.classId,
                 eclassname: '',
                 cclassname: '',
                 defaultmethodname: '',
                 arcid: ''
-            },
+            }),
             success: function(data) {
                 var classList = data.obj;
                 for (var i = 0; i < classList.length; i++) {
@@ -847,15 +882,16 @@ function methodClick(event) {
         $('#methodForm textarea[name="objectcode"]').val('');
         app.methodId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: address+'methodController/methodquery',
+            url: baseUrl+'methodController/methodquery',
             type: 'post',
-            data: {
+            contentType: 'application/json',
+            data: JSON.stringify({
                 id: app.methodId,
                 methodname: '',
                 methoddescription: '',
                 defaultmethodname: '',
                 arcclassid: ''
-            },
+            }),
             success: function(data) {
                 var methodList = data.obj;
                 for (var i = 0; i < methodList.length; i++) {

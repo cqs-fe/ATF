@@ -11,6 +11,24 @@
     <!-- pagination css -->
     <title>添加场景用例</title>
     <style type="text/css">
+        @media (max-width: 1768px){
+            .table-responsive {
+                width: 100%;
+                height: 40vh;
+                margin-bottom: 15px;
+                overflow-x: scroll;
+                overflow-y: scroll;
+                border: 1px solid #ddd;
+            }
+            .table-responsive > .table > thead > tr > th,
+            .table-responsive > .table > tbody > tr > th,
+            .table-responsive > .table > tfoot > tr > th,
+            .table-responsive > .table > thead > tr > td,
+            .table-responsive > .table > tbody > tr > td,
+            .table-responsive > .table > tfoot > tr > td {
+                white-space: nowrap;
+            }
+        }
         .insert-btn{
             margin-left: 20px;
         }
@@ -66,6 +84,11 @@
         }
         .filter{
             margin-bottom: 8px;
+        }
+        /*用例详情超链接*/
+        .detail-link{
+            color: #428bca;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -177,41 +200,57 @@
                                 </div>
                             </div>
                             <!-- 表格 -->
-                            <table class="table table-striped table-bordered border-top text-center" id="sample_1">
-                                <thead>
-                                    <tr>
-                                        <th style="width:8px;">
-                                            <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
-                                        </th>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered border-top text-center" id="sample_1">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:8px;">
+                                                <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
+                                            </th>
+                                            <!-- <th></th> -->
+                                            <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="caseCompositeType" data-sort="desc" onclick="resort(this)">案例组成类型 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="useStatus" data-sort="desc" onclick="resort(this)">状态 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)">关联脚本名称 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="author" data-sort="desc" onclick="resort(this)">脚本编辑者 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="executor" data-sort="desc" onclick="resort(this)">执行者 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="reviewer" data-sort="desc" onclick="resort(this)">评审者 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="executeMethod" data-sort="desc" onclick="resort(this)">执行方式 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="submissionId" data-sort="desc" onclick="resort(this)">测试任务 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="priority" data-sort="desc" onclick="resort(this)">优先级 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                            <th class="hidden-phone text-center" data-order="casetype" data-sort="desc" onclick="resort(this)">用例类型 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                             <th class="hidden-phone text-center" data-order="caseproperty" data-sort="desc" onclick="resort(this)">用例性质 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                             <th class="hidden-phone text-center" data-order="testpoint" data-sort="desc" onclick="resort(this)">测试点 <span class="icon-sort-up" aria-hidden="true"></span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="caseTable">
+                                        <tr class="odd gradeX" v-for="case in caseList" id="{{case.id}}">
+                                            <td >
+                                                <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
+                                            </td>
+                                            <!-- <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td> -->
+                                            <td class="center hidden-phone"><a @click="showDetail($event)" class="detail-link">{{ case.casecode }}</a></td>
+                                            <td>{{ case.autId }}</td>
+                                            <td class="hidden-phone">{{ case.transId }}</td>
+                                            <td class="hidden-phone">{{ case.caseCompositeType }}</td>
+                                            <td class="center hidden-phone">{{ case.useStatus }}</td>
+                                            <td class="center">{{case.scriptModeFlag}}</td>
+                                            <td class="center hidden-phone">{{ case.author }}</td>
+                                            <td class="center hidden-phone">{{ case.executor }}</td>
+                                            <td class="center hidden-phone">{{ case.reviewer }}</td>
+                                            <td class="center hidden-phone">{{ case.executeMethod }}</td>
+                                            <td class="center">{{ case.submissionId }}</td>
+                                            <td class="center">{{ case.priority }}</td>
+                                            <td class="center">{{ case.casetype }}</td>
+                                            <td class="center">{{ case.caseproperty }}</td>
+                                            <td class="center">{{ case.testpoint }}</td>
 
-                                        <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th  class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="caseCompositeType" data-sort="desc" onclick="resort(this)">案例组成类型 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="useStatus" data-sort="desc" onclick="resort(this)">状态 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="author" data-sort="desc" onclick="resort(this)">脚本编辑者 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="executor" data-sort="desc" onclick="resort(this)">执行者 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                        <th class="hidden-phone text-center" data-order="executeMethod" data-sort="desc" onclick="resort(this)">执行方式 <span class="icon-sort-up" aria-hidden="true"></span></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="caseTable">
-                                    <tr class="odd gradeX" v-for="case in caseList" id="{{case.id}}">
-                                        <td>
-                                            <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
-                                        </td>
-
-                                        <td class="center hidden-phone">{{ case.casecode }}</td>
-                                        <td>{{ case.autId }}</td>
-                                        <td class="hidden-phone">{{ case.transId }}</td>
-                                        <td class="hidden-phone">{{ case.caseCompositeType }}</td>
-                                        <td class="center hidden-phone">{{ case.useStatus }}</td>
-                                        <td class="center hidden-phone">{{ case.author }}</td>
-                                        <td class="center hidden-phone">{{ case.executor }}</td>
-                                        <td class="center hidden-phone">{{ case.executeMethod }}</td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
+                                        </tr>
+                                    </tbody>
+                                </table> 
+                            </div>
 
                             <!-- 分页 -->
                             <div class="row">
@@ -323,6 +362,208 @@
                             </div>
                         </div>
                         <!-- selectAlertModal end -->
+                        <!-- detailModal start -->
+                        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">用例详情</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <div class="panel-body">
+                                                <div class="tab-content tasi-tab">
+                                                    <!-- 单案例 -->
+                                                    <div class="tab-pane active" id="single-case">
+                                                        <fieldset disabled>
+                                                        <form class="form-horizontal" role="form" id="detailForm">
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label hidden">案例组成类型</label>
+                                                                <div class="col-lg-4 hidden">
+                                                                    <input type="text" class="form-control" name="casecompositetype" value="1">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">案例编号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control" name="casecode">
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">测试任务</label>
+                                                                <div class="col-lg-4">
+                                                                    <!-- <input type="text" class="form-control" name="submissionid"> -->
+                                                                    <select type="text" class="form-control" name="submissionid">
+                                                                        <option v-for="item in missionList" value="{{item.id}}">{{item.missionName}}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">被测系统</label>
+                                                                <div class="col-lg-4">
+                                                                    <select type="text" class="form-control" name="autid"></select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">版本号</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control" name="versioncode">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">功能点</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" id="" name="transid">
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">所属模板</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="scriptmodeflag" id="">
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试点</label>
+                                                                <div class="col-lg-4">
+                                                                    <input type="text" class="form-control" name="testpoint">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试意图</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3" name="testdesign"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">前置条件</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3" name="prerequisites"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">数据需求</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3" name="datarequest"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">测试步骤</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3" name="teststep"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">预期结果</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3" name="expectresult"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">附加检查点</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3" name="checkpoint"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">案例性质</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="caseproperty">
+                                                                        <option value="1">正常值</option>
+                                                                        <option value="2">错误值</option>
+                                                                        <option value="3">边界值</option>
+                                                                        <option value="4">要素级</option>
+                                                                        <option value="5">流程级</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">测试案例类型</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="casetype">
+                                                                        <option value="1">联机</option>
+                                                                        <option value="2">批量</option>
+                                                                        <option value="3">接口</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">优先级</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="priority">
+                                                                        <option value="1">1级</option>
+                                                                        <option value="2">2级</option>
+                                                                        <option value="3">3级</option>
+                                                                        <option value="4">4级</option>
+                                                                        <option value="5">5级</option>
+                                                                        <option value="6">6级</option>
+                                                                        <option value="7">7级</option>
+                                                                        <option value="8">8级</option>
+                                                                        <option value="9">9级</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">作者</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="author">
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">评审者</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" name="reviewer">
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">执行者</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" name="executor">
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">执行方式</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="executemethod">
+                                                                        <option value="1">手工</option>
+                                                                        <option value="2">自动化</option>
+                                                                        <option value="3">配合</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-lg-2 control-label">脚本管理方式</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" name="scriptmode">
+                                                                        <option value="0">模板</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">案例使用状态</label>
+                                                                <div class="col-lg-4">
+                                                                    <select class="form-control" size="1" name="usestatus">
+                                                                        <option value="1">新增</option>
+                                                                        <option value="2">评审通过</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-lg-2 control-label">备注</label>
+                                                                <div class="col-lg-10">
+                                                                    <textarea class="form-control" rows="3" name="note"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            </form>   
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    <div class="modal-footer">
+                                        <a class="btn btn-default" data-dismiss="modal">取消</a>
+                                        <!-- <a class="btn btn-success" @click="edit">修改</a> -->
+                                        <!-- <a data-dismiss="modal" class="btn btn-info" v-on:click="">保存</a> -->
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- detailModal end -->
                         <!-- savaFilterModal start -->
                         <div class="modal fade" id="saveFilterModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -352,7 +593,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- savaFilterModal end -->
             </section>
             <div class="footer">

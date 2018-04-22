@@ -25,8 +25,8 @@ var template_obj = `
                             <select class="form-control" id="transactSelect" v-model="transid">
                             </select>
                         </div>
-                        <a class="btn btn-white"  @click="toElementLib"><i class="icon-cog"></i> 元素库</a>
-                        <a class="btn btn-white" @click="toScript"><i class="icon-cog"></i> 基础脚本</a>
+                        <a class="btn btn-white"  @click="toElementLib"><i class="icon-external-link"></i> 元素库</a>
+                        <a class="btn btn-white" @click="toScript"><i class="icon-external-link"></i> 基础脚本</a>
                     </div>
                 </form>
                 <!-- select end -->

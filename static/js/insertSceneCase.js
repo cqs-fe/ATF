@@ -11,6 +11,7 @@ var app = new Vue({
         executeMethod: [], // 执行方式
         caseCompositeType: [], // 案例组成类型
         useStatus: [], // 案例状态
+        missionList: [], //测试任务
         filterSceneId:'',//所属场景
         testpoint: '', // 测试点
         author: '', //编写者
@@ -44,7 +45,8 @@ var app = new Vue({
         getCase(this.currentPage, this.pageSize, this.order, this.sort);
         changeListNum();
         getScene();
-
+        this.getUsers();
+        this.getMission(); //获取案例添加表单任务编号下拉列表
         $('.3').addClass('open')
         $('.3 .arrow').addClass('open')
         $('.3-ul').css({display: 'block'})
@@ -663,6 +665,27 @@ var app = new Vue({
             this.sceneid = keyval[0].split('=')[1],
             this.scenename = decodeURI(keyval[1].split('=')[1]);
         },
+        //获取用户
+        getUsers:function() {
+            $.ajax({
+                url: address + 'userController/selectAll',
+                type: 'GET',
+                success: function(data) {
+                    app.users = data.obj;
+                }
+            });
+        },
+        //获取添加案例任务编号下拉列表
+        getMission: function(){
+            $.ajax({
+                url: address+"missionController/selectAll",
+                type: 'GET',
+                success:function(data){
+                    console.log(data)
+                    app.missionList=data.obj;
+                }
+            });
+        },
         //添加场景案例
         insert: function() {
             this.getIds();
@@ -701,7 +724,48 @@ var app = new Vue({
             });
             app.ids = id_array.join(',');
         },
-
+        showDetail(event){
+                document.getElementsByTagName('fieldset')[0].setAttribute('disabled', true);
+                $('#detailModal').modal();
+                var id=$(event.target).parent().prev().children().attr('id');
+                $.ajax({
+                    url: address+'TestcaseController/viewtestcase',
+                    type: 'post',
+                    data: {
+                        "id": id
+                    },
+                    success: function(res){
+                        // console.log(res)
+                        var caseData=res.o[1];
+                        $('#detailForm input[name="casecode"]').val(caseData.casecode);
+                        $('#detailForm select[name="submissionid"]').val(caseData.submissionId);
+                        $('#detailForm select[name="autid"]').val(caseData.autId);
+                        $('#detailForm input[name="versioncode"]').val(caseData.versionCode);
+                        $('#detailForm select[name="transid"]').val(caseData.transId);
+                        $('#detailForm select[name="scriptmodeflag"]').val(caseData.scriptModeFlag);
+                        $('#detailForm input[name="testpoint"]').val(caseData.testpoint);
+                        $('#detailForm textarea[name="testdesign"]').val(caseData.testdesign);
+                        $('#detailForm textarea[name="prerequisites"]').val(caseData.prerequisites);
+                        $('#detailForm textarea[name="datarequest"]').val(caseData.datarequest);
+                        $('#detailForm textarea[name="teststep"]').val(caseData.teststep);
+                        $('#detailForm textarea[name="expectresult"]').val(caseData.expectresult);
+                        $('#detailForm textarea[name="checkpoint"]').val(caseData.checkpoint);
+                        $('#detailForm select[name="caseproperty"]').val(caseData.caseproperty);
+                        $('#detailForm select[name="casetype"]').val(caseData.casetype);
+                        $('#detailForm select[name="priority"]').val(caseData.priority);
+                        $('#detailForm select[name="author"]').val(caseData.author);
+                        $('#detailForm select[name="reviewer"]').val(caseData.reviewer);
+                        $('#detailForm select[name="executor"]').val(caseData.executor);
+                        $('#detailForm select[name="executemethod"]').val(caseData.executemethod);
+                        $('#detailForm select[name="scriptmode"]').val(caseData.scriptmode);
+                        $('#detailForm select[name="usestatus"]').val(caseData.usestatus);
+                        $('#detailForm textarea[name="note"]').val(caseData.note);
+                    }
+                });
+        },
+        edit(){
+            document.getElementsByTagName('fieldset')[0].removeAttribute('disabled');
+        },
         // 排序
         sortBy: function(sortparam) {
             this.sortparam = sortparam;
@@ -925,3 +989,85 @@ function resort(target) {
     getCase(1, 10, app.order, app.sort);
 }
 //重新排序 结束
+
+//三级联动
+$(document).ready(function(e) {
+
+    yiji(); //第一级函数
+    erji(); //第二级函数
+    sanji(); //第三极函数
+    $('select[name="autid"]').change(function() {
+        //var target = $(this);
+        erji();
+        sanji();
+    })
+    $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').change(function() {
+
+        sanji();
+    })
+});
+
+//一级 测试系统
+function yiji() {
+    $.ajax({
+        async: false,
+        url: address + "autController/selectAll",
+        type: "POST",
+        success: function(data) {
+            var autList = data.obj;
+            var str = "";
+            for (var i = 0; i < autList.length; i++) {
+
+                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+            }
+
+            $('select[name="autid"]').html(str);
+
+        }
+    });
+}
+
+//二级 功能点
+function erji() {
+    var val = $('select[name="autid"]').val();
+    $.ajax({
+        async: false,
+        url: address + 'transactController/showalltransact',
+        data: { 'autlistselect': val },
+        type: "POST",
+        success: function(data) {
+            var transactList = data.o;
+            var str = "";
+            for (var i = 0; i < transactList.length; i++) {
+
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+            }
+            $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').html(str);
+
+        }
+
+    });
+}
+
+//三级 模板脚本
+function sanji() {
+
+    var val = $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').val();
+
+    $.ajax({
+        url: address + "scripttemplateController/showallscripttemplate",
+        data: { "transactid": val },
+        type: "POST",
+        success: function(data) {
+
+            var lie = data.o;
+            var str = "";
+            for (var i = 0; i < lie.length; i++) {
+
+                str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
+            }
+            $('select[name="autid"]').parent().parent().next().find('select[name="scriptmodeflag"]').html(str);
+        }
+
+    });
+}

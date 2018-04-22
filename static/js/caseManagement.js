@@ -970,58 +970,10 @@ var app = new Vue({
                 $('#transid').modal();
             }
         },
-        checkEdit: () => {
-            app.getIds();
-            var selectedInput = $('input[name="chk_list"]:checked');
-            if (selectedInput.length === 0) {
-                $('#selectAlertModal').modal();
-            } else {
-                $('#editModal').modal();
-                var id=selectedInput.attr('id');
-                $.ajax({
-                    url: address+'TestcaseController/viewtestcase',
-                    type: 'post',
-                    data: {
-                        "id": id
-                    },
-                    success: function(res){
-                        // console.log(res)
-                        var caseData=res.o[1];
-                        $('#editForm input[name="casecode"]').val(caseData.casecode);
-                        $('#editForm select[name="submissionid"]').val(caseData.submissionId);
-                        $('#editForm select[name="autid"]').val(caseData.autId);
-                        $('#editForm input[name="versioncode"]').val(caseData.versionCode);
-                        $('#editForm select[name="transid"]').val(caseData.transId);
-                        $('#editForm select[name="scriptmodeflag"]').val(caseData.scriptModeFlag);
-                        $('#editForm input[name="testpoint"]').val(caseData.testpoint);
-                        $('#editForm textarea[name="testdesign"]').val(caseData.testdesign);
-                        $('#editForm textarea[name="prerequisites"]').val(caseData.prerequisites);
-                        $('#editForm textarea[name="datarequest"]').val(caseData.datarequest);
-                        $('#editForm textarea[name="teststep"]').val(caseData.teststep);
-                        $('#editForm textarea[name="expectresult"]').val(caseData.expectresult);
-                        $('#editForm textarea[name="checkpoint"]').val(caseData.checkpoint);
-                        $('#editForm select[name="caseproperty"]').val(caseData.caseproperty);
-                        $('#editForm select[name="casetype"]').val(caseData.casetype);
-                        $('#editForm select[name="priority"]').val(caseData.priority);
-                        $('#editForm select[name="author"]').val(caseData.author);
-                        $('#editForm select[name="reviewer"]').val(caseData.reviewer);
-                        $('#editForm select[name="executor"]').val(caseData.executor);
-                        $('#editForm select[name="executemethod"]').val(caseData.executemethod);
-                        $('#editForm select[name="scriptmode"]').val(caseData.scriptmode);
-                        $('#editForm select[name="usestatus"]').val(caseData.usestatus);
-                        $('#editForm textarea[name="note"]').val(caseData.note);
-                    }
-                });
-            }
-        },
-        checkDetail: () => {
-            app.getIds();
-            var selectedInput = $('input[name="chk_list"]:checked');
-            if (selectedInput.length === 0) {
-                $('#selectAlertModal').modal();
-            } else {
+        showDetail(event){
+                document.getElementsByTagName('fieldset')[0].setAttribute('disabled', true);
                 $('#detailModal').modal();
-                var id=selectedInput.attr('id');
+                var id=$(event.target).parent().prev().children().attr('id');
                 $.ajax({
                     url: address+'TestcaseController/viewtestcase',
                     type: 'post',
@@ -1056,7 +1008,9 @@ var app = new Vue({
                         $('#detailForm textarea[name="note"]').val(caseData.note);
                     }
                 });
-            }
+        },
+        edit(){
+            document.getElementsByTagName('fieldset')[0].removeAttribute('disabled');
         },
         // 排序
         sortBy: function(sortparam) {
