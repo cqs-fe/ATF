@@ -234,53 +234,51 @@
                 <input type="checkbox"  @change="checkallBox($event)" v-model="checkall"> &nbsp;&nbsp;全选
               </div>
               <div id="sortable">
-                <div class="case-lib" v-for="case_wrapper in sceneInfo.caseDtos">
-                  <template v-if="case_wrapper.caseCompositeType == '1'">
-                  <div class="checkbox-wrapper">
-                    <i class="icon-move handle" style="color: #ff6c60;"></i> &nbsp;&nbsp;
-                    <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
-                      <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
-                    </div>
+                <template v-for="group in sceneInfo.caseGroup">
+                  <div class="case-lib" v-for="case_wrapper in group">
+                      <template v-if="case_wrapper.caseCompositeType == '1'">
+                        <div class="checkbox-wrapper">
+                          <i class="icon-move handle" style="color: #ff6c60;"></i> &nbsp;&nbsp;
+                          <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
+                            <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
+                          </div>
+                        </div>
+                        <div v-for="time in case_wrapper">
+                          <div class="case-wrapper" v-for="case in time">
+                            <div class="" style="height: 30px; width: 30px; border-width: 15px; border-style: solid; border-color: transparent transparent  transparent #bebaba;margin: 0 -30px 0 20px; position: relative; top: 0%;"></div>
+                            <div class="case"  @click="changeCase(case.id, 1)"  @mousedown.stop="1" :style="{ marginRight: (index !== time.length - 1) ? '0px' : (caseMaxLength[key] - index - 1) * 170 + 'px'}">
+                              <div class="case-header">
+                                <p :title="case.casecode" style="margin-left: 5px;">{{case.casecode}}</p>
+                                <input type="checkbox" v-bind:value="case.id" class="check-case single-case" v-model="selectedCases">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </template>
+                      <template v-else>
+                        <div class="checkbox-wrapper">
+                          <i class="icon-move handle" style="color: #ff6c60;"></i> &nbsp;&nbsp;
+                          <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1"><input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
+                          @change="checkallToggle($event)"></div>
+                        </div>
+                        <div class="case-wrapper">
+                          <template v-for="(key, time) in case_wrapper">
+                            <div class="" style="height: 30px; width: 30px; border-width: 15px; border-style: solid; border-color: transparent transparent  transparent #bebaba;margin: 0 -30px 0 20px; position: relative; top: 0%;"></div>
+                            <div class="case" v-for="(index, case) in time" @mousedown.stop="1"
+                              @click="changeCase(case.id, 2)" 
+                              :style="{ marginRight: (index !== time.length - 1) ? '0px' : (caseMaxLength[key] - index - 1) * 170 + 'px'}">
+                              <div class="case-header">
+                                <p :title="case.casecode" style="margin-left: 5px;">{{case.casecode}}</p>
+                                <input type="checkbox" v-bind:value="case.id"
+                                class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
+                              </div>
+                            </div>
+                          </template>
+                        </div>
+                      </template>
                   </div>
-                  <div class="case-wrapper">
-                    <div class="case"  @click="changeCase(case_wrapper.id, 1)"  @mousedown.stop="1">
-                      <div class="case-header">
-                        <p :title="case_wrapper.casecode" style="margin-left: 5px;">{{case_wrapper.casecode}}</p>
-                        <input type="checkbox" v-bind:value="case_wrapper.id" class="check-case single-case" v-model="selectedCases">
-                      </div>
-                      <!-- <div class="case-main">
-                        <p>{{case_wrapper.casecode}}</p>
-                        <span></span>
-                      </div> -->
-                      <!-- <footer class="case-footer">
-                        <img :src="exeImgs[case_wrapper.state]">
-                      </footer> -->
-                    </div>
-                  </div>
-                  </template>
-                  <template v-else>
-                  <div class="checkbox-wrapper">
-                    <i class="icon-move handle" style="color: #ff6c60;"></i> &nbsp;&nbsp;
-                    <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1"><input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases"
-                    @change="checkallToggle($event)"></div>
-                  </div>
-                  <div class="case-wrapper">
-                    <div class="case" v-for="item in case_wrapper.flowNodeDtos" @mousedown.stop="1"  @click="changeCase(item.id, 2)">
-                      <div class="case-header">
-                        <p :title="item.casecode" style="margin-left: 5px;">{{item.casecode}}</p>
-                        <input type="checkbox" v-bind:value="item.id"
-                        class="check-case" @change="checkChanged($event)" v-model="checkedFlowNodes">
-                      </div>
-                      <!-- <div class="case-main">
-                        <p>{{item.casecode}}</p>
-                      </div> -->
-                      <!-- <footer class="case-footer">
-                        <img :src="exeImgs[item.state]">
-                      </footer> -->
-                    </div>
-                  </div>
-                  </template>
-                </div>
+                  <hr>
+                </template>
               </div>
             </div>
           </main>
@@ -419,7 +417,7 @@
                   <div class="select-wrapper">
                     <div class="select-group">
                       <label>执行状态策略</label>
-                      <select v-model="exe_strategy.exe_strategy1_status">
+                      <select v-model="exe_strategy1_status">
                         <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">全部重新执行</option>
                         <option value="2">跳过执行成功的案例</option>
@@ -432,7 +430,7 @@
                   <div class="select-wrapper">
                     <div class="select-group">
                       <label>起始节点策略</label>
-                      <select v-model="exe_strategy.exe_strategy2_start">
+                      <select v-model="exe_strategy2_start">
                         <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">从第一个节点开始</option>
                         <option value="2">从第一个执行失败的节点开始</option>
@@ -440,7 +438,7 @@
                     </div>
                     <div class="select-group">
                       <label>执行顺序策略</label>
-                      <select v-model="exe_strategy.exe_strategy2_order">
+                      <select v-model="exe_strategy2_order">
                         <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">顺序无关执行</option>
                         <option value="2">强制顺序执行</option>
@@ -448,7 +446,7 @@
                     </div>
                     <div class="select-group">
                       <label>执行状态策略</label>
-                      <select v-model="exe_strategy.exe_strategy2_status">
+                      <select v-model="exe_strategy2_status">
                         <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">全部重新执行</option>
                         <option value="2">跳过执行成功的案例</option>
@@ -461,7 +459,7 @@
                   <div class="select-wrapper">
                     <div class="select-group">
                       <label>起始用例策略</label>
-                      <select v-model="exe_strategy.exe_strategy3_start">
+                      <select v-model="exe_strategy3_start">
                         <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">从第一个节点开始</option>
                         <option value="2">从第一个执行失败的节点开始</option>
@@ -469,7 +467,7 @@
                     </div>
                     <div class="select-group">
                       <label>执行顺序策略</label>
-                      <select v-model="exe_strategy.exe_strategy3_order">
+                      <select v-model="exe_strategy3_order">
                         <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">顺序无关执行</option>
                         <option value="2">强制顺序执行</option>
@@ -477,7 +475,7 @@
                     </div>
                     <div class="select-group">
                       <label>执行状态策略</label>
-                      <select v-model="exe_strategy.exe_strategy3_status">
+                      <select v-model="exe_strategy3_status">
                         <!-- <option value="0">保持原样不做处理</option> -->
                         <option value="1">全部重新执行</option>
                         <option value="2">跳过执行成功的案例</option>

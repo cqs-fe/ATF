@@ -5,7 +5,7 @@ var vBody = new Vue({
 		// tooltipMessage:'',
 		caselibIds: [],			
 		caselibId: 3,			// caselibId 
-		executionround: '',		// 执行轮次 
+		executionround: '1',		// 执行轮次 
 		recordflag: 2,			// 记录单
 		exeScope: null,			// 执行范围
 		selectState: '',		// 选择状态
