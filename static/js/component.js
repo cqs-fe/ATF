@@ -446,7 +446,9 @@ var app = new Vue({
                 success: function(data) {
                     if (data.respCode==0000) {
                         $('#successModal').modal();
-                        
+                        $('#methodProp input[name="method"]:checked').parent().next().text(overrideFlag);
+                        $('#methodProp input[name="method"]:checked').parent().next().next().text(methodname);
+                        $('#methodProp input[name="method"]:checked').parent().next().next().next().text(methoddescription);
                     } else {
                         $('#failModal').modal();
                     }
@@ -708,6 +710,7 @@ function classClick(event,i) {
 }
 // 勾选方法
 function methodClick(event,i) {
+     app.paraList=[];
     if ($(event.target).attr('checked')) {
         $('#classSection').css('display', 'none');
         $('#methodSection').css('display', 'block');
@@ -728,7 +731,7 @@ function methodClick(event,i) {
         $('#methodForm input[name="waittime"]').val(curMethod.waittime);
         $('#methodForm input[name="timeout"]').val(curMethod.timeout);
         $('#methodForm textarea[name="targetCodeContent"]').val(curMethod.targetCodeContent);
-        app.paraList = curMethod.arguments;
+        app.paraList = JSON.parse(curMethod.arguments);
         // $.ajax({
         //     url: address + 'ommethodController/selectByPrimaryKey',
         //     type: 'post',
