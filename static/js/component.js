@@ -394,8 +394,8 @@ var app = new Vue({
         updateMethod: function() {
             var methodname = $('#methodForm input[name="name"]').val(),
                 methoddescription = $('#methodForm input[name="description"]').val(),
-                overrideFlag=$('#methodForm select[name="overrideFlag"]'),
-                visibilityFlag=$('#methodForm select[name="visibilityFlag"]'),
+                overrideFlag=$('#methodForm select[name="overrideFlag"]').val(),
+                visibilityFlag=$('#methodForm select[name="visibilityFlag"]').val(),
                 waittime = $('#methodForm input[name="waittime"]').val(),
                 timeout = $('#methodForm input[name="timeout"]').val(),
                 targetCodeContent = $('#methodForm textarea[name="targetCodeContent"]').val();
@@ -414,7 +414,9 @@ var app = new Vue({
                 r += "},";
                 paraList += r;
             }
-            paraList = paraList.substring(0, paraList.length - 1);
+            if(paraList.length>1){
+                paraList = paraList.substring(0, paraList.length - 1);                
+            }
             paraList += ']';
             console.log(paraList)
             var that=this;
