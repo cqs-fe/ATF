@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  
+
   <link rel="stylesheet" type="text/css" href="../static/css/index.css">
   <link rel="stylesheet" type="text/css" href="../static/css/handsontable.full.css">
   <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
@@ -18,62 +18,82 @@
   <script type="text/javascript" src="../lib/handsontable.full.js"></script>
   <title>Case Manager</title>
   <style>
-   .insert-btn{
-            margin-left: 20px;
-        }
-        .filterScene{
-            display: inline-block;
-            float: left;
-        }
-        .panel-body{
-            padding: 0 15px 15px 15px;
-        }
-        .panel-body>label{
-            margin-bottom: 10px;
-        }
-        select[multiple], select[size] {
-            height: 34px;
-        }
-        .form-group {
-            margin-bottom: 5px;
-        }
-        .filterButtons{
-            margin-bottom: 10px;
-        }
-        .btn-default {
-            color: #333;
-            background-color: #fff;
-            border-color: #ccc;
-        }
-        .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
-            color: #333;
-            background-color: #ebebeb;
-            border-color: #adadad;
-        }
-        .filterList{
-            list-style: none;
-        }
-        .filterList>li{
-            display: inline-block;
-            margin-left: 5px;
-            margin-bottom: 5px;
-        }
-        .prop_select{
-            width: 100px !important;
-        }
-        .compare_select{
-            width: 80px !important;
-        }
-        .val_select{
-            display: inline;
-            width: 150px !important;
-        }
-        .saveFilter{
-            margin-left: 10px;
-        }
-        .filter{
-            margin-bottom: 8px;
-        }
+    .insert-btn {
+      margin-left: 20px;
+    }
+
+    .filterScene {
+      display: inline-block;
+      float: left;
+    }
+
+    .panel-body {
+      padding: 0 15px 15px 15px;
+    }
+
+    .panel-body>label {
+      margin-bottom: 10px;
+    }
+
+    select[multiple],
+    select[size] {
+      height: 34px;
+    }
+
+    .form-group {
+      margin-bottom: 5px;
+    }
+
+    .filterButtons {
+      margin-bottom: 10px;
+    }
+
+    .btn-default {
+      color: #333;
+      background-color: #fff;
+      border-color: #ccc;
+    }
+
+    .btn-default:hover,
+    .btn-default:focus,
+    .btn-default:active,
+    .btn-default.active,
+    .open .dropdown-toggle.btn-default {
+      color: #333;
+      background-color: #ebebeb;
+      border-color: #adadad;
+    }
+
+    .filterList {
+      list-style: none;
+    }
+
+    .filterList>li {
+      display: inline-block;
+      margin-left: 5px;
+      margin-bottom: 5px;
+    }
+
+    .prop_select {
+      width: 100px !important;
+    }
+
+    .compare_select {
+      width: 80px !important;
+    }
+
+    .val_select {
+      display: inline;
+      width: 150px !important;
+    }
+
+    .saveFilter {
+      margin-left: 10px;
+    }
+
+    .filter {
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 
@@ -200,26 +220,26 @@
                 </td>
                 <td class="index" @mousedown.stop="1">{{index + 1}}</td>
                 <td class="operations" @mousedown.stop="1">
-                    <template v-if="row.operation.ui != '' && row.operation.element != ''">
-                        <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
-                        <label >UI:</label>
-                        <span class="operation-ui">{{row.operation.ui}}</span>
-                        <label>元素:</label>
-                        <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
-                    </template>
-                    <template v-else>
-                        <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
-                        <label >公共函数:</label>
-                        <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
-                        <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
-                    </template>
+                  <template v-if="row.operation.ui != '' && row.operation.element != ''">
+                    <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                    <label>UI:</label>
+                    <span class="operation-ui">{{row.operation.ui}}</span>
+                    <label>元素:</label>
+                    <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  </template>
+                  <template v-else>
+                    <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+                    <label>公共函数:</label>
+                    <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                    <span class="operation-element" style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                  </template>
                 </td>
                 <td class="functions" @mousedown.stop="1">
                   <select class="functions-select form-control" style="width: 90%;">
-                      <template v-for="function in row.functions"  @change="changeFunction($event.target, index, 1)">
-                          <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
-                          <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
-                      </template>
+                    <template v-for="function in row.functions" @change="changeFunction($event.target, index, 1)">
+                      <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+                      <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                    </template>
                     <!-- <option v-for="function in row.functions" :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option> -->
                   </select>
                 </td>
@@ -243,7 +263,10 @@
                           <td class="param-value" contenteditable="true">{{parameter.Value}}</td>
                         </tr>
                         <tr>
-                          <td colspan="2"><button @click="cancelEditParam($event, 1)">取消</button><button style="matgin-left: 10px;" @click="saveParam($event, 1)">保存</button></td>
+                          <td colspan="2">
+                            <button @click="cancelEditParam($event, 1)">取消</button>
+                            <button style="matgin-left: 10px;" @click="saveParam($event, 1)">保存</button>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -312,24 +335,24 @@
                 <td class="index">{{index + 1}}</td>
                 <td class="operations">
                   <template v-if="row.operation.ui != '' && row.operation.element != ''">
-                      <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
-                      <label >UI:</label>
-                      <span class="operation-ui">{{row.operation.ui}}</span>
-                      <label>元素:</label>
-                      <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
+                    <label>UI:</label>
+                    <span class="operation-ui">{{row.operation.ui}}</span>
+                    <label>元素:</label>
+                    <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
                   </template>
                   <template v-else>
-                      <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
-                      <label >公共函数:</label>
-                      <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
-                      <span class="operation-element"  style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+                    <i class="icon-edit" @click="showUiAndElement($event, 2)" style="color: #ff6c60;"></i>
+                    <label>公共函数:</label>
+                    <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+                    <span class="operation-element" style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
                   </template>
                 </td>
                 <td class="functions">
                   <select class="functions-select form-control" style="width: 90%;">
-                    <template v-for="function in row.functions"  @change="changeFunction($event.target, index, 2)">
-                        <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
-                        <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+                    <template v-for="function in row.functions" @change="changeFunction($event.target, index, 2)">
+                      <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+                      <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
                     </template>
                   </select>
                 </td>
@@ -354,7 +377,10 @@
                           <td class="param-value" contenteditable="true">{{parameter.Value}}</td>
                         </tr>
                         <tr class="bottom-row">
-                          <td colspan="2"> <button @click="cancelEditParam($event, 2)">取消</button> <button  style="matgin-left: 10px;" @click="saveParam($event, 2)">保存</button></td>
+                          <td colspan="2">
+                            <button @click="cancelEditParam($event, 2)">取消</button>
+                            <button style="matgin-left: 10px;" @click="saveParam($event, 2)">保存</button>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -454,83 +480,87 @@
   <div class="content">
     <!--main content start-->
     <section id="main-content">
-      <div id="filter-container">
+      <!-- <div id="filter-container">
         <div class="filter">
-           <div class="row">
-                                    <div class="col-lg-2">
-                                        <div class="filter-show">
-                                            <h4 class="panel-title">
-                                                  <a class="btn btn-white" v-on:click="isShow=!isShow, iconflag=!iconflag">
-                                                      <span v-if="iconflag">显示筛选</span>
-                                                      <span v-else>收起筛选</span>
-                                                      <i :class="{'icon-angle-down':iconflag, 'icon-angle-up':!iconflag}"></i>
-                                                  </a>
-                                            </h4>
-                                        </div>
-                                    </div>
-           </div>
+          <div class="row">
+            <div class="col-lg-2">
+              <div class="filter-show">
+                <h4 class="panel-title">
+                  <a class="btn btn-white" v-on:click="isShow=!isShow, iconflag=!iconflag">
+                    <span v-if="iconflag">显示筛选</span>
+                    <span v-else>收起筛选</span>
+                    <i :class="{'icon-angle-down':iconflag, 'icon-angle-up':!iconflag}"></i>
+                  </a>
+                </h4>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="row" v-show="isShow">
-                                <div class="col-lg-12">
-                                    <div id="collapse1" class="panel-collapse collpase">
-                                        <div class="panel-body">
-                                            <div class="filterButtons">
-                                                <label>
-                                                    <input type="radio" name="sat" class="ace">
-                                                    <span class="lbl">满足所有条件</span>
-                                                </label>
-                                                 <label>
-                                                    <input type="radio" name="sat" class="ace">
-                                                    <span class="lbl">满足任一条件</span>
-                                                </label>
-                                                <button class="btn btn-primary saveFilter" data-toggle="modal" href="#saveFilterModal">保存查询条件</button>
-                                                <label>我的查询</label>
-                                                <select class="selectpicker"></select>
-                                                <button class="btn btn-primary" @click="filterCase">查询</button>
-                                            </div>
-                                            <ul class="filterList">
-                                                <li>
-                                                    <label>筛选项目</label>
-                                                    <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
-                                                        <option value="">请选择</option>
-                                                        <option value="caseCompositeType">用例组成类型</option>
-                                                        <option value="casecode">用例编号</option>
-                                                        <option value="submissionId">测试任务</option>
-                                                        <option value="autId">被测系统</option>
-                                                        <!-- <option value="transId">功能点</option> -->
-                                                        <!-- <option value="testpoint">测试点</option> -->
-                                                        <option value="testdesign">测试意图</option>
-                                                        <option value="prerequisites">前置条件</option>
-                                                        <option value="datarequest">数据需求</option>
-                                                        <option value="teststep">测试步骤</option>
-                                                        <option value="expectresult">预期结果</option>
-                                                        <option value="checkpoint">附加检查点</option>
-                                                        <option value="caseproperty">用例性质</option>
-                                                        <option value="casetype">测试用例类型</option>
-                                                        <option value="priority">优先级</option>
-                                                        <option value="author">作者</option>
-                                                        <option value="reviewer">评审者</option>
-                                                        <option value="executor">执行者</option>
-                                                        <option value="executeMethod">执行方式</option>
-                                                        <option value="scriptMode">脚本管理方式</option>
-                                                        <!-- <option value="scriptModeFlag">所属模板</option> -->
-                                                        <option value="sceneId">所属场景</option>    
-                                                    </select>
-                                                    <select name="compareType" class="selectpicker compare_select">
-                                                    </select>
-                                                    <label>值</label>
-                                                    <select name="propertyValue" class="selectpicker val_select">
-                                                    </select>
-                                                    <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button>
-                                                </li>
-                                            </ul>
-                                            <button class="btn btn-primary btn-xs" @click="addFilter()" id="add_btn"><i class="icon-plus"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
+          <div class="col-lg-12">
+            <div id="collapse1" class="panel-collapse collpase">
+              <div class="panel-body">
+                <div class="filterButtons">
+                  <label>
+                    <input type="radio" name="sat" class="ace">
+                    <span class="lbl">满足所有条件</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="sat" class="ace">
+                    <span class="lbl">满足任一条件</span>
+                  </label>
+                  <button class="btn btn-primary saveFilter" data-toggle="modal" href="#saveFilterModal">保存查询条件</button>
+                  <label>我的查询</label>
+                  <select class="selectpicker"></select>
+                  <button class="btn btn-primary" @click="filterCase">查询</button>
+                </div>
+                <ul class="filterList">
+                  <li>
+                    <label>筛选项目</label>
+                    <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
+                      <option value="">请选择</option>
+                      <option value="caseCompositeType">用例组成类型</option>
+                      <option value="casecode">用例编号</option>
+                      <option value="submissionId">测试任务</option>
+                      <option value="autId">被测系统</option>
+                      <option value="transId">功能点</option>
+                      <option value="testpoint">测试点</option>
+                      <option value="testdesign">测试意图</option>
+                      <option value="prerequisites">前置条件</option>
+                      <option value="datarequest">数据需求</option>
+                      <option value="teststep">测试步骤</option>
+                      <option value="expectresult">预期结果</option>
+                      <option value="checkpoint">附加检查点</option>
+                      <option value="caseproperty">用例性质</option>
+                      <option value="casetype">测试用例类型</option>
+                      <option value="priority">优先级</option>
+                      <option value="author">作者</option>
+                      <option value="reviewer">评审者</option>
+                      <option value="executor">执行者</option>
+                      <option value="executeMethod">执行方式</option>
+                      <option value="scriptMode">脚本管理方式</option>
+                      <option value="scriptModeFlag">所属模板</option>
+                      <option value="sceneId">所属场景</option>
+                    </select>
+                    <select name="compareType" class="selectpicker compare_select">
+                    </select>
+                    <label>值</label>
+                    <select name="propertyValue" class="selectpicker val_select">
+                    </select>
+                    <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)">
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </button>
+                  </li>
+                </ul>
+                <button class="btn btn-primary btn-xs" @click="addFilter()" id="add_btn">
+                  <i class="icon-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <section class="content-wrapper">                            
+      </div> -->
+      <section class="content-wrapper">
         <div class="treeMenu" v-bind:class="{'close1': !flag, 'open2': flag}" id="submenu">
           <div class="selectDiv">
             <div>
@@ -542,9 +572,8 @@
             </div>
             <div>
               <label v-for="(index,item) in checkedItems" class="checkedItem" track-by="$index">
-                <input type="checkbox" name="checkbox" v-bind:value="item.value" 
-                v-model="checkedArray" v-bind:data-script-mode="item.script_mode"
-                 v-bind:data-execute-method="item.execute_method" class="testpoints-box"> {{item.name}}
+                <input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" v-bind:data-script-mode="item.script_mode"
+                  v-bind:data-execute-method="item.execute_method" class="testpoints-box"> {{item.name}}
               </label>
             </div>
           </div>
@@ -562,23 +591,23 @@
           <div class="row" style="margin-top: 10px;margin-bottom: 0px; height: auto; margin-right: 0;">
             <div class="col-lg-12">
               <ul class="breadcrumb" style="margin-bottom: 0; margin-left: 15px;">
-                  <li>
-                      <a>
-                        <i class="icon-home"></i> 项目测试</a>
-                    </li>
+                <li>
+                  <a>
+                    <i class="icon-home"></i> 项目测试</a>
+                </li>
                 <li>
                   <a href="#" class="active">
-                     测试资源管理</a>
+                    测试资源管理</a>
                 </li>
               </ul>
             </div>
           </div>
           <div class="col-g-12">
-              <div class="top-bar">
-                  <button class="btn btn-white" id="saveAll">
-                    <i class="icon-save"></i>
-                    保存</button>
-                </div>
+            <div class="top-bar">
+              <button class="btn btn-white" id="saveAll">
+                <i class="icon-save"></i>
+                保存</button>
+            </div>
           </div>
 
           <!-- <ul class="nav nav-tabs" role="tablist" id="tabs" style="margin: 0 15px;">
@@ -607,8 +636,9 @@
             </div>
             
           </di> -->
-         
+
           <div class="dataTable-wrapper" style="margin-left: 15px;margin-right: 15px; padding: 0;">
+            <div id="no-data-tip" style="text-align: center;margin: 20px auto;">请双击脚本获取数据</div>
             <div id="handsontable">
             </div>
           </div>
@@ -622,40 +652,41 @@
               </button>
             </div>
             <div class="panel-body">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>操作项</th>
-                      <th>方法</th>
-                      <th>参数</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(index, row) in data">
-                      <td class="index">{{ +index + 1 }}</td>
-                      <td class="operations">
-                          <template v-if="row.ui != '' && row.element != ''">
-                              <label >UI:</label>
-                              <span class="operation-ui">{{row.ui}}</span>
-                              <label>元素:</label>
-                              <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
-                          </template>
-                          <template v-else>
-                              <label >公共函数:</label>
-                              <span class="operation-ui" style="display: none;">{{row.ui}}</span>
-                              <span class="operation-element"  style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
-                          </template>
-                      </td>
-                      <td class="functions">{{ row.method }}</td>
-                      <td class="parameters">
-                          <div class="param-show">
-                              <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}: <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
-                            </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>操作项</th>
+                    <th>方法</th>
+                    <th>参数</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(index, row) in data">
+                    <td class="index">{{ +index + 1 }}</td>
+                    <td class="operations">
+                      <template v-if="row.ui != '' && row.element != ''">
+                        <label>UI:</label>
+                        <span class="operation-ui">{{row.ui}}</span>
+                        <label>元素:</label>
+                        <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
+                      </template>
+                      <template v-else>
+                        <label>公共函数:</label>
+                        <span class="operation-ui" style="display: none;">{{row.ui}}</span>
+                        <span class="operation-element" style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
+                      </template>
+                    </td>
+                    <td class="functions">{{ row.method }}</td>
+                    <td class="parameters">
+                      <div class="param-show">
+                        <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}:
+                          <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </main>
@@ -721,67 +752,68 @@
     <!-- modal end -->
     <!-- view script -->
     <div class="modal fade" tabindex="-1" role="dialog" id="view-script">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content"  style="width: 800px;">
-            <div class="modal-header">
-              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h4 class="modal-title">选择操作项与方法</h4>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 800px;">
+          <div class="modal-header">
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">选择操作项与方法</h4>
+          </div>
+          <div class="modal-body">
+            <div class="tab-content" id="script-modal" style="width: 750px;">
+              <table class="table table-bordered table-striped" v-if="tableData.length">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>操作项</th>
+                    <th>方法</th>
+                    <th>参数</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(index, row) in tableData">
+                    <td class="index">{{ +index + 1 }}</td>
+                    <td class="operations">
+                      <template v-if="row.ui != '' && row.element != ''">
+                        <label>UI:</label>
+                        <span class="operation-ui">{{row.ui}}</span>
+                        <label>元素:</label>
+                        <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
+                      </template>
+                      <template v-else>
+                        <label>公共函数:</label>
+                        <span class="operation-ui" style="display: none;">{{row.ui}}</span>
+                        <span class="operation-element" style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
+                      </template>
+                    </td>
+                    <td class="functions">{{ row.method }}</td>
+                    <td class="parameters">
+                      <div class="param-show">
+                        <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}:
+                          <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
             </div>
-            <div class="modal-body" >
-                <div class="tab-content" id="script-modal"  style="width: 750px;">
-                    <table class="table table-bordered table-striped" v-if="tableData.length">
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>操作项</th>
-                            <th>方法</th>
-                            <th>参数</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="(index, row) in tableData">
-                            <td class="index">{{ +index + 1 }}</td>
-                            <td class="operations">
-                                <template v-if="row.ui != '' && row.element != ''">
-                                    <label >UI:</label>
-                                    <span class="operation-ui">{{row.ui}}</span>
-                                    <label>元素:</label>
-                                    <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
-                                </template>
-                                <template v-else>
-                                    <label >公共函数:</label>
-                                    <span class="operation-ui" style="display: none;">{{row.ui}}</span>
-                                    <span class="operation-element"  style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
-                                </template>
-                            </td>
-                            <td class="functions">{{ row.method }}</td>
-                            <td class="parameters">
-                                <div class="param-show">
-                                  <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}: <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
-                                </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                    </table>
-                    <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
-                </div>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" data-dismiss="modal">取消</button>
-              <button class="btn btn-primary" data-dismiss="modal" @click="editRowMultiple()">确定</button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal">取消</button>
+            <button class="btn btn-primary" data-dismiss="modal" @click="editRowMultiple()">确定</button>
           </div>
         </div>
       </div>
-  <!-- view script end -->
+    </div>
+    <!-- view script end -->
   </div>
   <!-- <script type="text/x-template" id="view-script-template"> -->
 
 
   <!-- </script> -->
-  
+
   <link rel="import" href="./common/header.html?__inline">
   <link rel="import" href="./noLoginAlert.html?__inline">
   <link rel="import" href="./common-vac/alert.html?__inline">

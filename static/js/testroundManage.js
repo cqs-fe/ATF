@@ -9,21 +9,11 @@ var app = new Vue({
         listnum: 10, //页面大小
         order: 'id',
         sort: 'asc',
-        isPageNumberError: false,
         checkboxModel: [],
         checked: "",
-        querySceneId: '',
-        //当前选中行
-        selectedId: '',
-        selectedSceneCode: '',
-        selectedSceneName: '',
-        selectedAbstractarchitecture_name: '',
-        selectedScene_desc: ''
     },
     ready: function() {
         getTestRound();
-        // getScene(this.currentPage, this.pageSize, this.order, this.sort);
-        // changeListNum();
         $('.3').addClass('open')
         $('.3 .arrow').addClass('open')
         $('.3-ul').css({display: 'block'})
@@ -51,28 +41,6 @@ var app = new Vue({
                 });
             }
         },
-        //turnToPage为跳转到某页
-        //传入参数pageNum为要跳转的页数
-        // turnToPage(pageNum) {
-        //     var ts = this;
-        //     pageNum = parseInt(pageNum);
-
-        //     //页数不合法则退出
-        //     if (!pageNum || pageNum > ts.totalPage || pageNum < 1) {
-        //         console.log('页码输入有误！');
-        //         ts.isPageNumberError = true;
-        //         return false;
-        //     } else {
-        //         ts.isPageNumberError = false;
-        //     }
-
-        //     //更新当前页
-        //     ts.currentPage = pageNum;
-
-        //     //页数变化时的回调
-        //     getScene(ts.currentPage, ts.pageSize, 'id', 'asc');
-        // },
-
 
         //添加测试轮次
         insert: function() {
@@ -121,7 +89,6 @@ var app = new Vue({
                     }
                 });
             }
-
         },
         //修改测试轮次
         update: function() {
@@ -160,31 +127,7 @@ var app = new Vue({
         },
 
     },
-
-
 });
-
-//获取场景
-// function getScene(page, listnum, order, sort) {
-//     //获取list通用方法，只需要传入多个所需参数
-//     $.ajax({
-//         url: 'http://10.108.226.152:8080/ATFCloud/sceneController/selectAllByPage',
-//         type: 'GET',
-//         data: {
-//             'page': page,
-//             'rows': listnum,
-//             'order': order,
-//             'sort': sort
-//         },
-//         success: function(data) {
-//             app.sceneList = data.rows;
-//             app.tt = data.total;
-//             app.totalPage = Math.ceil(app.tt / listnum);
-//             app.pageSize = listnum;
-//         }
-//     });
-
-// }
 
 //获取测试轮次
 function getTestRound() {
@@ -196,61 +139,3 @@ function getTestRound() {
         }
     });
 }
-
-//改变页面大小
-// function changeListNum() {
-//     $('#mySelect').change(function() {
-//         listnum = $(this).children('option:selected').val();
-//         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-//         getScene(1, listnum, 'id', 'asc');
-//     });
-// }
-
-//全选反选
-// $("#chk_all").click(function() {　　
-//     $("input[name='chk_list']").prop("checked", $(this).prop("checked"));　
-// });
-
-//重新排序
-function resort(target) {
-    var spans = target.parentNode.getElementsByTagName("span");
-    for (var span in spans) {
-        if (spans[span].nodeName === "SPAN") {
-            spans[span].setAttribute("class", "");
-        }
-    }
-    if (target.getAttribute("data-sort") === "desc") {
-        app.sort = "asc";
-        target.getElementsByTagName("span")[0].setAttribute("class", "icon-sort-up")
-        target.setAttribute("data-sort", "asc");
-    } else {
-        app.sort = "desc";
-        target.getElementsByTagName("span")[0].setAttribute("class", "icon-sort-down")
-        target.setAttribute("data-sort", "desc");
-    }
-    app.order = target.getAttribute("data-order");
-    getScene(1, 10, app.order, app.sort);
-}
-//重新排序 结束
-
-//搜索场景
-// function queryScene() {
-//     $.ajax({
-//         url: 'http://10.108.226.152:8080/ATFCloud/sceneController/selectByPrimaryKey',
-//         type: 'POST',
-//         data: {
-//             'page': app.currentPage,
-//             'rows': app.listnum,
-//             'order': app.order,
-//             'sort': app.sort,
-//             'id': app.querySceneId
-//         },
-//         success: function(data) {
-//             app.sceneList = data.rows;
-//             console.log(app.sceneList);
-//             app.tt = data.total;
-//             app.totalPage = Math.ceil(app.tt / app.listnum);
-//             app.pageSize = app.listnum;
-//         }
-//     });
-// }
