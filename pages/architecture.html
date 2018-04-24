@@ -38,15 +38,15 @@
                                 开发架构
                                 <div class="archi-btn">
                                     <a class="btn btn-white btn-sm" data-toggle="modal" href="#addArchModal"><i class="icon-plus" @click="getArchiList"></i></a>
-                                    <!-- <a class="btn btn-white btn-sm " @click="delArchi"><i class="icon-remove"></i></a>
- -->                                    <a class="btn btn-white btn-sm " data-toggle="modal" href="#updateArchModal"><i class="icon-edit"></i></a>
+                                    <!-- <a class="btn btn-white btn-sm " @click="delArchi"><i class="icon-remove"></i></a> -->
+                                    <a class="btn btn-white btn-sm " data-toggle="modal" href="#updateArchModal"><i class="icon-edit"></i></a>
                                 </div>
                             </header>
                             <div id="menuContent" class="menuContent treeMenu">
                                 <h5 class="archi-title">抽象架构</h5>
                                 <ul id="archiTree" class="ztree tree"></ul>
-                                <h5 class="archi-title">全局方法</h5>
-                                <ul id="gmethodTree" class="ztree tree"></ul>
+                                <!-- <h5 class="archi-title">全局方法</h5>
+                                <ul id="gmethodTree" class="ztree tree"></ul> -->
                             </div>
                         </section>
                     </div>
@@ -60,22 +60,24 @@
                                     <div class="property">
                                         控件类型
                                         <a class="btn btn-white btn-sm pull-right" data-toggle="modal" href="#addClassModal"><i class="icon-plus"></i></a>
-                                        <!-- <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a> -->
+                                        <a class="btn btn-white btn-sm pull-right" @click="delClass($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
-                                                    <th>英文名称</th>
-                                                    <th>中文名称</th>
+                                                    <th style="width:20%">继承标志</th>
+                                                    <th style="width:20%">名称</th>
+                                                    <th>描述</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="classProp">
                                                 <tr>
                                                     <td>
-                                                        <input type="radio" name="chk_list" />
+                                                        <input type="radio" name="class" />
                                                     </td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
@@ -88,20 +90,22 @@
                                         <a class="btn btn-white btn-sm pull-right" @click="delMethod"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
-                                        <table class="table table-bordered">
+                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
-                                                    <th>名称</th>
+                                                    <th style="width:20%">继承标志</th>                                                    
+                                                    <th style="width:20%">名称</th>
                                                     <th>描述</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="methodProp">
                                                 <tr>
                                                     <td>
-                                                        <input type="radio" name="chk_list" />
+                                                        <input type="radio" name="method" />
                                                     </td>
                                                     <td></td>
+                                                    <td></td>                                                    
                                                     <td></td>
                                                 </tr>
                                             </tbody>
@@ -117,43 +121,167 @@
                             <header class="panel-heading">
                                 {{className}}
                             </header>
-                            <div class="elementContent">
+                            <div class="rightContent">
                                 <form class="form-horizontal panel-pad" id="classForm">
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">英文名称</label>
+                                        <label class="col-lg-2 control-label">英文名称</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="ename" class="form-control" value="">
+                                            <input type="text" name="name" class="form-control" value="">
                                         </div>
                                         <label class="col-lg-2 control-label">中文名称</label>
                                         <div class="col-lg-3">
-                                            <input type="text" name="cname" class="form-control" value="">
+                                            <input type="text" name="chsName" class="form-control" value="">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">默认方法名称</label>
+                                        <label class="col-lg-2 control-label">描述</label>
                                         <div class="col-lg-3">
-                                            <select class="form-control" name="dname">
-                                                <option value="">-- 请选择方法 --</option>
-                                                <option v-for='item in methodList' :value="item.id">{{item.methodname}}</option>
+                                            <input type="text" name="descShort" class="form-control" value="">
+                                        </div>
+                                        <label class="col-lg-2 control-label">默认方法</label>
+                                        <div class="col-lg-3">
+                                            <select class="form-control" size="1" id="defaultMethodSelect" style="margin-top:5px">
+                                                <option v-for="item in methodList" value="{{item.id}}">{{item.name}}</option>
                                             </select>
                                         </div>
                                     </div>
+                                   
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">继承标志</label>
+                                        <div class="col-lg-3">
+                                            <select class="form-control" size="1" id="overideFlag" style="margin-top:5px">
+                                                <option value="0">+</option>
+                                                <option value="1">-</option>
+                                                <option value="2">*</option>
+                                                <option value="3">/</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-lg-2 control-label">继承可见性</label>
+                                        <div class="col-lg-3">
+                                            <select class="form-control" size="1" id="visibilityFlag" style="margin-top:5px">
+                                                <option value="0">公共</option>
+                                                <option value="1">私有</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="property">
+                                        运行时参数
+                                        <a class="btn btn-white btn-sm pull-right" @click="addRuntimeArgsPara($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delRuntimeArgsPara($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered" id="runtimeArgsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th id="name">属性名</th>
+                                                    <th id="value">属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="runtimeArgsTbody">
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="runtimeArgs_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="property">
+                                        支持的识别属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addSupRecPara($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delSupRecPara($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered" id="supportedRecognitionTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th id="name">属性名</th>
+                                                    <th id="value">属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="supRecTbody">
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="supRec_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="property">
+                                        自识别属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addSelfRecPara($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delSelfRecPara($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered" id="selfRecTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th id="name">属性名</th>
+                                                    <th id="value">属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="selfRecTbody">
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="selfRec_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="property">
+                                        辅助识别属性
+                                        <a class="btn btn-white btn-sm pull-right" @click="addAssistRecPara($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delAssistRecPara($event)"><i class="icon-minus"></i></a>
+                                    </div>
+                                    <div class="property">
+                                        <table class="table table-bordered" id="assistRecTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%"></th>
+                                                    <th id="name">属性名</th>
+                                                    <th id="value">属性值</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="assistRecTbody">
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="assistRec_list" />
+                                                    </td>
+                                                    <td contenteditable="true"></td>
+                                                    <td contenteditable="true"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
                                 </form>
-                                <a class="btn btn-info" @click="updateClass">保存</a>
+                                <a class="btn btn-info rightBtn" @click="updateClass">保存</a>
                             </div>
                         </section>
                     </div>
                     <!-- class end -->
                     <!-- method start -->
                     <div class="col-lg-6">
-                        <section class="panel" id="methodSection" style="display: none;">
+                        <section class="panel" id="methodSection" style="display:none;">
                             <header class="panel-heading">
                                 {{methodName}}
                             </header>
-                            <div class="elementContent">
+                            <div class="rightContent">
                                 <form class="form-horizontal panel-pad" id="methodForm">
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">名称</label>
+                                        <label class="col-lg-2 control-label">名称</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="name" class="form-control" value="">
                                         </div>
@@ -162,19 +290,48 @@
                                             <input type="text" name="description" class="form-control" value="">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-3 control-label">有无参数</label>
+                                    <!-- <div class="form-group">
+                                        <label class="col-lg-2 control-label">创建者</label>
                                         <div class="col-lg-3">
-                                            <select class="form-control" name="isparameter">
-                                                <option value="1">有</option>
-                                                <option value="0">无</option>
-                                            </select>
+                                            <input type="text" name="creator" class="form-control" value="" disabled>
                                         </div>
+                                        <label class="col-lg-2 control-label">创建时间</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="createTime" class="form-control" value="" disabled>
+                                        </div>                                    
                                     </div>
-                                    <div class="property">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">修改者</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="modifier" class="form-control" value="" disabled>
+                                        </div>
+                                        <label class="col-lg-2 control-label">修改时间</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="modifiedTime" class="form-control" value="" disabled>
+                                        </div>                                    
+                                    </div> -->
+                                    <div class="form-group">
+                                            <label class="col-lg-2 control-label">继承标志</label>
+                                            <div class="col-lg-3">
+                                                <select class="form-control" size="1" name="overrideFlag" style="margin-top:5px">
+                                                        <option value="0">+</option>
+                                                        <option value="1">-</option>
+                                                        <option value="2">*</option>
+                                                        <option value="3">/</option>
+                                                </select>
+                                            </div>
+                                            <label class="col-lg-2 control-label">继承可见性</label>
+                                            <div class="col-lg-3">
+                                                <select class="form-control" size="1" class="visibilityFlag" style="margin-top:5px">
+                                                    <option value="0">公共</option>
+                                                    <option value="1">私有</option>
+                                                </select>
+                                            </div>
+                                    </div>                            
+                                     <div class="property">
                                         参数列表
-                                        <a class="btn btn-white btn-sm pull-right" @click="addPara($event)"><i class="icon-plus"></i></a>
-                                        <a class="btn btn-white btn-sm pull-right" @click="delPara($event)"><i class="icon-minus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="addMethodPara($event)"><i class="icon-plus"></i></a>
+                                        <a class="btn btn-white btn-sm pull-right" @click="delMethodPara($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
                                         <table class="table table-bordered" id="pTable">
@@ -182,28 +339,72 @@
                                                 <tr>
                                                     <th style="width:5%"></th>
                                                     <th id="name">参数名称</th>
-                                                    <th id="valueclass">值类型</th>
-                                                    <th id="parameterizedcolumn">参数化列</th>
-                                                    <th id="defaultvalue">默认值</th>
-                                                    <th id="description">描述</th>
+                                                    <th id="type">值类型</th>
+                                                    <th id="parameterizeColumn">参数化列</th>
+                                                    <th id="desc">描述</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="methodPara">
-                                                <tr v-for="item in methodParamList">
+                                                <tr v-for="item in paraList">
                                                     <td>
                                                         <input type="checkbox" name="chk_list" />
                                                     </td>
                                                     <td contenteditable="true">{{item.name}}</td>
-                                                    <td contenteditable="true">{{item.valueclass}}</td>
-                                                    <td contenteditable="true">{{item.parameterizedcolumn}}</td>
-                                                    <td contenteditable="true">{{item.defaultvalue}}</td>
-                                                    <td contenteditable="true">{{item.description}}</td>
+                                                    <td contenteditable="true">{{item.type}}</td>
+                                                    <td contenteditable="true">{{item.parameterizeColumn}}</td>
+                                                    <td contenteditable="true">{{item.desc}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">等待时间</label>
+                                        <label class="col-lg-2 control-label">等待时间</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="waittime" class="form-control">
+                                        </div>
+                                        <label class="col-lg-2 control-label">超时时间</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="timeout" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">目标代码</label>
+                                        <div class="col-lg-8">
+                                            <textarea type="text" name="targetCodeContent" class="form-control" rows='15'></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <label class="col-lg-2 control-label">mtype</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="mtype" class="form-control" value="">
+                                        </div>
+                                        <label class="col-lg-2 control-label">author</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="author" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">outputvaluedesc</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="outputvaluedesc" class="form-control" value="">
+                                        </div>
+                                        <label class="col-lg-2 control-label">inputargdesc</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="inputargdesc" class="form-control" value="">
+                                        </div>
+                                    </div> -->
+                                    <!--    <div class="form-group">
+                                        <label class="col-lg-2 control-label">有无参数</label>
+                                        <div class="col-lg-3">
+                                            <select class="form-control" name="isPara">
+                                                <option>有</option>
+                                                <option>无</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                   
+                                    <!-- <div class="form-group">
+                                        <label class="col-lg-2 control-label">等待时间</label>
                                         <div class="col-lg-3">
                                             <input type="text" name="waittime" class="form-control" value="">
                                         </div>
@@ -211,15 +412,15 @@
                                         <div class="col-lg-3">
                                             <input type="text" name="timeout" class="form-control" value="">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-3 control-label">目标代码</label>
+                                    </div> -->
+                                   <!--  <div class="form-group">
+                                        <label class="col-lg-2 control-label">目标代码</label>
                                         <div class="col-lg-9">
                                             <textarea class="form-control" rows="10" name="objectcode"></textarea>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </form>
-                                <a class="btn btn-info" @click="updateMethod">保存</a>
+                                <a class="btn btn-info rightBtn" @click="updateMethod">保存</a>
                             </div>
                         </section>
                     </div>
@@ -350,7 +551,7 @@
                                                 <div class="col-lg-5">
                                                     <select class="form-control" name="parentArcId">
                                                         <option value=''>-- 请选择父架构 --</option>
-                                                        <option v-for="item in archiList" value="item.id">{{item.name}}</option>
+                                                        <option v-for="item in archiList" value="{{item.id}}">{{item.name}}</option>
                                                     </select>
                                                 </div>
                                             </div>

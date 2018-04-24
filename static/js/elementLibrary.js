@@ -835,13 +835,14 @@ var elementLibrary = Vue.extend({
             // var val = $('#autSelect').val();
             var _this = this;
             $.ajax({
-                url: address + 'autController/selectClass',
-                data: { 'id': _this.autId },
+                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
                 success: function(data) {
+                    console.log(data)
                     _this.classtypeList = data;
                 }
-
             });
         },
         //设置所属测试系统和所属功能点为上级页面选中的值

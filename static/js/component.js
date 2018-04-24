@@ -150,7 +150,7 @@ var app = new Vue({
                                     var methodList = data.omMethodRespDTOList;
                                     for (var i = 0; i < methodList.length; i++) {
                                         var methodTr = $('<tr></tr>'),
-                                            methodCheckTd = $("<td><input type='radio' name='method' onclick='methodClick(event,i)'/></td>"),
+                                            methodCheckTd = $(`<td><input type='radio' name='method' onclick='methodClick(event,${i})'/></td>`),
                                             flagTd=$('<td ></td>'),
                                             methodNameTd = $('<td ></td>'),
                                             methodDescriptionTd = $('<td ></td>');
@@ -478,6 +478,7 @@ function getClass() {
             $('#classProp').children().remove();
             var classList = data.omClassRespDTOList;
             app.classList=classList;
+            // console.log(classList)
             for (var i = 0; i < classList.length; i++) {
                 var classTr = $('<tr></tr>'),
                     classCheckTd = $(`<td><input type='radio' name='class' onclick='classClick(event,${i})'/></td>`),
@@ -485,7 +486,7 @@ function getClass() {
                     classNameTd = $('<td ></td>'),
                     classDescriptionTd = $('<td ></td>');
                 classTr.attr('id', classList[i].id);
-                classHeritImgTd.html('<img src="http://58pic.ooopic.com/58pic/11/72/82/37I58PICgk5.jpg" width="20" height="20">');
+                classHeritImgTd.html();
                 classNameTd.html(classList[i].chsName);
                 classDescriptionTd.html(classList[i].descShort);
                 classTr.append(classCheckTd, classHeritImgTd ,classNameTd, classDescriptionTd);
@@ -710,7 +711,7 @@ function classClick(event,i) {
 }
 // 勾选方法
 function methodClick(event,i) {
-     app.paraList=[];
+    app.paraList=[];
     if ($(event.target).attr('checked')) {
         $('#classSection').css('display', 'none');
         $('#methodSection').css('display', 'block');
@@ -720,7 +721,7 @@ function methodClick(event,i) {
         $('#methodForm input[name="maintainTime"]').val('');
         $('#methodForm textarea[name="executecode"]').val('');
         app.paraList=[];
-
+        $('#methodPara').children().remove();
         app.methodId = $(event.target).parent().parent().attr('id');
         var curMethod = app.methodList[i];
         console.log(curMethod)
