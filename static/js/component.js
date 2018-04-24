@@ -503,11 +503,6 @@ function classClick(event,i) {
     if ($(event.target).attr("checked")) {
         $('#classSection').css('display', 'block');
         $('#methodSection').css('display', 'none');
-       
-        // var curName = $(event.target).parent().next().next().html();
-        // var curDesc = $(event.target).parent().next().next().next().html();
-        // $('#classForm input[name="classname"]').val(curName);
-        // $('#classForm input[name="descname"]').val(curDesc);
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
@@ -527,7 +522,7 @@ function classClick(event,i) {
                 
                 var methodList = data.omMethodRespDTOList;
                 app.methodList = methodList;
-                // console.log(app.methodList)
+                console.log(app.methodList);
                 for (let i = 0; i < methodList.length; i++) {
                     var methodTr = $('<tr></tr>'),
                         methodCheckTd = $(`<td><input type='radio' name='method' onclick='methodClick(event,${i})'/></td>`),

@@ -80,7 +80,7 @@ var template_obj = `
                             <div class="col-xs-3">
                                 <select class="form-control" id="classtypeSelect">
                                     <option value="">--选择控件类型--</option>
-                                    <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
+                                    <option v-for="item in classtypeList" :value="item.id">{{item.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -427,11 +427,13 @@ var objectRepo =  Vue.extend({
             var _this = this
             const val = $('#autSelect').val();
             $.ajax({
-                url: address + 'autController/selectClass',
-                data: { 'id': val },
+                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
                 success: function(data) {
-                    _this.classtypeList = data;
+                    // console.log(data)
+                    _this.classtypeList = data.omClassRespDTOList;
                 }
             });
         },
