@@ -518,8 +518,13 @@ function classClick(event,i) {
                 id: app.classId,
             }),
             success: function(data) {
-                $('#methodProp').children().remove();
-                $('#defaultMethodSelect').children().remove();
+                if($('#methodProp').children()){
+                   $('#methodProp').children().remove(); 
+                }
+                if($('#defaultMethodSelect').children()){
+                    $('#defaultMethodSelect').children().remove();    
+                }
+                
                 var methodList = data.omMethodRespDTOList;
                 app.methodList = methodList;
                 // console.log(app.methodList)
@@ -567,7 +572,9 @@ function classClick(event,i) {
         $('#visibilityFlag').val(curClass.visibilityFlag);
 
         supRecList = JSON.parse(curClass.supportedRecognitionPros);
-        $('#supRecTbody').children().remove();
+        if($('#supRecTbody').children()){
+            $('#supRecTbody').children().remove();
+        }
         if (supRecList) {
             for (let i = 0; i < supRecList.length; i++) {
                 var paraTr = $('<tr></tr>'),
@@ -583,7 +590,9 @@ function classClick(event,i) {
         
 
         runtimeArgsList = JSON.parse(curClass.runtimeArgs);
-        $('#runtimeArgsTbody').children().remove();
+        if($('#runtimeArgsTbody').children()){
+           $('#runtimeArgsTbody').children().remove(); 
+        }
         if(runtimeArgsList){
             for (let i = 0; i < runtimeArgsList.length; i++) {
                 var paraTr = $('<tr></tr>'),
@@ -614,7 +623,9 @@ function classClick(event,i) {
         }
 
         assistRecList = JSON.parse(curClass.assistRecognitionPros);
-        $('#assistRecTbody').children().remove();
+        if($('#assistRecTbody').children()){
+            $('#assistRecTbody').children().remove();
+        }
         if(assistRecList){
             for (let i = 0; i < assistRecList.length; i++) {
                 var paraTr = $('<tr></tr>'),
@@ -711,7 +722,6 @@ function classClick(event,i) {
 }
 // 勾选方法
 function methodClick(event,i) {
-    app.paraList=[];
     if ($(event.target).attr('checked')) {
         $('#classSection').css('display', 'none');
         $('#methodSection').css('display', 'block');
@@ -721,10 +731,10 @@ function methodClick(event,i) {
         $('#methodForm input[name="maintainTime"]').val('');
         $('#methodForm textarea[name="executecode"]').val('');
         app.paraList=[];
-        $('#methodPara').children().remove();
+        // $('#methodPara').children().remove();
         app.methodId = $(event.target).parent().parent().attr('id');
         var curMethod = app.methodList[i];
-        console.log(curMethod)
+        console.log(curMethod);
         $('#methodForm input[name="name"]').val(curMethod.name);
         $('#methodForm input[name="description"]').val(curMethod.descShort);
         $('#methodForm select[name="overrideFlag"]').val(curMethod.overrideFlag);
@@ -733,6 +743,7 @@ function methodClick(event,i) {
         $('#methodForm input[name="timeout"]').val(curMethod.timeout);
         $('#methodForm textarea[name="targetCodeContent"]').val(curMethod.targetCodeContent);
         app.paraList = JSON.parse(curMethod.arguments);
+        console.log(app.paraList)
         // $.ajax({
         //     url: address + 'ommethodController/selectByPrimaryKey',
         //     type: 'post',
