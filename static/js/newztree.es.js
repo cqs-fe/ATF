@@ -38,14 +38,14 @@ $(document).ready(function() {
             getAutandTrans: function() {
                 $.ajax({
                     // async: false,
-                    url: address + "autController/selectAll",
+                    url: address2 + "/aut/queryListAut",
                     type: "POST",
                     success: function(data) {
-                        var autList = data.obj;
+                        var autList = data.autRespDTOList;
                         var str = "";
                         for (var i = 0; i < autList.length; i++) {
 
-                            str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                            str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
                         }
 
                         $('#autSelect').html(str);
@@ -399,11 +399,11 @@ $(document).ready(function() {
                     callback: {},
                     data: {
                         key: {
-                            name: "mname",
+                            name: "name",
                         },
                         simpleData: {
                             enable: true,
-                            idKey: 'methodid',
+                            idKey: 'id',
                             pIdKey: 'parentid',
                             rootPId: 0
                         }
@@ -431,11 +431,11 @@ $(document).ready(function() {
                     callback: {},
                     data: {
                         key: {
-                            name: "mname",
+                            name: "name",
                         },
                         simpleData: {
                             enable: true,
-                            idKey: 'methodid',
+                            idKey: 'id',
                             pIdKey: 'parentid',
                             rootPId: 0
                         }
@@ -485,9 +485,6 @@ $(document).ready(function() {
                 });
                 // $("#sortable").disableSelection();
             });
-            // $('#edit-parameter-modal').on('hidden.bs.modal', function() {
-
-            // })
             $('.2').addClass('open')
             $('.2 .arrow').addClass('open')
             $('.2-ul').css({display: 'block'})
@@ -703,13 +700,14 @@ $(document).ready(function() {
                 });
                 // 请求函数集
                 $.ajax({
-                    url: address + 'autController/selectFunctionSet',
-                    data: { 'id': mainVue.autId },
+                    url: address2 + 'aut/selectFunctionSet',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'id': mainVue.autId }),
                     type: 'post',
                     dataType: 'json',
-                    success: (data, statusText) => {
-                        if (data.obj) {
-                            $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.obj);
+                    success: (data, statusText) => {console.log(data);
+                        if (data.respCode === '0000') {
+                            $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.omMethodRespDTOList);
                         }
                     }
                 })
@@ -733,7 +731,7 @@ $(document).ready(function() {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
                     var o = {};
-                    o.name = treeNode.mname;
+                    o.name = treeNode.name;
                     o.parameterlist = treeNode.arguments;
                     this.uiOrFunctions.function = o;
                 }
@@ -829,17 +827,23 @@ $(document).ready(function() {
                     }
                     var getFunctions = new Promise((resolve, reject) => {
                         $.ajax({
-                            url: address + 'autController/selectMethod',
-                            data: data,
+                            url: address2 + 'aut/selectMethod',
+                            contentType: 'application/json',
+                            data: JSON.stringify(data),
                             type: 'post',
                             dataType: 'json',
                             success: function(data, statusText) {
-                                var { functions, parameterlist } = _this.setFunctionAndParameter(data);
-                                operationRows[index].parameters = parameterlist;
-                                operationRows[index].functions = functions;
-                                operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
-                                _this.updateRow(operationRows, index);
-                                resolve();
+                                if (data.respCode === '0000' && data.omMethodRespDTOList) {
+                                    var { functions, parameterlist } = _this.setFunctionAndParameter(data.omMethodRespDTOList);
+                                    operationRows[index].parameters = parameterlist;
+                                    operationRows[index].functions = functions;
+                                    operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
+                                    _this.updateRow(operationRows, index);
+                                    resolve();
+                                } else {
+                                    Vac.alert('查询数据出错！');
+                                    reject();
+                                }
                             }
                         })
                     });
@@ -874,32 +878,22 @@ $(document).ready(function() {
                 var functions = [];
                 var  parameterlist = [];
                 try {
-                  if (data.ommethod) {
-                    for (let m of data.ommethod) {
-                      var o = {};
-                      o.name = m.mname;
-                      o.parameterlist = m.arguments;
-                      functions.push(o);
+                    for (let m of data) {
+                        let o = {};
+                        o.name = m.name;
+                        o.parameterlist = m.arguments;
+                        functions.push(o);
                     }
-                  }
-                  if (data.acrmethod) {
-                    for (let m of data.acrmethod) {
-                      var o = {};
-                      o.name = m.methodname;
-                      o.parameterlist = m.arguments;
-                      functions.push(o);
+                    if (functions.length) {
+                        let paras = JSON.parse(`${functions[0].parameterlist}`);
+                        for (let para of paras) {
+                            parameterlist.push({ Name: para.name, Value: "" });
+                        }
                     }
-                  }
-                 
-                  if (functions.length) {
-                    let paras = JSON.parse(`${functions[0].parameterlist}`);
-                    for (let para of paras) {
-                        parameterlist.push({ Name: para.name, Value: "" });
-                    }
-                  }
-                  return { functions, parameterlist };
+                    return { functions, parameterlist };
                 } catch (e) {
-                  console.error(e);
+                    console.error(e);
+                    // return { functions: [], parameterlist: [] };;
                 }
             }
         }
@@ -914,7 +908,7 @@ $(document).ready(function() {
                 mainVue.scriptIsChanged = true
                 var uiTree = $.fn.zTree.getZTreeObj("ui-element-ul2");
                 var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
-                var uiNodes = uiTree.getCheckedNodes(true);
+                var uiNodes = uiTree ? uiTree.getCheckedNodes(true) : [];
 
                 var functionNodes = functionTree ? functionTree.getCheckedNodes(true) : []
                 for (var node of uiNodes) {
@@ -930,16 +924,21 @@ $(document).ready(function() {
                     }
                     newRow.functions = []
                     $.ajax({
-                        url: address + 'autController/selectMethod',
-                        data: { id: mainVue.autId, classname: newRow.operation.classType },
+                        url: address2 + 'aut/selectMethod',
+                        data: JSON.stringify({ id: mainVue.autId, classname: newRow.operation.classType }),
+                        contentType: 'application/json',
                         type: 'post',
                         dataType: 'json',
                         success: function(data, statusText) {
-                            var { functions, parameterlist } = modalVue.setFunctionAndParameter(data);
-                            newRow.functions = functions;
-                            newRow.selectedFunc = functions.length ? functions[0].name : '';
-                            newRow.parameters = parameterlist;
-                            editDataVue.operationRows.push(newRow);
+                            if (data.respCode === '0000' && data.omMethodRespDTOList) {
+                                var { functions, parameterlist } = modalVue.setFunctionAndParameter(data.omMethodRespDTOList);
+                                newRow.functions = functions;
+                                newRow.selectedFunc = functions.length ? functions[0].name : '';
+                                newRow.parameters = parameterlist;
+                                editDataVue.operationRows.push(newRow);
+                            } else {
+                                Vac.alert('查询方法出错！');
+                            }
                         }
                     })
                 }
@@ -953,7 +952,7 @@ $(document).ready(function() {
                             classType: ''
                         }
                         newRow.functions = []
-                        newRow.functions.push({ name: node.mname, parameterlist: node.arguments })
+                        newRow.functions.push({ name: node.name, parameterlist: node.arguments })
 
                         newRow.parameters = []
                         try{

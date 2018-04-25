@@ -5,9 +5,6 @@ var app = new Vue({
         recordList: [], //测试记录
         testPhaseList:[],//测试阶段下拉列表
         testRoundList:[],//测试轮次下拉列表
-        sceneList:[],//场景下拉列表
-        testphase: '',//测试阶段
-        testround: '',//测试轮次
         recorderstate:'2',//记录单状态
         tt: 0, //总条数
         pageSize: 10, //页面大小
@@ -28,19 +25,17 @@ var app = new Vue({
         selectedRecord_desc: '',
         searchKey:'', //搜索条件
         searchVal: '',
-        ids: '',
     },
     ready: function() {
-        getRecord(this.currentPage, this.pageSize, this.order, this.sort);
-        getTestPhase();
-        getTestRound();
-        getScene();
-        changeListNum();
+        let id = document.location.search.slice(1).split('=')[1];console.log(id); 
+        getRecord(id, this.currentPage, this.pageSize, this.order, this.sort);
+
+        // changeListNum();
 
         $('.3').addClass('open')
 		$('.3 .arrow').addClass('open')
 		$('.3-ul').css({display: 'block'})
-		$('.3-7').css({color: '#ff6c60'})
+		$('.3-8').css({color: '#ff6c60'})
     },
     methods: {
         //获取选中的id
@@ -146,27 +141,34 @@ var app = new Vue({
             $('#updateForm input[name="abstractarchitecture_name"]').val(selectedInput.parent().next().next().next().html());
             $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
         },
+
     },
 
 
 });
 
 //获取测试记录
-function getRecord(page, listnum, order, sort) {
+function getRecord(id) {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        // url: address + 'testrecordController/selectAllByPage',
-        url: address2+'testRecord/batchQuery',
+        url: address2 + 'testRecord/selectByRunId',
         type: 'POST',
+        contentType: 'application/json',
         data: JSON.stringify({
-            testPhase: '74',
-            testRound: 1
+            runId: id
         }),
-        success: function(data) {
-            app.recordList = data.rows;
-            app.tt = data.total;
-            app.totalPage = Math.ceil(app.tt / listnum);
-            // app.pageSize = listnum;
+        success: function(data) {console.log(data);
+            if (data.respCode === '0000') {
+                app.recordList = data.list;
+                // app.tt = data.batchRunCtrlEntities[0] ?  data.batchRunCtrlEntities[0].page.totalCount : 0;
+                // app.totalPage = data.batchRunCtrlEntities[0] ?  data.batchRunCtrlEntities[0].page.totalPage : 0;
+                // app.pageSize = data.batchRunCtrlEntities[0] ?  data.batchRunCtrlEntities[0].page.pageSize : 0;
+            } else {
+                app.recordList = [];
+                // app.tt = 0;
+                // app.totalPage = 0;
+                // app.pageSize = 5;
+            }
         }
     });
 

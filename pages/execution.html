@@ -53,9 +53,7 @@
                                 <table class="table table-striped table-bordered border-top text-center" id="sample_1">
                                     <thead>
                                         <tr>
-                                            <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">id
-                                                <span class="icon-sort-up" aria-hidden="true"></span>
-                                            </th>
+                                            <th class="hidden-phone text-center" data-order="casecode" data-sort="desc">操作</th>
                                             <th class="text-center" data-order="autId" data-sort="desc">发起用户</th>
                                             <th class="hidden-phone text-center" data-order="transId">创建日期</th>
                                             <th class="hidden-phone text-center" data-order="transId">创建时间</th>
@@ -80,8 +78,11 @@
                                         </tr>
                                     </thead>
                                     <tbody id="sceneTable">
-                                        <tr class="odd gradeX" v-for="scene in sceneList" id="{{scene.id}}"></td>
-                                            <!-- <td class="center " width="">{{ scene.creatorId }}</td>
+                                        <tr class="odd gradeX" v-for="scene in sceneList" id="{{scene.id}}">
+                                            <td class="center " width="" :data-id="scene.id">
+                                                <button class="btn btn-xs btn-success" @click="getRecord(scene.id)">记录单</button>
+                                            </td>
+                                            <td class="center " width="">{{ scene.creatorId }}</td>
                                             <td class="center " width="">{{ scene.createDate }}</td>
                                             <td class="center " width="">{{ scene.createTime }}</td>
                                             <td class="center " width="">{{ executeProduct[scene.executeProduct] }}</td>
@@ -101,10 +102,7 @@
                                             <td class="center " width="">{{ scene.runResultMessage }}</td>
                                             <td class="center " width="">{{ scene.creatorId }}</td>
                                             <td class="center " width="">{{ scene.finishDate }}</td>
-                                            <td class="center " width="">{{ scene.finishTime }}</td> -->
-                                            <td class="center" width="20%">
-                                                <a class="btn btn-primary btn-xs" @click="toSceneManagement($event)">管理</a>
-                                            </td>
+                                            <td class="center " width="">{{ scene.finishTime }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -173,6 +171,54 @@
                     </div>
                 </div>
                 <!-- table end -->
+                 <!-- updateModal start -->
+                 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">修改测试项目</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- modal-body start -->
+                                    <section class="panel">
+                                        <form id="updateForm" class="form-horizontal" role="form">
+                                            <div class="form-group hidden">
+                                                <label class="col-lg-3 control-label">测试项目编号</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="id" value="{{ selectedId}}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">测试项目编号</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="testProjectCode">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">测试项目名称</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="testProjectName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">描述</label>
+                                                <div class="col-lg-5">
+                                                    <textarea class="form-control" rows="3" name="taskDescription"></textarea>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </section>
+                                    <!-- modal-body end -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                    <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="update">修改</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- updateModal end -->
             </section>
             <link rel="import" href="./common/copy-right.html?__inline">
         </section>

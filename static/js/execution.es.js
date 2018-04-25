@@ -12,6 +12,7 @@ var app = new Vue({
     el: '#scene',
     data: {
         sceneList: [],
+        recordList: [],
         tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
@@ -141,86 +142,8 @@ var app = new Vue({
             }
             
         },
-        //删除场景
-        checkDel:()=>{
-            app.getIds();
-            const selectedInput = $('input[name="chk_list"]:checked');
-            if (selectedInput.length === 0) {
-                $('#selectAlertModal').modal();
-            } else{
-                $('#deleteModal').modal();
-            } 
-        },
-        del: function() {
-            this.getIds();
-            var self=this;
-            $.ajax({
-                url: address + 'sceneController/delete',
-                type: 'post',
-                data: {
-                    'id': app.ids
-                },
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                        getScene(self.currentPage, self.pageSize, self.order, self.sort);
-                    } else {
-                        $('#failModal').modal();
-                    }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-        },
-        //修改场景
-        checkUpdate:()=>{
-            app.getSelected();
-            const selectedInput = $('input[name="chk_list"]:checked');
-            if (selectedInput.length === 0) {
-                $('#selectAlertModal').modal();
-            } else{
-                $('#updateModal').modal();
-            } 
-        },
-        update: function() {
-            var self=this;
-            $.ajax({
-                url: address + 'sceneController/update',
-                type: 'post',
-                data: $("#updateForm").serializeArray(),
-                success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        $('#successModal').modal();
-                         getScene(self.currentPage, self.pageSize, self.order, self.sort);
-                    } else {
-                        $('#failModal').modal();
-                    }
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-        },
-        //获取当前选中行内容
-        getSelected: function() {
-            var selectedInput = $('input[name="chk_list"]:checked');
-            var selectedId = selectedInput.attr('id');
-            $('#updateForm input[name="id"]').val(selectedId);
-            $('#updateForm input[name="scenename"]').val(selectedInput.parent().next().html());
-            $('#updateForm textarea[name="description"]').val(selectedInput.parent().next().next().html());
-        },
-        //自定义筛选条件添加选择项
-        addItem: function() {
-            var n = this.customFilterList ? this.customFilterList.length + 1 : 1;
-            this.customFilterList.push({ title: '选择' + n });
-        },
-        //删除选择项
-        removeItem: function(item) {
-            var index = this.customFilterList.indexOf(item);
-            this.customFilterList.splice(index, 1);
+        getRecord: function (id) {
+           window.open('testRecord-of-runid.html?runId=' + id);
         },
         //传递当前页选中的场景id到场景管理页面
         toSceneManagement: function(e) {
@@ -245,10 +168,17 @@ function getScene(page, listnum, order, sort) {
             'pagesize': listnum
         }),
         success: function(data) {
-            app.sceneList = data.rows;
-            app.tt = data.total;
-            app.totalPage = Math.ceil(app.tt / listnum);
-            app.pageSize = listnum;
+            if (data.respCode === '0000') {
+                app.sceneList = data.batchRunCtrlEntities;
+                app.tt = data.batchRunCtrlEntities[0] ?  data.batchRunCtrlEntities[0].page.totalCount : 0;
+                app.totalPage = data.batchRunCtrlEntities[0] ?  data.batchRunCtrlEntities[0].page.totalPage : 0;
+                app.pageSize = data.batchRunCtrlEntities[0] ?  data.batchRunCtrlEntities[0].page.pageSize : 0;
+            } else {
+                app.sceneList = [];
+                app.tt = 0;
+                app.totalPage = 0;
+                app.pageSize = 5;
+            }
         }
     });
 
