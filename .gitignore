@@ -3,4 +3,5 @@ debug.log
 dist/
 public/
 dist/
+**.zip
 .DS_Store

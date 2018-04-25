@@ -485,9 +485,6 @@ $(document).ready(function() {
                 });
                 // $("#sortable").disableSelection();
             });
-            // $('#edit-parameter-modal').on('hidden.bs.modal', function() {
-
-            // })
             $('.2').addClass('open')
             $('.2 .arrow').addClass('open')
             $('.2-ul').css({display: 'block'})
@@ -734,7 +731,7 @@ $(document).ready(function() {
                     this.uiOrFunctions.type = 'function'
                     // 获取节点的全部内容
                     var o = {};
-                    o.name = treeNode.mname;
+                    o.name = treeNode.name;
                     o.parameterlist = treeNode.arguments;
                     this.uiOrFunctions.function = o;
                 }
@@ -836,12 +833,17 @@ $(document).ready(function() {
                             type: 'post',
                             dataType: 'json',
                             success: function(data, statusText) {
-                                var { functions, parameterlist } = _this.setFunctionAndParameter(data.omMethodRespDTOList);
-                                operationRows[index].parameters = parameterlist;
-                                operationRows[index].functions = functions;
-                                operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
-                                _this.updateRow(operationRows, index);
-                                resolve();
+                                if (data.respCode === '0000' && data.omMethodRespDTOList) {
+                                    var { functions, parameterlist } = _this.setFunctionAndParameter(data.omMethodRespDTOList);
+                                    operationRows[index].parameters = parameterlist;
+                                    operationRows[index].functions = functions;
+                                    operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
+                                    _this.updateRow(operationRows, index);
+                                    resolve();
+                                } else {
+                                    Vac.alert('查询数据出错！');
+                                    reject();
+                                }
                             }
                         })
                     });
@@ -887,29 +889,12 @@ $(document).ready(function() {
                         for (let para of paras) {
                             parameterlist.push({ Name: para.name, Value: "" });
                         }
-                      }
-                      return { functions, parameterlist };
+                    }
+                    return { functions, parameterlist };
                 } catch (e) {
                     console.error(e);
+                    // return { functions: [], parameterlist: [] };;
                 }
-                // try {
-                //   if (data.ommethod) {
-                //     for (let m of data.ommethod) {
-                //       var o = {};
-                //       o.name = m.mname;
-                //       o.parameterlist = m.arguments;
-                //       functions.push(o);
-                //     }
-                //   }
-                //   if (data.acrmethod) {
-                //     for (let m of data.acrmethod) {
-                //       var o = {};
-                //       o.name = m.methodname;
-                //       o.parameterlist = m.arguments;
-                //       functions.push(o);
-                //     }
-                //   }
-                
             }
         }
     })
@@ -945,11 +930,15 @@ $(document).ready(function() {
                         type: 'post',
                         dataType: 'json',
                         success: function(data, statusText) {
-                            var { functions, parameterlist } = modalVue.setFunctionAndParameter(data.omMethodRespDTOList);
-                            newRow.functions = functions;
-                            newRow.selectedFunc = functions.length ? functions[0].name : '';
-                            newRow.parameters = parameterlist;
-                            editDataVue.operationRows.push(newRow);
+                            if (data.respCode === '0000' && data.omMethodRespDTOList) {
+                                var { functions, parameterlist } = modalVue.setFunctionAndParameter(data.omMethodRespDTOList);
+                                newRow.functions = functions;
+                                newRow.selectedFunc = functions.length ? functions[0].name : '';
+                                newRow.parameters = parameterlist;
+                                editDataVue.operationRows.push(newRow);
+                            } else {
+                                Vac.alert('查询方法出错！');
+                            }
                         }
                     })
                 }
