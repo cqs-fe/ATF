@@ -1,3 +1,4 @@
+var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var app = new Vue({
     el: '#v-transact',
     data: {
@@ -269,14 +270,15 @@ function resort(target) {
 function autSelect() {
     $.ajax({
         async: false,
-        url: address + "autController/selectAll",
+        url: address2 + "/aut/queryListAut",
         type: "POST",
         success: function(data) {
-            var autList = data.obj;
+            // console.log(data)
+            var autList = data.autRespDTOList;
             var str = "";
             for (var i = 0; i < autList.length; i++) {
 
-                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
             }
 
             $('#autSelect').html(str);

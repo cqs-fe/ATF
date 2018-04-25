@@ -1,3 +1,4 @@
+var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var template_obj = `
 <div style="min-height: 0;">
     <div class="row" v-if="breadShow">
@@ -441,13 +442,14 @@ var objectRepo =  Vue.extend({
         getAutandTrans: function() {
             var _this = this
             $.ajax({
-                url: address + "autController/selectAll",
+                url: address2 + "/aut/queryListAut",
                 type: "POST",
                 success: function(data) {
-                    var autList = data.obj;
+                    var autList = data.autRespDTOList;
                     var str = "";
                     for (var i = 0; i < autList.length; i++) {
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
                     }
 
                     $('#autSelect').html(str);

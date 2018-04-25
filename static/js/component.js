@@ -259,22 +259,21 @@ var app = new Vue({
             selectedTr.remove();
         },
         //修改控件类型
-        updateClass:function(){
-
+        updateClass: function() {
             var name = $('#classForm input[name="name"]').val(),
                 chsName = $('#classForm input[name="chsName"]').val(),
                 descShort = $('#classForm input[name="descShort"]').val(),
-                overideFlag = $('#overideFlag').val(), 
+                overideFlag = $('#overideFlag').val(),
                 defaultMethod = $('#defaultMethodSelect').val(),
-                visibilityFlag = $('#visibilityFlag').val(); 
+                visibilityFlag = $('#visibilityFlag').val();
 
-                // picfile = $('#');
+            // picfile = $('#');
 
-                //supRecParaList
-                var supRecParaList = '[',
-                    pTable = $('#supportedRecognitionTable'),
-                    pRow = pTable.find('tr'),
-                    pCol = pRow[0].children;
+            //supRecParaList
+            var supRecParaList = '[',
+                pTable = $('#supportedRecognitionTable'),
+                pRow = pTable.find('tr'),
+                pCol = pRow[0].children;
 
             for (var j = 1; j < pRow.length; j++) {
                 var r = '{';
@@ -286,13 +285,13 @@ var app = new Vue({
                 r += "},";
                 supRecParaList += r;
             }
-            if(supRecParaList.length>1){
-                supRecParaList = supRecParaList.substring(0, supRecParaList.length - 1);                
+            if (supRecParaList.length > 1) {
+                supRecParaList = supRecParaList.substring(0, supRecParaList.length - 1);
             }
             supRecParaList += ']';
 
-                //runtimeArgsParaList
-                var runtimeArgsParaList = '[',
+            //runtimeArgsParaList
+            var runtimeArgsParaList = '[',
                 pTable = $('#runtimeArgsTable'),
                 pRow = pTable.find('tr'),
                 pCol = pRow[0].children;
@@ -307,13 +306,13 @@ var app = new Vue({
                 r += "},";
                 runtimeArgsParaList += r;
             }
-            if(runtimeArgsParaList.length>1){
-                runtimeArgsParaList = runtimeArgsParaList.substring(0, runtimeArgsParaList.length - 1);                
+            if (runtimeArgsParaList.length > 1) {
+                runtimeArgsParaList = runtimeArgsParaList.substring(0, runtimeArgsParaList.length - 1);
             }
             runtimeArgsParaList += ']';
 
-                //selfRecParaList
-                var selfRecParaList = '[',
+            //selfRecParaList
+            var selfRecParaList = '[',
                 pTable = $('#selfRecTable'),
                 pRow = pTable.find('tr'),
                 pCol = pRow[0].children;
@@ -328,13 +327,13 @@ var app = new Vue({
                 r += "},";
                 selfRecParaList += r;
             }
-            if(selfRecParaList.length>1){
-                selfRecParaList = selfRecParaList.substring(0, selfRecParaList.length - 1);                
+            if (selfRecParaList.length > 1) {
+                selfRecParaList = selfRecParaList.substring(0, selfRecParaList.length - 1);
             }
             selfRecParaList += ']';
 
-             //assistRecParaList
-                var assistRecParaList = '[',
+            //assistRecParaList
+            var assistRecParaList = '[',
                 pTable = $('#assistRecTable'),
                 pRow = pTable.find('tr'),
                 pCol = pRow[0].children;
@@ -349,14 +348,14 @@ var app = new Vue({
                 r += "},";
                 assistRecParaList += r;
             }
-            if(assistRecParaList.length>1){
-                assistRecParaList = assistRecParaList.substring(0, assistRecParaList.length - 1);                
+            if (assistRecParaList.length > 1) {
+                assistRecParaList = assistRecParaList.substring(0, assistRecParaList.length - 1);
             }
             assistRecParaList += ']';
-            
-            var that=this;
+
+            var that = this;
             $.ajax({
-                url: address+'/omClass/modifySingleAutOmClass',
+                url: address + '/omClass/modifySingleAutOmClass',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -366,17 +365,17 @@ var app = new Vue({
                     "autId": that.autId,
                     "descShort": descShort,
                     "defaultMethod": defaultMethod,
-                    "supportedRecognitionPros":supRecParaList,
+                    "supportedRecognitionPros": supRecParaList,
                     "runtimeArgs": runtimeArgsParaList,
                     "selfRecognitionPros": selfRecParaList,
                     "assistRecognitionPros": assistRecParaList,
                     "overideFlag": overideFlag,
-                    "creatorId":'',
-                    "modifierId":'',
-                    "visibilityFlag":visibilityFlag
+                    "creatorId": '',
+                    "modifierId": '',
+                    "visibilityFlag": visibilityFlag
                 }),
                 success: function(data) {
-                    if (data.respCode==0000) {
+                    if (data.respCode == 0000) {
                         $('#successModal').modal();
                         getClass();
                     } else {
@@ -449,6 +448,7 @@ var app = new Vue({
                         $('#methodProp input[name="method"]:checked').parent().next().text(overrideFlag);
                         $('#methodProp input[name="method"]:checked').parent().next().next().text(methodname);
                         $('#methodProp input[name="method"]:checked').parent().next().next().next().text(methoddescription);
+                        getClass();
                     } else {
                         $('#failModal').modal();
                     }
@@ -479,18 +479,28 @@ function getClass() {
             var classList = data.omClassRespDTOList;
             app.classList=classList;
             // console.log(classList)
-            for (var i = 0; i < classList.length; i++) {
-                var classTr = $('<tr></tr>'),
-                    classCheckTd = $(`<td><input type='radio' name='class' onclick='classClick(event,${i})'/></td>`),
-                    classHeritImgTd = $('<td ></td>'),
-                    classNameTd = $('<td ></td>'),
-                    classDescriptionTd = $('<td ></td>');
-                classTr.attr('id', classList[i].id);
-                classHeritImgTd.html();
-                classNameTd.html(classList[i].chsName);
-                classDescriptionTd.html(classList[i].descShort);
-                classTr.append(classCheckTd, classHeritImgTd ,classNameTd, classDescriptionTd);
-                $('#classProp').append(classTr);
+            if(classList){
+                for (var i = 0; i < classList.length; i++) {
+                    var classTr = $('<tr></tr>'),
+                        classCheckTd = $(`<td><input type='radio' name='class' onclick='classClick(event,${i})'/></td>`),
+                        overideFlagTd = $('<td ></td>'),
+                        classNameTd = $('<td ></td>'),
+                        classDescriptionTd = $('<td ></td>');
+                    classTr.attr('id', classList[i].id);
+                    if(classList[i].overideFlag==0){
+                        overideFlagTd.html('普通继承');
+                    }else if(classList[i].overideFlag==1){
+                        overideFlagTd.html('重载');
+                    }else if(classList[i].overideFlag==2){
+                        overideFlagTd.html('禁用');
+                    }else{
+                        overideFlagTd.html('');
+                    }
+                    classNameTd.html(classList[i].name);
+                    classDescriptionTd.html(classList[i].descShort);
+                    classTr.append(classCheckTd, overideFlagTd ,classNameTd, classDescriptionTd);
+                    $('#classProp').append(classTr);
+                }
             }
         },
         error: function() {
@@ -499,7 +509,7 @@ function getClass() {
     });
 }
 // 勾选控件类型
-function classClick(event,i) {
+function classClick(event, i) {
     if ($(event.target).attr("checked")) {
         $('#classSection').css('display', 'block');
         $('#methodSection').css('display', 'none');
@@ -513,29 +523,32 @@ function classClick(event,i) {
                 id: app.classId,
             }),
             success: function(data) {
-                if($('#methodProp').children()){
-                   $('#methodProp').children().remove(); 
+                if ($('#methodProp').children()) {
+                    $('#methodProp').children().remove();
                 }
-                if($('#defaultMethodSelect').children()){
-                    $('#defaultMethodSelect').children().remove();    
-                }
-                
+
                 var methodList = data.omMethodRespDTOList;
                 app.methodList = methodList;
                 console.log(app.methodList);
                 for (let i = 0; i < methodList.length; i++) {
                     var methodTr = $('<tr></tr>'),
                         methodCheckTd = $(`<td><input type='radio' name='method' onclick='methodClick(event,${i})'/></td>`),
-                        flagTd=$('<td ></td>'),
+                        flagTd = $('<td ></td>'),
                         methodNameTd = $('<td ></td>'),
                         methodDescriptionTd = $('<td ></td>');
                     methodTr.attr('id', methodList[i].id);
-                    flagTd.html(methodList[i].overrideFlag);
+                    if (methodList[i].overrideFlag == 0) {
+                        flagTd.html('普通继承');
+                    } else if (methodList[i].overrideFlag == 1) {
+                        flagTd.html('禁用');
+                    } else {
+                        flagTd.html('');
+                    }
                     methodNameTd.html(methodList[i].name);
                     methodDescriptionTd.html(methodList[i].descShort);
-                    methodTr.append(methodCheckTd, flagTd,methodNameTd, methodDescriptionTd);
+                    methodTr.append(methodCheckTd, flagTd, methodNameTd, methodDescriptionTd);
                     $('#methodProp').append(methodTr);
-                          
+
                     // var tmpOption = $('<option>').text(methodList[i].mname).val(i);
                     // $('#defaultMethodSelect').append(tmpOption);
                 }
@@ -552,89 +565,89 @@ function classClick(event,i) {
                 // $('#classForm input[name="createTime"]').val('');
                 // $('#classForm input[name="modifier"]').val('');
                 // $('#classForm input[name="modifiedTime"]').val('');
-        var curClass = app.classList[i];
-        // console.log(curClass)
-        $('#classForm input[name="chsName"]').val(curClass.chsName);
-        $('#classForm input[name="name"]').val(curClass.name);
-        $('#classForm input[name="descShort"]').val(curClass.descShort);
-        // $('#classForm input[name="creator"]').val(curClass.creatorId);
-        // $('#classForm input[name="createTime"]').val(curClass.createTime);
-        // $('#classForm input[name="modifier"]').val(curClass.modifierId);
-        // $('#classForm input[name="modifiedTime"]').val(curClass.modifiedTime);
-        // $('#previewImg').attr("src", curClass.picSample);
-        $('#overideFlag').val(curClass.overideFlag);
-        $('#defaultMethod').val(curClass.defaultMethod);
-        $('#visibilityFlag').val(curClass.visibilityFlag);
+                var curClass = app.classList[i];
+                // console.log(curClass)
+                $('#classForm input[name="chsName"]').val(curClass.chsName);
+                $('#classForm input[name="name"]').val(curClass.name);
+                $('#classForm input[name="descShort"]').val(curClass.descShort);
+                // $('#classForm input[name="creator"]').val(curClass.creatorId);
+                // $('#classForm input[name="createTime"]').val(curClass.createTime);
+                // $('#classForm input[name="modifier"]').val(curClass.modifierId);
+                // $('#classForm input[name="modifiedTime"]').val(curClass.modifiedTime);
+                // $('#previewImg').attr("src", curClass.picSample);
+                $('#overideFlag').val(curClass.overideFlag);
+                $('#defaultMethod').val(curClass.defaultMethod);
+                $('#visibilityFlag').val(curClass.visibilityFlag);
 
-        supRecList = JSON.parse(curClass.supportedRecognitionPros);
-        if($('#supRecTbody').children()){
-            $('#supRecTbody').children().remove();
-        }
-        if (supRecList) {
-            for (let i = 0; i < supRecList.length; i++) {
-                var paraTr = $('<tr></tr>'),
-                    paraCheckTd = $('<td><input type="checkbox" name="supRec_list"/></td>'),
-                    paraNameTd = $('<td contenteditable="true"></td>'),
-                    paraDescriptionTd = $('<td contenteditable="true"></td>');
-                paraNameTd.html(supRecList[i].name);
-                paraDescriptionTd.html(supRecList[i].value);
-                paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
-                $('#supRecTbody').append(paraTr);
-            }
-        }
-        
+                supRecList = JSON.parse(curClass.supportedRecognitionPros);
+                if ($('#supRecTbody').children()) {
+                    $('#supRecTbody').children().remove();
+                }
+                if (supRecList) {
+                    for (let i = 0; i < supRecList.length; i++) {
+                        var paraTr = $('<tr></tr>'),
+                            paraCheckTd = $('<td><input type="checkbox" name="supRec_list"/></td>'),
+                            paraNameTd = $('<td contenteditable="true"></td>'),
+                            paraDescriptionTd = $('<td contenteditable="true"></td>');
+                        paraNameTd.html(supRecList[i].name);
+                        paraDescriptionTd.html(supRecList[i].value);
+                        paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
+                        $('#supRecTbody').append(paraTr);
+                    }
+                }
 
-        runtimeArgsList = JSON.parse(curClass.runtimeArgs);
-        if($('#runtimeArgsTbody').children()){
-           $('#runtimeArgsTbody').children().remove(); 
-        }
-        if(runtimeArgsList){
-            for (let i = 0; i < runtimeArgsList.length; i++) {
-                var paraTr = $('<tr></tr>'),
-                    paraCheckTd = $('<td><input type="checkbox" name="runtimeArgs_list"/></td>'),
-                    paraNameTd = $('<td contenteditable="true"></td>'),
-                    paraDescriptionTd = $('<td contenteditable="true"></td>');
-                paraNameTd.html(runtimeArgsList[i].name);
-                paraDescriptionTd.html(runtimeArgsList[i].value);
-                paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
-                $('#runtimeArgsTbody').append(paraTr);
-            }
-        }
-        
 
-        selfRecList = JSON.parse(curClass.selfRecognitionPros);
-        $('#selfRecTbody').children().remove();
-        if(selfRecList){
-            for (let i = 0; i < selfRecList.length; i++) {
-                var paraTr = $('<tr></tr>'),
-                    paraCheckTd = $('<td><input type="checkbox" name="selfRec_list"/></td>'),
-                    paraNameTd = $('<td contenteditable="true"></td>'),
-                    paraDescriptionTd = $('<td contenteditable="true"></td>');
-                paraNameTd.html(selfRecList[i].name);
-                paraDescriptionTd.html(selfRecList[i].value);
-                paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
-                $('#selfRecTbody').append(paraTr);
-            }
-        }
+                runtimeArgsList = JSON.parse(curClass.runtimeArgs);
+                if ($('#runtimeArgsTbody').children()) {
+                    $('#runtimeArgsTbody').children().remove();
+                }
+                if (runtimeArgsList) {
+                    for (let i = 0; i < runtimeArgsList.length; i++) {
+                        var paraTr = $('<tr></tr>'),
+                            paraCheckTd = $('<td><input type="checkbox" name="runtimeArgs_list"/></td>'),
+                            paraNameTd = $('<td contenteditable="true"></td>'),
+                            paraDescriptionTd = $('<td contenteditable="true"></td>');
+                        paraNameTd.html(runtimeArgsList[i].name);
+                        paraDescriptionTd.html(runtimeArgsList[i].value);
+                        paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
+                        $('#runtimeArgsTbody').append(paraTr);
+                    }
+                }
 
-        assistRecList = JSON.parse(curClass.assistRecognitionPros);
-        if($('#assistRecTbody').children()){
-            $('#assistRecTbody').children().remove();
-        }
-        if(assistRecList){
-            for (let i = 0; i < assistRecList.length; i++) {
-                var paraTr = $('<tr></tr>'),
-                    paraCheckTd = $('<td><input type="checkbox" name="assistRec_list"/></td>'),
-                    paraNameTd = $('<td contenteditable="true"></td>'),
-                    paraDescriptionTd = $('<td contenteditable="true"></td>');
-                paraNameTd.html(assistRecList[i].name);
-                paraDescriptionTd.html(assistRecList[i].value);
-                paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
-                $('#assistRecTbody').append(paraTr);
-            }
-        }
 
-        
+                selfRecList = JSON.parse(curClass.selfRecognitionPros);
+                $('#selfRecTbody').children().remove();
+                if (selfRecList) {
+                    for (let i = 0; i < selfRecList.length; i++) {
+                        var paraTr = $('<tr></tr>'),
+                            paraCheckTd = $('<td><input type="checkbox" name="selfRec_list"/></td>'),
+                            paraNameTd = $('<td contenteditable="true"></td>'),
+                            paraDescriptionTd = $('<td contenteditable="true"></td>');
+                        paraNameTd.html(selfRecList[i].name);
+                        paraDescriptionTd.html(selfRecList[i].value);
+                        paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
+                        $('#selfRecTbody').append(paraTr);
+                    }
+                }
+
+                assistRecList = JSON.parse(curClass.assistRecognitionPros);
+                if ($('#assistRecTbody').children()) {
+                    $('#assistRecTbody').children().remove();
+                }
+                if (assistRecList) {
+                    for (let i = 0; i < assistRecList.length; i++) {
+                        var paraTr = $('<tr></tr>'),
+                            paraCheckTd = $('<td><input type="checkbox" name="assistRec_list"/></td>'),
+                            paraNameTd = $('<td contenteditable="true"></td>'),
+                            paraDescriptionTd = $('<td contenteditable="true"></td>');
+                        paraNameTd.html(assistRecList[i].name);
+                        paraDescriptionTd.html(assistRecList[i].value);
+                        paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
+                        $('#assistRecTbody').append(paraTr);
+                    }
+                }
+
+
                 // $.ajax({
                 //     url: 'http://10.108.223.23:8080/ATFCloud2.0/omclassController/selectByPrimaryKey',   //ATF2.0
                 //     // url: '/api/postcomponent',
@@ -651,7 +664,7 @@ function classClick(event,i) {
                 //         $('#classForm input[name="createTime"]').val(data.createTime);
                 //         $('#classForm input[name="modifier"]').val(data.modifierId);
                 //         $('#classForm input[name="modifiedTime"]').val(data.modifiedTime);
-        
+
                 //         $('#previewImg').attr("src",data.picSample);
 
                 //         $('#heritTagSelect').val(data.overideFlag).attr('selected',true);
@@ -696,7 +709,7 @@ function classClick(event,i) {
                 //             paraTr.append(paraCheckTd, paraNameTd, paraDescriptionTd);
                 //             $('#selfRecTbody').append(paraTr);
                 //         } 
-                        
+
                 //         assistRecList = data.assistRecognitionPros;
                 //         $('#assistRecTbody').children().remove();
                 //         for (var i = 0; i < supRecList.length; i++) {                            
