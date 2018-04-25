@@ -158,12 +158,10 @@ function getRecord(page, listnum, order, sort) {
         // url: address + 'testrecordController/selectAllByPage',
         url: address2+'testRecord/batchQuery',
         type: 'POST',
-        data: {
-            'page': page,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
+        data: JSON.stringify({
+            testPhase: '74',
+            testRound: 1
+        }),
         success: function(data) {
             app.recordList = data.rows;
             app.tt = data.total;

@@ -830,7 +830,7 @@ $(document).ready(function() {
                     }
                     var getFunctions = new Promise((resolve, reject) => {
                         $.ajax({
-                            url: address2 + 'autController/selectMethod',
+                            url: address2 + 'aut/selectMethod',
                             contentType: 'application/json',
                             data: JSON.stringify(data),
                             type: 'post',
@@ -923,7 +923,7 @@ $(document).ready(function() {
                 mainVue.scriptIsChanged = true
                 var uiTree = $.fn.zTree.getZTreeObj("ui-element-ul2");
                 var functionTree = $.fn.zTree.getZTreeObj("functions-ul2");
-                var uiNodes = uiTree.getCheckedNodes(true);
+                var uiNodes = uiTree ? uiTree.getCheckedNodes(true) : [];
 
                 var functionNodes = functionTree ? functionTree.getCheckedNodes(true) : []
                 for (var node of uiNodes) {
@@ -963,7 +963,7 @@ $(document).ready(function() {
                             classType: ''
                         }
                         newRow.functions = []
-                        newRow.functions.push({ name: node.mname, parameterlist: node.arguments })
+                        newRow.functions.push({ name: node.name, parameterlist: node.arguments })
 
                         newRow.parameters = []
                         try{
