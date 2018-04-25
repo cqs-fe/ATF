@@ -54,27 +54,27 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试系统编号</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autCode" required>
+                                                        <input type="text" class="form-control" name="code" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试系统名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autName" required>
+                                                        <input type="text" class="form-control" name="nameMedium" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">开发架构</label>
                                                     <div class="col-lg-5">
-                                                        <select class="form-control" name="abstractarchitecture_id">
-                                                            <option v-for="item in abstrList" value="{{item.id}}">{{item.architecturename}}</option>
+                                                        <select class="form-control" name="inheriteArcId">
+                                                            <option v-for="item in abstrList" value="{{item.id}}">{{item.name}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name="aut_desc"></textarea>
+                                                        <textarea class="form-control" rows="3" name="descShort"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -131,28 +131,28 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试系统编号</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autCode" value="{{selectedAutCode}}">
+                                                        <input type="text" class="form-control" name="code" value="{{selectedAutCode}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试系统名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autName" value="{{selectedAutName}}">
+                                                        <input type="text" class="form-control" name="nameMedium" value="{{selectedAutName}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">开发架构</label>
                                                     <div class="col-lg-5">
-                                                        <select class="form-control" name="abstractarchitecture_id">
+                                                        <select class="form-control" name="inheriteArcId">
                                                             <option value="">-- 选择开发架构 --</option>
-                                                            <option v-for="item in abstrList" value="{{item.id}}">{{item.architecturename}}</option>
+                                                            <option v-for="item in abstrList" value="{{item.id}}">{{item.name}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name="aut_desc" value="{{selectedAut_desc}}"></textarea>
+                                                        <textarea class="form-control" rows="3" name="descShort" value="{{selectedAut_desc}}"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -274,10 +274,10 @@
                                         <td>
                                             <input type="radio" v-model="" name="chk_list" id="{{aut.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="20%">{{ aut.autCode }}</td>
-                                        <td width="20%">{{ aut.autName }}</td>
-                                        <td width="20%" data-id="{{aut.abstractarchitecture.id}}">{{ aut.abstractarchitecture.architecturename }}</td>
-                                        <td class="hidden-phone" width="40%">{{ aut.aut_desc }}</td>
+                                        <td class="center hidden-phone" width="20%">{{ aut.code }}</td>
+                                        <td width="20%">{{ aut.nameMedium }}</td>
+                                        <td width="20%" data-id="{{aut.inheriteArcId}}">{{ }}</td>
+                                        <td class="hidden-phone" width="40%">{{ aut.descShort }}</td>
                                     </tr>
                                 </tbody>
                             </table>

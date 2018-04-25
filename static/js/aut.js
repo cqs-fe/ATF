@@ -1,3 +1,4 @@
+var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var app = new Vue({
     el: '#v-aut',
     data: {
@@ -79,12 +80,13 @@ var app = new Vue({
         insert: function() {
             var self=this;
             $.ajax({
-                url: address+'autController/insert',
+                url: address2+'/aut/addSingleAut',
                 type: 'post',
-                data: $("#insertForm").serializeArray(),
+                contentType: 'application/json',
+                data: getJson($("#insertForm").serialize()),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode==0000) {
                         $('#successModal').modal();
                         getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
@@ -145,11 +147,12 @@ var app = new Vue({
         update: function() {
             var self=this;
             $.ajax({
-                url: address+'autController/update',
+                url: address2+'/aut/modifySingleAut',
                 type: 'post',
-                data: $("#updateForm").serializeArray(),
+                contentType:'application/json',
+                data: getJson($("#updateForm").serialize()),
                 success: function(data) {
-                    if (data.success) {
+                   if (data.respCode==0000) {
                         $('#successModal').modal();
                         getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
@@ -166,10 +169,10 @@ var app = new Vue({
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             $('input[name="id"]').val(selectedId);
-            $('#updateForm input[name="autCode"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="autName"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm select[name="abstractarchitecture_id"]').val(selectedInput.parent().next().next().next().data('id'));
-            $('#updateForm textarea[name="aut_desc"]').val(selectedInput.parent().next().next().next().next().html());
+            $('#updateForm input[name="code"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm select[name="inheriteArcId"]').val(selectedInput.parent().next().next().next().data('id'));
+            $('#updateForm textarea[name="descShort"]').val(selectedInput.parent().next().next().next().next().html());
         },
 
         //传递当前页选中测试系统id到功能点页面
@@ -235,21 +238,21 @@ function getAut(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address+'autController/selectAllByPage',
-        type: 'GET',
-        data: {
-            'page': page,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
+        url: address2+'/aut/pagedBatchQueryAut',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': page,
+            'pageSize': listnum,
+            'orderColumns': order,
+            'orderType': sort
+        }),
         success: function(data) {
-            console.info(data);
-            console.info(data.rows);
+            // console.info(data);
             // var data = JSON.parse(data);
-            app.autList = data.rows;
-            app.tt = data.total;
-            app.totalPage = Math.ceil(app.tt / listnum);
+            app.autList = data.autRespDTOList;
+            app.tt = data.totalCount;
+            app.totalPage = data.totalPage;
             app.pageSize = listnum;
         }
     });
@@ -318,10 +321,11 @@ function queryAut() {
 //获取addModal 开发架构select下拉列表
 function getAbstr(){
     $.ajax({
-        url: address+'abstractarchitectureController/selectAll',
+        url: address2+'/abstractArchitecture/queryArchitectureList',
         type:'post',
         success:function(data){
-            app.abstrList=data.obj;
+            // console.log(data)
+            app.abstrList=data.architectureRespDTOList;
         }
     });
 }

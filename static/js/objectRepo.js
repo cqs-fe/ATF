@@ -1,3 +1,4 @@
+var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var template_obj = `
 <div style="min-height: 0;">
     <div class="row" v-if="breadShow">
@@ -25,8 +26,8 @@ var template_obj = `
                             <select class="form-control" id="transactSelect" v-model="transid">
                             </select>
                         </div>
-                        <a class="btn btn-white"  @click="toElementLib"><i class="icon-cog"></i> 元素库</a>
-                        <a class="btn btn-white" @click="toScript"><i class="icon-cog"></i> 基础脚本</a>
+                        <a class="btn btn-white"  @click="toElementLib"><i class="icon-external-link"></i> 元素库</a>
+                        <a class="btn btn-white" @click="toScript"><i class="icon-external-link"></i> 基础脚本</a>
                     </div>
                 </form>
                 <!-- select end -->
@@ -80,7 +81,7 @@ var template_obj = `
                             <div class="col-xs-3">
                                 <select class="form-control" id="classtypeSelect">
                                     <option value="">--选择控件类型--</option>
-                                    <option v-for="item in classtypeList" :value="item.classId">{{item.className}}</option>
+                                    <option v-for="item in classtypeList" :value="item.id">{{item.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -427,11 +428,13 @@ var objectRepo =  Vue.extend({
             var _this = this
             const val = $('#autSelect').val();
             $.ajax({
-                url: address + 'autController/selectClass',
-                data: { 'id': val },
+                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
                 success: function(data) {
-                    _this.classtypeList = data;
+                    // console.log(data)
+                    _this.classtypeList = data.omClassRespDTOList;
                 }
             });
         },
@@ -439,13 +442,14 @@ var objectRepo =  Vue.extend({
         getAutandTrans: function() {
             var _this = this
             $.ajax({
-                url: address + "autController/selectAll",
+                url: address2 + "/aut/queryListAut",
                 type: "POST",
                 success: function(data) {
-                    var autList = data.obj;
+                    var autList = data.autRespDTOList;
                     var str = "";
                     for (var i = 0; i < autList.length; i++) {
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
                     }
 
                     $('#autSelect').html(str);

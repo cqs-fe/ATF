@@ -49,8 +49,8 @@
                                             <select class="form-control" id="transactSelect" v-model="transid">
                                             </select>
                                         </div>
-                                        <a class="btn btn-white" @click="toObjectRepo"><i class="icon-cog"></i> 对象库</a>
-                                        <a class="btn btn-white" @click="toScript"><i class="icon-cog"></i> 基础脚本</a>
+                                        <a class="btn btn-white" @click="toObjectRepo"><i class="icon-external-link"></i> 对象库</a>
+                                        <a class="btn btn-white" @click="toScript"><i class="icon-external-link"></i> 基础脚本</a>
                                     </div>
                                 </form>
                                 <!-- select end -->
@@ -136,7 +136,7 @@
                                             <div class="col-xs-3">
                                                 <select class="form-control" id="classtypeSelect">
                                                     <option value="">--选择控件类型--</option>
-                                                    <option v-for="item in classtypeList" :value="item.className">{{item.className}}</option>
+                                                    <option v-for="item in classtypeList" :value="item.id">{{item.name}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -812,14 +812,15 @@ var app = new Vue({
                                 }
                             });
                             // 获取classtype
-                            $.ajax({
-                                url: address + 'autController/selectClass',
-                                data: { 'id': _this.autId },
+                             $.ajax({
+                                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ 'id': _this.autId }),
                                 type: "POST",
                                 success: function(data) {
-                                    _this.classtypeList = data;
+                                    // console.log(data)
+                                    _this.classtypeList = data.omClassRespDTOList;
                                 }
-
                             });
                             _this.getUILinkedObjectTree();
                             _this.getEleParentObjectTree();
@@ -874,13 +875,14 @@ var app = new Vue({
             // var val = $('#autSelect').val();
             var _this = this;
             $.ajax({
-                url: address + 'autController/selectClass',
-                data: { 'id': _this.autId },
+                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
                 success: function(data) {
-                    _this.classtypeList = data;
+                    // console.log(data)
+                    _this.classtypeList = data.omClassRespDTOList;
                 }
-
             });
         },
         //设置所属测试系统和所属功能点为上级页面选中的值
