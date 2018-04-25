@@ -795,15 +795,15 @@ var elementLibrary = Vue.extend({
         //获取测试系统
         autSelect: function() {
             $.ajax({
-                async: false,
-                url: address + "autController/selectAll",
+               async: false,
+               url: address2 + "/aut/queryListAut",
                 type: "POST",
                 success: function(data) {
-                    var autList = data.obj;
+                    var autList = data.autRespDTOList;
                     var str = "";
                     for (var i = 0; i < autList.length; i++) {
 
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
                     }
 
                     $('#autSelect').html(str);
