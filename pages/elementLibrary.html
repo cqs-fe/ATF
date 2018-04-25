@@ -507,6 +507,7 @@
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
 <script>
+var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var app = new Vue({
     el: '#elementLibrary',
     data: function() {
@@ -773,14 +774,15 @@ var app = new Vue({
         getAutandTrans: function() {
             var _this = this;
             $.ajax({
-                url: address + "autController/selectAll",
+                url: address2 + "/aut/queryListAut",
                 type: "POST",
+                contentType:'application/json',
                 success: function(data) {
-                    var autList = data.obj;
+                    var autList = data.autRespDTOList;
                     var str = "";
                     for (var i = 0; i < autList.length; i++) {
 
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
                     }
 
                     $('#autSelect').html(str);
@@ -835,14 +837,15 @@ var app = new Vue({
         autSelect: function() {
             $.ajax({
                 async: false,
-                url: address + "autController/selectAll",
+                url: address2 + "/aut/queryListAut",
                 type: "POST",
+                contentType:'application/json',
                 success: function(data) {
-                    var autList = data.obj;
+                    var autList = data.autRespDTOList;
                     var str = "";
                     for (var i = 0; i < autList.length; i++) {
 
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
                     }
 
                     $('#autSelect').html(str);
