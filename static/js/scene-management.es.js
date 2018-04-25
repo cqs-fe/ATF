@@ -1,5 +1,5 @@
 
-  __inline('./scene-management/checked.js')
+	__inline('./scene-management/checked.js')
 var vBody = new Vue({
 	el: '#v-body',
 	data: {
@@ -189,26 +189,25 @@ var vBody = new Vue({
 								caseGroup[data.obj.caseDtos[i].group] = [];
 							}
 							let group = caseGroup[data.obj.caseDtos[i].group];
-								let o = {};
-								Object.defineProperty(o, "id", {value: data.obj.caseDtos[i].id });
-								Object.defineProperty(o, "caseCompositeType", {value: data.obj.caseDtos[i].caseCompositeType });
-								if (data.obj.caseDtos[i].caseCompositeType+'' === '1') {
-									let time = data.obj.caseDtos[i].time;
-									o[time] = [data.obj.caseDtos[i]];
-									group.push(o);
-								} else {
-									for (var j = 0; j < data.obj.caseDtos[i].flowNodeDtos.length; j++) {
-										let time = data.obj.caseDtos[i].flowNodeDtos[j].time;
-										if (o[time]) {
-											o[time].push(data.obj.caseDtos[i].flowNodeDtos[j]);
-										} else {
-											o[time] = [data.obj.caseDtos[i].flowNodeDtos[j]];
-										}
+							let o = {};
+							Object.defineProperty(o, "id", {value: data.obj.caseDtos[i].id });
+							Object.defineProperty(o, "caseCompositeType", {value: data.obj.caseDtos[i].caseCompositeType });
+							if (data.obj.caseDtos[i].caseCompositeType+'' === '1') {
+								let time = data.obj.caseDtos[i].time || 'T+0';
+								o[time] = [data.obj.caseDtos[i]];
+								group.push(o);
+							} else {
+								for (var j = 0; j < data.obj.caseDtos[i].flowNodeDtos.length; j++) {
+									let time = data.obj.caseDtos[i].flowNodeDtos[j].time;
+									if (o[time]) {
+										o[time].push(data.obj.caseDtos[i].flowNodeDtos[j]);
+									} else {
+										o[time] = [data.obj.caseDtos[i].flowNodeDtos[j]];
 									}
-									group.push(o);
 								}
+								group.push(o);
+							}
 						}
-						
 						for (var group in caseGroup) {
 							for (var i = 0; i < caseGroup[group].length; i++) {
 								for (var time in  caseGroup[group][i]){
@@ -376,20 +375,6 @@ var vBody = new Vue({
 								$('.btn-default', trs[i]).click(_this.removeTriggerCondition);
 							}
 							
-							// if(actions && actions.length){
-							// 	var length = actions.length;
-							// 	for(var i=0; i<length; i++){
-							// 		var div = $(`<div class="action-item-wrapper">
-					  //                   <button class="btn-removeaction"><span class="icon-remove"></span></button>
-					  //                   <span class="id"></span><div class="item-row"> <label>选择操作</label><select class="actionname">
-					  //                           <option value="1">发送邮件</option><option value="2">打开网页</option></select></div><div class="item-row"><label>脚本类型</label>
-					  //                       <select class="actiontype"> <option value="2">groovy</option><option value="1">2</option>
-					  //                       </select></div> <div class="item-row"><label>脚本内容</label><textarea rows="5" class="scriptcontent"></textarea>
-					  //                   </div>
-					  //               </div>`);
-							// 		actionWrapper.append(div);
-							// 	}
-							// }
 							var divs = $('.action-item-wrapper');
 							for(var i=0; i<divs.length;i++){
 								$('.id', divs[i]).prop('data-actionid',actions[i].id);

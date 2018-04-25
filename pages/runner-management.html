@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="import" href="./common/header.html?__inline">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+    <title>执行机管理</title>
+</head>
+
+<body id="v-testProject" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <link rel="import" href="./common/header-guide.html?__inline">
+        <!--header end-->
+        <!--sidebar start-->
+        <link rel="import" href="./common/aside-guide.html?__inline">
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- breadcrumb start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="breadcrumb">
+                            <li><a href="#"><i class="icon-home"></i> 测试基础设施测试</a></li>
+                            <li class="active"><a href="#"> 执行机管理</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- breadcrumb end -->
+                <!--top-button start-->
+                <div class="row">
+                    <div class="col-lg-12 top-btn">
+                        <a class="btn btn-white" data-toggle="modal" href="#insertModal"><i class="icon-plus"></i> 添加</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#deleteModal"><i class="icon-trash"></i> 删除</a>
+                        <a class="btn btn-white" data-toggle="modal" href="#updateModal" @click="getSelected"><i class="icon-edit"></i> 修改</a>
+                        <!-- insertModal start -->
+                        <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加执行机</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="insertForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">中等长度名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="nameMedium">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">IP</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="ip">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">端口号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="portNo">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">描述</label>
+                                                    <div class="col-lg-5">
+                                                        <textarea class="form-control" rows="3" name="descripition"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label">创建者ID</label>
+                                                    <div class="col-lg-5">
+                                                        <input class="form-control" rows="3" name="creatorId"/>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="insert()">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- insertModal end -->
+                        <!-- delModal start -->
+                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">删除执行机</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <h4>确认删除执行机？</h4>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="del">删除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- delModal end -->
+                        <!-- updateModal start -->
+                        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">修改执行机</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- modal-body start -->
+                                        <section class="panel">
+                                            <form id="updateForm" class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">执行机ID</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="id" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">中等长度名称</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="nameMedium">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">IP</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="ip">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">端口号</label>
+                                                    <div class="col-lg-5">
+                                                        <input type="text" class="form-control" name="portNo">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">描述</label>
+                                                    <div class="col-lg-5">
+                                                        <textarea class="form-control" rows="3" name="descripition"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-3 control-label">修改者ID</label>
+                                                    <div class="col-lg-5">
+                                                        <input class="form-control" rows="3" name="modifierId"/>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </section>
+                                        <!-- modal-body end -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="update">修改</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- updateModal end -->
+                        <!-- successModal start -->
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作成功</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作成功！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- successModal end -->
+                        <!-- failModal start -->
+                        <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>操作失败！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- failModal end -->
+                        <!-- selectAlertModal start -->
+                        <div class="modal fade" id="selectAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>请先选中一条数据！</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- selectAlertModal end -->
+                    </div>
+                </div>
+                <!--topbutton end-->
+                <!-- table start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                执行机管理
+                            </header>
+                            <!-- 表格 -->
+                            <table class="table table-striped table-bordered border-top text-center" id="">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" class="text-center">
+                                            <!-- <input type="checkbox" v-model="checked"  name="chk_all" id="chk_all" /> -->
+                                        </th>
+                                        <th class="text-center">名称</th>
+                                        <th class="text-center">IP</th>
+                                        <th class="text-center">端口号</th>
+                                        <th class="hidden-phone text-center">描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="testProjectTable">
+                                    <tr class="odd gradeX" v-for="project in testProjectList" id="{{project.id}}">
+                                        <td width="5%">
+                                            <input type="radio" v-model="" name="chk_list" id="{{project.id}}" />
+                                        </td>
+                                        <td class="center " width="20%">{{ project.nameMedium }}</td>
+                                        <td width="20%">{{ project.ip }}</td>
+                                        <td width="20%">{{ project.portNo }}</td>
+                                        <td class="hidden-phone" width="40%">{{ project.descripition }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- 分页 -->
+                            <!-- <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <div class="pagination-wrap" v-if="totalPage!=0">
+                                        <div class="num">
+                                                <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
+                                                    <option value="5" selected>5条/页</option>
+                                                    <option value="10">10条/页</option>
+                                                    <option value="20">20条/页</option>
+                                                    <option value="50">50条/页</option>
+                                                </select> 
+                                        </div>
+                                        <ul class="pagination">
+                                            <li :class="currentPage==1?'disabled':''"><a href="javascript:;" @click="turnToPage(1)">首页</a></li>
+                                            <li :class="currentPage==1?'disabled':''"><a @click="turnToPage(currentPage-1)" href="javascript:;">上一页</a></li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-3)" v-text="currentPage-3" v-if="currentPage-3>0"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-2)" v-text="currentPage-2" v-if="currentPage-2>0"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-1)" v-text="currentPage-1" v-if="currentPage-1>0"></a>
+                                            </li>
+                                            <li class="active"><a href="javascript:;" @click="turnToPage(currentPage)" v-text="currentPage"></a></li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+1)" v-text="currentPage+1" v-if="currentPage+1<=totalPage"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+2)" v-text="currentPage+2" v-if="currentPage+2<=totalPage"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+3)" v-text="currentPage+3" v-if="currentPage+3<=totalPage"></a>
+                                            </li>
+                                            <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(currentPage+1)">下一页</a></li>
+                                            <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(totalPage)">尾页</a></li>
+                                        </ul>
+                                        <div class="go">
+                                            <div :class="isPageNumberError?'input-group error':'input-group'">
+                                                <input class="form-control" type="number" v-model="goToPage" min="1"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+                                            </div>
+                                        </div>
+                                        <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </section>
+                    </div>
+                </div>
+                <!-- table end -->
+            </section>
+            <link rel="import" href="./common/copy-right.html?__inline">
+        </section>
+    </div>
+</body>
+
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+<script src="../lib/vue-resource.min.js"></script>
+<script type="text/javascript" src="../static/js/runner-management.es.js"></script>

@@ -7,7 +7,7 @@ var app = new Vue({
         sceneList:[],//场景下拉列表
         testphase: '',//测试阶段
         testround: '',//测试轮次
-        recorderstate:'',//记录单状态
+        recorderstate:'2',//记录单状态
         tt: 0, //总条数
         pageSize: 10, //页面大小
         currentPage: 1, //当前页
@@ -27,7 +27,7 @@ var app = new Vue({
         selectedRecord_desc: '',
         searchKey:'', //搜索条件
         searchVal: '',
-        ids: ''
+        ids: '',
     },
     ready: function() {
         getRecord(this.currentPage, this.pageSize, this.order, this.sort);
@@ -84,27 +84,18 @@ var app = new Vue({
             //页数变化时的回调
             getRecord(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-
-
-        //添加场景
-        // insert: function() {
-        //     $.ajax({
-        //         url: 'http://10.108.226.152:8080/ATFCloud/RecordController/insertSelective',
-        //         type: 'post',
-        //         data: {},
-        //         success: function(data) {
-        //             console.info(data);
-        //             if (data.success) {
-        //                 $('#successModal').modal();
-        //             } else {
-        //                 $('#failModal').modal();
-        //             }
-        //         },
-        //         error: function() {
-        //             $('#failModal').modal();
-        //         }
-        //     });
-        // },
+        viewCase: function (sceneId, caseid, sourcechannel) {
+			var o = {
+				sceneId, caseid,
+				testPhase: this.testphaseValue,
+				testRound: this.testroundValue,
+				// executeround: this.executionround,
+				sourcechannel: sourcechannel,
+				recorderStatus: '2'
+			}
+			var args = encodeURIComponent(JSON.stringify(o));
+			window.open('case-operation.html?activeName=exec-record&viewcaseargs='+args, 'case_record');
+		},
         //合并
         merge: function(){
             $.ajax({

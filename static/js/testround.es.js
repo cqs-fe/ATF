@@ -178,8 +178,6 @@ var vBody = new Vue({
 			this.alertShow = false;
 		},
 		executeAll: function(){
-			// 20180117154254295845
-			// 20180117153441839537
 			var _this = this;
 			if(!this.executionround) {
 				Vac.alert('请填写执行轮次');return;
@@ -553,14 +551,14 @@ var vBody = new Vue({
 			}
 			this.setBackground(this.selectedSceneCases)
 		},
-		viewCase: function (sceneId, caseid, sourcechannel) {
+		viewCase: function (sceneId, caseid, sourcechannel, testPhase, testRound, recorderStatus) {
 			var o = {
 				sceneId, caseid,
-				testPhase: this.testphaseValue,
-				testRound: this.testroundValue,
+				testPhase: testPhase || this.testphaseValue,
+				testRound: testRound || this.testroundValue,
 				// executeround: this.executionround,
 				sourcechannel: sourcechannel,
-				recorderStatus: '2'
+				recorderStatus: recorderStatus || '2'
 			}
 			var args = encodeURIComponent(JSON.stringify(o));
 			window.open('case-operation.html?activeName=exec-record&viewcaseargs='+args, 'case_record');
