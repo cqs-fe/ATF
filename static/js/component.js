@@ -99,6 +99,47 @@ var app = new Vue({
                 });
             }
         },
+        // 获取当前控件对应的方法
+        getMethod() {
+            var classId = $('input[name="class"]:checked').parent().parent().attr('id');
+            var that=this;
+            // console.log(that.classId)
+            $.ajax({
+                url: address + '/omMethod/queryAutDirectOmMethods',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id: that.classId,
+                }),
+                success: function(data) {
+                    $('#methodProp').children().remove();
+                    var methodList = data.omMethodRespDTOList;
+                    app.methodList = methodList;
+                    for (var i = 0; i < methodList.length; i++) {
+                        var methodTr = $('<tr></tr>'),
+                            methodCheckTd = $(`<td><input type='radio' name='method' onclick='methodClick(event,${i})'/></td>`),
+                            flagTd = $('<td ></td>'),
+                            methodNameTd = $('<td ></td>'),
+                            methodDescriptionTd = $('<td ></td>');
+                        methodTr.attr('id', methodList[i].id);
+                        if(methodList[i].overrideFlag==0){
+                                flagTd.html('普通继承');    
+                            }else if(methodList[i].overrideFlag==1){
+                                flagTd.html('禁用');
+                            }else{
+                                flagTd.html('');
+                            }
+                        methodNameTd.html(methodList[i].name);
+                        methodDescriptionTd.html(methodList[i].descShort);
+                        methodTr.append(methodCheckTd, flagTd, methodNameTd, methodDescriptionTd);
+                        $('#methodProp').append(methodTr);
+
+                        var tmpOption = $('<option>').text(methodList[i].mname).val(i);
+                        $('#defaultMethodSelect').append(tmpOption);
+                    }
+                }
+            });
+        },
         //添加方法
         addMethod: function() {
             var name = $('#addMethodForm input[name="name"]').val(),
@@ -136,36 +177,7 @@ var app = new Vue({
                     if (data.respCode==0000) {
                           $('#successModal').modal();
                              //查询当前构件类型对应的方法
-                            that.classId = $('input[name="class"]:checked').parent().parent().attr('id');
-                            console.log(that.classId)
-                            $.ajax({
-                                url: address + '/omMethod/queryAutDirectOmMethods',
-                                type: 'post',
-                                contentType: 'application/json',
-                                data: JSON.stringify({
-                                    id: that.classId,
-                                }),
-                                success: function(data) {
-                                    $('#methodProp').children().remove();
-                                    var methodList = data.omMethodRespDTOList;
-                                    for (var i = 0; i < methodList.length; i++) {
-                                        var methodTr = $('<tr></tr>'),
-                                            methodCheckTd = $(`<td><input type='radio' name='method' onclick='methodClick(event,${i})'/></td>`),
-                                            flagTd=$('<td ></td>'),
-                                            methodNameTd = $('<td ></td>'),
-                                            methodDescriptionTd = $('<td ></td>');
-                                        methodTr.attr('id', methodList[i].id);
-                                        flagTd.html(methodList[i].overrideFlag);
-                                        methodNameTd.html(methodList[i].name);
-                                        methodDescriptionTd.html(methodList[i].descShort);
-                                        methodTr.append(methodCheckTd, flagTd,methodNameTd, methodDescriptionTd);
-                                        $('#methodProp').append(methodTr);
-                                              
-                                        var tmpOption = $('<option>').text(methodList[i].mname).val(i);
-                                        $('#defaultMethodSelect').append(tmpOption);
-                                    }
-                                }
-                            });
+                            that.getMethod();
                     } else {
                         $('#failModal').modal();
                     }
@@ -179,6 +191,7 @@ var app = new Vue({
         delMethod: function(e) {
             var selectedTr = $('input[name="method"]:checked').parent().parent(),
                 methodid = selectedTr.attr('id');
+            var that=this;
             if (methodid === undefined) {
                 $('#selectAlertModal').modal();
             } else {
@@ -193,7 +206,7 @@ var app = new Vue({
                         console.info(data);
                         if (data.respCode==0000) {
                             $('#successModal').modal();
-                            selectedTr.remove();
+                            that.getMethod();
                         } else {
                             $('#failModal').modal();
                         }
@@ -445,10 +458,7 @@ var app = new Vue({
                 success: function(data) {
                     if (data.respCode==0000) {
                         $('#successModal').modal();
-                        $('#methodProp input[name="method"]:checked').parent().next().text(overrideFlag);
-                        $('#methodProp input[name="method"]:checked').parent().next().next().text(methodname);
-                        $('#methodProp input[name="method"]:checked').parent().next().next().next().text(methoddescription);
-                        getClass();
+                        that.getMethod();
                     } else {
                         $('#failModal').modal();
                     }

@@ -81,7 +81,7 @@ var template_obj = `
                             <div class="col-xs-3">
                                 <select class="form-control" id="classtypeSelect">
                                     <option value="">--选择控件类型--</option>
-                                    <option v-for="item in classtypeList" :value="item.id">{{item.name}}</option>
+                                    <option v-for="item in classtypeList" :value="item.name">{{item.name}}</option>
                                 </select>
                             </div>
                         </div>

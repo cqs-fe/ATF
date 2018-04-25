@@ -156,7 +156,7 @@ var app = new Vue({
             var that=this;
             //查询class
             $.ajax({
-                url: address + '/arcClass/queryArcDirectOmClasses',
+                url: address + '/arcClass/queryArcVisibleOmClasses',
                 type: 'post',
                 contentType: "application/json",
                 data: JSON.stringify({
@@ -171,12 +171,22 @@ var app = new Vue({
                         for (var i = 0; i < classList.length; i++) {
                             var classTr = $('<tr></tr>'),
                                 classCheckTd = $(`<td><input type='radio' name='class' onclick='classClick(event,${i})'/></td>`),
+                                flagTd = $('<td ></td>'),
                                 eclassNameTd = $('<td ></td>'),
                                 cclassNameTd = $('<td ></td>');
                             classTr.attr('id', classList[i].id);
+                            if(classList[i].overideFlag==0){
+                                flagTd.html('普通继承');    
+                            }else if(classList[i].overideFlag==1){
+                                flagTd.html('重载');
+                            }else if(classList[i].overideFlag==2){
+                                flagTd.html('禁用');
+                            }else{
+                                flagTd.html(' ');
+                            }
                             eclassNameTd.html(classList[i].name);
                             cclassNameTd.html(classList[i].chsName);
-                            classTr.append(classCheckTd, eclassNameTd, cclassNameTd);
+                            classTr.append(classCheckTd, flagTd, eclassNameTd, cclassNameTd);
                             $('#classProp').append(classTr);
                         }
                     } else {
@@ -273,7 +283,7 @@ var app = new Vue({
             // console.log(classId)
             var that=this;
             $.ajax({
-                url: address + '/arcMethod/queryArcDirectOmMethods',
+                url: address + '/arcClass/queryArcVisibleOmMethods',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -281,7 +291,7 @@ var app = new Vue({
                 }),
                 success: function(data) {
                     $('#methodProp').children().remove();
-                    // console.log(data)
+                    console.log(data)
                     var methodList = data.arcMethodRespDTOList;
                     that.methodList = methodList;
                     if (methodList) {
@@ -292,7 +302,13 @@ var app = new Vue({
                                 methodNameTd = $('<td ></td>'),
                                 methodDescriptionTd = $('<td ></td>');
                             methodTr.attr('id', methodList[i].id);
-                            flagTd.html(methodList[i].overrideFlag);
+                            if(methodList[i].overrideFlag==0){
+                                flagTd.html('普通继承');    
+                            }else if(methodList[i].overrideFlag==1){
+                                flagTd.html('禁用');
+                            }else{
+                                flagTd.html('');
+                            }
                             methodNameTd.html(methodList[i].name);
                             methodDescriptionTd.html(methodList[i].descShort);
                             methodTr.append(methodCheckTd, flagTd, methodNameTd, methodDescriptionTd);
@@ -458,7 +474,6 @@ var app = new Vue({
                 nodes = treeObj.getSelectedNodes(true),
                 arcId = nodes[0].id;
             // picfile = $('#');
-
             //supRecParaList
             var supRecParaList = '[',
                 pTable = $('#supportedRecognitionTable'),
@@ -637,9 +652,9 @@ var app = new Vue({
                 success: function(data) {
                     if (data.respCode==0000) {
                         $('#successModal').modal();
-                        $('#methodProp input[name="method"]:checked').parent().next().text(overrideFlag);
-                        $('#methodProp input[name="method"]:checked').parent().next().next().text(methodname);
-                        $('#methodProp input[name="method"]:checked').parent().next().next().next().text(methoddescription);
+                        // $('#methodProp input[name="method"]:checked').parent().next().text(overrideFlag);
+                        // $('#methodProp input[name="method"]:checked').parent().next().next().text(methodname);
+                        // $('#methodProp input[name="method"]:checked').parent().next().next().next().text(methoddescription);
                         that.getMethod();
                     } else {
                         $('#failModal').modal();
@@ -722,7 +737,7 @@ var setting1 = {
             app.archiName = treeNode.name;
             //查询class
             $.ajax({
-                url: address+'/arcClass/queryArcDirectOmClasses',
+                url: address+'/arcClass/queryArcVisibleOmClasses',
                 type: 'post',
                 contentType: "application/json",
                 data: JSON.stringify({
@@ -894,7 +909,7 @@ function classClick(event, i) {
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: address + '/arcMethod/queryArcDirectOmMethods',
+            url: address + '/arcClass/queryArcVisibleOmMethods',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -913,7 +928,14 @@ function classClick(event, i) {
                             methodNameTd = $('<td ></td>'),
                             methodDescriptionTd = $('<td ></td>');
                         methodTr.attr('id', methodList[i].id);
-                        flagTd.html(methodList[i].overrideFlag);
+                        if(methodList[i].overrideFlag==0){
+                            flagTd.html('普通继承');    
+                        }else if(methodList[i].overrideFlag==1){
+                            flagTd.html('禁用');
+                        }else{
+                            flagTd.html('');
+                        }
+                        
                         methodNameTd.html(methodList[i].name);
                         methodDescriptionTd.html(methodList[i].descShort);
                         methodTr.append(methodCheckTd, flagTd, methodNameTd, methodDescriptionTd);
@@ -931,7 +953,7 @@ function classClick(event, i) {
         $('#visibilityFlag').val('');
 
         var curClass = app.classList[i];
-        console.log(curClass)
+        console.log(curClass);
         $('#classForm input[name="chsName"]').val(curClass.chsName);
         $('#classForm input[name="name"]').val(curClass.name);
         $('#classForm input[name="descShort"]').val(curClass.descShort);

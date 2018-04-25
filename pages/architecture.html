@@ -587,13 +587,13 @@
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">编码</label>
                                                 <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="architecturecode" id="">
+                                                    <input type="text" class="form-control" name="code" id="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">中文名称</label>
                                                 <div class="col-lg-5">
-                                                    <input type="text" class="form-control" name="architecturename" id="">
+                                                    <input type="text" class="form-control" name="name" id="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -608,13 +608,16 @@
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">父架构</label>
                                                 <div class="col-lg-5">
-                                                    <select class="form-control" name="inherit"></select>
+                                                    <select class="form-control" name="parentArcId">
+                                                        <option value=''>-- 请选择父架构 --</option>
+                                                        <option v-for="item in archiList" value="{{item.id}}">{{item.name}}</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">描述</label>
                                                 <div class="col-lg-5">
-                                                    <textarea class="form-control" rows="4" name="description"></textarea>
+                                                    <textarea class="form-control" rows="4" name="descShort"></textarea>
                                                 </div>
                                             </div>
                                             <input type="reset" name="reset" style="display: none;">

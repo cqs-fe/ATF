@@ -79,11 +79,20 @@ var app = new Vue({
         //添加
         insert: function() {
             var self=this;
+            var code=$('#insertForm input[name="code"]').val(),
+                nameMedium=$('#insertForm input[name="nameMedium"]').val(),
+                inheriteArcId=$('#insertForm select[name="inheriteArcId"]').val(),
+                descShort=$('#insertForm textarea[name="descShort"]').val();
             $.ajax({
                 url: address2+'/aut/addSingleAut',
                 type: 'post',
                 contentType: 'application/json',
-                data: getJson($("#insertForm").serialize()),
+                data: JSON.stringify({
+                    'code': code,
+                    'nameMedium': nameMedium,
+                    'inheriteArcId': inheriteArcId,
+                    'descShort': descShort
+                }),
                 success: function(data) {
                     console.info(data);
                     if (data.respCode==0000) {
@@ -146,11 +155,22 @@ var app = new Vue({
         //修改测试系统
         update: function() {
             var self=this;
+            var id=$('#updateForm input[name="id"]').val(),
+                code=$('#updateForm input[name="code"]').val(),
+                nameMedium=$('#updateForm input[name="nameMedium"]').val(),
+                inheriteArcId=$('#updateForm select[name="inheriteArcId"]').val(),
+                descShort=$('#updateForm textarea[name="descShort"]').val();
             $.ajax({
                 url: address2+'/aut/modifySingleAut',
                 type: 'post',
                 contentType:'application/json',
-                data: getJson($("#updateForm").serialize()),
+                data: JSON.stringify({
+                    'id': id,
+                    'code': code,
+                    'nameMedium': nameMedium,
+                    'inheriteArcId': inheriteArcId,
+                    'descShort': descShort
+                }),
                 success: function(data) {
                    if (data.respCode==0000) {
                         $('#successModal').modal();
