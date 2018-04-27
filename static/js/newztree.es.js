@@ -633,7 +633,7 @@ $(document).ready(function() {
                     url: address + 'scripttemplateController/scripttemplateSave',
                     type: 'post',
                     data: {
-                        'script_id': mainVue.script_id,
+                        'script_id': mainVue.script_id || mainVue.templateList[0].id,
                         'content': sendData
                     },
                     success: function(data) {
@@ -657,7 +657,7 @@ $(document).ready(function() {
                     type: 'post',
                     data: {
                         'autId': mainVue.autId,
-                        'script_id': mainVue.script_id,
+                        'script_id': mainVue.script_id|| mainVue.templateList[0].id,
                         'content': sendData
                     },
                     success: function(data) {
@@ -881,9 +881,10 @@ $(document).ready(function() {
                     for (let m of data) {
                         let o = {};
                         o.name = m.name;
-                        o.parameterlist = m.arguments;
+                        o.parameterlist = m.arguments || "[]";
                         functions.push(o);
                     }
+                    console.log(data);
                     if (functions.length) {
                         let paras = JSON.parse(`${functions[0].parameterlist}`);
                         for (let para of paras) {
