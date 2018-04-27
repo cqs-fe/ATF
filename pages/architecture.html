@@ -39,7 +39,7 @@
                                 <div class="archi-btn">
                                     <a class="btn btn-white btn-sm" data-toggle="modal" href="#addArchModal"><i class="icon-plus" @click="getArchiList"></i></a>
                                     <!-- <a class="btn btn-white btn-sm " @click="delArchi"><i class="icon-remove"></i></a> -->
-                                    <a class="btn btn-white btn-sm " data-toggle="modal" href="#updateArchModal"><i class="icon-edit"></i></a>
+                                    <a class="btn btn-white btn-sm " data-toggle="modal" @click="beforeUpdateArchi"><i class="icon-edit"></i></a>
                                 </div>
                             </header>
                             <div id="menuContent" class="menuContent treeMenu">
@@ -596,7 +596,7 @@
                                                     <input type="text" class="form-control" name="name" id="">
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label class="col-lg-3 control-label">类型</label>
                                                 <div class="col-lg-5">
                                                     <select class="form-control">
@@ -604,7 +604,7 @@
                                                         <option>全局方法</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="form-group">
                                                 <label class="col-lg-3 control-label">父架构</label>
                                                 <div class="col-lg-5">

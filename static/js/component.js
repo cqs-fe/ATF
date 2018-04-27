@@ -479,7 +479,7 @@ function getClass() {
     var autId=sessionStorage.getItem("autId");
     $('.autName').html(autName);
     $.ajax({        
-        url: address + '/aut/queryAutDirectOmClasses',
+        url: address + '/aut/queryAutVisibleOmClasses',
         type: 'post',
         data: JSON.stringify({ 'id': autId }),
         contentType: 'application/json',
@@ -526,7 +526,7 @@ function classClick(event, i) {
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
         $.ajax({
-            url: address + '/omMethod/queryAutDirectOmMethods',
+            url: address + '/aut/queryAutVisibleOmMethods',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify({

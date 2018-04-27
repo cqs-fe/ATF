@@ -28,6 +28,12 @@
 .elementContent>a{
 	margin: 0 0 10px 80%;
 }
+.rightContent{
+	border: 1px solid rgb(170,170,170);
+}
+.rightBtn{
+	margin: 0 0 10px 18px;
+}
 .saveBtn{
 	margin: 5px 5px 5px 550px;
 }

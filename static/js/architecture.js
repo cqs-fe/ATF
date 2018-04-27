@@ -100,14 +100,28 @@ var app = new Vue({
         //         });
         //     }
         // },
+        beforeUpdateArchi(){
+            $('#updateArchModal').modal();
+            var treeObj = $.fn.zTree.getZTreeObj("archiTree"),
+                nodes = treeObj.getSelectedNodes(true),
+                id = nodes[0].id;
+            for(let item of this.archiList){
+                if(item.id==id){
+                    $('#updateArchForm input[name="code"]').val(item.code);
+                    $('#updateArchForm input[name="name"]').val(item.name);
+                    $('#updateArchForm select[name="parentArcId"]').val(item.parentArcId);
+                    $('#updateArchForm textarea[name="descShort"]').val(item.descShort);
+                }
+            } 
+        },
         updateArchi: function() {
             var code = $('#updateArchForm input[name="code"]').val(),
-                architecturename = $('#updateArchForm input[name="name"]').val(),
+                name = $('#updateArchForm input[name="name"]').val(),
                 parentArcId = $('#updateArchForm select[name="parentArcId"]').val(),
                 descShort = $('#updateArchForm textarea[name="descShort"]').val(),
                 modifierId=sessionStorage.getItem('userId'),
                 treeObj = $.fn.zTree.getZTreeObj("archiTree"),
-                nodes = treeObj.getCheckedNodes(true),
+                nodes = treeObj.getSelectedNodes(true),
                 id = nodes[0].id;
             $.ajax({
                 url: address+'/abstractArchitecture/modifyAbstractArchitecture',
@@ -115,8 +129,8 @@ var app = new Vue({
                 contentType: 'application/json',
                 data: JSON.stringify({
                     "id": id,
-                    "architecturecode": architecturecode,
-                    "architecturename": architecturename,
+                    "code": code,
+                    "name": name,
                     "parentArcId": parentArcId,
                     "descShort": descShort,
                     "modifierId": modifierId
@@ -824,6 +838,7 @@ function getArchiTree() {
             if (data !== null) {
                 $.fn.zTree.init($("#archiTree"), setting1, data.architectureRespDTOList);
                 app.archiList=data.architectureRespDTOList;
+                // console.log(app.archiList)
             }
         }
     });
