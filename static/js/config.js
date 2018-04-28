@@ -10,3 +10,12 @@ function getJson(data) {
     });
     return JSON.stringify(o);
 }
+$.ajax2 = function (opt) {
+    if (opt.url.startsWith(address2)) {
+        opt.contentType = 'application/json';
+        if (typeof opt.data === 'object') {
+            opt.data = JSON.stringify(opt.data);
+        }
+    }
+    $.ajax(opt);
+};

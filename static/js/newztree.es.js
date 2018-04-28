@@ -36,7 +36,7 @@ $(document).ready(function() {
         methods: {
             //初始化获取测试系统和功能点
             getAutandTrans: function() {
-                $.ajax({
+                $.ajax2({
                     // async: false,
                     url: address2 + "/aut/queryListAut",
                     type: "POST",
@@ -51,7 +51,7 @@ $(document).ready(function() {
                         $('#autSelect').html(str);
                         mainVue.autId = sessionStorage.getItem("autId");
                         $("#autSelect").val(mainVue.autId);
-                        $.ajax({
+                        $.ajax2({
                             url: address + 'transactController/showalltransact',
                             data: { 'autlistselect': mainVue.autId },
                             type: "POST",
@@ -72,7 +72,7 @@ $(document).ready(function() {
             },
             //获取测试系统
             autSelect: function() {
-                $.ajax({
+                $.ajax2({
                     async: true,
                     url: address + "autController/selectAll",
                     type: "POST",
@@ -95,7 +95,7 @@ $(document).ready(function() {
                 var _this = this;
                 // var val = sessionStorage.getItem('autId');
                 // console.log(this.autId);
-                $.ajax({
+                $.ajax2({
                     async: true,
                     url: address + 'transactController/showalltransact',
                     data: { 'autlistselect': val },
@@ -138,7 +138,7 @@ $(document).ready(function() {
                     getTemplate();
                 }
                 function getTemplate() {
-                    $.ajax({
+                    $.ajax2({
                         url: address + 'scripttemplateController/showallscripttemplate',
                         data: { 'transactid': _this.transId },
                         type: "POST",
@@ -231,8 +231,8 @@ $(document).ready(function() {
                             script_id: _this.templateList[templateId].id
                         }
                         editDataVue.operationRows = [];
-                        $.ajax({
-                            url: address + 'scripttemplateController/showScripttemplateTable',
+                        $.ajax2({
+                            url: address2 + 'scripttemplateController/showScripttemplateTable',
                             data: data,
                             type: 'post',
                             dataType: 'json',
@@ -279,8 +279,8 @@ $(document).ready(function() {
             },
             showScripttemplateTable: function(args) {
                 var _this = this;
-                $.ajax({
-                    url: address + 'scripttemplateController/showScripttemplateTable',
+                $.ajax2({
+                    url: address2 + 'scripttemplateController/showScripttemplateTable',
                     data: args,
                     type: 'post',
                     dataType: 'json',
@@ -326,7 +326,7 @@ $(document).ready(function() {
             saveTemplate: function() {
                 var _this = this;
                 _this.newTemplate.transId = _this.transId
-                $.ajax({
+                $.ajax2({
                     url: address + 'scripttemplateController/insert',
                     data: _this.newTemplate,
                     type: 'post',
@@ -349,7 +349,7 @@ $(document).ready(function() {
                 }
                 var templateId = this.checkedTemplate[0];
                 _this.script_id = _this.templateList[templateId].id;
-                $.ajax({
+                $.ajax2({
                     url: address + 'scripttemplateController/delete',
                     data: { 'id': _this.script_id },
                     type: 'post',
@@ -629,11 +629,11 @@ $(document).ready(function() {
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
                 // return
-                $.ajax({
+                $.ajax2({
                     url: address + 'scripttemplateController/scripttemplateSave',
                     type: 'post',
                     data: {
-                        'script_id': mainVue.script_id,
+                        'script_id': mainVue.script_id || mainVue.templateList[0].id,
                         'content': sendData
                     },
                     success: function(data) {
@@ -652,12 +652,12 @@ $(document).ready(function() {
             //参数化
             para: function() {
                var sendData = this.generateScriptString();
-                $.ajax({
-                    url: address + 'scripttemplateController/showscripttemplateTableSave',
+                $.ajax2({
+                    url: address2 + 'scripttemplateController/showscripttemplateTableSave',
                     type: 'post',
                     data: {
                         'autId': mainVue.autId,
-                        'script_id': mainVue.script_id,
+                        'script_id': mainVue.script_id|| mainVue.templateList[0].id,
                         'content': sendData
                     },
                     success: function(data) {
@@ -684,7 +684,7 @@ $(document).ready(function() {
             getUIAndFunctions: function(type){
                 var str = +type === 1 ? '' : 2
                 var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
-                $.ajax({
+                $.ajax2({
                     url: address + 'elementlibraryController/showUIandElementforScript',
                     data: 'transid=' + mainVue.transId,
                     type: 'post',
@@ -699,7 +699,7 @@ $(document).ready(function() {
                     }
                 });
                 // 请求函数集
-                $.ajax({
+                $.ajax2({
                     url: address2 + 'aut/selectFunctionSet',
                     contentType: 'application/json',
                     data: JSON.stringify({ 'id': mainVue.autId }),
@@ -826,7 +826,7 @@ $(document).ready(function() {
                         classname: editDataVue.uiOrFunctions.classType, // classname
                     }
                     var getFunctions = new Promise((resolve, reject) => {
-                        $.ajax({
+                        $.ajax2({
                             url: address2 + 'aut/selectMethod',
                             contentType: 'application/json',
                             data: JSON.stringify(data),
@@ -881,9 +881,10 @@ $(document).ready(function() {
                     for (let m of data) {
                         let o = {};
                         o.name = m.name;
-                        o.parameterlist = m.arguments;
+                        o.parameterlist = m.arguments || "[]";
                         functions.push(o);
                     }
+                    console.log(data);
                     if (functions.length) {
                         let paras = JSON.parse(`${functions[0].parameterlist}`);
                         for (let para of paras) {
@@ -923,7 +924,7 @@ $(document).ready(function() {
                         classType: node.classType
                     }
                     newRow.functions = []
-                    $.ajax({
+                    $.ajax2({
                         url: address2 + 'aut/selectMethod',
                         data: JSON.stringify({ id: mainVue.autId, classname: newRow.operation.classType }),
                         contentType: 'application/json',

@@ -156,16 +156,25 @@ function getRecord(page, listnum, order, sort) {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
         // url: address + 'testrecordController/selectAllByPage',
-        url: address2+'testRecord/batchQuery',
+        url: address2+'testRecordController/selectByTestPhase',
         type: 'POST',
         data: JSON.stringify({
-            testPhase: '74',
-            testRound: 1
+            testPhaseId: app.testphase,
+            testRoundId: testround,
+            sourceChannel: 'PE4',
+            // caseLibId: '',
+            // sceneId: '',
+            // testPlanId: ''
         }),
         success: function(data) {
-            app.recordList = data.rows;
-            app.tt = data.total;
-            app.totalPage = Math.ceil(app.tt / listnum);
+            if (data.respCode === '0000') {
+
+            } else {
+                $('#failModal').modal();
+            }
+            // app.recordList = data.rows;
+            // app.tt = data.total;
+            // app.totalPage = Math.ceil(app.tt / listnum);
             // app.pageSize = listnum;
         }
     });
