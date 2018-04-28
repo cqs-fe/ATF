@@ -434,7 +434,7 @@ var objectRepo =  Vue.extend({
                 type: "POST",
                 success: function(data) {
                     // console.log(data)
-                    _this.classtypeList = data.omClassRespDTOList;
+                    _this.classtypeList = data.omClassRespDTOList.concat(data.arcClassRespDTOList);
                 }
             });
         },
