@@ -408,6 +408,7 @@ var app = new Vue({
                 methoddescription = $('#methodForm input[name="description"]').val(),
                 overrideFlag=$('#methodForm select[name="overrideFlag"]').val(),
                 visibilityFlag=$('#methodForm select[name="visibilityFlag"]').val(),
+                labelArgument=$('#methodForm input[name="labelArgument"]').val(),
                 waittime = $('#methodForm input[name="waittime"]').val(),
                 timeout = $('#methodForm input[name="timeout"]').val(),
                 targetCodeContent = $('#methodForm textarea[name="targetCodeContent"]').val();
@@ -446,7 +447,7 @@ var app = new Vue({
                     "overrideFlag":overrideFlag,
                     "visibilityFlag": visibilityFlag,
                     "argsCount": '',
-                    "labelArgument": '',
+                    "labelArgument": labelArgument,
                     "author": '',
                     "waittime": waittime,
                     "timeout": timeout,
