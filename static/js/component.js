@@ -747,8 +747,12 @@ function methodClick(event,i) {
 
         $('#methodForm input[name="name"]').val('');
         $('#methodForm input[name="description"]').val('');
-        $('#methodForm input[name="maintainTime"]').val('');
-        $('#methodForm textarea[name="executecode"]').val('');
+        $('#methodForm select[name="overrideFlag"]').val('');
+        $('#methodForm select[name="visibilityFlag"]').val('');
+        $('#methodForm input[name="labelArgument"]').val('');
+        $('#methodForm input[name="waittime"]').val('');
+        $('#methodForm input[name="timeout"]').val('');
+        $('#methodForm textarea[name="targetCodeContent"]').val('');
         app.paraList=[];
         // $('#methodPara').children().remove();
         app.methodId = $(event.target).parent().parent().attr('id');
@@ -758,6 +762,7 @@ function methodClick(event,i) {
         $('#methodForm input[name="description"]').val(curMethod.descShort);
         $('#methodForm select[name="overrideFlag"]').val(curMethod.overrideFlag);
         $('#methodForm select[name="visibilityFlag"]').val(curMethod.visibilityFlag);
+        $('#methodForm input[name="labelArgument"]').val(curMethod.labelArgument);
         $('#methodForm input[name="waittime"]').val(curMethod.waittime);
         $('#methodForm input[name="timeout"]').val(curMethod.timeout);
         $('#methodForm textarea[name="targetCodeContent"]').val(curMethod.targetCodeContent);
