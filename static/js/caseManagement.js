@@ -1,3 +1,4 @@
+var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var app = new Vue({
     el: '#caseManagement',
     data: {
@@ -184,13 +185,14 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
-                            url: address+"autController/selectAll",
+                            url: address2+"/aut/queryListAut",
                             type: 'get',
                             success:function(data){
-                                if(data.success){
-                                    let autList=data.obj;
+                                // console.log(data)
+                                if(data.respCode=='0000'){
+                                    let autList=data.autRespDTOList;
                                     for(let item of autList){
-                                        $('#autVal').append(`<option value="${item.id}">${item.autName}</option>`);
+                                        $('#autVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#autVal').selectpicker('refresh');
                                 }
@@ -200,13 +202,14 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"autController/selectAll",
+                            url: address2+"/aut/queryListAut",
                             type: 'get',
                             success:function(data){
-                                if(data.success){
-                                    let autList=data.obj;
+                                // console.log(data)
+                                if(data.respCode=='0000'){
+                                    let autList=data.autRespDTOList;
                                     for(let item of autList){
-                                        $('#autVal').append(`<option value="${item.id}">${item.autName}</option>`);
+                                        $('#autVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#autVal').selectpicker('refresh');
                                 }
@@ -668,7 +671,7 @@ var app = new Vue({
                 },
                 success: function(data) {
                     // console.info(data);
-                    console.info(data.o.rows);
+                    // console.info(data.o.rows);
                     app.caseList = data.o.rows;
                     app.tt = data.o.total;
                     app.totalPage = Math.ceil(app.tt / listnum);
@@ -758,7 +761,7 @@ var app = new Vue({
                     'subnote': ''
                 },
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     if (data.success) {
                         $('#successModal').modal();
                         self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
@@ -784,7 +787,7 @@ var app = new Vue({
         //获取caseLibid
         getCaseLibId: function() {
             var caselibid = sessionStorage.getItem('caselibid');
-            console.log(caselibid);
+            // console.log(caselibid);
             $('#caselibid').val(caselibid);
             this.caselibid = caselibid;
         },
@@ -817,7 +820,7 @@ var app = new Vue({
         getSubCase: function(e) {
             var flowId = $(e.target).parent().parent().attr('id'),
                 flowTr = $(e.target).parent().parent();
-            console.log(flowId);
+            // console.log(flowId);
             if ($(e.target).attr("class") === "icon-angle-right") {
                 $.ajax({
                     url: address + 'TestcaseController/testcaseactionquery',
@@ -825,7 +828,7 @@ var app = new Vue({
                     data: { 'testcaseid': flowId },
                     success: function(data) {
                         this.subCaseList = data.obj;
-                        console.log(this.subCaseList);
+                        // console.log(this.subCaseList);
                         for (var i = 0; i < this.subCaseList.length; i++) {
                             var subTr = $("<tr class='subShow'></tr>"),
                                 iconTd = $("<td></td>"),
@@ -904,7 +907,7 @@ var app = new Vue({
                     type: 'post',
                     data: $("#executorForm").serializeArray(),
                     success: function(data) {
-                        console.info(data);
+                        // console.info(data);
                         if (data.msg == "完成") {
                             $('#successModal').modal();
                             self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
@@ -945,7 +948,7 @@ var app = new Vue({
                     type: 'post',
                     data: $("#executeMethodForm").serializeArray(),
                     success: function(data) {
-                        console.info(data);
+                        // console.info(data);
                         if (data.success) {
                             $('#successModal').modal();
                             self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
@@ -1112,7 +1115,7 @@ var app = new Vue({
                 url: address+"missionController/selectAll",
                 type: 'GET',
                 success:function(data){
-                    console.log(data)
+                    // console.log(data)
                     app.missionList=data.obj;
                 }
             });
@@ -1165,7 +1168,7 @@ var app = new Vue({
                 let data=[];
                 let list=$(".filterList>li");
                 let that=this;
-                console.log(list)
+                // console.log(list)
                 for(let i=0;i<list.length;i++){
                     let listItem={};
                     listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
@@ -1178,7 +1181,7 @@ var app = new Vue({
                     }
                     data.push(listItem);
                 }
-                console.log(data)
+                // console.log(data)
                 $.ajax({
                     url:address+'TestcaseController/testcaseFilter',
                     data:{
@@ -1229,14 +1232,15 @@ $(document).ready(function(e) {
 function yiji() {
     $.ajax({
         async: false,
-        url: address + "autController/selectAll",
+        url: address2+"/aut/queryListAut",
         type: "POST",
         success: function(data) {
-            var autList = data.obj;
+            // console.log(data)
+            var autList = data.autRespDTOList;
             var str = "";
             for (var i = 0; i < autList.length; i++) {
 
-                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
             }
 
             $('select[name="autid"]').html(str);
@@ -1311,14 +1315,14 @@ $(document).ready(function(e) {
 function first() {
     $.ajax({
         async: false,
-        url: address + "autController/selectAll",
+        url:address2+"/aut/queryListAut",
         type: "POST",
         success: function(data) {
-            var autList = data.obj;
+            var autList = data.autRespDTOList;
             var str = "";
             for (var i = 0; i < autList.length; i++) {
 
-                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
             }
 
             $("#1ji").html(str);
@@ -1381,14 +1385,14 @@ function third() {
 function diyi() {
     $.ajax({
         async: false,
-        url: address + "autController/selectAll",
+        url: address2+"/aut/queryListAut",
         type: "POST",
         success: function(data) {
-            var autList = data.obj;
+            var autList = data.autRespDTOList;
             var str = "";
             for (var i = 0; i < autList.length; i++) {
 
-                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
             }
 
             $('select[name="subautid"]').html(str);
@@ -1457,7 +1461,7 @@ function transid() {
             'scriptmodeflag':$("#transidForm select[name='scriptmodeflag']").val(),
         },
         success: function(data) {
-            console.info(data);
+            // console.info(data);
             if (data.success) {
                 $('#successModal').modal();
                 app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
@@ -1482,7 +1486,7 @@ function executor() {
         type: 'post',
         data: $("#executorForm").serializeArray(),
         success: function(data) {
-            console.info(data.msg);
+            // console.info(data.msg);
             if (data.msg == "完成") {
                 $('#successModal').modal();
                 app.getCase(app.currentPage, app.pageSize, app.order, app.sort);

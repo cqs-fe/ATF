@@ -821,7 +821,7 @@ var app = new Vue({
                                 type: "POST",
                                 success: function(data) {
                                     // console.log(data)
-                                    _this.classtypeList = data.omClassRespDTOList;
+                                    _this.classtypeList = data.omClassRespDTOList.concat(data.arcClassRespDTOList);
                                 }
                             });
                             _this.getUILinkedObjectTree();
@@ -884,7 +884,7 @@ var app = new Vue({
                 type: "POST",
                 success: function(data) {
                     // console.log(data)
-                    _this.classtypeList = data.omClassRespDTOList;
+                    _this.classtypeList = data.omClassRespDTOList.concat(data.arcClassRespDTOList);
                 }
             });
         },

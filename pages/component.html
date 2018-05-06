@@ -395,6 +395,7 @@
                                             <label class="col-lg-2 control-label">继承标志</label>
                                             <div class="col-lg-3">
                                                 <select class="form-control" size="1" name="overrideFlag" style="margin-top:5px">
+                                                        <option value="">-请选择-</option>
                                                         <option value="0">普通继承</option>
                                                         <option value="1">禁用</option>
                                                 </select>
@@ -402,11 +403,18 @@
                                             <label class="col-lg-2 control-label">继承可见性</label>
                                             <div class="col-lg-3">
                                                 <select class="form-control" size="1" class="visibilityFlag" style="margin-top:5px">
+                                                    <option value="">-请选择-</option>
                                                     <option value="0">公共</option>
                                                     <option value="1">私有</option>
                                                 </select>
                                             </div>
-                                    </div>                            
+                                    </div> 
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">标志参数化列</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" name="labelArgument" class="form-control">
+                                        </div>
+                                    </div>                           
                                      <div class="property">
                                         参数列表
                                         <a class="btn btn-white btn-sm pull-right" @click="addMethodPara($event)"><i class="icon-plus"></i></a>
