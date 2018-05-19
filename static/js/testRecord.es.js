@@ -31,10 +31,21 @@ var app = new Vue({
         ids: '',
     },
     ready: function() {
-        getRecord(this.currentPage, this.pageSize, this.order, this.sort);
-        getTestPhase();
-        getTestRound();
+        // getRecord(this.currentPage, this.pageSize, this.order, this.sort);
+        var p1 = new Promise((resolve, reject) => {
+            getTestPhase(resolve);
+        });
+        var p2 = new Promise((resolve, reject) => {
+            getTestRound(resolve);
+        });
+        var p = Promise.all([p1, p2]);
+        p.then(() => {
+            getRecord();
+        });
+        // getTestPhase();
+        // getTestRound();
         getScene();
+        // setTimeout(getRecord(), 500);
         changeListNum();
 
         $('.3').addClass('open')
@@ -158,19 +169,21 @@ function getRecord(page, listnum, order, sort) {
         // url: address + 'testrecordController/selectAllByPage',
         url: address2+'testRecordController/selectByTestPhase',
         type: 'POST',
+        contentType: 'application/json',
         data: JSON.stringify({
             testPhaseId: app.testphase,
-            testRoundId: testround,
-            sourceChannel: 'PE4',
+            testRoundId: app.testround,
+            sourceChannel: 'PE4'
             // caseLibId: '',
             // sceneId: '',
             // testPlanId: ''
         }),
         success: function(data) {
+            app.recordList = data.list;
             if (data.respCode === '0000') {
 
             } else {
-                $('#failModal').modal();
+                // $('#failModal').modal();
             }
             // app.recordList = data.rows;
             // app.tt = data.total;
@@ -181,22 +194,30 @@ function getRecord(page, listnum, order, sort) {
 
 }
 //获取测试阶段
-function getTestPhase(){
+function getTestPhase(resolve){
     $.ajax({
         url: address+'testphaseController/selectAll',
         type: 'get',
         success:function(data){
             app.testPhaseList=data.obj;
+            app.testphase = data.obj[0].id;
+            if (resolve) {
+                resolve();
+            }
         }
     });
 }
 //获取测试轮次
-function getTestRound(){
+function getTestRound(resolve){
     $.ajax({
         url: address+'testroundController/selectAll',
         type: 'get',
         success: function(data){
             app.testRoundList=data.obj;
+            app.testround = data.obj[0] ? data.obj[0].id : '';
+            if(resolve) {
+                resolve();
+            }
         }
     });
 }
@@ -225,27 +246,6 @@ $("#chk_all").click(function() {　　
     $("input[name='chk_list']").prop("checked", $(this).prop("checked"));　
 });
 
-//重新排序
-// function resort(target) {
-//     var spans = target.parentNode.getElementsByTagName("span");
-//     for (var span in spans) {
-//         if (spans[span].nodeName === "SPAN") {
-//             spans[span].setAttribute("class", "");
-//         }
-//     }
-//     if (target.getAttribute("data-sort") === "desc") {
-//         app.sort = "asc";
-//         target.getElementsByTagName("span")[0].setAttribute("class", "icon-sort-up")
-//         target.setAttribute("data-sort", "asc");
-//     } else {
-//         app.sort = "desc";
-//         target.getElementsByTagName("span")[0].setAttribute("class", "icon-sort-down")
-//         target.setAttribute("data-sort", "desc");
-//     }
-//     app.order = target.getAttribute("data-order");
-//     getRecord(1, 10, app.order, app.sort);
-// }
-//重新排序 结束
 
 //搜索测试记录
 function queryRecord() {

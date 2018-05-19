@@ -739,7 +739,8 @@ function search(){
 // 点击搜索按钮结束
 
 //重新排序
-function resort(target){
+function resort(e){
+    var target = e.currentTarget;
     var spans = target.parentNode.getElementsByTagName("span");
     for(var span in spans){
         if(spans[span].nodeName === "SPAN"){
