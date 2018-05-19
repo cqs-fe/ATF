@@ -905,7 +905,7 @@ var app = new Vue({
                 alert('UI名称不能为空');
             }else{
                 $.ajax({
-                    url: address + 'elementlibraryController/insertUI',
+                    url: address2 + '/elementRepository/addSingleUI',
                     type: 'post',
                     data: {
                         "UIName": UIName,
@@ -936,7 +936,7 @@ var app = new Vue({
             var nodes = treeObj.getSelectedNodes();
             var delUIName = nodes[0].name;
             $.ajax({
-                url: address + 'elementlibraryController/deleteUI',
+                url: address2 + '/elementRepository/deleteSingleUI',
                 type: 'post',
                 data: {
                     "deleteUI": delUIName,
@@ -980,7 +980,7 @@ var app = new Vue({
                 relateParentIdentifyObjectId = '';
             }
             $.ajax({
-                url: address + 'elementlibraryController/updateUI',
+                url: address2 + '/elementRepository/modifySingleUI',
                 type: 'post',
                 data: {
                     "UIName": UIName,
@@ -1032,7 +1032,7 @@ var app = new Vue({
                 alert('元素名称不能为空');
             }else{
                 $.ajax({
-                    url: address + 'elementlibraryController/insertElement',
+                    url: address2 + '/elementRepository/addSingleElement',
                     type: 'post',
                     data: {
                         "transid": transid,
@@ -1064,7 +1064,7 @@ var app = new Vue({
             var delElementName = nodes[0].name;
             var delUIName = nodes[0].getParentNode().name;
             $.ajax({
-                url: address + 'elementlibraryController/deleteElement',
+                url: address2 + '/elementRepository/deleteSingleElement',
                 type: 'post',
                 data: {
                     "deleteElements": delElementName,
@@ -1169,7 +1169,7 @@ var app = new Vue({
                 relatePropVal.push(relatePropNameTd.eq(2).html());
             });
             $.ajax({
-                url: address + 'elementlibraryController/updateElement',
+                url: address2 + '/elementRepository/modifySingleElement',
                 type: 'post',
                 data: {
                     "UIName": UIName,

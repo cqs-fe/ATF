@@ -189,6 +189,7 @@ var app = new Vue({
                                 eclassNameTd = $('<td ></td>'),
                                 cclassNameTd = $('<td ></td>');
                             classTr.attr('id', classList[i].id);
+                            flagTd.attr('id', classList[i].overideFlag);
                             if(classList[i].overideFlag==0){
                                 flagTd.html('普通继承');    
                             }else if(classList[i].overideFlag==1){
@@ -772,12 +773,16 @@ var setting1 = {
                                 eclassNameTd = $('<td ></td>'),
                                 cclassNameTd = $('<td ></td>');
                             classTr.attr('id', classList[i].id);
-                            if(classList[i].overideFlag==0){
-                                overideFlagTd.html('普通继承');
-                            }else if(classList[i].overideFlag==1){
-                                overideFlagTd.html('重载');
+                            if(classList[i].overideFlag==1){
+                                overideFlagTd.html('自身控件');
                             }else if(classList[i].overideFlag==2){
+                                overideFlagTd.html('继承自父类');
+                            }else if(classList[i].overideFlag==3){
+                                overideFlagTd.html('重载继承');
+                            }else if(classList[i].overideFlag==4){
                                 overideFlagTd.html('禁用');
+                            }else if(classList[i].overideFlag==5){
+                                overideFlagTd.html('重定义');
                             }else{
                                 overideFlagTd.html('');
                             }
@@ -924,6 +929,7 @@ function classClick(event, i) {
         $('#methodSection').css('display', 'none');
         //查询当前构件类型对应的方法
         app.classId = $(event.target).parent().parent().attr('id');
+        let overideFlag=$(event.target).parent().next().attr('id');
         $.ajax({
             url: address + '/arcClass/queryArcVisibleOmMethods',
             type: 'post',
@@ -944,11 +950,15 @@ function classClick(event, i) {
                             methodNameTd = $('<td ></td>'),
                             methodDescriptionTd = $('<td ></td>');
                         methodTr.attr('id', methodList[i].id);
-                        if(methodList[i].overrideFlag==0){
-                            flagTd.html('普通继承');    
-                        }else if(methodList[i].overrideFlag==1){
+                        if (methodList[i].overrideFlag == 1) {
+                            flagTd.html('自身方法');
+                        } else if (methodList[i].overrideFlag == 2) {
+                            flagTd.html('继承自父类');
+                        } else if (methodList[i].overrideFlag == 3) {
+                            flagTd.html('重载继承');
+                        } else if (methodList[i].overrideFlag == 4) {
                             flagTd.html('禁用');
-                        }else{
+                        } else {
                             flagTd.html('');
                         }
                         
@@ -1036,6 +1046,28 @@ function classClick(event, i) {
                 $('#assistRecTbody').append(paraTr);
             }
         }
+
+        var overrideFlag=$(event.target).parent().next().html();
+        // console.log(overrideFlag)
+        if(overrideFlag=='继承自父类'){//不能修改/刪除  不能添加方法
+            $('#classForm input').attr('disabled','disabled');
+            $('#classForm select').attr('disabled','disabled');
+            $('.c-right-table tr td').attr('contenteditable', false);
+            $('#addMethodBtn').attr('disabled','disabled');
+            $('#delMethodBtn').attr('disabled','disabled');
+        }else if(overrideFlag=='禁用'){//可以修改/刪除   不能添加方法
+            $('#classForm input').attr('disabled',false);
+            $('#classForm select').attr('disabled',false);
+            $('.c-right-table tr td').attr('contenteditable', true);
+            $('#addMethodBtn').attr('disabled','disabled');
+            $('#delMethodBtn').attr('disabled','disabled');
+        }else{//可以修改/刪除， 可以添加方法
+            $('#classForm input').attr('disabled',false);
+            $('#classForm select').attr('disabled',false);
+            $('.c-right-table tr td').attr('contenteditable', true);
+            $('#addMethodBtn').attr('disabled',false);
+            $('#delMethodBtn').attr('disabled',false);
+        }
     }
 }
 // 勾选方法
@@ -1066,7 +1098,22 @@ function methodClick(event,i) {
         $('#methodForm input[name="timeout"]').val(curMethod.timeout);
         $('#methodForm textarea[name="targetCodeContent"]').val(curMethod.targetCodeContent);
         app.paraList = JSON.parse(curMethod.arguments);
-        console.log(app.paraList)
+        // console.log(app.paraList)
+        var overrideFlag=$(event.target).parent().next().html();
+        // console.log(overrideFlag)
+        if(overrideFlag=='继承自父类'){//不能修改/刪除
+            $('#methodForm input').attr('disabled','disabled');
+            $('#methodForm select').attr('disabled','disabled');
+            $('#methodForm textarea').attr('disabled','disabled');
+            $('#delMethodBtn').attr('disabled','disabled');
+            $('.m-right-table tr td').attr('contenteditable', false);
+        }else{
+            $('#methodForm input').attr('disabled',false);
+            $('#methodForm select').attr('disabled',false);
+            $('#methodForm textarea').attr('disabled',false);
+            $('#delMethodBtn').attr('disabled',false);
+            $('.m-right-table tr td').attr('contenteditable', true);
+        }
     }
 }
 

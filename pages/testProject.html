@@ -51,19 +51,19 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试项目编号</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="testProjectCode">
+                                                        <input type="text" class="form-control" name="codeLong">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试项目名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="testProjectName">
+                                                        <input type="text" class="form-control" name="nameMedium">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name="taskDescription"></textarea>
+                                                        <textarea class="form-control" rows="3" name="descMedium"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -112,7 +112,7 @@
                                         <section class="panel">
                                             <form id="updateForm" class="form-horizontal" role="form">
                                                 <div class="form-group hidden">
-                                                    <label class="col-lg-3 control-label">测试项目编号</label>
+                                                    <label class="col-lg-3 control-label">测试项目id</label>
                                                     <div class="col-lg-5">
                                                         <input type="text" class="form-control" name="id" value="{{ selectedId}}">
                                                     </div>
@@ -120,19 +120,19 @@
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试项目编号</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="testProjectCode">
+                                                        <input type="text" class="form-control" name="codeLong">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">测试项目名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="testProjectName">
+                                                        <input type="text" class="form-control" name="nameMedium">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name="taskDescription"></textarea>
+                                                        <textarea class="form-control" rows="3" name="descMedium"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -254,9 +254,9 @@
                                         <td width="5%">
                                             <input type="radio" v-model="" name="chk_list" id="{{project.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="20%">{{ project.testProjectCode }}</td>
-                                        <td width="20%">{{ project.testProjectName }}</td>
-                                        <td class="hidden-phone" width="40%">{{ project.taskDescription }}</td>
+                                        <td class="center hidden-phone" width="20%">{{ project.codeLong }}</td>
+                                        <td width="20%">{{ project.nameMedium }}</td>
+                                        <td class="hidden-phone" width="40%">{{ project.descMedium }}</td>
                                         <td class="hidden">{{project.caselibId}}</td>
                                     </tr>
                                 </tbody>
