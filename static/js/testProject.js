@@ -1,3 +1,4 @@
+
 var app = new Vue({
     el: '#v-testProject',
     data: {
@@ -83,12 +84,13 @@ var app = new Vue({
                 alert("所有项均为必填项");
             }else{
                 $.ajax({
-                    url: address + 'testProjectController/insert',
+                    url: address2 + '/testProjectController/addSingleTestProject',
                     type: 'post',
-                    data: $("#insertForm").serializeArray(),
+                    contentType: 'application/json',
+                    data: getJson($("#insertForm").serialize()),
                     success: function(data) {
-                        console.info(data);
-                        if (data.success) {
+                        // console.info(data);
+                        if (data.respCode=='0000') {
                             getTestProject(1, app.pageSize, 'id', 'asc');
                             $('#successModal').modal();
                         } else {
@@ -106,14 +108,15 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: address + 'testProjectController/delete',
+                url: address2 + '/testProjectController/disableSingleTestProject',
                 type: 'post',
-                data: {
-                    'ids': app.ids
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'id': app.ids
+                }),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode=='0000') {
                         getTestProject(1, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
                     } else {
@@ -128,12 +131,13 @@ var app = new Vue({
         //修改测试项目
         update: function() {
             $.ajax({
-                url: address + 'testProjectController/update',
+                url: address2 + '/testProjectController/modifySingleTestProject',
                 type: 'post',
-                data: $("#updateForm").serializeArray(),
+                contentType: 'application/json',
+                data: getJson($("#updateForm").serialize()),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode=='0000') {
                         getTestProject(1, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
                     } else {
@@ -150,9 +154,9 @@ var app = new Vue({
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             $('input[name="id"]').val(selectedId);
-            $('#updateForm input[name="testProjectCode"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="testProjectName"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm textarea[name="taskDescription"]').val(selectedInput.parent().next().next().next().html());
+            $('#updateForm input[name="codeLong"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm textarea[name="descMedium"]').val(selectedInput.parent().next().next().next().html());
         },
         //进入
         to: function() {
@@ -177,19 +181,19 @@ function getTestProject(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address + 'testProjectController/selectAllByPage',
-        type: 'GET',
-        data: {
-            'page': page,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
+        url: address2 + 'testProjectController/pagedBatchQueryTestProject',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': page,
+            'pageSize': listnum,
+            'orderColumns': order,
+            'orderType': sort
+        }),
         success: function(data) {
             console.info(data);
-            console.info(data.rows);
-            app.testProjectList = data.rows;
-            app.tt = data.total;
+            app.testProjectList = data.list;
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
         }

@@ -1,4 +1,3 @@
-var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var app = new Vue({
     el: '#v-transact',
     data: {
@@ -59,14 +58,15 @@ var app = new Vue({
         },
         //添加功能点
         insert: function() {
-            $('#insertForm input[name="autid"]').val($('#autSelect').val());
+            $('#insertForm input[name="autId"]').val($('#autSelect').val());
             var self=this;
             $.ajax({
-                url: address + 'transactController/inserttransact',
+                url: address2 + 'transactController/addSingleTransact',
                 type: 'post',
-                data: $("#insertForm").serializeArray(),
+                contentType: 'application/json',
+                data: getJson($("#insertForm").serialize()),
                 success: function(data) {
-                    if (data.success) {
+                    if (data.respCode=='0000') {
                         $('#successModal').modal();
                         queryTransact();
                     } else {
@@ -93,14 +93,15 @@ var app = new Vue({
             this.getIds();
             var self=this;
             $.ajax({
-                url: address + 'transactController/deletetransact',
+                url: address2 + 'transactController/deleteSingleTransact',
                 type: 'post',
-                data: {
-                    'transactid': app.ids
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'id': app.ids
+                }),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode=='0000') {
                         $('#successModal').modal();
                         // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
                         queryTransact();
@@ -132,12 +133,13 @@ var app = new Vue({
         update: function() {
             var self=this;
             $.ajax({
-                url: address + 'transactController/updatetransact',
+                url: address2 + 'transactController/modifySingleTransact',
                 type: 'post',
-                data: $("#updateForm").serializeArray(),
+                contentType: 'application/json',
+                data: getJson($("#updateForm").serialize()),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode=='0000') {
                         $('#successModal').modal();
                         // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
                         queryTransact();
@@ -154,10 +156,10 @@ var app = new Vue({
         getSelected: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
-            $('#updateForm input[name="transactid"]').val(selectedId);
-            $('#updateForm input[name="transactcode"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="transactname"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm textarea[name="descript"]').val(selectedInput.parent().next().next().next().next().html());
+            $('#updateForm input[name="id"]').val(selectedId);
+            $('#updateForm input[name="code"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm textarea[name="descShort"]').val(selectedInput.parent().next().next().next().next().html());
         },
         //传递当前页选中的测试系统id和功能点id到元素库页面
         toElementLib: function() {
@@ -208,20 +210,20 @@ function getTransact(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address + 'transactController/selectAllByPage',
-        type: 'GET',
-        data: {
-            'page': page,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
+        url: address2 + 'transactController/pagedBatchQueryTransact',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': page,
+            'pageSize': listnum,
+            'orderColumns': order,
+            'orderType': sort
+        }),
         success: function(data) {
             console.info(data);
-            console.info(data.rows);
             // var data = JSON.parse(data);
-            app.transactList = data.o.rows;
-            app.tt = data.o.total;
+            app.transactList = data.list;
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
         }
@@ -295,26 +297,20 @@ function setval() {
     var autId=sessionStorage.getItem("autId");
     $("#autSelect").val(autId);
     $.ajax({
-        url: address + 'transactController/transactqueryByPage',
+        url: address2 + 'transactController/pagedBatchQueryTransact',
         type: 'POST',
-        data: {
-            'page': 1,
-            'rows': 10,
-            'order': 'id',
-            'sort': 'asc',
-            'id': '',
-            'transcode': '',
-            'transname': '',
-            'autctgId': '',
-            'descript': '',
-            'maintainer': '',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': 1,
+            'pageSize': 10,
+            'orderColumns': 'id',
+            'orderType': 'asc',
             'autId': $('#autSelect').val(),
-            'useStatus': '',
-
-        },
+        }),
         success: function(data) {
-            app.transactList = data.o.rows;
-            app.tt = data.o.total;
+            console.log(data)
+            app.transactList = data.list;
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             app.pageSize = app.listnum;
         },
@@ -326,26 +322,19 @@ function setval() {
 //通过选择被测系统筛选查询功能点 
 function queryTransact() {
     $.ajax({
-        url: address + 'transactController/transactqueryByPage',
+        url: address2 + 'transactController/pagedBatchQueryTransact',
         type: 'POST',
-        data: {
-            'page': app.currentPage,
-            'rows': app.listnum,
-            'order': app.order,
-            'sort': app.sort,
-            'id': '',
-            'transcode': '',
-            'transname': '',
-            'autctgId': '',
-            'descript': '',
-            'maintainer': '',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': 1,
+            'pageSize': 10,
+            'orderColumns': 'id',
+            'orderType': 'asc',
             'autId': $('#autSelect').val(),
-            'useStatus': '',
-
-        },
+        }),
         success: function(data) {
-            app.transactList = data.o.rows;
-            app.tt = data.o.total;
+            app.transactList = data.list;
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             // app.pageSize = app.listnum;
         },
