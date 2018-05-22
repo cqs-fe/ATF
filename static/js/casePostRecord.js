@@ -110,8 +110,8 @@ var app = new Vue({
                 
                 return false;
             }
-             		else if(val==0){ 
-             	 	  var url = "http://111.230.230.174:8080/importCase/batchImport/file/template/simple";
+             		else if(val==0){
+             	 	  var url = address+"importCase/batchImport/file/template/simple";
 			          window.location.href = url;
             		 } 
             		 else{ 
