@@ -1,0 +1,10 @@
+{
+  "respCode": "0000",
+  "respMsg": "未知异常",
+  "list": [
+    {
+      "sceneId": 1,
+      "testPhaseId": 3
+    }
+  ]
+}
