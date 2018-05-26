@@ -42,13 +42,13 @@ var app = new Vue({
         //获取案例
         getAllUploadUser:function(){
         	 $.ajax({
-                url: 'http://111.230.230.174:8080/importCase/batchImport/getAllUploadUser', 
+                url:   'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/queryAllUploadUser' , 
                 type: 'post',
                 data: {
                    },
                     success: function(data) {
                       
-                    app.allUploadUser=data.retData;
+                    app.allUploadUser=data.userNames;
                      console.log("success"); 
                      
                 }, error: function( ) { 
@@ -58,26 +58,23 @@ var app = new Vue({
         	},
         getCase:function() {
             $.ajax({ 
-                url: 'http://111.230.230.174:8080/importCase/batchImport/getImportStatusByPage', 
+                url:   'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/queryBatchImportStatus', 
                 type: 'post',
-                
                 data: {
                     'pageNum': this.currentPage,
                     'pageSize': this.pageSize,
-                    'orderBy': 'batch_import_no',
+                    'orderColumn': 'batch_import_no',
                     'orderType':'desc',
-                    'conditions.uploadUserName': $('#sortuploadUserName').val(),
-                    'conditions.importStatus': $('#importStatus').val(),
-                    'conditions.createTimeLower': $('#createTimeLower').val().replace( '-','/' ).replace( '-','/' ) ,
-                    'conditions.createTimeUpper': $('#createTimeUpper').val().replace( '-','/' ).replace( '-','/' ) 
+                    'uploadUserReallyName': $('#sortuploadUserName').val(),
+                    'importStatus': $('#importStatus').val(),
+                    'createTimeLower': $('#createTimeLower').val().replace( '-','/' ).replace( '-','/' ) ,
+                    'createTimeUpper': $('#createTimeUpper').val().replace( '-','/' ).replace( '-','/' ) 
                 },
                 success: function(data) {
                     console.log(data); 
                     app.tt = data.retData.totalCount; 
                     app.caseList = data.retData.rows; 
                     app.totalPage =data.retData.totalPage;
-                   
-                     console.info(app.tt+'ye'+app.totalPage+"sd"+ app.pageSize); 
                 }, error: function(XMLHttpRequest, textStatus, errorThrown) { 
                     data={"retCode":"tcmRet00000","retMsg":"查询成功!","retData":[{"batchImportNo":"2018010574eb0a5966074e6","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":3,"failNum":5,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2018-01-05 15:02:39","finishTime":"2018-01-05 15:02:40"},{"batchImportNo":"201801056c399a7c4f644dd","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":3,"failNum":5,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2018-01-05 15:05:56","finishTime":"2018-01-05 15:05:57"},{"batchImportNo":"201801040c8b38548754465","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":3,"failNum":5,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2018-01-04 14:36:28","finishTime":"2018-01-04 14:36:31"},{"batchImportNo":"20171224fb6714620662425","caseLibId":1,"uploadUserName":"杨梁","totalNum":9,"successNum":3,"failNum":6,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2017-12-24 17:27:13","finishTime":"2017-12-24 17:27:15"},{"batchImportNo":"20171224aadd2b79502f485","caseLibId":1,"uploadUserName":"杨梁","totalNum":9,"successNum":3,"failNum":3,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2017-12-24 17:21:26","finishTime":"2017-12-24 17:21:28"},{"batchImportNo":"20171224a3b586769c17437","caseLibId":1,"uploadUserName":"杨梁","totalNum":9,"successNum":3,"failNum":3,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2017-12-24 17:17:18","finishTime":"2017-12-24 17:17:20"},{"batchImportNo":"20171224182a4e2b5d684f6","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":8,"failNum":0,"errMsg":"全部用例导入成功！","importStatus":"全部成功","createTime":"2017-12-24 17:27:42","finishTime":"2017-12-24 17:27:44"}]};
                     app.caseList = data.retData;
@@ -107,15 +104,14 @@ var app = new Vue({
             var val=$('input:radio[name="templateType"]:checked').val();
             
             if(val==null){
-                
                 return false;
             }
              		else if(val==0){
-             	 	  var url = address+"importCase/batchImport/file/template/simple";
+             	 	  let url = "http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
 			          window.location.href = url;
             		 } 
             		 else{ 
-             	   var url = "http://111.230.230.174:8080/importCase/batchImport/file/template/standard";
+             	   var let = "http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/file/template/standard";
 			           window.location.href = url;
             		 } 
             });
@@ -125,14 +121,14 @@ var app = new Vue({
           upload:function() {
          
 							  $.ajax({
-						    url: 'http://111.230.230.174:8080/importCase/batchImport/uploadImportFile',
+						    url: 'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase',
 						    type: 'POST',
 						    cache: false,
 						    data: new FormData($('#importForm')[0]),
 						    processData: false,
 						    contentType: false, 
-						     success: function(data) {
-               		console.log(data.retMsg);   
+						    success: function(data) {
+               	console.log(data.retMsg);   
                		 
                		 	$('#importModal').modal('hide');
                		 	$('#successModal').modal('show');
@@ -145,8 +141,8 @@ var app = new Vue({
         },
         //导出错误文件
           downloadError :function (ID) {
-          	 var url = "http://111.230.230.174:8080/importCase/batchImport/file/errorFile/";
-			         window.location.href = url+ID;
+          	 var url = "http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/file/errorFile/";
+			       window.location.href = url+ID;
 			        //var fileName = ID+"错误信息.txt";
 			        //var form = $("<form></form>").attr("action", url).attr("method", "post");
 			        //form.append($("<input></input>").attr("type", "hidden").attr("name", "batchImportNo").attr("value", ID));
@@ -186,7 +182,3 @@ var app = new Vue({
     },
 
 });
- 
- 
- 
-  
