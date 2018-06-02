@@ -136,7 +136,7 @@ $(document).ready(function(){
                         $("#addModal").modal("hide");
                         updateTableAndPagination(currentPage); 
                     }else{
-                        Vac.alert('添加失败！')
+                        Vac.alert(data.respMsg);
                     }
                 },
                 error: function() {
@@ -638,7 +638,7 @@ function createTable(dataSet){
 
 function destructe(data){
     var newData = null;
-    newData = data.map(function(value){
+    newData = data.list.map(function(value){
         var newValue = {};
         ({
             id: newValue.id,
@@ -648,7 +648,6 @@ function destructe(data){
         } = value);
         return newValue;
     });
-    console.log(newData)
     return newData;
 }
 //控制首页尾页等的可用性 结束

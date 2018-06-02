@@ -122,7 +122,6 @@
                         </div>
                         <!-- mergeModal end -->
                         <!-- delModal start -->
-                       
                         <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -232,7 +231,7 @@
                                                 </select>  
                                             </div>
                                             <div class="col-sm-1">
-                                                <a class="btn btn-primary" onclick="queryRecord()">查询</a>
+                                                <a class="btn btn-primary" onclick="getRecord()">查询</a>
                                             </div>
                                         </div>
                                     </form>
@@ -261,7 +260,7 @@
                                             <th class="text-center">执行结果状态</th>
                                             <th class="text-center">来源渠道</th>
                                             <th class="text-center">资源路径</th>
-                                            <th class="text-center">执行实例ID</th>
+                                            <!-- <th class="text-center">执行实例ID</th> -->
                                             <th class="text-center">操作</th>
                                         </tr>
                                     </thead>
@@ -271,19 +270,19 @@
                                                 <input type="checkbox" v-model="" name="chk_list" id="{{item.id}}" />
                                             </td>
                                             <td class="center" width="5%">{{ item.sceneId }}</td>
-                                            <td class="center" width="10%">{{ item.testPhase }}</td>
-                                            <td width="">{{ item.testRound }}</td>
-                                            <td class="" width="">{{item.executeround}}</td>
-                                            <td class="" width="">{{item.caseid}}</td>
-                                            <td class="" width="">{{item.flownodename}}</td>
-                                            <td class="" width="">{{item.recorderstate}}</td>
-                                            <td class="" width="">{{item.resultstatus}}</td>
-                                            <td class="" width="">{{item.sourcechannel}}</td>
-                                            <td class="" width="">{{item.resourcepath}}</td>
-                                            <td class="" width="">{{item.testexeinsid}}</td>
+                                            <td class="center" width="10%">{{ item.testPhaseId }}</td>
+                                            <td width="">{{ item.testRoundId }}</td>
+                                            <td class="" width="">{{item.executeRound}}</td>
+                                            <td class="" width="">{{item.caseId}}</td>
+                                            <td class="" width="">{{item.flownodeName}}</td>
+                                            <td class="" width="">{{item.recorderStatus}}</td>
+                                            <td class="" width="">{{item.executeStatus}}</td>
+                                            <td class="" width="">{{item.sourceChannel}}</td>
+                                            <td class="" width="">{{item.resourcePath}}</td>
+                                            <!-- <td class="" width="">{{item.testexeinsid}}</td> -->
                                             <td width="80px">
                                                 <a class="btn btn-xs btn-success"
-                                                    @click="viewCase(item.sceneId, item.caseid, item.sourcechannel, item.testPhase, item.testRound, recorderstate)">
+                                                    @click="viewCase(item.sceneId, item.caseid, item.sourcechannel, item)">
                                                     详情
                                                 </a>
                                             </td>
@@ -351,4 +350,4 @@
 </html>
 <link rel="import" href="./common/footer.html?__inline">
 <script src="../lib/vue-resource.min.js"></script>
-<script type="text/javascript" src="../static/js/testRecord.js"></script>
+<script type="text/javascript" src="../static/js/testRecord.es.js"></script>

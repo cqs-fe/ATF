@@ -67,18 +67,18 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
-                                                    <th style="width:20%">继承标志</th>
-                                                    <th style="width:20%">英文名称</th>
-                                                    <th>中文名称</th>
+                                                    <th style="width:25%">继承标志</th>
+                                                    <th style="width:25%">英文名称</th>
+                                                    <th >中文名称</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="classProp">
                                                 <tr>
-                                                    <td>
+                                                    <td style="width:5%">
                                                         <input type="radio" name="class" />
                                                     </td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td style="width:25%"></td>
+                                                    <td style="width:25%"></td>
                                                     <td></td>
                                                 </tr>
                                             </tbody>
@@ -94,18 +94,18 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
-                                                    <th style="width:20%">继承标志</th>                                                    
-                                                    <th style="width:20%">名称</th>
+                                                    <th style="width:25%">继承标志</th>                                                    
+                                                    <th style="width:25%">名称</th>
                                                     <th>描述</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="methodProp">
                                                 <tr>
-                                                    <td>
+                                                    <td style="width:5%">
                                                         <input type="radio" name="method" />
                                                     </td>
-                                                    <td></td>
-                                                    <td></td>                                                    
+                                                    <td style="width:25%"></td>
+                                                    <td style="width:25%"></td>                                                    
                                                     <td></td>
                                                 </tr>
                                             </tbody>
@@ -151,9 +151,10 @@
                                         <label class="col-lg-2 control-label">继承标志</label>
                                         <div class="col-lg-3">
                                             <select class="form-control" size="1" id="overideFlag" style="margin-top:5px">
-                                                <option value="0">普通继承</option>
-                                                <option value="1">重载</option>
-                                                <option value="2">禁用</option>
+                                                <option value="">请选择</option>
+                                                        <option value="1">自身控件</option>
+                                                        <option value="4">禁用</option>
+                                                        <option value="5">重定义</option>
                                             </select>
                                         </div>
                                         <label class="col-lg-2 control-label">继承可见性</label>
@@ -171,7 +172,7 @@
                                         <a class="btn btn-white btn-sm pull-right" @click="delRuntimeArgsPara($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
-                                        <table class="table table-bordered" id="runtimeArgsTable">
+                                        <table class="table table-bordered c-right-table" id="runtimeArgsTable">
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
@@ -196,7 +197,7 @@
                                         <a class="btn btn-white btn-sm pull-right" @click="delSupRecPara($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
-                                        <table class="table table-bordered" id="supportedRecognitionTable">
+                                        <table class="table table-bordered c-right-table" id="supportedRecognitionTable">
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
@@ -221,7 +222,7 @@
                                         <a class="btn btn-white btn-sm pull-right" @click="delSelfRecPara($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
-                                        <table class="table table-bordered" id="selfRecTable">
+                                        <table class="table table-bordered c-right-table" id="selfRecTable">
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
@@ -246,7 +247,7 @@
                                         <a class="btn btn-white btn-sm pull-right" @click="delAssistRecPara($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
-                                        <table class="table table-bordered" id="assistRecTable">
+                                        <table class="table table-bordered c-right-table" id="assistRecTable">
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>
@@ -315,8 +316,8 @@
                                             <div class="col-lg-3">
                                                 <select class="form-control" size="1" name="overrideFlag" style="margin-top:5px">
                                                         <option value="">-请选择-</option>
-                                                        <option value="0">普通继承</option>
-                                                        <option value="1">禁用</option>
+                                                        <option value="1">自身方法</option>
+                                                        <option value="4">禁用</option>
                                                 </select>
                                             </div>
                                             <label class="col-lg-2 control-label">继承可见性</label>
@@ -340,7 +341,7 @@
                                         <a class="btn btn-white btn-sm pull-right" @click="delMethodPara($event)"><i class="icon-minus"></i></a>
                                     </div>
                                     <div class="property">
-                                        <table class="table table-bordered" id="pTable">
+                                        <table class="table table-bordered m-right-table" id="pTable">
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%"></th>

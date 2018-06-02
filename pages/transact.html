@@ -53,25 +53,25 @@
                                                 <div class="form-group hidden">
                                                     <label class="col-lg-3 control-label">被测系统id</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="autid">
+                                                        <input type="text" class="form-control" name="autId">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">编码</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="transactcode">
+                                                        <input type="text" class="form-control" name="code">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="transactname">
+                                                        <input type="text" class="form-control" name="nameMedium">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name="descript"></textarea>
+                                                        <textarea class="form-control" rows="3" name="descShort"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -122,25 +122,25 @@
                                                 <div class="form-group hidden">
                                                     <label class="col-lg-3 control-label">功能点id</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="transactid">
+                                                        <input type="text" class="form-control" name="id">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">编码</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="transactcode">
+                                                        <input type="text" class="form-control" name="code">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">名称</label>
                                                     <div class="col-lg-5">
-                                                        <input type="text" class="form-control" name="transactname">
+                                                        <input type="text" class="form-control" name="nameMedium">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
                                                     <div class="col-lg-5">
-                                                        <textarea class="form-control" rows="3" name="descript"></textarea>
+                                                        <textarea class="form-control" rows="3" name="descShort"></textarea>
                                                     </div>
                                                 </div>
                                             </form>
@@ -241,10 +241,10 @@
                                         <td>
                                             <input type="radio" v-model="" name="chk_list" id="{{transact.id}}" />
                                         </td>
-                                        <td class="center hidden-phone">{{ transact.transcode }}</td>
-                                        <td>{{ transact.transname }}</td>
+                                        <td class="center hidden-phone">{{ transact.code }}</td>
+                                        <td>{{ transact.nameMedium }}</td>
                                         <!-- <td class="hidden-phone">{{ transact.transacttype }}</td> -->
-                                        <td class="hidden-phone">{{ transact.descript}}</td>
+                                        <td class="hidden-phone">{{ transact.descShort}}</td>
                                     </tr>
                                 </tbody>
                             </table>
