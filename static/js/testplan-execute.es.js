@@ -11,12 +11,10 @@ var vBody = new Vue({
 		selectState: '',		// 选择状态
 
 		// save the value obtained from back end and will set to the selects' options
-		testphases: [], 
+		testPlans: [], 
 		testrounds: [],
 		// save the values which is selected by users and will be send to the back end
-		testphaseValue: null,
-		testroundValue: null,
-
+		testPlanId: null,
 		// the cases and scenes obtained from back end
 		testCaseList: [],
 		testSceneList:[],
@@ -73,61 +71,27 @@ var vBody = new Vue({
 	},
 	created: function(){
 		var _this = this;
-		// get testphases
-		let getPhasePro = new Promise((resolve, reject) => {
-			$.ajax({
-				url: address + 'testphaseController/selectAll',
-				data: '',
-				type: 'GET',
-				dataType: 'json',
-				success: function(data, statusTest){
-					if(data.success == true){
-						_this.testphases = data.obj;
-						if(_this.testphases[0]) {
-							_this.testphaseValue = _this.testphases[0].phasename
-							resolve()
-						}
-					} else {
-						Vac.alert('查询用例失败！');
-					}
-				},
-				error: function() {
-					Vac.alert('查询用例出错！');
-				}
-			});
-		})
-		let getRoundPro = new Promise((resolve, reject) => {
-			$.ajax({
-				url: address + 'testroundController/selectAll',
-				data: '',
-				type: 'get',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.success == true){
-						_this.testrounds = data.obj;
-						if(_this.testrounds[0]) {
-							_this.testroundValue = _this.testrounds[0].id
-							resolve()
-						} else {
-							Vac.alert('查询用例失败！');
-						}
-					}
-				},
-				error: function() {
-					Vac.alert('查询用例出错！');
-				}
-			});
-		})
 		let getCaseId = new Promise((resolve, reject) => {
 			_this.caselibId = sessionStorage.getItem('caselibid');
-			resolve();
+			resolve(_this.caselibId);
 		})
-		
-		Promise.all([getPhasePro, getRoundPro, getCaseId])
-			.then(() => {
-				_this.getCases()
-			})
-			.catch(() => { console.log("测试计划及测试轮次数据不全") })
+		getCaseId.then((id) => {
+			Vac.ajax({
+				url: address2 + 'testPlanController/selectAllTestPlan',
+				data: { caseLibId: id },
+				success: function(data){
+					console.log(data);
+					// _this.testrounds = data.obj;
+					// if(_this.testrounds[0]) {
+					// 	_this.testroundValue = _this.testrounds[0].id
+					// 	resolve()
+					// }
+					resolve();
+				}
+			});
+		}).then(() => {
+			_this.getCases();
+		}).catch(err => { Vac.alert(err); });
 		// init the modal 
 		$('#add-modal').on('hidden.bs.modal', function (e) {
 			var scenes = _this.selectedScene;
@@ -148,10 +112,7 @@ var vBody = new Vue({
 		$('.3-ul').css({display: 'block'})
 		$('.3-6').css({color: '#ff6c60'})
 	},
-	// updated: function(){
-	// 	console.log("updated")
-	// 	this.setSelectListener()
-	// },
+
 	watch: {
 		"selectedCases": function(value, oldVal) {
 			this.checkall = (value.length === this.caseIds.length)
@@ -179,33 +140,38 @@ var vBody = new Vue({
 		},
 		executeAll: function(){
 			var _this = this;
-			if(!this.executionround) {
-				Vac.alert('请填写执行轮次');return;
+			if(!this.userId ) {
+				Vac.alert('请填写用户id');return;
+			}
+			if(!this.recordflag) {
+				Vac.alert('请填写recordflag');return;
+			}
+			if (!this.exeScope) {
+				Vac.alert('请填写执行范围');return;
+			}
+			if (!this.testPlanId) {
+				Vac.alert('请选择测试计划');return;
 			}
 			var data = {
-				executionround: this.executionround,
+				userId: this.userId,
 				recordflag: this.recordflag,
 				exeScope: this.exeScope,
 				selectState: this.selectState,
-				caselibId: this.caselibId,
-				testPhase: this.testphaseValue,
-				testRound: this.testroundValue
+				testPlanId: this.testPlanId
 			}
-			$.ajax({
-				url: address + 'executeController/t1',
+			Vac.ajax({
+				url: address2 + 'executeController/t1',
 				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText) {
-					if (data.success === true) {
-						_this.startQueryResult(data.msg);
-					}else {
-						Vac.alert('执行失败！');
+				success: function(data) {
+					if (data.respCode === '0000') {
+						_this.startQueryResult(data.respMsg);
+					} else {
+						Vac.alert(respMsg);
 						_this.setResultIcon();
 					}
 				},
 				error: function(){
-					Vac.alert('执行失败！');
+					Vac.alert('网络错误，执行失败！');
 					_this.setResultIcon();
 				}
 			})
@@ -277,14 +243,12 @@ var vBody = new Vue({
 		addScene: function() {
 			var _this = this;
 			
-			$.ajax({
-				url: address + 'sceneController/selectBycaseLibId',
-				data: 'caseLibId='+this.caselibId,
-				dataType: 'json',
-				type: 'post',
+			Vac.ajax({
+				url: address2 + 'sceneController/selectAllScene',
+				data: { caseLibId: this.caselibId },
 				success: function(data, statusText){
-					if(data.success == true){
-						_this.allscenes = data.obj;
+					if(data.respCode == '0000'){
+						_this.allscenes = data.list;
 						$('#add-modal').modal('show');
 					}
 				}
@@ -325,13 +289,11 @@ var vBody = new Vue({
 					testcaseList,
 					sceneCaseList
 				}
-				$.ajax({
-					url: address + 'testexecutioninstanceController/delete',
+				Vac.ajax({
+					url: address2 + 'caseExecuteInstance/deleteCaseExecuteInstance',
 					data: data,
-					type: 'post',
-					dataType: 'json',
 					success: function(data, statusText){
-						if(data.success){
+						if(data.respCode === '0000'){
 							$('#add-modal').modal('hide');
 							Vac.alert('移除成功')
 							_this.getCases()
@@ -355,21 +317,18 @@ var vBody = new Vue({
 				scenecaseList: ''			//  暂时为空 [{"sceneId":1,"testcaseList":[1,2]}]
 			};
 			// send data and display the modal 
-			$.ajax({
-				url: address + 'testexecutioninstanceController/insert',
-				// url: 'api/testexecution.json',
+			Vac.ajax({
+				url: address2 + 'caseExecuteInstance/insertCaseExecuteInstance',
 				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.success){
+				success: function(data){
+					if(data.respCode === '0000'){
 						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
 						_this.getCases()
 						// _this.alertShow = true;
 						// _this.tooltipMessage = '添加成功';
 					}else {
-						Vac.alert("添加失败")
+						Vac.alert(data.respMsg)
 					}
 				},
 				error: function() {
@@ -404,18 +363,15 @@ var vBody = new Vue({
 		getCases: function(){
 			var data = {
 				caselibId: this.caselibId,
-				testPhase: this.testphaseValue,
-				testRound: this.testroundValue,
+				testPlanId: this.testPlanId,
 				roundFlag: 2,
 				scopeFlag: 1
 			};
 			var _this = this;
-			$.ajax({
-				url: address + 'testexecutioninstanceController/textexecutioninstancequery',
-				type: 'post',
+			Vac.ajax({
+				url: address2 + 'caseExecuteInstance/queryCaseExecuteInstance',
 				data: data,
-				dataType: 'json',
-				success: function(data, statusText){
+				success: function(data){
 					_this.testCaseList = data.testCaseList;
 					_this.testSceneList = data.testSceneList;
 
@@ -426,7 +382,7 @@ var vBody = new Vue({
 						// Vac.alert('未查询到相关的场景信息！')
 					}
 					_this.caseIds.length = 0
-					_this.flowNodeIds.clear()
+					_this.flowNodeIds.clear();
 					_this.testCaseList.forEach((value) => {
 						Vac.pushNoRepeat(_this.caseIds, value.caseId)
 						if(value.caseCompositeType == 2) {

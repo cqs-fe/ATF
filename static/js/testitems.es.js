@@ -23,29 +23,41 @@ $(document).ready(function(){
     (function() {
         $("#showRows").val("5");
         showRows =  $("#showRows").val();
-        let xmlHttpRequest = null;
-        if (window.XMLHttpRequest) {
-            xmlHttpRequest = new XMLHttpRequest();
-        } else {
-            xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        let url = address + "missionController/selectAllByPage";
-        xmlHttpRequest.open("post", url, true);
-        xmlHttpRequest.setRequestHeader("CONTENT-TYPE", "application/x-www-form-urlencoded");
-        xmlHttpRequest.onreadystatechange = function() {
-            if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
-                let str = xmlHttpRequest.responseText;
-                let obj = eval("(" + str + ")");
-                totalRows = obj.total;
-                dataSet = destructe(obj.rows);
-                initialTable();
-            }
-        };
+        // let xmlHttpRequest = null;
+        // if (window.XMLHttpRequest) {
+        //     xmlHttpRequest = new XMLHttpRequest();
+        // } else {
+        //     xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+        // }
+        // let url = address + "missionController/selectAllByPage";
+        // xmlHttpRequest.open("post", url, true);
+        // xmlHttpRequest.setRequestHeader("CONTENT-TYPE", "application/x-www-form-urlencoded");
+        // xmlHttpRequest.onreadystatechange = function() {
+        //     if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
+        //         let str = xmlHttpRequest.responseText;
+        //         let obj = eval("(" + str + ")");
+        //         totalRows = obj.total;
+        //         dataSet = destructe(obj.rows);
+        //         initialTable();
+        //     }
+        // };
         let page = 1;
         let rows = showRows;
         let data = getSendData(page,rows);
-        console.log(data)
-        xmlHttpRequest.send(data);
+        Vac.ajax({
+            url: address3 + 'missionController/pagedBatchQueryTestMission',
+            data: data,
+            success: function (data) {
+                if (data.respCode !== '0000') {
+                    Vac.alert(data.respMsg);
+                    return;
+                }
+                // 未定
+            },
+            error: function () {
+                Vac.alert('网络错误，请稍候再试~');
+            }
+        });
     })();// 立即执行函数，获取服务器全部数据结束
 
     $('.3').addClass('open');
@@ -56,27 +68,16 @@ $(document).ready(function(){
     // 添加模态框显示时的初始化
     (function(){
         $("a[id='addModalBtn']").click(function(){
-
-            loginDetect().then(
-                function(response){
-                    if(response.success === true){
-                        initialForm(response.obj.id, response.obj.username);
-                    }else{
-                        $("#vac-nologin-alert").modal('show');
-                        return;
-                    }
-                },
-                function(){
-                    $("#vac-nologin-alert").modal('show');
-                    return;
-                });
-
+            if (!loginDetect()) {
+                $("#vac-nologin-alert").modal('show');
+                return;
+            }
             // initial Form
             function initialForm(userid, username){
                 $('#addModal').modal('show');
                 $('#createUser').val("");
             };// initial Form end
-
+            initialForm();
         });
     })(); //添加模态框显示时的初始化 结束
 
@@ -126,13 +127,11 @@ $(document).ready(function(){
     (function(){
         $("#btn-add").click(function(){
             var data = $("#addForm").serialize();
-            $.ajax({
-                url: address + "missionController/insert",
-                type: "post",
-                dataType: "json",
-                data: data,
+            Vac.ajax({
+                url: address3 + "missionController/addSingleTestMission",
+                data: getJson(data),
                 success: function(data, textStatus){
-                    if(data.success === true){
+                    if(data.respCode === '0000'){
                         Vac.alert('添加成功！')
                         $("#addModal").modal("hide");
                         updateTableAndPagination(currentPage); 
@@ -151,15 +150,12 @@ $(document).ready(function(){
     //更改按钮，发送ajax
     (function(){
         $("#btn-alter").click(function(){
-            console.log(44)
             var data = $("#alterForm").serialize()+"&id="+itemId;
-            $.ajax({
-                url: address + "missionController/update",
-                type: "post",
-                dataType: "json",
-                data: data,
-                success: function(data, textStatus){
-                    if(data.success === true){
+            Vac.ajax({
+                url: address3 + "missionController/modifySingleTestMission",
+                data: getJson(data),
+                success: function(data){
+                    if(data.respCode === '0000'){
                         Vac.alert('修改成功！')
                         $("#alterModal").modal("hide");
                         updateTableAndPagination(currentPage); 
@@ -207,7 +203,6 @@ $(document).ready(function(){
 
 //初始化table
 function initialTable() {
-
     createTable(dataSet);
     // 初始化分页组件
     totalPage = Math.ceil(totalRows / showRows); // 全部页码的数量
@@ -227,29 +222,10 @@ function initialTable() {
 
 // Show alter modal
 function showAlterModal(button){
-    loginDetect().then(
-        function(response){
-            if(response.success === true){
-                initialForm(response.obj.id, response.obj.username);
-            }else{
+    if (!loginDetect()) {
                 $("#vac-nologin-alert").modal('show');
                 return;
             }
-        },
-        function(){
-            $("#vac-nologin-alert").modal('show');
-            return;
-        });
-    //console.log(this);
-    // var itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
-    // var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
-    // var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
-    // var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
-
-    // $('#view-itemcode').val(itemId);
-    // $('#view-itemname').val(itemName);
-    // $('#view-itemtype').val(itemType);
-    // $('#view-projectCode').val(projectCode);
     var tr = button.parentNode.parentNode;
     itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
     var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
@@ -291,13 +267,12 @@ function updateTableAndPagination(destinatePage){
     var page = destinatePage; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
-        type: "post",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         data: data,
-        dataType: 'json',
         success: function(data, statusText){
-            if(data.total >= 0){
+            if(data.respCode === '0000'){console.log(data);
+                // 处理待定
                 dataSet = destructe(data.rows);
                 createTable(dataSet);
                 var lis = document.getElementById("pagination").getElementsByTagName("li");
@@ -331,13 +306,13 @@ function nextPage(){
     var page = parseInt(currentPage) + 1; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         type: "post",
         data: data,
         dataType: 'json',
-        success: function(data, statusText){
-            if(data.total >= 0){
+        success: function(data){
+            if(data.respCode === '0000'){
                 var dataSet = null;
                 dataSet = destructe(data.rows);
                 createTable(dataSet);
@@ -385,13 +360,13 @@ function previousPage(){
     var page = parseInt(currentPage) - 1; // 页码
     var rows = showRows;  //每页的大小
     var data = getSendData(page, rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         type: "post",
         data: data,
         dataType: 'json',
         success: function(data, statusText){
-            if(data.total >= 0){
+            if(data.respCode === '0000'){
                 var dataSet = null;
                 dataSet = destructe(data.rows);
                 createTable(dataSet);
@@ -437,13 +412,13 @@ function firstPage(){
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
     var data = getSendData(page, rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         type: "post",
         data: data,
         dataType: 'json',
         success: function(data, statusText){
-            if(data.total >= 0){
+            if(data.respCode === '0000'){
                 dataSet = destructe(data.rows);
                 createTable(dataSet);
 
@@ -478,13 +453,11 @@ function lastPage(){
     var page = totalPage; // 页码
     var rows = showRows;  //每页的大小
     var data = getSendData(page,rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
-        type: "post",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         data: data,
-        dataType: 'json',
-        success: function(data, statusText){
-            if(data.total >= 0){
+        success: function(data){
+            if(data.respCode === '0000'){
                 dataSet = destructe(data.rows);
                 createTable(dataSet);
                 currentPage = parseInt(page);
@@ -520,13 +493,13 @@ function gotoPage(){
     var page = destinatePage; // 页码
     var rows = showRows;  //每页的大小
     var data = getSendData(page,rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         type: "post",
         data: data,
         dataType: 'json',
         success: function(data, statusText){
-            if(data.total >= 0){
+            if(data.respCode === '0000'){
                 dataSet = destructe(data.rows);
                 createTable(dataSet);
                 currentPage = parseInt(page);
@@ -605,13 +578,11 @@ function changeShowRows(event){
     var page = 1; // 页码
     var rows = event.target.value;  //每页的大小
     var data = getSendData(page, rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
-        type: "post",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         data: data,
-        dataType: 'json',
         success: function(data, statusText){
-            if(data.total >= 0){
+            if(data.respCode === '0000'){
                 showRows = rows;
                 dataSet = destructe(data.rows);
                 createTable(dataSet);
@@ -696,13 +667,11 @@ function search(){
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
-    $.ajax({
-        url: address + "missionController/selectAllByPage",
-        type: "post",
+    Vac.ajax({
+        url: address3 + "missionController/pagedBatchQueryTestMission",
         data: data,
-        dataType: 'json',
         success: function(data, statusText){
-            if(data.total >= 0){
+            if(data.respCode === '0000'){
                 dataSet = destructe(data.rows);
                 console.log(dataSet);
                 createTable(dataSet);
@@ -764,42 +733,22 @@ function resort(e){
 //重新排序 结束
 //检测用户登录状态，添加 更改操作需要有登陆权限
 function loginDetect(){
-    return new Promise(function(resolve, reject){
-        var sessionId = window.sessionStorage.getItem("sessionId");
-        if(sessionId !== null && sessionId !== ""){
-            var client = null;
-            if(window.XMLHttpRequest){
-                client = new XMLHttpRequest();
-            }else{
-                client = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            var url = address + "userController/getUser";
-            client.open("POST", url, true);
-            client.onreadystatechange = function(){
-                if(this.readyState !== 4){
-                    return;
-                }
-                if(this.status === 200){
-                    resolve(this.response);
-                }else{
-                    reject(new Error(this.statusText));
-                }
-            };
-            client.setRequestHeader("CONTENT-TYPE", "application/x-www-form-urlencoded");
-            client.responseType = "json";
-            client.setRequestHeader("Accept", "application/json");
-            // console.log(sessionId);
-            var data = "sessionId=" + sessionId;
-            client.send(data);
-
-        }else{
-            reject();
+    var userId = window.sessionStorage.getItem('userId');
+    if(userId != undefined && userId != ''){
+        return true;
+    } else {
+        return false;
         }
-    });
 }
 //检测用户登录状态，添加 更改操作需要有登陆权限 结束
 //得到发送的data
 function getSendData(page, rows){
-    return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&missionName="+sendData.missionName+"&missionCode="+sendData.missionCode+"&testProjectId="+sendData.testProjectId;
+    return {
+        pageSize: rows,
+        currentPage: page,
+        orderType: sendData.order,
+        orderColumns: sendData.sort
+    };
+    // return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&missionName="+sendData.missionName+"&missionCode="+sendData.missionCode+"&testProjectId="+sendData.testProjectId;
 }
 //得到发送的data

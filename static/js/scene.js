@@ -208,7 +208,7 @@ var app = new Vue({
         toSceneManagement: function(e) {
             var sceneid = $(e.target).parent().prev().prev().prev().children().attr('id'),
                 scenename = $(e.target).parent().prev().prev().html();
-            location.href = "SceneManagement.html?sceneid=" + sceneid + "&" + "scenename=" + scenename;
+            location.href = "scene-setting.html?sceneid=" + sceneid + "&" + "scenename=" + scenename;
         }
 
     },

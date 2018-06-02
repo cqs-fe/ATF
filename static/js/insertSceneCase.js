@@ -661,7 +661,7 @@ var app = new Vue({
             var thisURL = document.URL,
                 getval = thisURL.split('?')[1],
                 keyval = getval.split('&');
-            this.url_parameter = 'SceneManagement.html?' + getval;
+            this.url_parameter = 'scene-setting.html?' + getval;
             this.sceneid = keyval[0].split('=')[1],
             this.scenename = decodeURI(keyval[1].split('=')[1]);
         },
@@ -703,7 +703,7 @@ var app = new Vue({
                     },
                     success: function(data) {
                         if (data.success) {
-                            location.href = "SceneManagement.html?sceneid=" + that.sceneid + "&" + "scenename=" + that.scenename;
+                            location.href = "scene-setting.html?sceneid=" + that.sceneid + "&" + "scenename=" + that.scenename;
                             $('#successModal').modal();
                         } else {
                             $('#failModal').modal();
