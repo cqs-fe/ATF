@@ -682,7 +682,7 @@ var app = new Vue({
         //获取用户
         getUsers:function() {
             $.ajax({
-                url: address + 'userController/selectAll',
+                url: address2 + 'userController/selectAll',
                 type: 'GET',
                 success: function(data) {
                     app.users = data.obj;

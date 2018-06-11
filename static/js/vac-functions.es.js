@@ -140,42 +140,40 @@ Vac.startDrag = function (triggerElement, targetElement) {
  * 发送ajax
  * @param { Object } option 发送ajax的设置项
  */
-Vac.ajax = function({url, async = true,type = 'get', data = '', dataType = 'json', success}) {
-  if(!url) {
-    console.log('Error in Vac.ajax: no available url.')
-    return
-  }
-  if(!success) {
-    console.log('Error in Vac.ajax: no available success function.')
-    return
-  }
-  let request = null
-  if (window.XMLHttpRequest) {
-    //Firefox, Opera, IE7, and other browsers will use the native object
-    request = new XMLHttpRequest();
-  } else {
-    //IE 5 and 6 will use the ActiveX control
-    request = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-
-  request.onreadystatechange = function () { // 状态发生变化时，函数被回调
-    if (request.readyState === 4) { // 成功完成
-        // 判断响应结果:
-        if (request.status === 200) {
-            // 成功，通过responseText拿到响应的文本:
-            success(JSON.parse(request.responseText), request.status);
-        } else {
-            console.log(request.status)
-        }
-    } else {
-        // HTTP请求还在继续...
-    }
-  }
-
-  // 发送请求:
-  request.open(type, url, async);
-  request.send(data);
-}
+// Vac.ajax = function({url, async = true,type = 'get', data = '', dataType = 'json', success}) {
+//   if(!url) {
+//     console.log('Error in Vac.ajax: no available url.')
+//     return
+//   }
+//   if(!success) {
+//     console.log('Error in Vac.ajax: no available success function.')
+//     return
+//   }
+//   let request = null
+//   if (window.XMLHttpRequest) {
+//     //Firefox, Opera, IE7, and other browsers will use the native object
+//     request = new XMLHttpRequest();
+//   } else {
+//     //IE 5 and 6 will use the ActiveX control
+//     request = new ActiveXObject("Microsoft.XMLHTTP");
+//   }
+//   request.onreadystatechange = function () { // 状态发生变化时，函数被回调
+//     if (request.readyState === 4) { // 成功完成
+//         // 判断响应结果:
+//         if (request.status === 200) {
+//             // 成功，通过responseText拿到响应的文本:
+//             success(JSON.parse(request.responseText), request.status);
+//         } else {
+//             console.log(request.status)
+//         }
+//     } else {
+//         // HTTP请求还在继续...
+//     }
+//   }
+//   // 发送请求:
+//   request.open(type, url, async);
+//   request.send(data);
+// }
 
 /**
  * 以不重复的方式向数组中插入数据
@@ -279,7 +277,34 @@ Vac.pushNoRepeat = function(array, value){
       }
     }
   }
-
+/**
+ * ajax 请求
+ */
+Vac.ajax = function(opt) {
+  if (typeof opt.data === 'object') {
+    opt.data = JSON.stringify(opt.data);
+  }
+  opt.contentType = opt.contentType || 'application/json';
+  opt.type = opt.type || 'post';
+  opt.dataType = 'json';
+  $.ajax({
+    url: opt.url,
+    data: opt.data || '',
+    type: opt.type || 'post',
+    contentType: opt.contentType || 'application/json',
+    dataType: opt.dataType || 'json',
+    success: function(data) {
+      opt.success(data);
+    },
+    error: function() {
+      if (opt.error) {
+        opt.error();
+      } else {
+        Vac.alert('网络错误，请稍候再试~');
+      }
+    }
+  });
+}
 /**
   * throttle 函数
   * @param { Function } func The function to throttle.

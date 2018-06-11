@@ -60,7 +60,6 @@ var checkFunction = {
 
 
 		function mouseMoveFunction(event){
-			// console.log(new Date().getSeconds())
 			if(selDiv.style.display == 'none'){
 				selDiv.style.display = "block";
 			}
@@ -69,10 +68,8 @@ var checkFunction = {
 			// 获取鼠标移动后的位置
 			_x = startX - moveBeforeX + moveAfterX;
 			_y = startY - moveBeforeY + moveAfterY;
-			// console.log("_X:" + _x + "-- _Y:" + _y);
 			selDiv.style.left = Math.min(_x, startX) + "px";
 			selDiv.style.top = Math.min(_y, startY) + "px";
-			// console.log("Left:" + selDiv.style.left + "-- Top:" + selDiv.style.top);
 			selDiv.style.width = Math.abs(_x - startX) + "px";
 			selDiv.style.height  = Math.abs(_y - startY) + "px";
 
@@ -95,7 +92,7 @@ var checkFunction = {
 				var inputRight =  inputLeft + selectedRange[i].offsetWidth;
 				var inputBottom = inputTop + selectedRange[i].offsetHeight;
 				let value = selectedRange[i].value;
-				if( inputBottom < _b && inputTop > _t && inputLeft > _l && inputRight < _r) {console.log(value);
+				if( inputBottom < _b && inputTop > _t && inputLeft > _l && inputRight < _r) {
 					if ($(selectedRange[i]).hasClass('single-case')) {
 						_this.pushNoRepeat(_this.selectedCases, +value)
 					} else {
@@ -144,7 +141,6 @@ var checkFunction = {
 	},
 	checkallToggle (event){
 		var flag = event.target.checked;
-		// console.log(flag)
 		var inputs = event.target.parentNode.parentNode.parentNode.getElementsByClassName('check-case');
 		let inputValue = []
 		if(flag) {
@@ -164,10 +160,8 @@ var checkFunction = {
 			}
 		}
 		this.setBackground()
-		console.log(this.checkedFlowNodes);
 	},
 	checkallBox (event){
-		// console.log(this.checkall)
 		if(this.checkall === true) {
 			this.caseIds.forEach((value) => {
 				this.selectedCases.includes(value) ? 1 : (this.selectedCases.push(value))

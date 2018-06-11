@@ -90,7 +90,7 @@ var app = new Vue({
             $('#insertForm input[name="creatorId"]').val(creatorId);
             if(nameMedium=='' || ip=='' || portNo=='' || description==''){
                 alert("所有项均为必填项");
-            }else{console.log(getJson($("#insertForm").serialize()));
+            }else{
                 $.ajax({
                     url: address + 'autoTestRunner/addAutoTestRunner',
                     type: 'post',
@@ -121,7 +121,6 @@ var app = new Vue({
                     'id': app.ids
                 }),
                 success: function(data) {
-                    console.info(data);
                     if (data.respCode === '0000') {
                         getTestProject(1, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
@@ -142,7 +141,6 @@ var app = new Vue({
                 contentType: 'application/json',
                 data: getJson($("#updateForm").serialize()),
                 success: function(data) {
-                    console.info(data);
                     if (data.success) {
                         getTestProject(1, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();

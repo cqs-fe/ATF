@@ -45,14 +45,14 @@ var vBody = new Vue({
 			exe_strategy3_status: '1',
 			exe_strategy_err: '1'
 		},
-		exe_strategy1_status: '1',
-			exe_strategy2_start: '1',
-			exe_strategy2_order: '1',
-			exe_strategy2_status: '1',
-			exe_strategy3_start: '1',
-			exe_strategy3_order: '1',
-			exe_strategy3_status: '1',
-			exe_strategy_err: '1',
+		exeStrategy1Status: '1',
+		exeStrategy2Start: '1',
+		exeStrategy2Order: '1',
+		exeStrategy2Status: '1',
+		exeStrategy3Start: '1',
+		exeStrategy3Order: '1',
+		exeStrategy3Status: '1',
+		exeStrategyErr: '1',
 		checkall: false,
 		// save the selected cases
 		selectedCases: [],
@@ -172,12 +172,10 @@ var vBody = new Vue({
 		},
 		getCases: function(){
 			var _this = this;
-			$.ajax({
-				url: address + 'sceneController/selectByPrimaryKey',
+			Vac.ajax({
+				url: address3 + 'sceneController/selectScene',
 				// url: '/api/getcaseinscene',
-				data: 'id='+_this.sceneid,
-				type: 'post',
-				dataType: 'json',
+				data: { id: +_this.sceneid },
 				success: function(data, statusText){
 					if(data.success == true){
 						// _this.sceneInfo = data.obj;
@@ -218,28 +216,14 @@ var vBody = new Vue({
 						_this.caseMaxLength = caseMaxLength;
 						data.obj.caseGroup = caseGroup;
 						_this.sceneInfo = data.obj;
-						// var o = {
-							_this.exeStrategy1Status= data.obj.exe_strategy1_status || 1;
-							_this.exeStrategy2Start=data.obj.exe_strategy2_start || '1';
-							_this.exeStrategy2Order= data.obj.exe_strategy2_order || '1';
-							_this.exeStrategy2Status= data.obj.exe_strategy2_status || '1';
-							_this.exeStrategy3Start= data.obj.exe_strategy3_start || '1';
-							_this.exeStrategy3Order= data.obj.exe_strategy3_order || '1';
-							_this.exeStrategy3Status= data.obj.exe_strategy3_status || '1';
-							_this.exeStrategyErr= data.obj.exe_strategy_err || '1';
-						// };
-						// ({
-						// 	exeStrategy1Status: _this.exe_strategy.exe_strategy1_status || '1';
-						// 	exeStrategy2Start:_this.exe_strategy.exe_strategy2_start || '1',
-						// 	exeStrategy2Order: _this.exe_strategy.exe_strategy2_order || '1',
-						// 	exeStrategy2Status: _this.exe_strategy.exe_strategy2_status || '1',
-						// 	exeStrategy3Start: _this.exe_strategy.exe_strategy3_start || '1',
-						// 	exeStrategy3Order: _this.exe_strategy.exe_strategy3_order || '1',
-						// 	exeStrategy3Status: _this.exe_strategy.exe_strategy3_status || '1',
-						// 	exeStrategyErr: _this.exe_strategy.exe_strategy_err || '1'
-						// } = data.obj);
-						// _this.exe_strategy = o;
-						console.log(_this.exe_strategy)
+						_this.exeStrategy1Status= data.obj.exe_strategy1_status || 1;
+						_this.exeStrategy2Start=data.obj.exe_strategy2_start || '1';
+						_this.exeStrategy2Order= data.obj.exe_strategy2_order || '1';
+						_this.exeStrategy2Status= data.obj.exe_strategy2_status || '1';
+						_this.exeStrategy3Start= data.obj.exe_strategy3_start || '1';
+						_this.exeStrategy3Order= data.obj.exe_strategy3_order || '1';
+						_this.exeStrategy3Status= data.obj.exe_strategy3_status || '1';
+						_this.exeStrategyErr= data.obj.exe_strategy_err || '1';
 						if(!(data.obj.caseDtos && data.obj.caseDtos.length)) {
 							Vac.alert('未查询到相关的用例信息')
 						}
@@ -262,15 +246,19 @@ var vBody = new Vue({
 		},
 		getTriggers: function(){
 			var _this = this;
-			$.ajax({
-				url: address + 'trigerController/trigerqueryinScene',
-				data: 'sceneId='+_this.sceneid,
-				type: 'post',
-				dataType: 'json',
+			Vac.ajax({
+				url: address3 + 'trigerController/queryTrigerForScene',
+				data: { sceneId: _this.sceneid },
 				success: function(data){
-					if(data.success == true){
-						_this.triggers = data.obj;
+					if(data.respCode == '0000'){
+						_this.triggers = data.trigerDtoList;
+						console.log( data.trigerDtoList);
+					} else {
+						Vac.alert(data.respMsg);
 					}
+				},
+				error: function () {
+					Vac.alert('网络错误，请稍候再试~');
 				}
 			});
 		},
@@ -331,44 +319,35 @@ var vBody = new Vue({
 				}
 				this.triggerInfo.editTriggerType = "编辑";
 				// 获取触发器内容
-				$.ajax({
-					url: address + 'trigerController/trigerquery',
-					data: 'trigerId=' + _this.triggerInfo.selectedTrigger[0],
-					type: 'post',
-					dataType: 'json',
+				Vac.ajax({
+					url: address3 + 'trigerController/queryTriger',
+					data: { id: _this.triggerInfo.selectedTrigger[0] },
 					success: function(data, statusText){
-						if(data.success == true){
-							({
-								id: _this.editTriggerData.triggerId,
-								trigerName: _this.editTriggerData.name,
-								trigerDesc: _this.editTriggerData.desc,
-								occasions: _this.editTriggerData.occasions,
-								exeConditionRelate: _this.editTriggerData.Conditionrelate,
-								conditions: _this.editTriggerData.conditions,
-								actions: _this.editTriggerData.actions
-							} = data.obj);
+						if(data.respCode == '0000'){
+							// ({
+							// 	id: _this.editTriggerData.triggerId,
+							// 	trigerName: _this.editTriggerData.name,
+							// 	trigerDesc: _this.editTriggerData.desc,
+							// 	occasions: _this.editTriggerData.occasions,
+							// 	exeConditionRelate: _this.editTriggerData.Conditionrelate,
+							// 	conditions: _this.editTriggerData.conditions,
+							// 	actions: _this.editTriggerData.actions
+							// } = data.obj);
+							_this.editTriggerData.triggerId = data.trigerEntity.id;
+							_this.editTriggerData.name = data.trigerEntity.trigerName;
+							_this.editTriggerData.desc = data.trigerEntity.trigerDesc;
+							_this.editTriggerData.occasions = data.occasions;
+							_this.editTriggerData.Conditionrelate = data.trigerEntity.exeConditionRelate;
+							_this.editTriggerData.conditions = data.conditions;
+							_this.editTriggerData.actions = data.actions;
 
 							var tbody = $('#conditionsBody');
-							var conditions = data.obj.conditions;
+							var conditions = data.conditions;
 							var actionWrapper = $('.trigger-action-wrapper');
-							var actions = data.obj.actions;
+							var actions = data.actions;
 
-							// if(conditions && conditions.length){
-							// 	var length = conditions.length;
-							// 	for(var i=0;i<length;i++){
-							// 		var tr = $(`<tr><td><select class="objectname"><option value="1" selected>用例编号</option>
-       //                              <option value="2">测试系统名称</option>
-       //                              <option value="3">功能点名称</option>
-       //                              </select> </td><td><select class="matchtype"><option value="1">
-							// 			等于</option><option value="2">大于</option></select></td><td><input type="text" name="" style="width:100%;height: 100%;border: none;" class="value">
-       //                      			</td><td><button class="btn btn-default">删除</button>
-       //                      			</td></tr>`);
-							// 		tbody.append(tr);
-							// 	}
-							// }
 							var trs = $('#conditionsBody tr');
-							for(var i=0; i<trs.length;i++){
-								
+							for(var i=0; i<trs.length;i++){console.log(trs.length)
 								$('.objectName',trs[i]).val(conditions[i].objectName);
 								$('.matchType',trs[i]).val(conditions[i].matchType);
 								$('.value',trs[i]).val(conditions[i].value);
@@ -378,9 +357,9 @@ var vBody = new Vue({
 							var divs = $('.action-item-wrapper');
 							for(var i=0; i<divs.length;i++){
 								$('.id', divs[i]).prop('data-actionid',actions[i].id);
-								$('.actionname', divs[i]).val(actions[i].actionname);
-								$('.actiontype',divs[i]).val(actions[i].actiontype);
-								$('.scriptcontent',divs[i]).val(actions[i].scriptcontent);
+								$('.actionname', divs[i]).val(actions[i].actionName);
+								$('.actiontype',divs[i]).val(actions[i].actionType);
+								$('.scriptcontent',divs[i]).val(actions[i].scriptContent);
 								$('.btn-removeaction', divs[i]).click(_this.removeTriggerAction);
 							}
 						}
@@ -396,17 +375,15 @@ var vBody = new Vue({
 				var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm');
 				
 				promise.then(() => {
-					$.ajax({
-						url: address + 'trigerController/delete',
-						data: 'id='+ _this.triggerInfo.selectedTrigger[0],
-						type: 'post',
-						dataType: 'json',
+					Vac.ajax({
+						url: address3 + 'trigerController/deleteTriger',
+						data: { id:  _this.triggerInfo.selectedTrigger[0] },
 						success: function(data, statusText){
-							if(data.success === true) {
-								Vac.alert(data.msg);
+							if(data.respCode === '0000') {
+								Vac.alert(data.respMsg);
 								_this.getTriggers();
 							}else {
-								Vac.alert('删除失败' + data.msg);
+								Vac.alert('删除失败' + data.respMsg);
 							}
 						}
 					});
@@ -468,29 +445,26 @@ var vBody = new Vue({
 			// 新增保存
 			function save1(){
 				var data = {
-					sceneid: _this.sceneid,
+					sceneId: _this.sceneid,
 					name: _this.editTriggerData.name,
 					desc: _this.editTriggerData.desc,
-					occasions: _this.editTriggerData.occasions,
-					Conditionrelate: _this.editTriggerData.Conditionrelate
+					occasions: '[' + _this.editTriggerData.occasions.map(v => `"${v}"`) + ']',
+					conditionRelate: _this.editTriggerData.Conditionrelate
 				};
 				var obj = getDataInTable(1);
 				data.conditions = obj.conditions;
 				data.actions = obj.actions;
 				
-				$.ajax({
-					url: address + 'trigerController/insert',
+				Vac.ajax({
+					url: address3 + 'trigerController/insertTriger',
 					data: data,
-					type: 'post',
-					dataType: 'json',
 					success: function(data, statusText){
-						if(data.success){
-							Vac.alert(data.msg);
-							this.triggerShow = false;
+						if(data.respCode === '0000'){
+							Vac.alert(data.respMsg);
 							_this.getTriggers();
 							_this.triggerShow = false
 						} else {
-							Vac.alert(data.msg);
+							Vac.alert(data.respMsg);
 						}
 					}
 				});
@@ -505,11 +479,11 @@ var vBody = new Vue({
 			function save2(){
 				
 				var data = {
-					triggerId: _this.triggerInfo.selectedTrigger[0],
+					id: +_this.triggerInfo.selectedTrigger[0],
 					name: _this.editTriggerData.name,
 					desc: _this.editTriggerData.desc,
-					occasions: '[' + _this.editTriggerData.occasions+']',
-					Condition_relate: _this.editTriggerData.Conditionrelate,
+					occasions:  JSON.stringify(_this.editTriggerData.occasions),
+					conditionRelate: _this.editTriggerData.Conditionrelate,
 					modifyType: 2
 				};
 				
@@ -517,19 +491,17 @@ var vBody = new Vue({
 				data.conditions = obj.conditions;
 				data.actions = obj.actions;
 				
-				$.ajax({
-					url: address + 'trigerController/update',
+				Vac.ajax({
+					url: address3 + 'trigerController/updataTriger',
 					data: data,
-					type: 'post',
-					dataType: 'json',
 					success: function(data, statusText){
-						if(data.success){
-							Vac.alert(data.msg);
+						if(data.respCode === '0000'){
+							Vac.alert(data.respMsg);
 							this.triggerShow = false;
 							_this.getTriggers();
 							_this.triggerShow = false
 						}else {
-							Vac.alert(data.msg);
+							Vac.alert(data.respMsg);
 						}
 					}
 				});
@@ -542,28 +514,22 @@ var vBody = new Vue({
 				var trs = document.querySelectorAll('#conditionsBody tr');
 				for(var i=0,len=trs.length; i<len; i++){
 					var obj = {};
-					obj.objectName = trs[i].querySelector('.objectname').value;
+					obj.ObjectName = trs[i].querySelector('.objectname').value;
 					obj.matchType = trs[i].querySelector('.matchtype').value;
 					obj.value = trs[i].querySelector('.value').value;
 					conditions.push(JSON.stringify(obj));
 				}
 				var divs = document.querySelectorAll('.action-item-wrapper');
-				for(var i=0,len=divs.length; i<len; i++){
+				for(var i=0,len=divs.length; i < len; i++){
 					var obj = {};
-					if(type == 2){
-						if((_this.editTriggerData.actions[i].id !== undefined))
-						{
-							obj.id = divs[i].querySelector('.id').innerHTML;
-						}
-						obj.trigerid = _this.triggerInfo.selectedTrigger[0];
-					}
-					obj.actionname = divs[i].querySelector('.actionname').value;
-					obj.actiontype = divs[i].querySelector('.actiontype').value;
-					obj.scriptcontent = divs[i].querySelector('.scriptcontent').value;
+					obj.trigerId = _this.triggerInfo.selectedTrigger[0];
+					obj.actionName = divs[i].querySelector('.actionname').value;
+					obj.actionType = divs[i].querySelector('.actiontype').value;
+					obj.scriptContent = divs[i].querySelector('.scriptcontent').value;
 					actions.push(JSON.stringify(obj));
 				}
 				return {
-					conditions: '[' + conditions.toString() + ']',
+					conditions: '[' + conditions + ']',
 					actions: '[' + actions + ']'
 				};
 			}
@@ -577,15 +543,14 @@ var vBody = new Vue({
 				item.id = trs[i].querySelector('input').value;
 				
 				item.state = trs[i].querySelector('select').value;
-				dataArray.push(JSON.stringify(item))
+				// dataArray.push(JSON.stringify(item))
+				dataArray.push(item);
 			}
-			$.ajax({
-				url: address + 'trigerController/updatestate',
-				data: 'states='+ '['+dataArray.toString()+']',
-				type: 'post',
-				dataType: 'json',
+			Vac.ajax({
+				url: address3 + 'trigerController/updateTrigerState',
+				data: { stateDtos:  dataArray },
 				success: function(data, statusText) {
-					if(data.success === true) {
+					if(data.respCode === '0000') {
 						Vac.alert('保存成功！')
 						_this.getTriggers()
 					} else {
@@ -603,15 +568,27 @@ var vBody = new Vue({
 		saveStrategy: function(){
 			
 			var _this = this;
-			_this.exe_strategy.sceneId = _this.sceneid;
-			$.ajax({
-				url: address + 'sceneController/set',
-				data: _this.exe_strategy,
-				dataType: 'json',
-				type: 'post',
+			const o = {
+				id: _this.sceneid,
+				exeStrategy1Status: _this.exeStrategy1Status,
+				exeStrategy2Start: _this.exeStrategy2Start,
+				exeStrategy2Order: _this.exeStrategy2Order,
+				exeStrategy2Status: _this.exeStrategy2Status,
+				exeStrategy3Start: _this.exeStrategy3Start,
+				exeStrategy3Order: _this.exeStrategy3Order,
+				exeStrategy3Status: _this.exeStrategy3Status,
+				exeStrategyErr: _this.exeStrategyErr
+			};
+			Vac.ajax({
+				url: address3 + 'sceneController/sceneStrategySetting',
+				data: o,
 				success: function(data){
-					Vac.alert(data.msg);
-					_this.getCases();
+					if (data.respCode === '0000') {
+						Vac.alert(data.respMsg);
+						_this.getCases();
+					} else {
+						Vac.alert(data.respMsg);						
+					}
 				},
 				error: function(){
 					Vac.alert('设置失败！')

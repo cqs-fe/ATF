@@ -1,4 +1,4 @@
-var address2 = 'http://10.108.223.23:8080/atfcloud1.0a/';
+// var address2 = 'http://10.108.223.23:8080/atfcloud1.0a/';
 var app = new Vue({
     el: '#testRecord',
     data: {
@@ -96,15 +96,12 @@ var app = new Vue({
             //页数变化时的回调
             getRecord(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-        viewCase: function (sceneId, caseid, sourcechannel) {
+        viewCase: function (sceneId, caseid, sourcechannel, item) {
 			var o = {
-				sceneId, caseid,
-				testPhase: this.testphaseValue,
-				testRound: this.testroundValue,
-				// executeround: this.executionround,
-				sourcechannel: sourcechannel,
-				recorderStatus: '2'
-			}
+				sceneId,
+                recorderStatus: '2',
+                item
+            }
 			var args = encodeURIComponent(JSON.stringify(o));
 			window.open('case-operation.html?activeName=exec-record&viewcaseargs='+args, 'case_record');
 		},
