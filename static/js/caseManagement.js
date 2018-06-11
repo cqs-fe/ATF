@@ -1,10 +1,10 @@
-var address2='http://10.108.223.23:8080/atfcloud1.0a';
+var address2='http://10.108.223.23:8080/atfcloud2.0a';
 var app = new Vue({
     el: '#caseManagement',
     data: {
         isShow: false,
         iconflag: true,
-        caseNodeNum: 0,
+        caseNodeNum: 0, 
         caseNode: '</h3><div class="form-group"><label class="col-lg-2 control-label hidden">案例组成类型</label><div class="col-lg-4 hidden"><input type="text" class="form-control" name="caseCompositeType" value="3"></div><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid" id=""></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><input class="form-control" name="subversioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option>模板</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option></select></div><label class="col-lg-2 control-label">测试顺序</label><div class="col-lg-4"><input class="form-control" name="steporder"></div></div><div class="form-group"><label class="col-lg-2 control-label">案例使用状态</label><div class="col-lg-4"><select class="form-control" size="1" name="subusestatus"><option value="1">新增</option><option value="2">评审通过</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
         caseList: [], //案例
         users: [], //所有用户
@@ -661,19 +661,19 @@ var app = new Vue({
         //获取案例
         getCase:function(currentPage, listnum, order, sort) {
             $.ajax({
-                url: address + 'TestcaseController/selectAllByPage',
-                type: 'GET',
-                data: {
-                    'page': currentPage,
-                    'rows': listnum,
-                    'order': order,
-                    'sort': sort
-                },
+                url: address2 + '/testcase/pagedBatchQueryTestCase',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'currentPage': currentPage,
+                    'pageSize': listnum,
+                    'orderColumns': order,
+                    'orderType': sort
+                }),
                 success: function(data) {
                     // console.info(data);
-                    // console.info(data.o.rows);
-                    app.caseList = data.o.rows;
-                    app.tt = data.o.total;
+                    app.caseList = data.testcaseViewRespDTOList;
+                    app.tt = data.totalCount;
                     app.totalPage = Math.ceil(app.tt / listnum);
                     app.pageSize = listnum;
                 }
@@ -978,36 +978,36 @@ var app = new Vue({
                 $('#detailModal').modal();
                 var id=$(event.target).parent().prev().children().attr('id');
                 $.ajax({
-                    url: address+'TestcaseController/viewtestcase',
+                    url: address2+'/testcase/getSingleTestCaseInfo',
                     type: 'post',
                     data: {
                         "id": id
                     },
                     success: function(res){
                         // console.log(res)
-                        var caseData=res.o[1];
+                        var caseData=res.testcaseViewRespDTO;
                         $('#detailForm input[name="casecode"]').val(caseData.casecode);
-                        $('#detailForm select[name="submissionid"]').val(caseData.submissionId);
+                        $('#detailForm select[name="submissionid"]').val(caseData.missionId);
                         $('#detailForm select[name="autid"]').val(caseData.autId);
-                        $('#detailForm input[name="versioncode"]').val(caseData.versionCode);
+                        $('#detailForm input[name="versioncode"]').val(caseData.version);
                         $('#detailForm select[name="transid"]').val(caseData.transId);
                         $('#detailForm select[name="scriptmodeflag"]').val(caseData.scriptModeFlag);
-                        $('#detailForm input[name="testpoint"]').val(caseData.testpoint);
-                        $('#detailForm textarea[name="testdesign"]').val(caseData.testdesign);
-                        $('#detailForm textarea[name="prerequisites"]').val(caseData.prerequisites);
-                        $('#detailForm textarea[name="datarequest"]').val(caseData.datarequest);
-                        $('#detailForm textarea[name="teststep"]').val(caseData.teststep);
-                        $('#detailForm textarea[name="expectresult"]').val(caseData.expectresult);
-                        $('#detailForm textarea[name="checkpoint"]').val(caseData.checkpoint);
-                        $('#detailForm select[name="caseproperty"]').val(caseData.caseproperty);
-                        $('#detailForm select[name="casetype"]').val(caseData.casetype);
+                        $('#detailForm input[name="testpoint"]').val(caseData.testPoint);
+                        $('#detailForm textarea[name="testdesign"]').val(caseData.testDesign);
+                        $('#detailForm textarea[name="prerequisites"]').val(caseData.preRequisites);
+                        $('#detailForm textarea[name="datarequest"]').val(caseData.dataRequest);
+                        $('#detailForm textarea[name="teststep"]').val(caseData.testStep);
+                        $('#detailForm textarea[name="expectresult"]').val(caseData.expectResult);
+                        $('#detailForm textarea[name="checkpoint"]').val(caseData.checkPoint);
+                        $('#detailForm select[name="caseproperty"]').val(caseData.caseProperty);
+                        $('#detailForm select[name="casetype"]').val(caseData.caseType);
                         $('#detailForm select[name="priority"]').val(caseData.priority);
-                        $('#detailForm select[name="author"]').val(caseData.author);
-                        $('#detailForm select[name="reviewer"]').val(caseData.reviewer);
-                        $('#detailForm select[name="executor"]').val(caseData.executor);
-                        $('#detailForm select[name="executemethod"]').val(caseData.executemethod);
-                        $('#detailForm select[name="scriptmode"]').val(caseData.scriptmode);
-                        $('#detailForm select[name="usestatus"]').val(caseData.usestatus);
+                        $('#detailForm select[name="author"]').val(caseData.authorId);
+                        $('#detailForm select[name="reviewer"]').val(caseData.reviewerId);
+                        $('#detailForm select[name="executor"]').val(caseData.executorId);
+                        $('#detailForm select[name="executemethod"]').val(caseData.executeMethod);
+                        $('#detailForm select[name="scriptmode"]').val(caseData.scriptMode);
+                        $('#detailForm select[name="usestatus"]').val(caseData.useStatus);
                         $('#detailForm textarea[name="note"]').val(caseData.note);
                     }
                 });

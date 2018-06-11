@@ -1060,7 +1060,7 @@
                                             <th style="width:8px;">
                                                 <input type="checkbox" v-model="checked" v-on:click="" name="chk_all" id="chk_all" />
                                             </th>
-                                            <!-- <th></th> -->
+                                            <th></th>
                                             <th class="hidden-phone text-center" data-order="casecode" data-sort="desc" onclick="resort(this)">案例编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                             <th class="text-center" data-order="autId" data-sort="desc" onclick="resort(this)">被测系统 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                             <th class="hidden-phone text-center" data-order="transId" data-sort="desc" onclick="resort(this)">功能点 <span class="icon-sort-up" aria-hidden="true"></span></th>
@@ -1083,22 +1083,22 @@
                                             <td >
                                                 <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
                                             </td>
-                                            <!-- <td><span class="icon-angle-right" v-show="case.caseCompositeType==='2-流程案例'" @click="getSubCase($event)"></span></td> -->
+                                            <td><span class="icon-angle-right" v-show="case.caseCompositeType=='2'" @click="getSubCase($event)"></span></td>
                                             <td class="center hidden-phone"><a @click="showDetail($event)" class="detail-link">{{ case.casecode }}</a></td>
-                                            <td>{{ case.autId }}</td>
-                                            <td class="hidden-phone">{{ case.transId }}</td>
-                                            <td class="hidden-phone">{{ case.caseCompositeType }}</td>
+                                            <td>{{ case.autName }}</td>
+                                            <td class="hidden-phone">{{ case.transName }}</td>
+                                            <td>{{ case.caseCompositeType=='1'?'单用例':'流程用例' }}</td>
                                             <td class="center hidden-phone">{{ case.useStatus }}</td>
-                                            <td class="center">{{case.scriptModeFlag}}</td>
-                                            <td class="center hidden-phone">{{ case.author }}</td>
-                                            <td class="center hidden-phone">{{ case.executor }}</td>
-                                            <td class="center hidden-phone">{{ case.reviewer }}</td>
+                                            <td class="center">{{case.scriptTemplateName}}</td>
+                                            <td class="center hidden-phone">{{ case.authorName }}</td>
+                                            <td class="center hidden-phone">{{ case.executorName }}</td>
+                                            <td class="center hidden-phone">{{ case.reviewerName }}</td>
                                             <td class="center hidden-phone">{{ case.executeMethod }}</td>
-                                            <td class="center">{{ case.submissionId }}</td>
+                                            <td class="center">{{ case.missionName }}</td>
                                             <td class="center">{{ case.priority }}</td>
-                                            <td class="center">{{ case.casetype }}</td>
-                                            <td class="center">{{ case.caseproperty }}</td>
-                                            <td class="center">{{ case.testpoint }}</td>
+                                            <td class="center">{{ case.caseType }}</td>
+                                            <td class="center">{{ case.caseProperty }}</td>
+                                            <td class="center">{{ case.testPoint }}</td>
 
                                         </tr>
                                     </tbody>
