@@ -38,7 +38,7 @@ $(document).ready(function() {
             getAutandTrans: function() {
                 Vac.ajax({
                     // async: false,
-                    url: address2 + "/aut/queryListAut",
+                    url: address3 + "/aut/queryListAut",
                     type: "POST",
                     data: '',
                     success: function(data) {
@@ -57,7 +57,7 @@ $(document).ready(function() {
                         mainVue.autId = sessionStorage.getItem("autId");
                         $("#autSelect").val(mainVue.autId);
                         Vac.ajax({
-                            url: address2 + 'transactController/showalltransact',
+                            url: address3 + 'transactController/showalltransact',
                             data: { 'autlistselect': mainVue.autId },
                             success: function(data) {
                                 if (data.respCode !== '0000') {
@@ -85,7 +85,7 @@ $(document).ready(function() {
             autSelect: function() {
                 Vac.ajax({
                     async: true,
-                    url: address2 + "/aut/queryListAut",
+                    url: address3 + "/aut/queryListAut",
                     success: function(data) {
                         if (data.respCode !== '0000') {
                             Vac.alert('查询测试系统失败');
@@ -246,7 +246,7 @@ $(document).ready(function() {
                         }
                         editDataVue.operationRows = [];
                         Vac.ajax({
-                            url: address2 + 'scripttemplateController/showScripttemplateTable',
+                            url: address3 + 'scripttemplateController/showScripttemplateTable',
                             data: data,
                             success: function(data) {
                                 // _this.scriptIsChanged = false
@@ -292,7 +292,7 @@ $(document).ready(function() {
             showScripttemplateTable: function(args) {
                 var _this = this;
                 Vac.ajax({
-                    url: address2 + 'scripttemplateController/showScripttemplateTable',
+                    url: address3 + 'scripttemplateController/showScripttemplateTable',
                     data: args,
                     success: function(data) {
                         // _this.scriptIsChanged = false
@@ -663,7 +663,7 @@ $(document).ready(function() {
             para: function() {
                var sendData = this.generateScriptString();
                 $.ajax2({
-                    url: address2 + 'scripttemplateController/showscripttemplateTableSave',
+                    url: address3 + 'scripttemplateController/showscripttemplateTableSave',
                     type: 'post',
                     data: {
                         'autId': mainVue.autId,
@@ -713,7 +713,7 @@ $(document).ready(function() {
                 });
                 // 请求函数集
                 $.ajax2({
-                    url: address2 + 'aut/selectFunctionSet',
+                    url: address3 + 'aut/selectFunctionSet',
                     contentType: 'application/json',
                     data: JSON.stringify({ 'id': mainVue.autId }),
                     type: 'post',
@@ -840,7 +840,7 @@ $(document).ready(function() {
                     }
                     var getFunctions = new Promise((resolve, reject) => {
                         $.ajax2({
-                            url: address2 + 'aut/selectMethod',
+                            url: address3 + 'aut/selectMethod',
                             contentType: 'application/json',
                             data: JSON.stringify(data),
                             type: 'post',
@@ -938,7 +938,7 @@ $(document).ready(function() {
                     }
                     newRow.functions = []
                     $.ajax2({
-                        url: address2 + 'aut/selectMethod',
+                        url: address3 + 'aut/selectMethod',
                         data: JSON.stringify({ id: mainVue.autId, classname: newRow.operation.classType }),
                         contentType: 'application/json',
                         type: 'post',
