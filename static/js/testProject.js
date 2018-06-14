@@ -1,4 +1,4 @@
-
+var address2 = 'http://10.108.223.23:8080/atfcloud2.0a/';
 var app = new Vue({
     el: '#v-testProject',
     data: {
@@ -164,9 +164,9 @@ var app = new Vue({
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
             } else {
-                var caselibId = selectedInput.parent().next().next().next().next().html();
+                var caseLibId = selectedInput.parent().next().next().next().next().html();
                 //存储测试项目id到sessionstorage
-                sessionStorage.setItem("caselibid", caselibId);
+                sessionStorage.setItem("caselibId", caseLibId);
                 location.href = "caseManagement.html";
             }
         }
@@ -241,7 +241,7 @@ function resort(target) {
 //搜索系统
 function queryTestProject() {
     $.ajax({
-        url: address + 'testProjectController/selectAllByPage',
+        url: address2 + 'testProjectController/selectAllByPage',
         type: 'POST',
         data: {
             'page': app.currentPage,

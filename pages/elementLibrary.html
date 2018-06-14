@@ -188,6 +188,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
+
                                         <div class="property">
                                             附加属性
                                             <a class="btn btn-white btn-sm pull-right" @click="addAddiProp"><i class="icon-plus"></i></a>
@@ -209,6 +210,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
+
                                         <div class="property">
                                             辅助属性
                                             <a class="btn btn-white btn-sm pull-right" @click="addAssiProp"><i class="icon-plus"></i></a>
@@ -230,53 +232,30 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </section>
-                                    <section class="panel elelink-panel">
-                                        <header class="panel-heading">关联元素</header>
-                                        <div class="linked">
-                                            <div class="linked-left">
-                                                <div class="property">
-                                                    关联元素
-                                                    <a class="btn btn-white btn-sm pull-right" @click="addLinked"><i class="icon-plus"></i></a>
-                                                    <a class="btn btn-white btn-sm pull-right" @click="delLinked"><i class="icon-minus"></i></a>
-                                                </div>
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:5%"></th>
-                                                            <th>关联元素</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="relateNameTbody">
-                                                        <tr class="text-center">
-                                                            <td colspan="3">暂无数据</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="linked-right">
-                                                <div class="property">
-                                                    属性
-                                                    <a class="btn btn-white btn-sm pull-right" @click="addLinkedProp"><i class="icon-plus"></i></a>
-                                                    <a class="btn btn-white btn-sm pull-right" @click="delLinkedProp"><i class="icon-minus"></i></a>
-                                                </div>
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:5%"></th>
-                                                            <th>属性名</th>
-                                                            <th>属性值</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="relatePropTbody">
-                                                        <tr class="text-center">
-                                                            <td colspan="3">暂无数据</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+
+                                        <div class="property">
+                                            关联属性
+                                            <a class="btn btn-white btn-sm pull-right" @click="addLinkedProp"><i class="icon-plus"></i></a>
+                                            <a class="btn btn-white btn-sm pull-right" @click="delLinkedProp"><i class="icon-minus"></i></a>
+                                        </div>
+                                        <div class="property">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:5%"></th>
+                                                        <th>属性名</th>
+                                                        <th>属性值</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="relatePropTbody">
+                                                    <tr class="text-center">
+                                                        <td colspan="3">暂无数据</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </section>
+
                                     <a class="btn btn-info" @click="updateElement">保存</a>
                                 </div>
                             </section>
@@ -296,6 +275,12 @@
                                                         <label class="col-xs-3 control-label">UI名称</label>
                                                         <div class="col-xs-5">
                                                             <input type="text" class="form-control" name="UIName" id="addUIName">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-xs-3 control-label"></label>
+                                                        <div class="col-xs-5">
+                                                            若要添加多个，请以英文逗号“,”隔开。
                                                         </div>
                                                     </div>
                                                     <div class="form-group hidden">
@@ -338,6 +323,12 @@
                                                         <label class="col-xs-3 control-label">元素名称</label>
                                                         <div class="col-xs-5">
                                                             <input type="text" class="form-control" name="ElementName" id="addElementName">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-xs-3 control-label"></label>
+                                                        <div class="col-xs-5">
+                                                            若要添加多个，请以英文逗号“,”隔开。
                                                         </div>
                                                     </div>
                                                     <div class="form-group hidden">
@@ -507,7 +498,7 @@
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
 <script>
-var address2='http://10.108.223.23:8080/atfcloud1.0a';
+var address2='http://10.108.223.23:8080/atfcloud2.0a';
 var app = new Vue({
     el: '#elementLibrary',
     data: function() {
@@ -515,6 +506,7 @@ var app = new Vue({
         return {
             autId: '',
             transactId: '',
+            elementRepositoryId: 6,
             UIName: '',
             UITitle: 'UI',
             eleName: '',
@@ -524,7 +516,6 @@ var app = new Vue({
             mainPropTr: '<tr><td><input type="checkbox" name="mainProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             addiPropTr: '<tr><td><input type="checkbox" name="addiProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             assiPropTr: '<tr><td><input type="checkbox" name="assiProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
-            linkedTr: '<tr><td><input type="radio" name="linkEle" @click="showLinkProp(index)"/></td><td contenteditable="true"></td></tr>',
             linkedPropTr: '<tr><td><input type="checkbox" name="linkProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             classtypeList: [], //控件类型下拉列表
             mainList: [], //主属性
@@ -533,9 +524,7 @@ var app = new Vue({
             addiListLength: 0,
             assiList: [], //辅助属性
             assiListLength: 0,
-            relateElementList: [], //关联元素
-            relateElementListLength: 0,
-            relatePropList: [], //关联元素属性
+            relatePropList: [], //关联属性
             relatePropListLength: 0,
             /*elementtree start*/
             setting1: {
@@ -551,7 +540,7 @@ var app = new Vue({
                 },
                 data: {
                     simpleData: {
-                        enable: true,
+                        enable: false,
                         idKey: 'id', //id编号命名
                         pIdKey: 'parentid', //父id编号命名
                         rootPId: 0
@@ -568,25 +557,28 @@ var app = new Vue({
                     beforeDrag: _this.zTreeBeforeDrag,
                     //点击时的回调函数
                     onClick: function(event, treeId, treeNode, clickFlag) {
+                        console.log(treeNode)
                         var transid = !_this.componentMode ? _this.transactId : _this.transid;
-                        if (treeNode.parentid == '0') { //选择的是UI
+                        if (treeNode.level == 0) { //选择的是UI
                             $(':input', '#UIForm').val('');
                             _this.getUILinkedObjectTree();
                             _this.UIName = treeNode.name;
                             _this.UITitle = treeNode.name;
+                            var uiId=treeNode.id;
                             $('#UIForm input[name="UIName"]').val(treeNode.name);
                             $('#blank').css('display', 'none');
                             $('#UI').css('display', 'block');
                             $('#ele').css('display', 'none');
                             $.ajax({
-                                url: address + 'elementlibraryController/queryUI',
+                                url: address2 + '/elementRepository/querySingleUI',
                                 type: 'post',
-                                data: {
-                                    "transid": transid,
-                                    "UIName": _this.UIName
-                                },
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    "repositoryId": _this.elementRepositoryId,
+                                    "uiId": uiId
+                                }),
                                 success: function(data) {
-                                    var relateObjectId = data.obj.relateIdentifyObjectId;
+                                    var relateObjectId = data.relateIdentifyObjectId;
                                     var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
                                     if (relateObjectId !== null && relateObjectId !== undefined && relateObjectId !== '') {
                                         treeObj.selectNode(treeObj.getNodeByParam("id", relateObjectId, null));
@@ -605,31 +597,33 @@ var app = new Vue({
                             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
                             var nodes = treeObj.getSelectedNodes();
                             _this.eleName = treeNode.name;
+                            _this.elementId=treeNode.id;
                             var parentNode = nodes[0].getParentNode();
                             _this.UIName = parentNode.name;
+                            var uiId=parentNode.id;
                             $("#mainTbody").children().remove();
                             $("#addiTbody").children().remove();
                             $("#assiTbody").children().remove();
-                            $("#relateNameTbody").children().remove();
                             $("#relatePropTbody").children().remove();
                             $('#blank').css('display', 'none');
                             $('#UI').css('display', 'none');
                             $('#ele').css('display', 'block');
                             var transid = !_this.componentMode ? _this.transactId : _this.transid;
                             $.ajax({
-                                url: address + 'elementlibraryController/queryElement',
+                                url: address2 + '/elementRepository/querySingleElement',
                                 type: 'post',
-                                data: {
-                                    "transid": transid,
-                                    "UIName": _this.UIName,
-                                    "ElementName": _this.eleName
-                                },
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    'repositoryId': _this.elementRepositoryId,
+                                    "uiId": uiId,
+                                    "elementId": _this.elementId 
+                                }),
                                 success: function(data) {
-                                    console.log(data)
-                                    var classtype = data.obj.identifyElement.classtype;
+                                    console.log(data);
+                                    var classtype = data.element.classType;
                                     $('#classtypeSelect').val(classtype);
-                                    var relateParentObjectId = data.obj.identifyElement.parentElementId;
-                                    var relateObjectId = data.obj.relateIdentifyObjectId;
+                                    var relateParentObjectId = data.element.relateParentIdentifyObjectId;
+                                    var relateObjectId = data.element.relateIdentifyObjectId;
                                     if (relateParentObjectId !== null && relateParentObjectId !== undefined && relateParentObjectId !== '') {
                                         //父对象
                                         var elePtree = $.fn.zTree.getZTreeObj("eleParentTree");
@@ -648,11 +642,11 @@ var app = new Vue({
                                     }
 
                                     //主属性
-                                    _this.mainList = []
-                                    _this.mainList = data.obj.identifyElement.locatePropertyCollection.main_properties;
+                                    _this.mainList = [];
+                                    _this.mainList = data.element.mainProperties;
                                     _this.mainListLength = _this.mainList.length;
-                                    for (var i = 0; i < _this.mainListLength; i++) {
-                                        var paraTr = $('<tr></tr>'),
+                                    for (let i = 0; i < _this.mainListLength; i++) {
+                                        let paraTr = $('<tr></tr>'),
                                             paraCheckTd = $('<td><input type="checkbox" name="mainProp"/></td>'),
                                             paraNameTd = $('<td contenteditable="true"></td>'),
                                             paraValTd = $('<td contenteditable="true"></td>');
@@ -663,10 +657,10 @@ var app = new Vue({
                                     }
 
                                     //附加属性
-                                    _this.addiList = data.obj.identifyElement.locatePropertyCollection.addtional_properties;
+                                    _this.addiList = data.element.additionalProperties;
                                     _this.addiListLength = _this.addiList.length;
-                                    for (var i = 0; i < _this.addiListLength; i++) {
-                                        var paraTr = $('<tr></tr>'),
+                                    for (let i = 0; i < _this.addiListLength; i++) {
+                                        let paraTr = $('<tr></tr>'),
                                             paraCheckTd = $('<td><input type="checkbox" name="addiProp"/></td>'),
                                             paraNameTd = $('<td contenteditable="true"></td>'),
                                             paraValTd = $('<td contenteditable="true"></td>');
@@ -677,7 +671,7 @@ var app = new Vue({
                                     }
 
                                     //辅助属性
-                                    _this.assiList = data.obj.identifyElement.locatePropertyCollection.assistant_properties;
+                                    _this.assiList = data.element.assistantProperties;
                                     _this.assiListLength = _this.assiList.length;
                                     for (var i = 0; i < _this.assiListLength; i++) {
                                         var paraTr = $('<tr></tr>'),
@@ -689,19 +683,18 @@ var app = new Vue({
                                         paraTr.append(paraCheckTd, paraNameTd, paraValTd);
                                         $('#assiTbody').append(paraTr);
                                     }
-
-                                    //关联元素
-                                    _this.relateElementList = data.obj.relateElementList;
-                                    if (_this.relateElementList) {
-                                        _this.relateElementListLength = _this.relateElementList.length;
-                                        for (var i = 0; i < _this.relateElementListLength; i++) {
-                                            var paraTr = $('<tr></tr>'),
-                                                paraCheckTd = $('<td><input type="radio" name="linkEle" onclick="showLinkProp(' + i + ')"/></td>'),
-                                                paraNameTd = $('<td contenteditable="true"></td>');
-                                            paraNameTd.html(_this.relateElementList[i].name);
-                                            paraTr.append(paraCheckTd, paraNameTd);
-                                            $('#relateNameTbody').append(paraTr);
-                                        }   
+                                    //关联属性
+                                    _this.assiList = data.element.relateProperties;
+                                    _this.assiListLength = _this.assiList.length;
+                                    for (var i = 0; i < _this.assiListLength; i++) {
+                                        var paraTr = $('<tr></tr>'),
+                                            paraCheckTd = $('<td><input type="checkbox" name="assiProp"/></td>'),
+                                            paraNameTd = $('<td contenteditable="true"></td>'),
+                                            paraValTd = $('<td contenteditable="true"></td>');
+                                        paraNameTd.html(_this.assiList[i].name);
+                                        paraValTd.html(_this.assiList[i].value);
+                                        paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                        $('#relatePropTbody').append(paraTr);
                                     }
 
                                 }
@@ -726,9 +719,12 @@ var app = new Vue({
                 data: {
                     simpleData: {
                         enable: true,
-                        idKey: 'id', //id编号命名
-                        pIdKey: 'parentid', //父id编号命名
+                        idKey: 'objectId', //id编号命名
+                        pIdKey: 'parentObjectId', //父id编号命名
                         rootPId: 0
+                    },
+                    key: {
+                        name: "objectName"
                     }
                 },
                 edit: {
@@ -742,7 +738,7 @@ var app = new Vue({
                     // 禁止拖拽
                     beforeDrag: _this.zTreeBeforeDrag,
                     onClick: function(event, treeId, treeNode, clickFlag) {
-                        _this.UILinked = treeNode.name;
+                        _this.UILinked = treeNode.objectName;
                     },
 
                 }
@@ -789,33 +785,62 @@ var app = new Vue({
                     _this.autId = sessionStorage.getItem("autId");
                     $("#autSelect").val(_this.autId);
                     $.ajax({
-                        url: address + 'transactController/showalltransact',
-                        data: { 'autlistselect': _this.autId },
-                        type: "POST",
+                        url: address2 + '/transactController/pagedBatchQueryTransact',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            'currentPage': 1,
+                            'pageSize': 100000,
+                            'orderColumns': 'id',
+                            'orderType': 'asc',
+                            'autId': _this.autId
+                        }),
                         success: function(data) {
-                            var transactList = data.o;
+                            var transactList = data.list;
                             var str = "";
                             for (var i = 0; i < transactList.length; i++) {
 
-                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
                             }
                             $('#transactSelect').html(str);
                             _this.transactId = sessionStorage.getItem("transactId");
                             $("#transactSelect").val(_this.transactId);
                             // 获取ui和element
                             $.ajax({
-                                url: address + 'elementlibraryController/showUIandElement',
+                                url: address2 + '/elementRepository/queryAllElementsForATransact',
                                 type: 'post',
-                                data: { "transid": _this.transactId },
+                                contentType: 'application/json',
+                                data: JSON.stringify({ "transactId": _this.transactId }),
                                 success: function(data) {
+                                    console.log(data)
                                     if (data !== null) {
-                                        $.fn.zTree.init($("#elementtree"), _this.setting1, data.obj);
+                                        var nodes=[];
+                                        var uis=data.uis;
+                                        for(var i=0; i<uis.length; i++){
+                                            var uiNode={};
+                                            uiNode.id=uis[i].uiId;
+                                            uiNode.name=uis[i].uiName;       
+                                            let elements=uis[i].elements;
+                                            if(elements){
+                                                uiNode.children=[];
+                                                for(var j=0; j<elements.length; j++){
+                                                    var eleNode={};
+                                                    eleNode.id=elements[j].elementId;
+                                                    eleNode.name=elements[j].elementName;
+                                                    uiNode.children.push(eleNode);
+                                                }
+                                            }
+                                            nodes.push(uiNode);
+                                        }
+                                        // console.log(nodes)
+                                        $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
+                                        app.elementRepositoryId = data.elementRepositoryId;
                                     }
                                 }
                             });
                             // 获取classtype
                              $.ajax({
-                                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                                url: address2 + '/aut/queryAutVisibleOmClasses',
                                 contentType: 'application/json',
                                 data: JSON.stringify({ 'id': _this.autId }),
                                 type: "POST",
@@ -858,11 +883,18 @@ var app = new Vue({
             var val = $('#autSelect').val();
             $.ajax({
                 async: false,
-                url: address + 'transactController/showalltransact',
-                data: { 'autlistselect': val },
-                type: "POST",
+                url: address2 + '/transactController/pagedBatchQueryTransact',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'currentPage': 1,
+                    'pageSize': 100000,
+                    'orderColumns': 'id',
+                    'orderType': 'asc',
+                    'autId': val,
+                }),
                 success: function(data) {
-                    var transactList = data.o;
+                    var transactList = data.list;
                     var str = "";
                     for (var i = 0; i < transactList.length; i++) {
 
@@ -878,7 +910,7 @@ var app = new Vue({
             // var val = $('#autSelect').val();
             var _this = this;
             $.ajax({
-                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                url: address2 + '/aut/queryAutVisibleOmClasses',
                 contentType: 'application/json',
                 data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
@@ -904,17 +936,30 @@ var app = new Vue({
             if(UIName==''){
                 alert('UI名称不能为空');
             }else{
+                var uiNames;
+                var uis=[];
+                if(UIName.indexOf(',')>0){//批量
+                    uiNames=UIName.split(",");
+                    for(var i=0; i<uiNames.length; i++){
+                        let ui={};
+                        ui.uiName=uiNames[i];
+                        uis.push(ui);
+                    }
+                }else{//单个
+                    let ui={};
+                    ui.uiName=UIName;
+                    uis.push(ui);
+                }
                 $.ajax({
-                    url: address2 + '/elementRepository/addSingleUI',
+                    url: address2 + '/elementRepository/batchAddUI',
                     type: 'post',
-                    data: {
-                        "UIName": UIName,
-                        "transid": transid,
-                        "relateIdentifyObjectId": relateIdentifyObjectId,
-                        "relateParentIdentifyObjectId": relateParentIdentifyObjectId
-                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'repositoryId': _this.elementRepositoryId,
+                        'uis': uis
+                    }),
                     success: function(data) {
-                        if (data.success) {
+                        if (data.respCode==0000) {
                             $('#successModalEle').modal('show');
                             _this.getElementTree();
                             $("#addUIName").val('');
@@ -934,16 +979,17 @@ var app = new Vue({
             var _this = this;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
             var nodes = treeObj.getSelectedNodes();
-            var delUIName = nodes[0].name;
+            var id = nodes[0].id;
             $.ajax({
                 url: address2 + '/elementRepository/deleteSingleUI',
                 type: 'post',
-                data: {
-                    "deleteUI": delUIName,
-                    "transid": _this.transactId,
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "uiId": id,
+                    "repositoryId": _this.elementRepositoryId
+                }),
                 success: function(data) {
-                    if (data.success) {
+                    if (data.respCode==0000) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
                     } else {
@@ -959,7 +1005,7 @@ var app = new Vue({
             var _this = this;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes(),
-                UIName = nodes[0].name,
+                uiId = nodes[0].id,
                 RUIName = $('#RUIName').val(),
                 LtreeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
             var Lnodes,
@@ -982,16 +1028,15 @@ var app = new Vue({
             $.ajax({
                 url: address2 + '/elementRepository/modifySingleUI',
                 type: 'post',
-                data: {
-                    "UIName": UIName,
-                    "transid": _this.transactId,
-                    "RUIName": RUIName,
-                    "relateIdentifyObjectId": relateIdentifyObjectId,
-                    "relateParentIdentifyObjectId": relateParentIdentifyObjectId
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'repositoryId': _this.elementRepositoryId,
+                    "uiId": uiId,
+                    "relateIdentifyObjectId": relateIdentifyObjectId
+                }),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode==0000) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
                         $('#blank').css('display', 'block');
@@ -1027,24 +1072,37 @@ var app = new Vue({
                 relateParentIdentifyObjectId = $("#addEleRelateParentIdentifyObjectId").val(),
                 treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes(),
-                selectedUIName = nodes[0].name;
+                selectedUIName = nodes[0].name,
+                uiId=nodes[0].id;
             if(ElementName==''){
                 alert('元素名称不能为空');
             }else{
+                var elementNames;
+                var elements=[];
+                if(ElementName.indexOf(",")>0){//批量
+                    elementNames=ElementName.split(",");
+                    for(var i=0; i<elementNames.length; i++){
+                        let element={};
+                        element.elementName=elementNames[i];
+                        elements.push(element);
+                    }
+                }else{//单个
+                    let element={};
+                    element.elementName=ElementName;
+                    elements.push(element);
+                }
                 $.ajax({
-                    url: address2 + '/elementRepository/addSingleElement',
+                    url: address2 + '/elementRepository/batchAddOrModifyElement',
                     type: 'post',
-                    data: {
-                        "transid": transid,
-                        "UIName": selectedUIName,
-                        "ElementName": ElementName,
-                        "ClassType": ClassType,
-                        "relateIdentifyObjectId": relateIdentifyObjectId,
-                        "relateParentIdentifyObjectId": relateParentIdentifyObjectId
-                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'repositoryId': _this.elementRepositoryId,
+                        "uiId": uiId,
+                        "elements": elements
+                    }),
                     success: function(data) {
-                        console.info(data);
-                        if (data.success) {
+                        // console.info(data);
+                        if (data.respCode==0000) {
                             $('#successModalEle').modal();
                             _this.getElementTree();
                         } else {
@@ -1061,19 +1119,20 @@ var app = new Vue({
             var _this = this;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
             var nodes = treeObj.getSelectedNodes();
-            var delElementName = nodes[0].name;
-            var delUIName = nodes[0].getParentNode().name;
+            var elementId = nodes[0].id;
+            var uiId = nodes[0].getParentNode().id;
             $.ajax({
                 url: address2 + '/elementRepository/deleteSingleElement',
                 type: 'post',
-                data: {
-                    "deleteElements": delElementName,
-                    "UIName": delUIName,
-                    "transid": _this.transactId,
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'repositoryId': _this.elementRepositoryId,
+                    "elementId": elementId,
+                    "uiId": uiId
+                }),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode==0000) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
                     } else {
@@ -1093,8 +1152,9 @@ var app = new Vue({
             if(nodes.length==0){
                 alert('请先选中元素');
             }else{
-                var UIName = nodes[0].getParentNode().name,
-                    eleName = nodes[0].name;
+                var uiId = nodes[0].getParentNode().id,
+                    eleName = nodes[0].name,
+                    elementId=nodes[0].id;
             }
             var rEleName = $('#rEleName').val(),
                 LtreeObj = $.fn.zTree.getZTreeObj("eleLinkedTree");
@@ -1127,85 +1187,78 @@ var app = new Vue({
             var ClassType = $('#classtypeSelect').val();
             //主属性
             var mainTd,
-                mainName = [],
-                mainVal = [];
+                mainProperties=[],
+                mainItem={};
             $('#mainTbody').find('tr').each(function() {
                 mainTd = $(this).children();
-                mainName.push(mainTd.eq(1).html()); //主属性名称
-                mainVal.push(mainTd.eq(2).html()); //主属性值
+                mainItem.name=mainTd.eq(1).html();
+                mainItem.value=mainTd.eq(2).html();
+                mainItem.method='';
+                mainItem.isRelative=null;
+                mainItem.toolName='';
+                mainProperties.push(mainItem);
             });
             //附加属性
             var addiTd,
-                addiName = [],
-                addiVal = [];
+                additionalProperties=[],
+                addiItem={};
             $('#addiTbody').find('tr').each(function() {
                 addiTd = $(this).children();
-                addiName.push(addiTd.eq(1).html()); //附加属性名称
-                addiVal.push(addiTd.eq(2).html()); //附加属性值
+                addiItem.name=addiTd.eq(1).html();
+                addiItem.value=addiTd.eq(2).html();
+                addiItem.method='';
+                addiItem.isRelative=null;
+                addiItem.toolName='';
+                additionalProperties.push(addiItem);
             });
             //辅助属性
-            var assisTd,
-                assisName = [],
-                assisVal = [];
+            var assiTd,
+                assitantProperties=[],
+                assiItem={};
             $('#assiTbody').find('tr').each(function() {
-                assisTd = $(this).children();
-                assisName.push(assisTd.eq(1).html()); //辅助属性名称
-                assisVal.push(assisTd.eq(2).html()); //辅助属性值
+                assiTd = $(this).children();
+                assiItem.name=assiTd.eq(1).html();
+                assiItem.value=assiTd.eq(2).html();
+                assiItem.method='';
+                assiItem.isRelative=null;
+                assiItem.toolName='';
+                assitantProperties.push(assiItem);
             });
-            //关联元素
-            var relateNameTd,
-                relateName = [];
-            $('#relateNameTbody').find('tr').each(function() {
-                relateNameTd = $(this).children();
-                relateName.push(relateNameTd.eq(1).html());
-            });
-            //关联元素属性
-            var relatePropNameTd,
-                relatePropName = [],
-                relatePropVal = [];
+            //关联属性 
+            var relTd,
+                relateProperties=[],
+                relItem={};
             $('#relatePropTbody').find('tr').each(function() {
-                relatePropNameTd = $(this).children();
-                relatePropName.push(relatePropNameTd.eq(1).html());
-                relatePropVal.push(relatePropNameTd.eq(2).html());
+                relTd = $(this).children();
+                relItem.name=relTd.eq(1).html();
+                relItem.value=relTd.eq(2).html();
+                relItem.method='';
+                relItem.isRelative=null;
+                relItem.toolName='';
+                relateProperties.push(relItem);
             });
             $.ajax({
                 url: address2 + '/elementRepository/modifySingleElement',
                 type: 'post',
-                data: {
-                    "UIName": UIName,
-                    "transid": transid,
-                    "ElementNmae": eleName,
-                    "RElementName": rEleName,
-                    "relateIdentifyObjectId": relateIdentifyObjectId,
-                    "relateParentIdentifyObjectId": relateParentIdentifyObjectId,
-                    "ClassType": ClassType,
-                    //主属性
-                    "mainpropertiesname": mainName.toString(),
-                    "mainpropertiesvalue": mainVal.toString(),
-                    "mainpropertiesmatchMethod": '',
-                    "mainpropertiesisRelative": '',
-                    "mainpropertiestoolName": '',
-                    //附加属性
-                    "addtionalpropertiesname": addiName.toString(),
-                    "addtionalpropertiesvalue": addiVal.toString(),
-                    "addtionalpropertiesmatchMethod": '',
-                    "addtionalpropertiesisRelative": '',
-                    "addtionalpropertiestoolName": '',
-                    //辅助属性
-                    "assistantpropertiesname": assisName.toString(),
-                    "assistantpropertiesvalue": assisVal.toString(),
-                    "assistantpropertiesmatchMethod": '',
-                    "assistantpropertiesisRelative": '',
-                    "assistantpropertiestoolName": '',
-                    //关联元素
-                    "relateElementname": relateName.toString(),
-                    //关联元素属性
-                    "relemainpropertiesname": relatePropName.join('.'),
-                    "relemainpropertiesvalue": relatePropVal.join('.'),
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'repositoryId': _this.elementRepositoryId,
+                    "uiId": uiId,
+                    "element": {
+                        "elementId": elementId,
+                        "elementName": eleName,
+                        "classType": ClassType,
+                        "relateIdentifyObjectId": relateIdentifyObjectId,
+                        "relateParentIdentifyObjectId": relateParentIdentifyObjectId,
+                        "mainProperties": mainProperties,
+                        "additionalProperties": additionalProperties,
+                        "assitantProperties": assitantProperties,
+                        "relateProperties": relateProperties
+                    }
+                }),
                 success: function(data) {
                     // console.log(data);
-                    if (data.success) {
+                    if (data.respCode==0000) {
                         $('#successModalEle').modal();
                         _this.getElementTree();
                         // treeObj.selectNode(nodes[0]);
@@ -1254,16 +1307,6 @@ var app = new Vue({
             var selectedTr = $('#assiTbody').find('input[name="assiProp"]:checked').parent().parent();
             selectedTr.remove();
         },
-        // 添加关联元素
-        addLinked: function() {
-            var curTbody = $('#relateNameTbody');
-            curTbody.append(this.linkedTr);
-        },
-        // 删除关联元素
-        delLinked: function() {
-            var selectedTr = $('#relateNameTbody').find('input[name="linkEle"]:checked').parent().parent();
-            selectedTr.remove();
-        },
         //添加关联元素属性
         addLinkedProp: function() {
             var curTbody = $('#relatePropTbody');
@@ -1280,12 +1323,32 @@ var app = new Vue({
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address + 'elementlibraryController/showUIandElement',
+                url: address2 + '/elementRepository/queryAllElementsForATransact',
                 type: 'post',
-                data: { "transid": transid },
+                contentType: 'application/json',
+                data: JSON.stringify({ "transactId": transid }),
                 success: function(data) {
                     if (data !== null) {
-                        $.fn.zTree.init($("#elementtree"), _this.setting1, data.obj);
+                        var nodes = [];
+                        var uis = data.uis;
+                        for (var i = 0; i < uis.length; i++) {
+                            var uiNode = {};
+                            uiNode.id = uis[i].uiId; 
+                            uiNode.name = uis[i].uiName;                          
+                            let elements = uis[i].elements;
+                            if (elements) {
+                                uiNode.children = [];
+                                for (var j = 0; j < elements.length; j++) {
+                                    var eleNode = {};
+                                    eleNode.id=elements[j].elementId;
+                                    eleNode.name = elements[j].elementName;
+                                    uiNode.children.push(eleNode);
+                                }
+                            }
+                            nodes.push(uiNode);
+                        }
+                        $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
+                        app.elementRepositoryId = data.elementRepositoryId;
                     }
                 }
             });
@@ -1296,7 +1359,6 @@ var app = new Vue({
         },
         //用按钮查询节点  
         searchNodes: function() {
-            console.log(0)
             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
             var keywords = $("#keyword").val();
             var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);
@@ -1311,12 +1373,13 @@ var app = new Vue({
             // var transid = $("#transactSelect").val();
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address + 'object_repoController/queryObject_repoAll',
+                url: address2 + '/objectRepository/queryAllObjectForATransact',
                 type: 'post',
-                data: { "transid": transid },
+                contentType: 'application/json',
+                data: JSON.stringify({ "transactId": transid }),
                 success: function(data) {
                     if (data !== null) {
-                        $.fn.zTree.init($("#UILinkedTree"), _this.setting2, data.obj);
+                        $.fn.zTree.init($("#UILinkedTree"), _this.setting2, data.objects);
                     }
                 }
             });
@@ -1325,9 +1388,9 @@ var app = new Vue({
         setUILinked: function() {
             var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree"),
                 nodes = treeObj.getSelectedNodes(),
-                obj = nodes[0].name;
+                obj = nodes[0].objectName;
             if (nodes[0].getParentNode()) {
-                var pObj = nodes[0].getParentNode().name;
+                var pObj = nodes[0].getParentNode().objectName;
                 $('#UILinkedInput').val(pObj + ' / ' + obj);
             } else {
                 $('#UILinkedInput').val(obj);
@@ -1346,12 +1409,13 @@ var app = new Vue({
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address + 'object_repoController/queryObject_repoAll',
+                url: address2 + '/objectRepository/queryAllObjectForATransact',
                 type: 'post',
-                data: { "transid": transid },
+                contentType: 'application/json',
+                data: JSON.stringify({ "transactId": transid }),
                 success: function(data) {
                     if (data !== null) {
-                        $.fn.zTree.init($("#eleParentTree"), _this.setting2, data.obj);
+                        $.fn.zTree.init($("#eleParentTree"), _this.setting2, data.objects);
                     }
                 }
             });
@@ -1360,9 +1424,9 @@ var app = new Vue({
         setEleParent: function() {
             var treeObj = $.fn.zTree.getZTreeObj("eleParentTree"),
                 nodes = treeObj.getSelectedNodes(),
-                obj = nodes[0].name;
+                obj = nodes[0].objectName;
             if (nodes[0].getParentNode()) {
-                var pObj = nodes[0].getParentNode().name;
+                var pObj = nodes[0].getParentNode().objectName;
                 $('#eleParentInput').val(pObj + ' / ' + obj);
             } else {
                 $('#eleParentInput').val(obj);
@@ -1381,12 +1445,13 @@ var app = new Vue({
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address + 'object_repoController/queryObject_repoAll',
+                url: address2 + '/objectRepository/queryAllObjectForATransact',
                 type: 'post',
-                data: { "transid": transid },
+                contentType: 'application/json',
+                data: JSON.stringify({ "transactId": transid }),
                 success: function(data) {
                     if (data !== null) {
-                        $.fn.zTree.init($("#eleLinkedTree"), _this.setting2, data.obj);
+                        $.fn.zTree.init($("#eleLinkedTree"), _this.setting2, data.objects);
                     }
                 }
             });
@@ -1395,9 +1460,9 @@ var app = new Vue({
         setEleLinked: function() {
             var treeObj = $.fn.zTree.getZTreeObj("eleLinkedTree"),
                 nodes = treeObj.getSelectedNodes(),
-                obj = nodes[0].name;
+                obj = nodes[0].objectName;
             if (nodes[0].getParentNode()) {
-                var pObj = nodes[0].getParentNode().name;
+                var pObj = nodes[0].getParentNode().objectName;
                 $('#eleLinkedInput').val(pObj + ' / ' + obj);
             } else {
                 $('#eleLinkedInput').val(obj);
@@ -1426,19 +1491,4 @@ var app = new Vue({
         },
     }
 });
-//获取关联元素属性
-function showLinkProp(index) {
-    app.relatePropList = app.relateElementList[index].locatePropertyCollection.main_properties;
-    app.relatePropListLength = app.relatePropList.length;
-    for (var i = 0; i < app.relatePropListLength; i++) {
-        var paraTr = $('<tr></tr>'),
-            paraCheckTd = $('<td><input type="checkbox" name="linkProp"/></td>'),
-            paraNameTd = $('<td contenteditable="true"></td>'),
-            paraValTd = $('<td contenteditable="true"></td>');
-        paraNameTd.html(app.relatePropList[i].name);
-        paraValTd.html(app.relatePropList[i].value);
-        paraTr.append(paraCheckTd, paraNameTd, paraValTd);
-        $('#relatePropTbody').append(paraTr);
-    }
-}
 </script>

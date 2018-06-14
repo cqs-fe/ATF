@@ -230,6 +230,7 @@
                                         <th style="width:8px;">
                                            
                                         </th>
+                                        <th class="text-center" width="10%">序号</th>
                                         <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)" width="20%">编码 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center" width="30%">名称</th>
                                         <!-- <th class="hidden-phone text-center" width="10%">类型</th> -->
@@ -237,10 +238,11 @@
                                     </tr>
                                 </thead>
                                 <tbody id="caseTable">
-                                    <tr class="odd gradeX" v-for="transact in transactList" id="{{transact.id}}">
+                                    <tr class="odd gradeX" v-for="(index,transact) in transactList" id="{{transact.id}}">
                                         <td>
                                             <input type="radio" v-model="" name="chk_list" id="{{transact.id}}" />
                                         </td>
+                                        <td width="10%">{{index+1}}</td>
                                         <td class="center hidden-phone">{{ transact.code }}</td>
                                         <td>{{ transact.nameMedium }}</td>
                                         <!-- <td class="hidden-phone">{{ transact.transacttype }}</td> -->

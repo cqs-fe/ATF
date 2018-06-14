@@ -1,4 +1,3 @@
-var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var template_obj = `
 <div style="min-height: 0;">
     <div class="row" v-if="breadShow">
@@ -163,6 +162,32 @@ var template_obj = `
                                 </tbody>
                             </table>
                         </div>
+
+                        <div class="property">
+                            关联属性
+                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+                        </div>
+                        <div class="property">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%"></th>
+                                        <th>属性名</th>
+                                        <th>属性值</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="relProp">
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="chk_list" />
+                                        </td>
+                                        <td contenteditable="true"></td>
+                                        <td contenteditable="true"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </section>
                     <a class="btn btn-info" @click="updateObj">保存</a>
                 </div>
@@ -221,6 +246,12 @@ var template_obj = `
                                             <input type="text" class="form-control" name="objName" id="addObjName">
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-3 control-label"></label>
+                                        <div class="col-xs-5">
+                                            若要添加多个，请以英文逗号“,”隔开。
+                                        </div>
+                                    </div>
                                 </form>
                             </section>
                             <!-- modal-body end -->
@@ -235,12 +266,10 @@ var template_obj = `
                 <!-- addUIModal end -->
             </div>
         </div>
-
 </div>
 `;
 
-// var app = new Vue({
-// var objectRepo = Vue.component('object-repo', {
+var address2='http://10.108.223.23:8080/atfcloud2.0a';
 var objectRepo =  Vue.extend({
     // el: '#main-content',
     name: 'object-repo',
@@ -264,6 +293,7 @@ var objectRepo =  Vue.extend({
         return {
             autId: '',
             transactId: '',
+            repositoryId: '',
             objId: '',
             objName: '',
             objTitle: '对象',
@@ -284,9 +314,12 @@ var objectRepo =  Vue.extend({
                 data: {
                     simpleData: {
                         enable: true,
-                        idKey: 'id', //id编号命名
-                        pIdKey: 'parentid', //父id编号命名
+                        idKey: 'objectId', //id编号命名
+                        pIdKey: 'parentObjectId', //父id编号命名
                         rootPId: 0
+                    },
+                    key: {
+                        name: "objectName"
                     }
                 },
                 edit: {
@@ -299,30 +332,30 @@ var objectRepo =  Vue.extend({
                     // 禁止拖拽
                     beforeDrag: _this.zTreeBeforeDrag,
                     onClick: function(event, treeId, treeNode, clickFlag) {
+                        // console.log(treeNode)
                         $('#obj').css('display','block');
                         $('#blank').css('display','none');
                         $('classtypeSelect').val('');
-                        _this.objName = treeNode.name;
-                        _this.objTitle = treeNode.name;
-                        $('#objForm input[name="name"]').val(treeNode.name);
-                        _this.objId = treeNode.id;
-                        var transid = !_this.componentMode ? _this.transactId : _this.transid;
-                        var data = {
-                            transid: transid,
-                            id: _this.objId
-                        }
+                        _this.objName = treeNode.objectName;
+                        _this.objTitle = treeNode.objectName;
+                        $('#objForm input[name="name"]').val(treeNode.objectName);
+                        _this.objId = treeNode.objectId;
                         $.ajax({
-                            url: address + 'object_repoController/queryObject_repo',
+                            url: address2 + '/objectRepository/querySingleObject',
                             type: 'post',
-                            data: data,
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                'repositoryId': _this.repositoryId,
+                                'objectId': _this.objId
+                            }),
                             success: function(data) {
                                 // console.log(data);
-                                var classtype=data.obj[0].classtype;
-                                // console.log(classtype)
+                                $('#classtypeSelect').val('');
+                                var classtype=data.object.classType;
                                 $('#classtypeSelect').val(classtype);
                                 //主属性
-                                var mainList = data.obj[0].locatePropertyCollection.main_properties;
-                                if (mainList.length !== 0) {
+                                var mainList = data.object.mainProperties;
+                                if (mainList) {
                                     $('#mainProp').children().remove();
                                     for (var i = 0; i < mainList.length; i++) {
                                         var mainTr = $('<tr></tr>'),
@@ -340,8 +373,8 @@ var objectRepo =  Vue.extend({
                                 }
 
                                 //附加属性
-                                var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
-                                if (addiList.length !== 0) {
+                                var addiList = data.object.additionalProperties;
+                                if (addiList) {
                                     $('#addiProp').children().remove();
                                     for (var j = 0; j < addiList.length; j++) {
                                         var addiTr = $('<tr></tr>'),
@@ -359,8 +392,8 @@ var objectRepo =  Vue.extend({
                                 }
 
                                 //辅助属性
-                                var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
-                                if (assiList.length !== 0) {
+                                var assiList = data.object.assistantProperties;
+                                if (assiList) {
                                     $('#assisProp').children().remove();
                                     for (var k = 0; k < assiList.length; k++) {
                                         var assiTr = $('<tr></tr>'),
@@ -375,6 +408,24 @@ var objectRepo =  Vue.extend({
                                 } else {
                                     $('#assisProp').children().remove();
                                     $('#assisProp').append(_this.propTr);
+                                }
+                                //关联属性
+                                var relList = data.object.relateProperties;
+                                if (relList) {
+                                    $('#relProp').children().remove();
+                                    for (var k = 0; k < relList.length; k++) {
+                                        var relTr = $('<tr></tr>'),
+                                            relCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                            relNameTd = $('<td contenteditable="true"></td>'),
+                                            relValTd = $('<td contenteditable="true"></td>');
+                                        relNameTd.html(relList[k].name);
+                                        relValTd.html(relList[k].value);
+                                        relTr.append(relCheckTd, relNameTd, relValTd);
+                                        $('#relProp').append(relTr);
+                                    }
+                                } else {
+                                    $('#relProp').children().remove();
+                                    $('#relProp').append(_this.propTr);
                                 }
 
                             },
@@ -414,7 +465,7 @@ var objectRepo =  Vue.extend({
         $('#search-btn').click(() => {
             var treeObj = $.fn.zTree.getZTreeObj("objectTree");
             var keywords = $("#keyword").val();
-            var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);
+            var nodes = treeObj.getNodesByParamFuzzy("objectName", keywords, null);
             if (nodes.length > 0) {
                 treeObj.selectNode(nodes[0]);
             }
@@ -428,7 +479,7 @@ var objectRepo =  Vue.extend({
             var _this = this
             const val = $('#autSelect').val();
             $.ajax({
-                url: ' http://10.108.223.23:8080/atfcloud1.0a' + '/aut/queryAutVisibleOmClasses',
+                url: address2 + '/aut/queryAutVisibleOmClasses',
                 contentType: 'application/json',
                 data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
@@ -444,6 +495,7 @@ var objectRepo =  Vue.extend({
             $.ajax({
                 url: address2 + "/aut/queryListAut",
                 type: "POST",
+                contentType:'application/json',
                 success: function(data) {
                     var autList = data.autRespDTOList;
                     var str = "";
@@ -456,15 +508,22 @@ var objectRepo =  Vue.extend({
                     _this.autId = sessionStorage.getItem("autId");
                     $("#autSelect").val(_this.autId);
                     $.ajax({
-                        url: address + 'transactController/showalltransact',
-                        data: { 'autlistselect': _this.autId },
-                        type: "POST",
+                        url: address2 + '/transactController/pagedBatchQueryTransact',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            'currentPage': 1,
+                            'pageSize': 100000,
+                            'orderColumns': 'id',
+                            'orderType': 'asc',
+                            'autId': _this.autId
+                        }),
                         success: function(data) {
-                            var transactList = data.o;
+                            var transactList = data.list;
                             var str = "";
                             for (var i = 0; i < transactList.length; i++) {
 
-                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
                             }
                             $('#transactSelect').html(str);
                             _this.transactId = sessionStorage.getItem("transactId");
@@ -485,14 +544,15 @@ var objectRepo =  Vue.extend({
         autSelect: function() {
             $.ajax({
                 async: false,
-                url: address + "autController/selectAll",
+                url: address2 + "/aut/queryListAut",
                 type: "POST",
+                contentType:'application/json',
                 success: function(data) {
-                    var autList = data.obj;
+                    var autList = data.autRespDTOList;
                     var str = "";
                     for (var i = 0; i < autList.length; i++) {
 
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
                     }
 
                     $('#autSelect').html(str);
@@ -505,11 +565,18 @@ var objectRepo =  Vue.extend({
             var val = $('#autSelect').val();
             $.ajax({
                 async: false,
-                url: address + 'transactController/showalltransact',
-                data: { 'autlistselect': val },
-                type: "POST",
+                url: address2 + '/transactController/pagedBatchQueryTransact',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'currentPage': 1,
+                    'pageSize': 100000,
+                    'orderColumns': 'id',
+                    'orderType': 'asc',
+                    'autId': val,
+                }),
                 success: function(data) {
-                    var transactList = data.o;
+                    var transactList = data.list;
                     var str = "";
                     for (var i = 0; i < transactList.length; i++) {
 
@@ -539,22 +606,37 @@ var objectRepo =  Vue.extend({
                 if (nodes.length === 0) {
                     parentid = "0";
                 } else {
-                    parentid = nodes[0].id;
+                    parentid = nodes[0].objectId;
                 }
-            } 
+            }
+            var objNames;
+            var objects=[];
+            if(objName.indexOf(',')>0){//批量
+               objNames=objName.split(',');
+               for(var i=0; i<objNames.length; i++){
+                   let object={};
+                   object.objectName=objNames[i];
+                   object.parentObjectId=parentid;
+                   objects.push(object);
+               }
+            }else{//单个
+                let object={};
+                object.objectName=objName;
+                object.parentObjectId=parentid;
+                objects.push(object);
+            }
+            // console.log(objects) 
             $.ajax({
-                url: address + 'object_repoController/insertObject_repo',
+                url: address2 + '/objectRepository/batchAddOrModifyObject',
                 type: 'post',
-                data: {
-                    "name": objName,
-                    "transid": transid,
-                    "classtype": '',
-                    "compositeType": '',
-                    "parentElementId": parentid
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "repositoryId": _this.repositoryId,
+                    "objects": objects
+                }),
                 success: function(data) {
                     // console.info(data);
-                    if (data.success) {
+                    if (data.respCode==0000) {
                         $('#successModal').modal();
                         _this.getObjTree();
                     } else {
@@ -573,19 +655,20 @@ var objectRepo =  Vue.extend({
             var ids;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             for (var i = 0; i < nodes.length; i++) {
-                ids = nodes[i].id;
+                ids = nodes[i].objectId;
             }
 
             $.ajax({
-                url: address + 'object_repoController/deleteObejct_repo',
+                url: address2 + '/objectRepository/deleteSingleObject',
                 type: 'post',
-                data: {
-                    "id": ids,
-                    "transid": transid,
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "repositoryId": _this.repositoryId,
+                    "objectId": ids
+                }),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode==0000) {
                         $('#successModal').modal();
                         _this.getObjTree();
                     } else {
@@ -601,72 +684,85 @@ var objectRepo =  Vue.extend({
             var _this = this
             var treeObj = $.fn.zTree.getZTreeObj("objectTree"),
                 nodes = treeObj.getSelectedNodes(true),
-                id = nodes[0].id,
+                id = nodes[0].objectId,
                 name = $('#objForm input[name="name"]').val(),
-                parentElementId = nodes[0].parentid,
+                parentObjectId = nodes[0].parentObjectId,
                 classtype = $('#classtypeSelect').val();
             //主属性
             var mainTd,
-                mainName = [],
-                mainVal = [];
+                mainProperties=[],
+                mainItem={};
             $('#mainProp').find('tr').each(function() {
                 mainTd = $(this).children();
-                mainName.push(mainTd.eq(1).html()); //主属性名称
-                mainVal.push(mainTd.eq(2).html()); //主属性值
+                mainItem.name=mainTd.eq(1).html();
+                mainItem.value=mainTd.eq(2).html();
+                mainItem.method='';
+                mainItem.isRelative=null;
+                mainItem.toolName='';
+                mainProperties.push(mainItem);
             });
             //附加属性
             var addiTd,
-                addiName = [],
-                addiVal = [];
+                additionalProperties=[],
+                addiItem={};
             $('#addiProp').find('tr').each(function() {
                 addiTd = $(this).children();
-                addiName.push(addiTd.eq(1).html()); //附加属性名称
-                addiVal.push(addiTd.eq(2).html()); //附加属性值
+                addiItem.name=addiTd.eq(1).html();
+                addiItem.value=addiTd.eq(2).html();
+                addiItem.method='';
+                addiItem.isRelative=null;
+                addiItem.toolName='';
+                additionalProperties.push(addiItem);
             });
             //辅助属性
-            var assisTd,
-                assisName = [],
-                assisVal = [];
+            var assiTd,
+                assistantProperties=[],
+                assiItem={};
             $('#assisProp').find('tr').each(function() {
-                assisTd = $(this).children();
-                assisName.push(assisTd.eq(1).html()); //辅助属性名称
-                assisVal.push(assisTd.eq(2).html()); //辅助属性值
+                assiTd = $(this).children();
+                assiItem.name=assiTd.eq(1).html();
+                assiItem.value=assiTd.eq(2).html();
+                assiItem.method='';
+                assiItem.isRelative=null;
+                assiItem.toolName='';
+                assistantProperties.push(assiItem);
             });
-            var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
+            //关联属性 
+            var relTd,
+                relateProperties=[],
+                relItem={};
+            $('#relProp').find('tr').each(function() {
+                relTd = $(this).children();
+                relItem.name=relTd.eq(1).html();
+                relItem.value=relTd.eq(2).html();
+                relItem.method='';
+                relItem.isRelative=null;
+                relItem.toolName='';
+                relateProperties.push(relItem);
+            });
             $.ajax({
-                url: address + 'object_repoController/updateObejct_repo',
+                url: address2 + '/objectRepository/modifySingleObject',
                 type: 'post',
-                data: {
-                    "id": id,
-                    "transid": transid,
-                    "name": name,
-                    "parentElementId": parentElementId,
-                    "classtype": classtype,
-                    "compositeType": "",
-                    "mainpropertiesname": mainName.toString(),
-                    "mainpropertiesvalue": mainVal.toString(),
-                    "mainpropertiesmatchMethod": '',
-                    "mainpropertiesisRelative": '',
-                    "mainpropertiestoolName": '',
-                    "addtionalpropertiesname": addiName.toString(),
-                    "addtionalpropertiesvalue": addiVal.toString(),
-                    "addtionalpropertiesmatchMethod": '',
-                    "addtionalpropertiesisRelative": '',
-                    "addtionalpropertiestoolName": '',
-                    "assistantpropertiesname": assisName.toString(),
-                    "assistantpropertiesvalue": assisVal.toString(),
-                    "assistantpropertiesmatchMethod": '',
-                    "assistantpropertiesisRelative": '',
-                    "assistantpropertiestoolName": ''
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "repositoryId": _this.repositoryId,
+                    "object": {
+                        "objectId": id,
+                        'objectName': name,
+                        'classType': classtype,
+                        'mainProperties': mainProperties,
+                        'additionalProperties': additionalProperties,
+                        'relateProperties': relateProperties,
+                        'assistantProperties': assistantProperties
+                    },
+                }),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode==0000) {
                         $('#successModal').modal();
                         _this.updateObjTree();
                         $('#obj').css('display','none');
                         $('#blank').css('display','block');
-                        // updateProp();
                     } else {
                         $('#failModal').modal();
                     }
@@ -686,30 +782,18 @@ var objectRepo =  Vue.extend({
         },
         // 页面初始化获取对象库
         getObjTree: function(){
-            var _this = this
+            var _this = this;
             var transid = !this.componentMode ? this.transactId : this.transid;
             $.ajax({
-                url: address + 'object_repoController/queryObject_repoAll',
+                url: address2 + '/objectRepository/queryAllObjectForATransact',
                 type: 'post',
-                data: { "transid": transid },
+                contentType: 'application/json',
+                data: JSON.stringify({ "transactId": transid }),
                 success: function(data) {
                     if (data !== null) {
-                        $.fn.zTree.init($("#objectTree"), _this.setting1, data.obj);
-                    }
-                }
-            });
-        },
-        //刷新对象库
-        updateObjTree: function(){
-            var _this = this
-            var transid = !this.componentMode ? this.transactId : this.transid;
-            $.ajax({
-                url: address + 'object_repoController/queryObject_repoAll',
-                type: 'post',
-                data: { "transid": transid },
-                success: function(data) {
-                    if (data !== null) {
-                        $.fn.zTree.init($("#objectTree"), _this.setting1, data.obj);
+                        var objects = data.objects;
+                        $.fn.zTree.init($("#objectTree"), _this.setting1, objects);
+                        _this.repositoryId = data.repositoryId;
                     }
                 }
             });
@@ -724,20 +808,21 @@ var objectRepo =  Vue.extend({
             var transid = !this.componentMode ? this.transactId : this.transid;
             const treeObj = $.fn.zTree.getZTreeObj("objectTree"),
                 nodes = treeObj.getSelectedNodes(true),
-                id = nodes[0].id,
+                id = nodes[0].objectId,
                 classtype = $('#classtypeSelect').val();
             $.ajax({
-                url: address + 'object_repoController/queryObject_repo',
+                url: address2 + '/objectRepository/querySingleObject',
                 type: 'post',
-                data: {
-                    "id": id,
-                    "transid":transid
-                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'repositoryId': _this.repositoryId,
+                    'objectId': id
+                }),
                 success: function(data) {
                     console.log(data);
-                    $('#classtypeSelect').val(data.obj.classtype);
+                    $('#classtypeSelect').val(data.object.classType);
                     //主属性
-                    var mainList = data.obj[0].locatePropertyCollection.main_properties;
+                    var mainList = data.object.mainProperties;
                     if (mainList.length !== 0) {
                         $('#mainProp').children().remove();
                         for (var i = 0; i < mainList.length; i++) {
@@ -756,7 +841,7 @@ var objectRepo =  Vue.extend({
                     }
 
                     //附加属性
-                    var addiList = data.obj[0].locatePropertyCollection.addtional_properties;
+                    var addiList = data.object.additionalProperties;
                     if (addiList.length !== 0) {
                         $('#addiProp').children().remove();
                         for (var j = 0; j < addiList.length; j++) {
@@ -775,7 +860,7 @@ var objectRepo =  Vue.extend({
                     }
 
                     //辅助属性
-                    var assiList = data.obj[0].locatePropertyCollection.assistant_properties;
+                    var assiList = data.object.assistantProperties;
                     if (assiList.length !== 0) {
                         $('#assisProp').children().remove();
                         for (var k = 0; k < assiList.length; k++) {
@@ -792,6 +877,25 @@ var objectRepo =  Vue.extend({
                         $('#assisProp').children().remove();
                         $('#assisProp').append(_this.propTr);
                     }
+                    
+                    //关联属性
+                    var relList = data.object.relateProperties;
+                    if (relList.length !== 0) {
+                        $('#relProp').children().remove();
+                        for (var k = 0; k < relList.length; k++) {
+                            var relTr = $('<tr></tr>'),
+                                relCheckTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                relNameTd = $('<td contenteditable="true"></td>'),
+                                relValTd = $('<td contenteditable="true"></td>');
+                            relNameTd.html(relList[k].name);
+                            relValTd.html(relList[k].value);
+                            relTr.append(relCheckTd, relNameTd, relValTd);
+                            $('#relsProp').append(relTr);
+                        }
+                    } else {
+                        $('#relProp').children().remove();
+                        $('#relProp').append(_this.propTr);
+                    }            
 
                 },
                 error: function() {
