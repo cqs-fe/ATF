@@ -450,11 +450,11 @@ var objectRepo =  Vue.extend({
                 _this.transactSelect();
                 _this.autId = $('#autSelect').val();
                 _this.transactId = $('#transactSelect').val();
-                _this.updateObjTree();
+                _this.getObjTree();
             });
             $('#transactSelect').change(() => {
                 _this.transactId = $('#transactSelect').val();
-                _this.updateObjTree();
+                _this.getObjTree();
             });
             // 搜索节点
             
@@ -580,7 +580,7 @@ var objectRepo =  Vue.extend({
                     var str = "";
                     for (var i = 0; i < transactList.length; i++) {
 
-                        str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                        str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
                     }
                     $('#transactSelect').html(str);
                 }

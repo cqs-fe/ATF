@@ -238,18 +238,19 @@ function resort(target) {
 }
 //重新排序 结束
 
-//搜索系统
+//根据编号搜索系统
 function queryTestProject() {
     $.ajax({
-        url: address2 + 'testProjectController/selectAllByPage',
+        url: address2 + 'testProjectController/querySingleTestProject',
         type: 'POST',
-        data: {
-            'page': app.currentPage,
-            'rows': app.listnum,
-            'order': app.order,
-            'sort': app.sort,
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': 1,
+            'pageSize': 10,
+            'orderColumns': 'id',
+            'orderType': 'asc',
             'testProjectCode': app.queryTestProject
-        },
+        }),
         success: function(data) {
             app.testProjectList = data.rows;
             console.log(app.testProjectList)
