@@ -400,8 +400,8 @@
                       <td>{{item.desc}}</td>
                       <td>
                         <select>
-                          <option value="1">启用</option>
-                          <option value="0">禁用</option>
+                            <option value="1" :selected="item.state === 1">启用</option>
+                            <option value="0" :selected="item.state === 0">禁用</option>
                         </select>
                       </td>
                     </tr>

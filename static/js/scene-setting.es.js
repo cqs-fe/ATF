@@ -252,7 +252,6 @@ var vBody = new Vue({
 				success: function(data){
 					if(data.respCode == '0000'){
 						_this.triggers = data.trigerDtoList;
-						console.log( data.trigerDtoList);
 					} else {
 						Vac.alert(data.respMsg);
 					}

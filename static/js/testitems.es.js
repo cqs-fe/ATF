@@ -23,24 +23,6 @@ $(document).ready(function(){
     (function() {
         $("#showRows").val("5");
         showRows =  $("#showRows").val();
-        // let xmlHttpRequest = null;
-        // if (window.XMLHttpRequest) {
-        //     xmlHttpRequest = new XMLHttpRequest();
-        // } else {
-        //     xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        // }
-        // let url = address + "missionController/selectAllByPage";
-        // xmlHttpRequest.open("post", url, true);
-        // xmlHttpRequest.setRequestHeader("CONTENT-TYPE", "application/x-www-form-urlencoded");
-        // xmlHttpRequest.onreadystatechange = function() {
-        //     if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
-        //         let str = xmlHttpRequest.responseText;
-        //         let obj = eval("(" + str + ")");
-        //         totalRows = obj.total;
-        //         dataSet = destructe(obj.rows);
-        //         initialTable();
-        //     }
-        // };
         let page = 1;
         let rows = showRows;
         let data = getSendData(page,rows);
@@ -52,7 +34,10 @@ $(document).ready(function(){
                     Vac.alert(data.respMsg);
                     return;
                 }
-                // 未定
+                totalRows = data.totalCount;
+                $('#totalRows').text(data.totalCount);
+                dataSet = destructe(data.list);
+                initialTable();
             },
             error: function () {
                 Vac.alert('网络错误，请稍候再试~');
@@ -130,7 +115,7 @@ $(document).ready(function(){
             Vac.ajax({
                 url: address3 + "missionController/addSingleTestMission",
                 data: getJson(data),
-                success: function(data, textStatus){
+                success: function(data){
                     if(data.respCode === '0000'){
                         Vac.alert('添加成功！')
                         $("#addModal").modal("hide");
@@ -206,6 +191,7 @@ function initialTable() {
     createTable(dataSet);
     // 初始化分页组件
     totalPage = Math.ceil(totalRows / showRows); // 全部页码的数量
+    console.log(totalPage)
     $("#gotoPage").attr("max",totalPage);
     $('#currentPageId').text(currentPage);
     $('#totalPages').text(totalPage);
@@ -222,15 +208,16 @@ function initialTable() {
 
 // Show alter modal
 function showAlterModal(button){
-    if (!loginDetect()) {
-                $("#vac-nologin-alert").modal('show');
-                return;
-            }
+    // if (!loginDetect()) {
+    //     $("#vac-nologin-alert").modal('show');
+    //     return;
+    // }
     var tr = button.parentNode.parentNode;
     itemId = tr.getElementsByClassName("td-itemId")[0].innerHTML;
     var itemName = tr.getElementsByClassName("td-name")[0].innerHTML;
     var itemType = tr.getElementsByClassName("td-type")[0].innerHTML;
     var projectCode = tr.getElementsByClassName('td-projectCode')[0].innerHTML;
+    initialForm();
         // initial Form
     function initialForm(userid, username){
         $('#alterModal').modal('show');
@@ -270,10 +257,10 @@ function updateTableAndPagination(destinatePage){
     Vac.ajax({
         url: address3 + "missionController/pagedBatchQueryTestMission",
         data: data,
-        success: function(data, statusText){
-            if(data.respCode === '0000'){console.log(data);
+        success: function(data){
+            if(data.respCode === '0000'){
                 // 处理待定
-                dataSet = destructe(data.rows);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
                 var lis = document.getElementById("pagination").getElementsByTagName("li");
                 var i = 0;
@@ -284,9 +271,9 @@ function updateTableAndPagination(destinatePage){
                     if(lis[i].firstChild.innerHTML == destinatePage)
                     {lis[i].setAttribute("class","active");}
                 }
-
                 currentPage = destinatePage;
-                totalPage = Math.ceil(data.total / showRows);
+                $('#totalRows').text(data.totalCount);
+                totalPage = Math.ceil(data.totalCount / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
                 $('#totalPages').text(totalPage);
@@ -314,7 +301,7 @@ function nextPage(){
         success: function(data){
             if(data.respCode === '0000'){
                 var dataSet = null;
-                dataSet = destructe(data.rows);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
                 currentPage = parseInt(page);
                 var pagination = document.getElementById("pagination");
@@ -341,7 +328,7 @@ function nextPage(){
                     {lis[i].setAttribute("class","active");}
                 }
 
-                totalPage = Math.ceil(data.total / showRows);
+                totalPage = Math.ceil(data.totalCount / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
                 $('#totalPages').text(totalPage);
@@ -368,7 +355,7 @@ function previousPage(){
         success: function(data, statusText){
             if(data.respCode === '0000'){
                 var dataSet = null;
-                dataSet = destructe(data.rows);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
 
                 currentPage = parseInt(page);
@@ -396,7 +383,7 @@ function previousPage(){
                     {lis[i].setAttribute("class","active");}
                 }
 
-                totalPage = Math.ceil(data.total / showRows);
+                totalPage = Math.ceil(data.totalCount / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
                 $('#totalPages').text(totalPage);
@@ -419,7 +406,7 @@ function firstPage(){
         dataType: 'json',
         success: function(data, statusText){
             if(data.respCode === '0000'){
-                dataSet = destructe(data.rows);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
 
                 currentPage = parseInt(page);
@@ -437,7 +424,7 @@ function firstPage(){
 
                 maxShowPage = 7;
                 minShowPage = 1;
-                totalPage = Math.ceil(data.total / showRows);
+                totalPage = Math.ceil(data.totalCount / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
                 $('#totalPages').text(totalPage);
@@ -458,7 +445,7 @@ function lastPage(){
         data: data,
         success: function(data){
             if(data.respCode === '0000'){
-                dataSet = destructe(data.rows);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
                 currentPage = parseInt(page);
                 var pagination = document.getElementById("pagination");
@@ -476,7 +463,7 @@ function lastPage(){
 
                 maxShowPage = totalPage;
                 minShowPage = totalPage - maxPage + 1;
-                totalPage = Math.ceil(data.total / showRows);
+                totalPage = Math.ceil(data.totalCount / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
                 $('#totalPages').text(totalPage);
@@ -500,7 +487,7 @@ function gotoPage(){
         dataType: 'json',
         success: function(data, statusText){
             if(data.respCode === '0000'){
-                dataSet = destructe(data.rows);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
                 currentPage = parseInt(page);
                 if(minShowPage <= currentPage && maxShowPage >= currentPage){
@@ -542,7 +529,7 @@ function gotoPage(){
                     maxShowPage = currentPage;
                     minShowPage = currentPage - maxPage + 1;
                 }
-                totalPage = Math.ceil(data.total / showRows);
+                totalPage = Math.ceil(data.totalCount / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
                 $('#totalPages').text(totalPage);
@@ -584,7 +571,7 @@ function changeShowRows(event){
         success: function(data, statusText){
             if(data.respCode === '0000'){
                 showRows = rows;
-                dataSet = destructe(data.rows);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
                 currentPage = 1;
                 // 初始化分页组件
@@ -599,7 +586,7 @@ function changeShowRows(event){
                     }
                     pagination.removeChild(document.getElementById("previousPage").parentNode.nextSibling);
                 }
-                totalPage = Math.ceil(data.total / showRows); // 全部页码的数量
+                totalPage = Math.ceil(data.totalCount / showRows); // 全部页码的数量
                 minShowPage = 1;
                 maxShowPage = totalPage <= maxPage ? totalPage : maxPage;
                 $("#gotoPage").attr("max",totalPage);
@@ -627,9 +614,9 @@ function createTable(dataSet){
     dataSet.forEach(value => {
     let tr = $('<tr></tr>');
     let tdId = $(`<td class="td-itemId"></td>`).text(value.id); // id
-    let tdName = $(`<td class="td-name"></td>`).text(value.testProjectName);  // 编号
-    let tdType = $(`<td class="td-type"></td>`).text(value.type); // 项目id
-    let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.testProjectCode);    // 名称
+    let tdName = $(`<td class="td-name"></td>`).text(value.nameMedium);  // 编号
+    let tdType = $(`<td class="td-type"></td>`).text(value.codeLong); // 项目id
+    let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.descMedium);    // 名称
     let tdOperation = $(`<td class="td-operation" style="padding-bottom: 7px;padding-top: 7px;"><a data-toggle="modal" class="btn btn-xs btn-view btn-success" onclick="showViewModal(this);" href=''>详情</a>    <a class="btn btn-xs btn-alter btn-primary" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
     tr.append(tdId, tdName, tdType, tdProjectCode,tdOperation);
     tbody.append(tr);
@@ -638,13 +625,13 @@ function createTable(dataSet){
 
 function destructe(data){
     var newData = null;
-    newData = data.list.map(function(value){
+    newData = data.map(function(value){
         var newValue = {};
         ({
             id: newValue.id,
-            missionName:  newValue.testProjectCode,
-            missionCode: newValue.testProjectName,
-            testProjectId: newValue.type,
+            nameMedium:  newValue.nameMedium,
+            codeLong: newValue.codeLong,
+            descMedium: newValue.descMedium,
         } = value);
         return newValue;
     });
@@ -671,8 +658,7 @@ function search(){
         data: data,
         success: function(data, statusText){
             if(data.respCode === '0000'){
-                dataSet = destructe(data.rows);
-                console.log(dataSet);
+                dataSet = destructe(data.list);
                 createTable(dataSet);
 
                 var pagination = document.getElementById("pagination");
@@ -685,7 +671,7 @@ function search(){
                     pagination.removeChild(document.getElementById("previousPage").parentNode.nextSibling);
                 }
                 currentPage = 1;
-                totalPage = Math.ceil(data.total / showRows);
+                totalPage = Math.ceil(data.totalCount / showRows);
                 $("#gotoPage").attr("max",totalPage);
                 $('#currentPageId').text(currentPage);
                 $('#totalPages').text(totalPage);
@@ -716,12 +702,10 @@ function resort(e){
         }
     }
     if(target.getAttribute("data-sort") === "desc"){
-         console.log(target.getAttribute("data-sort"));
         sendData.sort = "asc";
         target.getElementsByTagName("span")[0].setAttribute("class","icon-sort-up")
         target.setAttribute("data-sort", "asc");
     }else{
-        console.log(target.getAttribute("data-sort"));
         sendData.sort = "desc";
         target.getElementsByTagName("span")[0].setAttribute("class","icon-sort-down")
         target.setAttribute("data-sort", "desc");
@@ -745,8 +729,8 @@ function getSendData(page, rows){
     return {
         pageSize: rows,
         currentPage: page,
-        orderType: sendData.order,
-        orderColumns: sendData.sort
+        orderType: sendData.sort,
+        orderColumns: sendData.order
     };
     // return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&missionName="+sendData.missionName+"&missionCode="+sendData.missionCode+"&testProjectId="+sendData.testProjectId;
 }
