@@ -1694,7 +1694,7 @@ $(document).ready(function () {
 			methods: {
 				getInfo: function () {
 					var userId = sessionStorage.getItem('userId')
-					var caseLib_id = sessionStorage.getItem('caselibid')
+					var caseLib_id = sessionStorage.getItem('caselibId')
 					if (caseLib_id == null || caseLib_id == '') {
 						Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', '请先选择测试项目！').then(function () {
 							window.location.href = 'testProject.html'

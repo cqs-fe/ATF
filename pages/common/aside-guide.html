@@ -104,7 +104,7 @@
                     </li>
                     <li class="sub-menu">
                         <a class="3-4" href="scene.html">
-                            <span>测试场景</span>
+                            <span>测试场景管理</span>
                         </a>
                     </li>
                     <li class="sub-menu">
@@ -127,11 +127,11 @@
                             <span>批量执行管理</span>
                         </a>
                     </li>
-                    <!-- <li class="sub-menu">
-                        <a class="3-8" href="#">
-                            <span>统计及度量</span>
+                    <li class="sub-menu">
+                        <a class="3-9" href="testplan.html">
+                            <span>测试计划</span>
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </li>
             <!-- <li class="sub-menu 4">
@@ -157,7 +157,7 @@
                 menu: '',
                 subMenu: ''
             },
-            ready:function(){
+            ready: function(){
                 var caselib_Id = sessionStorage.getItem('caselibId')
                 if(!caselib_Id) {
                     for(let i = 2; i <= 8; i++) {
