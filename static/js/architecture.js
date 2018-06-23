@@ -751,6 +751,17 @@ var setting1 = {
         },
         onClick: function(event, treeId, treeNode, clickFlag) {
             app.archiName = treeNode.name;
+            // 清空method
+            $('#methodProp').children().remove();
+            $('#methodForm input[name="name"]').val('');
+            $('#methodForm input[name="description"]').val('');
+            $('#methodForm select[name="overrideFlag"]').val('');
+            $('#methodForm select[name="visibilityFlag"]').val('');
+            $('#methodForm input[name="labelArgument"]').val('');
+            $('#methodForm input[name="waittime"]').val('');
+            $('#methodForm input[name="timeout"]').val('');
+            $('#methodForm textarea[name="targetCodeContent"]').val('');
+            app.paraList=[];
             //查询class
             $.ajax({
                 url: address+'/arcClass/queryArcVisibleOmClasses',

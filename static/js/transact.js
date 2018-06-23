@@ -64,7 +64,12 @@ var app = new Vue({
                 url: address2 + 'transactController/addSingleTransact',
                 type: 'post',
                 contentType: 'application/json',
-                data: getJson($("#insertForm").serialize()),
+                data: JSON.stringify({
+                    autId: $("#insertForm input[name='autId']").val(),
+                    code: $("#insertForm input[name='code']").val(),
+                    nameMedium: $("#insertForm input[name='nameMedium']").val(),
+                    descShort: $("#insertForm textarea[name='descShort']").val()
+                }),
                 success: function(data) {
                     if (data.respCode=='0000') {
                         $('#successModal').modal();
@@ -136,9 +141,14 @@ var app = new Vue({
                 url: address2 + 'transactController/modifySingleTransact',
                 type: 'post',
                 contentType: 'application/json',
-                data: getJson($("#updateForm").serialize()),
+                data: JSON.stringify({
+                    id: $('#updateForm input[name="id"]').val(),
+                    code: $('#updateForm input[name="code"]').val(),
+                    nameMedium: $('#updateForm input[name="nameMedium"]').val(),
+                    descShort: $('#updateForm textarea[name="descShort"]').val()
+                }),
                 success: function(data) {
-                    console.info(data);
+                    // console.info(data);
                     if (data.respCode=='0000') {
                         $('#successModal').modal();
                         // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
@@ -157,8 +167,8 @@ var app = new Vue({
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             $('#updateForm input[name="id"]').val(selectedId);
-            $('#updateForm input[name="code"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm input[name="code"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().next().html());
             $('#updateForm textarea[name="descShort"]').val(selectedInput.parent().next().next().next().next().html());
         },
         //传递当前页选中的测试系统id和功能点id到元素库页面
