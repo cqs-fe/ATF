@@ -59,7 +59,7 @@ export const Ajax = function (opt) {
             if (opt.error) {
                 opt.error();
             } else {
-                Vac.alert('网络错误，请稍候再试~');
+                Alert('网络错误，请稍候再试~');
             }
         }
     });

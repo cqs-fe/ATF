@@ -1,4 +1,4 @@
-const prefix = '';
+const prefix = '../../../pages/';
 const menus = [{
     key: 'system-management',
     name: '系统管理',
@@ -77,7 +77,7 @@ const menus = [{
     }, {
         key: 'testplan',
         name: '测试计划管理',
-        url: prefix + 'testplan.html'
+        url: prefix + '../testplan.html'
     }]
 }];
 export default menus;

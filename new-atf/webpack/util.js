@@ -41,7 +41,6 @@ exports.getEntryConfig = function (globPath, srcDirName = 'src', staticDirName =
             chunks
         });
     });
-    console.log(result.html);
     console.log('entries: ', result.entry);
     return result;
 };

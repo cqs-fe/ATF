@@ -1,44 +1,26 @@
 <template>
 <div class="pagination-wrap" >
     <div class="num">
-            <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
-                <option value="5" selected>5条/页</option>
-                <option value="10">10条/页</option>
-                <option value="20">20条/页</option>
-                <option value="50">50条/页</option>
+            <select class="form-control" v-model="pageSize">
+                <option v-for="item of pageSizeArray" :value="item.value" :key="item.value">{{item.label}}</option>
             </select> 
     </div>
     <ul class="pagination">
-        <li :class="currentPage == 1 ? 'disabled':''"><a href="javascript:;" @click="turnToPage(1)">首页</a></li>
-        <li :class="currentPage == 1 ?'disabled':''"><a @click="turnToPage(currentPage-1)" href="javascript:;">上一页</a></li>
-        <li>
-            <a href="javascript:;" @click="turnToPage(currentPage-3)" v-text="currentPage-3" v-if="currentPage-3>0"></a>
+        <li :class="currentPage == 1 ? 'disabled':''"><a class="page-item" @click="go(1)">首页</a></li>
+        <li :class="currentPage == 1 ? 'disabled':''"><a @click="go(currentPage - 1)" class="page-item">上一页</a></li>
+        <li v-for="page of pageArray" :key="page" :class="+page === +currentPage ? 'active' : ''">
+            <a class="page-item" @click="go(page)" v-text="page"></a>
         </li>
-        <li>
-            <a href="javascript:;" @click="turnToPage(currentPage-2)" v-text="currentPage-2" v-if="currentPage-2>0"></a>
-        </li>
-        <li>
-            <a href="javascript:;" @click="turnToPage(currentPage-1)" v-text="currentPage-1" v-if="currentPage-1>0"></a>
-        </li>
-        <li class="active"><a href="javascript:;" @click="turnToPage(currentPage)" v-text="currentPage">3</a></li>
-        <li>
-            <a href="javascript:;" @click="turnToPage(currentPage+1)" v-text="currentPage+1" v-if="currentPage+1<=totalPage"></a>
-        </li>
-        <li>
-            <a href="javascript:;" @click="turnToPage(currentPage+2)" v-text="currentPage+2" v-if="currentPage+2<=totalPage"></a>
-        </li>
-        <li>
-            <a href="javascript:;" @click="turnToPage(currentPage+3)" v-text="currentPage+3" v-if="currentPage+3<=totalPage"></a>
-        </li>
-        <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(currentPage+1)">下一页</a></li>
-        <li :class="currentPage==totalPage?'disabled':''"><a href="javascript:;" @click="turnToPage(totalPage)">尾页</a></li>
+        <li :class="currentPage === totalPage ? 'disabled' : ''"><a class="page-item" @click="go(currentPage + 1)">下一页</a></li>
+        <li :class="currentPage === totalPage ? 'disabled' : ''"><a class="page-item" @click="go(totalPage)">尾页</a></li>
     </ul>
     <div class="go">
-        <div :class="isPageNumberError?'input-group error':'input-group'">
-            <input class="form-control" type="number" v-model="goToPage" min="1"><a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+        <div class="input-group" :class="('' + targetPage).trim() !== '' && (targetPage > totalPage || targetPage < 1) ? ' error':''">
+            <input class="form-control" type="number" v-model="targetPage" min="1" :max="totalPage">
+            <a class="page-item input-group-addon" @click="go(targetPage)">Go</a>
         </div>
     </div>
-    <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary" v-text="tt"></span> 条</small>
+    <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary"></span> 条</small>
 </div>
 </template>
 <script>
@@ -53,25 +35,95 @@ export default {
             type: Number,
             default: 29
         },
-        currentPage: {
+        defaultCurrentPage: {
             type: Number,
-            default: 3
+            default: 1
         },
-        pageSize: {
+        defaultPageSize: {
             type: Number,
             default: 5
+        },
+        pageSizeArray: {
+            type: Array,
+            default() {
+                return [{
+                    value: 5,
+                    label: '5条/页'
+                }, {
+                    value: 10,
+                    label: '10条/页'
+                }, {
+                    value: 20,
+                    label: '20条/页'
+                }, {
+                    value: 50,
+                    label: '50条/页'
+                }];
+            }
         }
     },
     data() {
         return {
-            
+            currentPage: 1,
+            pageArray: [],
+            isPageNumberError: false,
+            targetPage: 1,
+            size: 5
         };
     },
     created() {
+        this.currentPage = this.defaultCurrentPage;
+        this.pageSize = this.defaultPageSize;
+        this.pageArray = this.createArray(1, Math.min(this.totalPage, this.maxSize));
+    },
+    watch: {
+        currentPage(newVal, oldVal) {
+            let left = this.pageArray[0], right = this.pageArray[this.pageArray.length - 1];
+            if (left <= newVal && newVal <= right) {
+                return;
+            }
+            const maxSize = this.maxSize - 1;
+            if (newVal < left) {
+                if (newVal <= this.maxSize) {
+                    left = newVal;
+                    right = Math.min(newVal + this.maxSize - 1, this.totalPage);
+                } else {
+                    left = newVal - maxSize;
+                    right = newVal;
+                }
+            } else if (newVal > right) {
+                if (this.totalPage - maxSize <= newVal) {
+                    left = newVal - maxSize;
+                    right = newVal;
+                } else {
+                    left = newVal;
+                    right = newVal + maxSize;
+                }
+            }
+            this.pageArray = this.createArray(left, right);
+        },
+        pageSize(newVal) {
+            this.$emit('page-size-change', +newVal);
+        }
+    },
+    computed: {
         
     },
     methods: {
-        
+        go(page) {
+            if (+page < 1 || +page > this.totalPage) {
+                return;
+            }
+            this.currentPage = +page;
+            this.$emit('change', page);
+        },
+        createArray(min, max) {
+            const arr = [];
+            for (let i = +min; i <= +max; i++) {
+                arr.push(i);
+            }
+            return arr;
+        }
     }
 };
 </script>
@@ -86,6 +138,9 @@ export default {
     padding-left: 0;
     margin: 20px 0;
     border-radius: 4px;
+    .page-item {
+        cursor: pointer;
+    }
 }
 .small {
     margin: 0 10px;
@@ -128,13 +183,6 @@ export default {
 .input-group-addon, .input-group-btn, .input-group .form-control {
     display: table-cell;
 }
-/* .input-group .form-control {
-    position: relative;
-    z-index: 2;
-    float: left;
-    width: 100%;
-    margin-bottom: 0;
-} */
 .go .error .form-control{
     border: 1px solid #d95656;
 }
@@ -212,7 +260,7 @@ export default {
     display: inline;
 }
 
-.num{
+.num {
     display: inline-block;
     position: relative;
     top: -29px;

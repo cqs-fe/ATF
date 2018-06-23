@@ -2,7 +2,7 @@
 debug.log
 dist/
 public/
-new-atf/build/
+output/
 **.zip
 .DS_Store
 **/node_modules/

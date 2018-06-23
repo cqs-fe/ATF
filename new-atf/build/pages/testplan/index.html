@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css>
+    <link rel=stylesheet type=text/css href=../../assets/css/font-awesome.min.css>
+    <title>测试计划管理</title>
+<link href=../../static/style/2.css rel=stylesheet><link href=../../static/style/3.css rel=stylesheet><link href=../../static/style/1.css rel=stylesheet></head>
+<body>
+<div id=app>
+    <header-guide></header-guide>
+    <aside-guide open-menu=project-test active-item=testplan></aside-guide>
+    <div class=content>
+        <section id=main-content>
+            <section class=wrapper>
+                <main class=main>
+                    <div class=row>
+                        <div class=col-lg-12>
+                            <ul class=breadcrumb>
+                                <li class=active><a href=""><i class=icon-home></i> 测试计划</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class=top-bar>
+                        <button type=button class="btn btn-white" @click=showAddModal><i class=icon-plus></i>
+                        新增</button>
+                        <button class="btn btn-white" @click=showDeleteConfirm><i class=icon-remove></i>
+                        删除</button>
+                        <button class="btn btn-white" @click=showUpdateModal><i class=icon-edit></i>
+                        修改</button>
+                    </div>
+                    <div class=main-content style="padding: 20px;">
+                        <table id=testplan-table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope=col>操作</th>
+                                    <th scope=col>名称</th>
+                                    <th scope=col>描述</th>
+                                    <th scope=col>测试阶段</th>
+                                    <th scope=col>测试轮次</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="testPlan in testPlanArray">
+                                    <td>
+                                        <input type=radio v-bind:value=testPlan.id @click=changeSelect(testPlan.id) v-model=selectTestPlan>
+                                    </td>
+                                    <td>{{testPlan.nameMedium}}</td>
+                                    <td>{{testPlan.descMedium}}</td>
+                                    <td>{{testPlan.testPhaseName}}</td>
+                                    <td>{{testPlan.testRoundName}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <pagination></pagination>
+                    </div>
+                </main>
+            </section>
+            <copy-right></copy-right>
+        </section>
+    </div>
+    <modal v-model=addModalShow :title=addModalTitle ok-text=确认 cancel-text=取消 :before-close=add>
+        <form class=form-horizontal>
+            <div class=form-group>
+                <label for=testplan-name class="col-sm-2 control-label">名称</label>
+                <div class=col-sm-10>
+                    <input type=text v-model=addRowData.nameMedium class=form-control autocomplete=off>
+                </div>
+            </div>
+            <div class=form-group>
+                <label for=testplan-desc class="col-sm-2 control-label">描述</label>
+                <div class=col-sm-10>
+                    <input type=text v-model=addRowData.descMedium class=form-control autocomplete=off>
+                </div>
+            </div>
+            <div class=form-group v-show="1 === editType">
+                <label for=testplan-name class="col-sm-2 control-label">测试阶段</label>
+                <div class=col-sm-10>
+                    <el-select v-model=addRowData.testPhaseId filterable placeholder=请选择>
+                        <el-option v-for="testPhase in testPhaseArray" :key=testPhase.id :label=testPhase.phaseName :value=testPhase.id>
+                        </el-option>
+                    </el-select>
+                    <btn type=primary size=sm style="margin-left: 20px;" @click=showAddPhseModal>新增</btn>
+                </div>
+            </div>
+            <div class=form-group v-show="1 === editType">
+                <label for=testplan-desc class="col-sm-2 control-label">测试轮次</label>
+                <div class=col-sm-10>
+                    <select name=testRoundId id="" class=form-control v-model=addRowData.testRoundId>
+                        <option v-for="testRound in testRoundArray" :value=testRound.id>{{testRound.roundName}}</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </modal>
+    <modal v-model=addPhaseModalShow title=新增测试阶段 ok-text=确认 cancel-text=取消 :before-close=addTestPhase>
+            <form class=form-horizontal>
+                <div class=form-group>
+                    <label for=testplan-name class="col-sm-2 control-label">名称</label>
+                    <div class=col-sm-10>
+                        <input type=text v-model=addPhaseRowData.phaseName class=form-control autocomplete=off>
+                    </div>
+                </div>
+                <div class=form-group>
+                    <label for=testplan-desc class="col-sm-2 control-label">描述</label>
+                    <div class=col-sm-10>
+                        <input type=text v-model=addPhaseRowData.phaseDesc class=form-control autocomplete=off>
+                    </div>
+                </div>
+            </form>
+        </modal>
+</div>
+<script src=https://code.jquery.com/jquery-3.3.1.min.js integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin=anonymous></script>
+<script type=text/javascript src=../../static/js/2.js></script><script type=text/javascript src=../../static/js/3.js></script><script type=text/javascript src=../../static/js/1.js></script></body>
+
+</html>

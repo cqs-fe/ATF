@@ -1,0 +1,26 @@
+{
+  "name": "atf",
+  "version": "1.0.0",
+  "description": "ATF 1.0: 基于 vue 1.0 + fis3",
+  "main": "fis-conf.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "npm run release && npm run cpfile",
+    "cpfile": "cp new-atf/build output",
+    "build-new-atf": "cd new-atf && npm run build",
+    "release": "rm -rf output && fis3 release -d output",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cqs-fe/ATF.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cqs-fe/ATF/issues"
+  },
+  "homepage": "https://github.com/cqs-fe/ATF#readme"
+}
