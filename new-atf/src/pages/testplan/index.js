@@ -17,7 +17,13 @@ const initialAddRowData = {
     testPhaseId: '',
     testRoundId: '',
     creatorId: sessionStorage.getItem('userId') || 1,
-    caseLibId: sessionStorage.getItem('caseLibId') || 1
+    caseLibId: sessionStorage.getItem('caselibId') || 1
+};
+const initialAddRoundRowData = {
+    roundName: '',
+    roundDesc: '',
+    recordmanagementflag: 1,
+    timeexecutesetting: ''
 };
 new Vue({
     el: '#app',
@@ -27,9 +33,9 @@ new Vue({
     data: {
         selectTestPlan: '',
         addModalShow: false,
-        addPhaseModalShow: false,
+        addRoundModalShow: false,
         addRowData: { ...initialAddRowData },
-        addPhaseRowData: {},
+        addRoundRowData: { ...initialAddRoundRowData },
         addModalTitle: '新增测试计划',
         editType: 1,   // 1: add  2: update
         testPlanArray: [],
@@ -64,6 +70,7 @@ new Vue({
                         if ('0000' === data.respCode) {
                             Alert(data.respMsg);
                             this.addModalShow = false;
+                            this.addRowData = {...initialAddRowData};
                             this.getTestPlans();
                         } else {
                             Alert('出错啦~');
@@ -131,8 +138,12 @@ new Vue({
         },
         getTestPlans() {
             Ajax({
-				url: address3 + 'testPlanController/selectAllTestPlan',
-				data: {},
+				url: address3 + 'testPlanController/queryTestPlan',
+				data: {
+                    "nameMedium": "",
+                    "descMedium": "",
+                    "caseLibId": +initialAddRowData.caseLibId               
+                },
 				success: (data) => {
 					if ('0000' === data.respCode) {
 						this.testPlanArray = data.testPlanEntityList;
@@ -179,24 +190,24 @@ new Vue({
                 this.selectTestPlan = '';
             }
         },
-        showAddPhseModal() {
-            this.addPhaseModalShow = true;
+        showAddRoundModal() {
+            this.addRoundModalShow = true;
         },
-        addTestPhase(type) {
+        addTestRound(type) {
             if (!type || 'cancel' === type) {
-                this.addPhaseRowData = {
-                    phaseName: '', phaseDesc: ''
+                this.addRoundRowData = {
+                    ...initialAddRoundRowData
                 };
                 return true;
             } else {
                 Ajax({
-                    url: address3 + 'testphaseController/insertTestphase',
-                    data: this.addPhaseRowData,
+                    url: address3 + 'testroundController/insertTestround',
+                    data: this.addRoundRowData,
                     success: (data) => {
                         if ('0000' === data.respCode) {
                             Alert(data.respMsg);
-                            this.addPhaseModalShow = false;
-                            this.getTestPhases();
+                            this.addRoundModalShow = false;
+                            this.getTestRound();
                         } else {
                             Alert('出错啦~');
                         }

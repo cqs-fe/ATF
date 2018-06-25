@@ -75,37 +75,54 @@
                 </div>
             </div>
             <div class=form-group v-show="1 === editType">
-                <label for=testplan-name class="col-sm-2 control-label">测试阶段</label>
+                <label class="col-sm-2 control-label">测试阶段</label>
                 <div class=col-sm-10>
-                    <el-select v-model=addRowData.testPhaseId filterable placeholder=请选择>
-                        <el-option v-for="testPhase in testPhaseArray" :key=testPhase.id :label=testPhase.phaseName :value=testPhase.id>
-                        </el-option>
-                    </el-select>
-                    <btn type=primary size=sm style="margin-left: 20px;" @click=showAddPhseModal>新增</btn>
+                    <select name=testPhaseId id="" class=form-control v-model=addRowData.testPhaseId>
+                        <option v-for="testPhase in testPhaseArray" :value=testPhase.id :key=testPhase.id>
+                            {{testPhase.phaseName}}</option>
+                    </select>
                 </div>
             </div>
             <div class=form-group v-show="1 === editType">
-                <label for=testplan-desc class="col-sm-2 control-label">测试轮次</label>
+                <label class="col-sm-2 control-label">测试轮次</label>
                 <div class=col-sm-10>
-                    <select name=testRoundId id="" class=form-control v-model=addRowData.testRoundId>
-                        <option v-for="testRound in testRoundArray" :value=testRound.id>{{testRound.roundName}}</option>
-                    </select>
+                    <el-select v-model=addRowData.testRoundId filterable placeholder=请选择>
+                        <el-option v-for="testRound in testRoundArray" :key=testRound.id :label=testRound.roundName :value=testRound.id>
+                        </el-option>
+                    </el-select>
+                    <btn type=primary size=sm style="margin-left: 20px;" @click=showAddRoundModal>新增</btn>
                 </div>
             </div>
         </form>
     </modal>
-    <modal v-model=addPhaseModalShow title=新增测试阶段 ok-text=确认 cancel-text=取消 :before-close=addTestPhase>
+    <modal v-model=addRoundModalShow title=新增测试轮次 ok-text=确认 cancel-text=取消 :before-close=addTestRound>
             <form class=form-horizontal>
                 <div class=form-group>
-                    <label for=testplan-name class="col-sm-2 control-label">名称</label>
+                    <label class="col-sm-2 control-label">名称</label>
                     <div class=col-sm-10>
-                        <input type=text v-model=addPhaseRowData.phaseName class=form-control autocomplete=off>
+                        <input type=text v-model=addRoundRowData.roundName class=form-control autocomplete=off>
                     </div>
                 </div>
                 <div class=form-group>
-                    <label for=testplan-desc class="col-sm-2 control-label">描述</label>
+                    <label class="col-sm-2 control-label">描述</label>
                     <div class=col-sm-10>
-                        <input type=text v-model=addPhaseRowData.phaseDesc class=form-control autocomplete=off>
+                        <textarea resize=disabled v-model=addRoundRowData.roundDesc class=form-control autocomplete=off></textarea>
+                    </div>
+                </div>
+                <div class=form-group>
+                    <label class="col-sm-2 control-label">记录单保存方式</label>
+                    <div class=col-sm-10>
+                        <select class=form-control v-model=addRoundRowData.recordmanagementflag>
+                            <option v-for="option in [{ value: 1, label: '仅保存一份' }, { value: 2, label: '保存多份' }]" :value=option.value :key=option.value>
+                                {{option.label}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class=form-group>
+                    <label class="col-sm-2 control-label">定时执行方式</label>
+                    <div class=col-sm-10>
+                        <input type=text v-model=addRoundRowData.timeexecutesetting class=form-control autocomplete=off>
                     </div>
                 </div>
             </form>

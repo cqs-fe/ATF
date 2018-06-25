@@ -31,7 +31,7 @@ var view = new Vue({
             return;
           }
 					
-					_this.tableData = data.obj;
+			_this.tableData = data.obj;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
@@ -1571,11 +1571,10 @@ $(document).ready(function () {
 				// 保存点击后的复选框
 				checkedArray: [],
 				systemInfo: {
-					executor: 63,
-					caseLib_id: 1,
-					testpoints: '',
-					script_mode: '',
-					execute_method: ''
+					executorId: 63,
+					caseLibId: 1,
+					valueList: '[]',
+					propertyName: 'testPoint'
 				},
 				testpointsMap: new Map(),
 				testpointLength: 0
@@ -1600,7 +1599,7 @@ $(document).ready(function () {
 				_this.changeSelect({target: {value: 1 }});
 			},
 			watch: {
-				checkedArray(newVal, oldVal) {
+				checkedArray(newVal) {
 					var _this = this;
 					if (newVal.length > 1) {
 						newVal.shift()
@@ -1610,51 +1609,47 @@ $(document).ready(function () {
 						zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, []);
 						return
 					}
-					_this.systemInfo.testpoints = JSON.stringify(newVal)
-					var checkboxs = $(`input[value=${newVal[0]}]`);
-					_this.systemInfo.script_mode = checkboxs[0].getAttribute('data-script-mode');
-					_this.systemInfo.execute_method = checkboxs[0].getAttribute('data-execute-method');
+					_this.systemInfo.valueList = newVal;
+					_this.systemInfo.executorId = sessionStorage.getItem('userId');
+					_this.systemInfo.caseLibId = sessionStorage.getItem;
 					var data = {
-						executor: 	_this.systemInfo.executor,
-						caseLib_id:	_this.systemInfo.caseLib_id,
-						testpoints:	_this.systemInfo.testpoints,
+						propertyName: 'testPoint',
+						valueList: newVal,
+						executorId: sessionStorage.getItem('userId'),
+						caseLibId: sessionStorage.getItem('caselibId')
 					}
-					$.ajax({
-						url: address + "autController/selectTestCaseByCondition",
-						type: "post",
-						dataType: "json",
+					Vac.ajax({
+						url: address3 + "dataCenter/queryFilterTree",
 						data: data,
-						success: function (data, textStatus) {
-							if (!data.success) {
-								Vac.alert(data.msg);
+						success: function (data) {
+							if ('0000' !== data.respCode) {
+								Vac.alert(data.respMsg);
 								return;
 							}
 							var treeData = [];
-							if (data.o.length == 0) {
+							if (data.filterTree.length == 0) {
 								Vac.alert('返回结果为空！')
 								return
 							}
-							data.o.forEach((value) => {
-								// var testpointMapVal = ''+value.id;
+							data.filterTree.forEach((value) => {
 								var item = {};  //解构第一层
 								item.open = true;
 								item.children = [];
-								value.children.forEach((value1) => {
+								value.transactList.forEach((value1) => {
 									var subData = {};  //解构第二层
 									subData.children = [];
 									subData.open = true;
 									({
-										transactid: subData.id,
-										name: subData.name,
+										transId: subData.id,
+										transName: subData.name,
 									} = value1);
-									value1.children.forEach((value2 => {
+									value1.scriptTemplateList.forEach((value2 => {
 										var ssubData = {};		 //解构第二层
 										({
-											scriptid: ssubData.id,
-											name: ssubData.name
+											scriptId: ssubData.id,
+											scriptName: ssubData.name
 										} = value2);
 										subData.children.push(ssubData);
-										console.log(newVal.length + "-" + _this.testpointLength)
 										if (newVal.length > _this.testpointLength) {
 											var testpointMapVal = `${value.autid}-${value1.transactid}-${value2.scriptid}`
 											// testpointsMap的格式：
@@ -1669,7 +1664,6 @@ $(document).ready(function () {
 												_this.testpointsMap.set(newVal[newVal.length - 1], new Set())
 												_this.testpointsMap.get(newVal[newVal.length - 1]).add(testpointMapVal)
 											}
-											console.log(_this.testpointsMap)
 										}
 										// 生成关于testpoint的Map
 
@@ -1677,8 +1671,8 @@ $(document).ready(function () {
 									item.children.push(subData);
 								});
 								({
-									autid: item.id,
-									name: item.name,
+									autId: item.id,
+									autName: item.name,
 								} = value);
 								treeData.push(item);
 							});
@@ -1715,44 +1709,35 @@ $(document).ready(function () {
 					// console.log('hello');
 					if (event.target.value == 1) {
 						var data = {
-							executor: _this.systemInfo.executor,
-							caseLib_id: _this.systemInfo.caseLib_id
+							executorId: _this.systemInfo.executor,
+							caseLibId: _this.systemInfo.caseLib_id,
+							"property": "testPoint"
 						}
 						// 假数据，为了能取到数据配置的
 						var mockdata = {
-							executor: 63,
-							caseLib_id: 1
+							executorId: 1,
+							caseLibId: 1,
+							"property": "testPoint"
 						}
-						$.ajax({
-							url: address + "TestcaseController/selectTestPointByCondition",
+						Vac.ajax({
+							url: address3 + "dataCenter/queryDistinctTestcaseInfo",
 							data: data,
 							type: 'post',
 							dataType: "json",
-							success: function (data, textStatus) {
-								if (!data.success) {
-									Vac.alert(data.msg);
+							success: function (data) {
+								if ('0000' !== data.respCode) {
+									Vac.alert(data.respMsg);
 									return;
 								}
 								_this.checkedItems = []
-								if (!data.o || data.o.length == 0) {
+								if (!data.propertList || data.propertList.length == 0) {
 									Vac.alert('未查询到相关测试点！')
 									return
 								}
-								for (let value of data.o) {
-									var arrayItem = {};
-									if (value != null) {
-										({ 
-											testpoint: arrayItem.value,
-											executeMethod: arrayItem.execute_method,
-											scriptMode: arrayItem.script_mode,
-										} = value);
-										arrayItem.name = arrayItem.value;
-										_this.checkedItems.push(arrayItem);
-									}
-								}
+								_this.checkedItems = data.propertList
 							},
-							error: function (XMLHttpRequest, textStatus, errorThrown) {
-								Vac.alert('查询测试点失败，失败信息：' + textStatus)
+							error: function () {
+								Vac.alert('查询测试点失败')
 							}
 						});
 					} else {
@@ -1763,9 +1748,6 @@ $(document).ready(function () {
 				// 使用了mock
 				changeChecked: function (event) {
 					var _this = this;
-					// console.log(JSON.stringify(_this.checkedArray))
-					// console.log('[' + _this.checkedArray.toString() + ']')
-					// _this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
 					_this.systemInfo.testpoints = JSON.stringify(_this.checkedArray)
 					// 假数据
 					var dataMock = {
@@ -1773,13 +1755,10 @@ $(document).ready(function () {
 						caseLib_id: 1,
 						testpoints: JSON.stringify(["登录"]),
 					}
-					$.ajax({
-						url: address + "autController/selectTestCaseByCondition",
-						type: "post",
-						dataType: "json",
+					Vac.ajax({
+						url: address3 + "dataCenter/queryFilterTree",
 						data: _this.systemInfo,
-						// data: dataMock,
-						success: function (data, textStatus) {
+						success: function (data) {
 							if (data.success) {
 								var treeData = [];
 								if (data.o.length == 0) {
@@ -1998,17 +1977,15 @@ $(document).ready(function () {
 
 			return dataKey;
 		};
-		function zTreeOnDblClick(event, treeId, treeNode) {
+		function zTreeOnDblClick(event, treeId, treeNode) {console.log(treeNode);
 			if (treeNode && !treeNode.isParent) {
 				autId = treeNode.getParentNode().getParentNode().id;
 				transid = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
 				var data = {
 					testpoint: sub.checkedArray[0],
-					// script_mode: sub.systemInfo.script_mode,
-					// execute_method: sub.systemInfo.execute_method,
-					executor: sub.systemInfo.executor,
-					caseLib_id: sub.systemInfo.caseLib_id,
+					executorId: sessionStorage.getItem('userId'),
+					caseLibId: sessionStorage.getItem('caselibId'),
 					autId: autId,
 					transId: transid,
 					scriptId: scriptId
@@ -2020,13 +1997,11 @@ $(document).ready(function () {
 				tooltipwindow.autId = autId;
 				tooltipwindow.transId = transid;
 				tooltipwindow.scriptId = scriptId;
-				$.ajax({
-					url: address + "scripttemplateController/searchScripttemplateInf",
+				Vac.ajax({
+					url: address3 + "dataCenter/queryTestcaseInfo",
 					data: data,
-					type: "post",
-					dataType: "json",
 					success: function (data) {
-						if (data.success) {
+						if ('0000' === data.respCode) {
 							var dataKey = [];
 							if (data.o.tableHead) {
 								// [ ["[待删除]","商品"], ["[待删除]","t1"] ]

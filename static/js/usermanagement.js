@@ -83,9 +83,23 @@ $(document).ready(function() {
         data.role = $('#alter-role').val();
         data.dept = $('#alter-department').val();
         data.tel = $('#alter-phonenumber').val();
-        data.phone = $('#alter-telephone').val();
-        // data.email = $('#alter-email').val();
         data.status = $('#alter-state').val();
+        data.phone = $('#alter-telephone').val();
+        if (!data.username) {
+            Vac.alert('请输入用户名');return;
+        }
+        if (!data.reallyname) {
+            Vac.alert('请输入姓名');return;
+        }
+        if (!data.password) {
+            Vac.alert('请输入密码');return;
+        }
+        if (!data.role) {
+            Vac.alert('请输入用户角色');return;
+        }
+        if (!data.status) {
+            Vac.alert('请选择用户状态');return;
+        }
         $.ajax({
             url: address + 'userController/updateByPrimaryKey',
             type: 'post',
@@ -237,6 +251,7 @@ $(document).ready(function() {
         let username = $("#username").val();
         let name = $('#name').val();
         let password = $("#password").val()
+        let repassword = $("#confirm").val();
         let role = $("#role").val();
         let dept = $('#department').val();
         let tel = $('#phonenumber').val();
@@ -254,6 +269,24 @@ $(document).ready(function() {
             email: email,
             status: status
         };
+        if (!data.username) {
+            Vac.alert('请输入用户名');return;
+        }
+        if (!data.reallyname) {
+            Vac.alert('请输入姓名');return;
+        }
+        if (!data.password) {
+            Vac.alert('请输入密码');return;
+        }
+        if (password !== repassword) {
+            Vac.alert('两次密码不一致');return;
+        }
+        if (!data.role) {
+            Vac.alert('请输入用户角色');return;
+        }
+        if (!data.status) {
+            Vac.alert('请选择用户状态');return;
+        }
         $.ajax({
             url: address + 'userController/insert',
             type: 'post',

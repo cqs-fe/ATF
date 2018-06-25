@@ -15,6 +15,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 // vue-loader 参考：https://vue-loader.vuejs.org/guide/#vue-cli
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
+const isDevelopment = 'development' === process.env.NODE_ENV;
+const isProduction = 'production' === process.env.NODE_ENV;
+console.log(isProduction);
 const entryConfig = util.getEntryConfig('src/pages/**/*.html'); // 获得入口文件配置
 
 const htmlPlugins = entryConfig.html.map(item => {
@@ -38,7 +41,8 @@ module.exports = {
     }),
     output: {
         path: path.join(__dirname, '../build'),
-        filename: 'static/js/[id].js'
+        filename: 'static/js/[id].js',
+        publicPath: isDevelopment ? '/' : '../../'
     },
     module: {
         rules: [
@@ -60,8 +64,14 @@ module.exports = {
                 test: /\.s?css$/,
                 include: /(src|node_modules\/element-ui\/lib)/,
                 use: [
-                    { loader: MiniCssExtractPlugin.loader, options: { publicPath: '../../' } },
-                    { loader: 'css-loader', options: { url: true }},
+                    { 
+                        loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader'
+                    },
+                    {   loader: 'css-loader', 
+                        options: { 
+                            url: true
+                        }
+                    },
                     'sass-loader'
                 ]
             },
@@ -69,7 +79,7 @@ module.exports = {
                 test: /\.(png|jpg|gif|svg)$/,
                 loader: 'url-loader',
                 options: {
-                    limit: 10,
+                    limit: 1,
                     fallback: 'file-loader',
                     name: 'static/img/[name].[ext]'
                 }
@@ -78,7 +88,7 @@ module.exports = {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
                 loader:  'file-loader',
                 options: {
-                    name:'static/fonts/[name].[ext]'
+                    name: 'static/fonts/[name].[ext]'
                 }
             }
         ]
@@ -119,6 +129,7 @@ module.exports = {
     devServer: {
         contentBase: path.join(__dirname, 'build'),
         compress: true,
+        publicPath: '/',
         port: 9000
     }
 };

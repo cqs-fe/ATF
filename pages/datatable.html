@@ -572,8 +572,8 @@
             </div>
             <div>
               <label v-for="(index,item) in checkedItems" class="checkedItem" track-by="$index">
-                <input type="checkbox" name="checkbox" v-bind:value="item.value" v-model="checkedArray" v-bind:data-script-mode="item.script_mode"
-                  v-bind:data-execute-method="item.execute_method" class="testpoints-box"> {{item.name}}
+                <input type="checkbox" name="checkbox" v-bind:value="item" v-model="checkedArray" 
+                  class="testpoints-box"> {{item}}
               </label>
             </div>
           </div>
