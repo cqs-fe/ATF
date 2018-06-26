@@ -18,8 +18,8 @@ npm run build
 
 ## 介绍
 新的项目结构，使用`webpack`打包， 配合`Vue` + `ElementUI` + `uiv` 构建多页面应用。具有以下优点：
-- 使用`webpack-dev-server`进行开发调试，自动刷新浏览器；
-- 使用`webpack`打包构建，不限于使用较低版本的`node`，支持最新的JS语法；
+- 本结构使用`webpack-dev-server`进行开发调试，自动刷新浏览器；
+- 本结构使用`webpack`打包构建，不限于使用较低版本的`node`，支持最新的JS语法；
 - 引入了`jquery`， 支持按照需求额外引入 `bootstrap`,原则上优先使用`uiv`；
 - 项目使用了`uiv`组件库，完美符合`bootstrap`的UI风格，便于和老项目的页面保持风格一致；
 - 按需引入`ElementUI`的组件，提高开发效率；
