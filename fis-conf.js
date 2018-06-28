@@ -1,4 +1,5 @@
 fis.hook('commonjs');
+fis.set('project.ignore', ['new-atf/**', 'output/**', 'fis-conf.js']); // set 为覆盖不是叠加
 
 fis.match('/static/**.{js,scss,png,jpg,map,css,gif,PNG}', {
 	useHash: true,

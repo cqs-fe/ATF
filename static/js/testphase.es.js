@@ -29,9 +29,9 @@ var vBody = new Vue({
 			Vac.ajax({
 				url: address3 + "testphaseController/insertTestphase",
 				data: data,
-				success: function(data, statusText){
+				success: function(data){
 					if(data.respCode === '0000'){
-						$('#add-modal').show('hide')
+						$('#add-modal').modal('hide')
 						Vac.alert(data.respMsg)
 						_this.getData();
 					}else {
@@ -54,7 +54,7 @@ var vBody = new Vue({
 				Vac.ajax({
 					url: address3 + "testphaseController/deleteTestphase",
 					data: {id: +_this.selectedRows[0]},
-					success: (data, statusText) => {
+					success: (data) => {
 						if (data.respCode === '0000') {
 							_this.getData();
 							_this.selectedRows.shift();
@@ -70,7 +70,6 @@ var vBody = new Vue({
 			})
 		},
 		editRow: function(){
-			var _this = this;
 			if(this.selectedRows.length === 0){
 				Vac.alert('请选择要修改的项目');
 				return
@@ -92,7 +91,7 @@ var vBody = new Vue({
 			Vac.ajax({
 				url: address3 + "testphaseController/updateTestphase",
 				data: data,
-				success: (data, statusText) => {
+				success: (data,) => {
 					if(data.respCode === '0000') {
 						$('#edit-modal').modal('hide');
 						_this.getData();
@@ -109,7 +108,7 @@ var vBody = new Vue({
 			Vac.ajax({
 				url: address3 + "testphaseController/selectAllTestphase",
 				data: '{}',
-				success: (data, statusText) => {
+				success: (data) => {
 					if(data.respCode === '0000'){
 						this.rowData = data.testphaseEntityList;
 					}

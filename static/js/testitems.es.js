@@ -111,10 +111,14 @@ $(document).ready(function(){
     //添加按钮，发送ajax
     (function(){
         $("#btn-add").click(function(){
-            var data = $("#addForm").serialize();
+            const data = {
+                nameMedium: $('#itemname').val(),
+                codeLong: $('#codeLong').val(),
+                descMedium: $('#descMedium').val()
+            };
             Vac.ajax({
                 url: address3 + "missionController/addSingleTestMission",
-                data: getJson(data),
+                data: data,
                 success: function(data){
                     if(data.respCode === '0000'){
                         Vac.alert('添加成功！')
@@ -135,10 +139,16 @@ $(document).ready(function(){
     //更改按钮，发送ajax
     (function(){
         $("#btn-alter").click(function(){
-            var data = $("#alterForm").serialize()+"&id="+itemId;
+            // var data = $("#alterForm").serialize()+"&id="+itemId;
+            const data = {
+                id: itemId,
+                nameMedium: $('#alter-itemname').val(),
+                codeLong: $('#alter-itemtype').val(),
+                descMedium: $('#alter-projectCode').val()
+            };
             Vac.ajax({
                 url: address3 + "missionController/modifySingleTestMission",
-                data: getJson(data),
+                data: data,
                 success: function(data){
                     if(data.respCode === '0000'){
                         Vac.alert('修改成功！')

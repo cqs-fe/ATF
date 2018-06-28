@@ -2,6 +2,8 @@
 debug.log
 dist/
 public/
-dist/
+output/
 **.zip
 .DS_Store
+**/node_modules/
+
