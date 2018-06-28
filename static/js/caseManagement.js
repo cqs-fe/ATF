@@ -850,11 +850,12 @@ var app = new Vue({
                                 caseTypeTd = $("<td></td>"),
                                 casePropertyTd = $("<td></td>"),
                                 testPointTd = $("<td></td>");
-                            codeTd.html(that.subCaseList[i].actioncasecode);
+                            codeTd.html(that.subCaseList[i].actioncode);
                             autTd.html(that.subCaseList[i].autName);
                             transTd.html(that.subCaseList[i].transName);
                             compositeTd.html('流程节点');
                             useTd.html(that.subCaseList[i].useStatus);
+                            scriptTd.html(that.subCaseList[i].scriptTemplateName);
                             authorTd.html(that.subCaseList[i].authorName);
                             executorTd.html(that.subCaseList[i].executorName);
                             reviewerTd.html(that.subCaseList[i].reviewerName);
@@ -864,7 +865,7 @@ var app = new Vue({
                             caseTypeTd.html(that.subCaseList[i].caseType);
                             casePropertyTd.html(that.subCaseList[i].caseProperty);
                             testPointTd.html(that.subCaseList[i].testpoint);
-                            subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, authorTd, executorTd, reviewerTd, executeMethodTd, misssionTd, priorityTd, caseTypeTd, casePropertyTd, testPointTd);
+                            subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, scriptTd, authorTd, executorTd, reviewerTd, executeMethodTd, misssionTd, priorityTd, caseTypeTd, casePropertyTd, testPointTd);
                             flowTr.after(subTr);
                         }
 
@@ -906,38 +907,7 @@ var app = new Vue({
                 $('#assignModal').modal();
             }
         },
-        //分配执行者
-        executor: function() {
-            var self = this;
-            var selectedInput = $('input[name="chk_list"]:checked');
-            if (selectedInput.length === 0) {
-                $('#selectAlertModal').modal();
-            } else {
-                var id_array = new Array();
-                $('input[name="chk_list"]:checked').each(function() {
-                    id_array.push($(this).attr('id'));
-                });
-                $('input[name="ids"]').val(id_array.join(','));
-                $.ajax({
-                    url: address + 'TestcaseController/excutor',
-                    type: 'post',
-                    data: $("#executorForm").serializeArray(),
-                    success: function(data) {
-                        // console.info(data);
-                        if (data.msg == "完成") {
-                            $('#successModal').modal();
-                            self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
-                        } else {
-                            $('#failModal').modal();
-                        }
-                    },
-                    error: function() {
-                        $('#failModal').modal();
-                    }
-                });
-            }
-        },
-
+        
         checkExeM: () => {
             app.getIds();
             var selectedInput = $('input[name="chk_list"]:checked');
@@ -958,19 +928,20 @@ var app = new Vue({
                 $('input[name="chk_list"]:checked').each(function() {
                     id_array.push($(this).attr('id'));
                 });
-                $('input[name="ids"]').val(id_array.join(','));
+                $('#executeMethodForm input[name="ids"]').val(id_array.join(','));
                 $.ajax({
-                    url: address + 'TestcaseController/execute_mothord',
+                    url: address2 + '/testcase/batchModifyTestCaseProperty',
                     type: 'post',
-                    data: $("#executeMethodForm").serializeArray(),
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'testcaseIds': id_array,
+                        'property': 'executeMethod',
+                        'value': $("#executeMethodForm select[name='executeMethod']").val()
+                    }),
                     success: function(data) {
-                        // console.info(data);
-                        if (data.success) {
-                            $('#successModal').modal();
-                            self.getCase(self.currentPage, self.pageSize, self.order, self.sort);
-                        } else {
-                            $('#failModal').modal();
-                        }
+                        // console.info(data.msg);
+                        $('#successModal').modal();
+                        app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
                     },
                     error: function() {
                         $('#failModal').modal();
@@ -1184,18 +1155,23 @@ var app = new Vue({
                 let that=this;
                 // console.log(list)
                 for(let i=0;i<list.length;i++){
-                    let listItem={};
-                    listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
-                    listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
-                    let valType=$(list[i]).find('.val_select')[0].tagName;
-                    if(valType==='INPUT'){
-                        listItem.propertyValueList=[];
-                        let propertyValueList=$(list[i]).find('input.val_select').val();
-                        listItem.propertyValueList.push(propertyValueList);
-                    }else{
-                        listItem.propertyValueList=$(list[i]).find('select.val_select').val();
-                    }
-                    data.push(listItem);
+                        let listItem={};
+                        listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
+                        listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
+                        let valType=$(list[i]).find('.val_select')[0].tagName;
+                        if(valType==='INPUT'){
+                            listItem.propertyValueList=[];
+                            let propertyValueList=$(list[i]).find('input.val_select').val();
+                            listItem.propertyValueList.push(propertyValueList);
+                        }else{
+                            let propertyValueList=$(list[i]).find('select.val_select').val();
+                            if(Object.prototype.toString.call(propertyValueList)=='[object Array]'){
+                                listItem.propertyValueList=propertyValueList;
+                            }else{
+                                listItem.propertyValueList=propertyValueList.toString().split('');
+                            }
+                        }
+                        data.push(listItem);
                 }
                 // console.log(data)
                 var filterType=$('input[name="filterType"]').val();
@@ -1225,6 +1201,71 @@ var app = new Vue({
 
 });
 
+    //分配执行者
+    function executor() {
+        var id_array = new Array();
+        $('input[name="chk_list"]:checked').each(function() {
+            id_array.push($(this).attr('id'));
+        });
+        $('#executorForm input[name="ids"]').val(id_array.join(','));
+        $.ajax({
+            url: address2 + '/testcase/batchModifyTestCaseProperty',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                testcaseIds: id_array,
+                property: 'executor',
+                value: $("#executorForm select[name='executor']").val()
+            }),
+            success: function(data) {
+                // console.info(data.msg);
+                $('#successModal').modal();
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
+            },
+            error: function() {
+                $('#failModal').modal();
+            }
+        });
+    }
+    //设置功能点及模板脚本
+    function transid() {
+        var id_array = new Array();
+        $('input[name="chk_list"]:checked').each(function() {
+            id_array.push($(this).attr('id'));
+        });
+        $('#executorForm input[name="ids"]').val(id_array.join(','));
+        $.ajax({//transId
+            url: address2 + '/testcase/batchModifyTestCaseProperty',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                testcaseIds: id_array,
+                property: 'transId',
+                value: $("#transidForm select[name='transid']").val()
+            }),
+            success: function(data) {
+                // console.info(data.msg);
+                $('#successModal').modal();
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
+            },
+            error: function() {
+                $('#failModal').modal();
+            }
+        });
+        $.ajax({//scriptModeFlag
+            url: address2 + '/testcase/batchModifyTestCaseProperty',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                testcaseIds: id_array,
+                property: 'scriptModeFlag',
+                value: $("#transidForm select[name='scriptmodeflag']").val()
+            }),
+            success: function(data) {
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
+            }
+        });
+    }
 //全选反选
 $("#chk_all").click(function() {　　
     $("input[name='chk_list']").prop("checked", $(this).prop("checked"));　
@@ -1463,59 +1504,6 @@ function disan() {
 
         }
 
-    });
-}
-
-//设置功能点及模板脚本
-function transid() {
-    $.ajax({
-        url: address + 'TestcaseController/trans_id',
-        type: 'post',
-        // data: $("#transidForm").serializeArray(),
-        data:{
-            'ids':$("#transidForm input[name='ids']").val(),
-            'autid':$("#transidForm select[name='autid']").val(),
-            'transid':$("#transidForm select[name='transid']").val(),
-            'scriptmodeflag':$("#transidForm select[name='scriptmodeflag']").val(),
-        },
-        success: function(data) {
-            // console.info(data);
-            if (data.success) {
-                $('#successModal').modal();
-                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
-            } else {
-                $('#failModal').modal();
-            }
-        },
-        error: function() {
-            $('#failModal').modal();
-        }
-    });
-}
-//分配执行者
-function executor() {
-    var id_array = new Array();
-    $('input[name="chk_list"]:checked').each(function() {
-        id_array.push($(this).attr('id'));
-    });
-    $('input[name="ids"]').val(id_array.join(','));
-    $.ajax({
-        url: address2 + '/testcase/batchModifyTestCaseProperty',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            testcaseIds: $("#executorForm input[name='ids']").val(),
-            property: 'executor',
-            value: $("#executorForm select[name='executor']").val()
-        }),
-        success: function(data) {
-            // console.info(data.msg);
-            $('#successModal').modal();
-            app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
-        },
-        error: function() {
-            $('#failModal').modal();
-        }
     });
 }
 

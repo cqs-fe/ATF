@@ -688,6 +688,67 @@ var app = new Vue({
                 }
             });
         },
+        //获取流程节点
+        getSubCase: function(e) {
+            var flowId = $(e.target).parent().parent().attr('id'),
+                flowTr = $(e.target).parent().parent();
+            // console.log(flowId);
+            var that=this;
+            if ($(e.target).attr("class") === "icon-angle-right") {
+                $.ajax({
+                    url: address3 + '/testcase/queryTestcaseActionList',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'id': flowId }),
+                    success: function(data) {
+                        that.subCaseList = data.testcaseActionViewList;
+                        // console.log(that.subCaseList);
+                        for (var i = 0; i < that.subCaseList.length; i++) {
+                            var subTr = $("<tr class='subShow'></tr>"),
+                                iconTd = $("<td></td>"),
+                                checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                codeTd = $("<td></td>"),
+                                autTd = $("<td></td>"),
+                                transTd = $("<td></td>"),
+                                compositeTd = $("<td></td>"),
+                                useTd = $("<td></td>"),
+                                scriptTd=$("<td></td>"),
+                                authorTd = $("<td></td>"),
+                                executorTd = $("<td></td>"),
+                                reviewerTd = $("<td></td>"),
+                                executeMethodTd = $("<td></td>"),
+                                misssionTd = $("<td></td>"),
+                                priorityTd = $("<td></td>"),
+                                caseTypeTd = $("<td></td>"),
+                                casePropertyTd = $("<td></td>"),
+                                testPointTd = $("<td></td>");
+                            codeTd.html(that.subCaseList[i].actioncode);
+                            autTd.html(that.subCaseList[i].autName);
+                            transTd.html(that.subCaseList[i].transName);
+                            compositeTd.html('流程节点');
+                            useTd.html(that.subCaseList[i].useStatus);
+                            scriptTd.html(that.subCaseList[i].scriptTemplateName);
+                            authorTd.html(that.subCaseList[i].authorName);
+                            executorTd.html(that.subCaseList[i].executorName);
+                            reviewerTd.html(that.subCaseList[i].reviewerName);
+                            executeMethodTd.html(that.subCaseList[i].executeMethod);
+                            misssionTd.html(that.subCaseList[i].missionName);
+                            priorityTd.html(that.subCaseList[i].priority);
+                            caseTypeTd.html(that.subCaseList[i].caseType);
+                            casePropertyTd.html(that.subCaseList[i].caseProperty);
+                            testPointTd.html(that.subCaseList[i].testpoint);
+                            subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, scriptTd, authorTd, executorTd, reviewerTd, executeMethodTd, misssionTd, priorityTd, caseTypeTd, casePropertyTd, testPointTd);
+                            flowTr.after(subTr);
+                        }
+
+                    }
+                });
+                $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
+            } else {
+                $(".subShow").css("display", "none");
+                $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
+            }
+        },
         //改变页面大小
         changeListNum:function() {
             $('#mySelect').change(function() {
@@ -882,16 +943,23 @@ var app = new Vue({
                 let that=this;
                 // console.log(list)
                 for(let i=0;i<list.length;i++){
-                    let listItem={};
-                    listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
-                    listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
-                    let valType=$(list[i]).find('.val_select')[0].tagName;
-                    if(valType==='INPUT'){
-                        listItem.propertyValueList=$(list[i]).find('input.val_select').val();
-                    }else{
-                        listItem.propertyValueList=$(list[i]).find('select.val_select').val();
-                    }
-                    data.push(listItem);
+                        let listItem={};
+                        listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
+                        listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
+                        let valType=$(list[i]).find('.val_select')[0].tagName;
+                        if(valType==='INPUT'){
+                            listItem.propertyValueList=[];
+                            let propertyValueList=$(list[i]).find('input.val_select').val();
+                            listItem.propertyValueList.push(propertyValueList);
+                        }else{
+                            let propertyValueList=$(list[i]).find('select.val_select').val();
+                            if(Object.prototype.toString.call(propertyValueList)=='[object Array]'){
+                                listItem.propertyValueList=propertyValueList;
+                            }else{
+                                listItem.propertyValueList=propertyValueList.toString().split('');
+                            }
+                        }
+                        data.push(listItem);
                 }
                 // console.log(data)
                 var filterType=$('input[name="filterType"]').val();
