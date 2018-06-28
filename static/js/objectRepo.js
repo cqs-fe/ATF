@@ -293,7 +293,7 @@ var objectRepo =  Vue.extend({
         return {
             autId: '',
             transactId: '',
-            repositoryId: '',
+            repositoryId: 6,
             objId: '',
             objName: '',
             objTitle: '对象',
@@ -332,7 +332,7 @@ var objectRepo =  Vue.extend({
                     // 禁止拖拽
                     beforeDrag: _this.zTreeBeforeDrag,
                     onClick: function(event, treeId, treeNode, clickFlag) {
-                        // console.log(treeNode)
+                        console.log(treeNode)
                         $('#obj').css('display','block');
                         $('#blank').css('display','none');
                         $('classtypeSelect').val('');
@@ -792,6 +792,7 @@ var objectRepo =  Vue.extend({
                 success: function(data) {
                     if (data !== null) {
                         var objects = data.objects;
+                        console.log(objects)
                         $.fn.zTree.init($("#objectTree"), _this.setting1, objects);
                         _this.repositoryId = data.repositoryId;
                     }

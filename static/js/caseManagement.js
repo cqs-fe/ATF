@@ -671,7 +671,7 @@ var app = new Vue({
                     'orderType': sort
                 }),
                 success: function(data) {
-                    // console.info(data);
+                    // console.log(data);
                     app.caseList = data.testcaseViewRespDTOList;
                     app.tt = data.totalCount;
                     app.totalPage = Math.ceil(app.tt / listnum);
@@ -977,7 +977,6 @@ var app = new Vue({
                     }
                 });
             }
-
         },
 
         checkTransid: () => {
@@ -1190,7 +1189,9 @@ var app = new Vue({
                     listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
                     let valType=$(list[i]).find('.val_select')[0].tagName;
                     if(valType==='INPUT'){
-                        listItem.propertyValueList=$(list[i]).find('input.val_select').val();
+                        listItem.propertyValueList=[];
+                        let propertyValueList=$(list[i]).find('input.val_select').val();
+                        listItem.propertyValueList.push(propertyValueList);
                     }else{
                         listItem.propertyValueList=$(list[i]).find('select.val_select').val();
                     }
@@ -1351,7 +1352,6 @@ function first() {
     });
 }
 
-
 //二级 功能点
 function second() {
     var val = $("#1ji").val();
@@ -1464,7 +1464,6 @@ function disan() {
         }
 
     });
-
 }
 
 //设置功能点及模板脚本
@@ -1501,17 +1500,18 @@ function executor() {
     });
     $('input[name="ids"]').val(id_array.join(','));
     $.ajax({
-        url: address + 'TestcaseController/excutor',
+        url: address2 + '/testcase/batchModifyTestCaseProperty',
         type: 'post',
-        data: $("#executorForm").serializeArray(),
+        contentType: 'application/json',
+        data: JSON.stringify({
+            testcaseIds: $("#executorForm input[name='ids']").val(),
+            property: 'executor',
+            value: $("#executorForm select[name='executor']").val()
+        }),
         success: function(data) {
             // console.info(data.msg);
-            if (data.msg == "完成") {
-                $('#successModal').modal();
-                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
-            } else {
-                $('#failModal').modal();
-            }
+            $('#successModal').modal();
+            app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
         },
         error: function() {
             $('#failModal').modal();
