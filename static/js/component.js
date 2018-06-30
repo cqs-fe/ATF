@@ -524,7 +524,7 @@ function getClass() {
         }
     });
 }
-// 勾选控件类型
+// 点击控件类型
 function classClick(event, i) {
     if ($(event.target).attr("checked")) {
         $('#classSection').css('display', 'block');

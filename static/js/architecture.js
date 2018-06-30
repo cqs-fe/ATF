@@ -317,11 +317,15 @@ var app = new Vue({
                                 methodNameTd = $('<td ></td>'),
                                 methodDescriptionTd = $('<td ></td>');
                             methodTr.attr('id', methodList[i].id);
-                            if(methodList[i].overrideFlag==0){
-                                flagTd.html('普通继承');    
-                            }else if(methodList[i].overrideFlag==1){
+                            if (methodList[i].overrideFlag == 1) {
+                                flagTd.html('自身方法');
+                            } else if (methodList[i].overrideFlag == 2) {
+                                flagTd.html('继承自父类');
+                            } else if (methodList[i].overrideFlag == 3) {
+                                flagTd.html('重载继承');
+                            } else if (methodList[i].overrideFlag == 4) {
                                 flagTd.html('禁用');
-                            }else{
+                            } else {
                                 flagTd.html('');
                             }
                             methodNameTd.html(methodList[i].name);

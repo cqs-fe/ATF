@@ -62,33 +62,36 @@ var app = new Vue({
                 }
             });
         },
-        //删除测试轮次
-        del: function() {
+        checkDel(){
             this.getIds();
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
-            } else {
-                $.ajax({
-                    url: address+'testroundController/delete',
-                    type: 'post',
-                    data: {
-                        'id': app.ids
-                    },
-                    success: function(data) {
-                        console.info(data);
-                        if (data.success) {
-                            getTestRound();
-                            $('#successModal').modal();
-                        } else {
-                            $('#failModal').modal();
-                        }
-                    },
-                    error: function() {
+            } else{
+                $('#deleteModal').modal();
+            }
+        },
+        //删除测试轮次
+        del: function() {
+            $.ajax({
+                url: address + 'testroundController/delete',
+                type: 'post',
+                data: {
+                    'id': app.ids
+                },
+                success: function(data) {
+                    console.info(data);
+                    if (data.success) {
+                        getTestRound();
+                        $('#successModal').modal();
+                    } else {
                         $('#failModal').modal();
                     }
-                });
-            }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
         },
         //修改测试轮次
         update: function() {
@@ -117,13 +120,19 @@ var app = new Vue({
         },
         //获取当前选中行内容
         getSelected: function() {
+            this.getIds();
             var selectedInput = $('input[name="chk_list"]:checked');
-            var selectedId = selectedInput.attr('id');
-            $('#updateForm input[name="id"]').val(selectedId);
-            $('#updateForm input[name="roundname"]').val(selectedInput.parent().next().html());
-            $('#updateForm textarea[name="rounddesc"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm select[name="recordmanagementflag"]').val(selectedInput.parent().next().next().next().attr('data-value'));
-            $('#updateForm input[name="timeexecutesetting"]').val(selectedInput.parent().next().next().next().next().html());
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                var selectedId = selectedInput.attr('id');
+                $('#updateForm input[name="id"]').val(selectedId);
+                $('#updateForm input[name="roundname"]').val(selectedInput.parent().next().html());
+                $('#updateForm textarea[name="rounddesc"]').val(selectedInput.parent().next().next().html());
+                $('#updateForm select[name="recordmanagementflag"]').val(selectedInput.parent().next().next().next().attr('data-value'));
+                $('#updateForm input[name="timeexecutesetting"]').val(selectedInput.parent().next().next().next().next().html());
+                $('#updateModal').modal();
+            }
         },
 
     },

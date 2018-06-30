@@ -12,7 +12,7 @@ var app = new Vue({
         isPageNumberError: false,
         checkboxModel: [],
         checked: "",
-        querySceneId: '',
+        querySceneName: '',
         //当前选中行
         selectedId: '',
         selectedSceneCode: '',
@@ -83,7 +83,6 @@ var app = new Vue({
             //页数变化时的回调
             getScene(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
-
 
         //添加场景
         insert: function() {
@@ -299,19 +298,20 @@ function resort(target) {
 //搜索场景
 function queryScene() {
     $.ajax({
-        url: address + 'sceneController/selectByPrimaryKey',
+        url: address3 + 'sceneController/selectAllSceneByPage',
         type: 'POST',
-        data: {
-            'page': app.currentPage,
-            'rows': app.listnum,
-            'order': app.order,
-            'sort': app.sort,
-            'id': app.querySceneId
-        },
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': app.currentPage,
+            'pageSize': app.listnum,
+            'orderColumns': app.order,
+            'orderType': app.sort,
+            'nameMedium': app.querySceneName
+        }),
         success: function(data) {
-            app.sceneList = data.rows;
+            app.sceneList = data.sceneEntityList;
             console.log(app.sceneList);
-            app.tt = data.total;
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             app.pageSize = app.listnum;
         }

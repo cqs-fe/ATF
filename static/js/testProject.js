@@ -91,7 +91,7 @@ var app = new Vue({
                     success: function(data) {
                         // console.info(data);
                         if (data.respCode=='0000') {
-                            getTestProject(1, app.pageSize, 'id', 'asc');
+                            getTestProject(app.currentPage, app.pageSize, 'id', 'asc');
                             $('#successModal').modal();
                         } else {
                             $('#failModal').modal();
@@ -117,7 +117,7 @@ var app = new Vue({
                 success: function(data) {
                     // console.info(data);
                     if (data.respCode=='0000') {
-                        getTestProject(1, app.pageSize, 'id', 'asc');
+                        getTestProject(app.currentPage, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -138,7 +138,7 @@ var app = new Vue({
                 success: function(data) {
                     // console.info(data);
                     if (data.respCode=='0000') {
-                        getTestProject(1, app.pageSize, 'id', 'asc');
+                        getTestProject(app.currentPage, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -191,7 +191,7 @@ function getTestProject(page, listnum, order, sort) {
             'orderType': sort
         }),
         success: function(data) {
-            console.info(data);
+            // console.info(data);
             app.testProjectList = data.list;
             app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / listnum);
@@ -241,7 +241,7 @@ function resort(target) {
 //根据编号搜索系统
 function queryTestProject() {
     $.ajax({
-        url: address2 + 'testProjectController/querySingleTestProject',
+        url: address2 + 'testProjectController/pagedBatchQueryTestProject',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -249,12 +249,12 @@ function queryTestProject() {
             'pageSize': 10,
             'orderColumns': 'id',
             'orderType': 'asc',
-            'testProjectCode': app.queryTestProject
+            'codeLong': app.queryTestProject
         }),
         success: function(data) {
-            app.testProjectList = data.rows;
-            console.log(app.testProjectList)
-            app.tt = data.total;
+            app.testProjectList = data.list;
+            // console.log(app.testProjectList);
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             // app.pageSize = app.listnum;
         }
