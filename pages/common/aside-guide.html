@@ -94,7 +94,7 @@
                     </li>
                     <li class="sub-menu">
                         <a class="3-4" href="scene.html">
-                            <span>测试场景</span>
+                            <span>测试场景管理</span>
                         </a>
                     </li>
                     <li class="sub-menu">
@@ -103,7 +103,7 @@
                         </a>
                     </li>
                     <li class="sub-menu">
-                        <a class="3-6" href="testround.html">
+                        <a class="3-6" href="testplan-execute.html">
                             <span>测试计划及执行</span>
                         </a>
                     </li>
@@ -117,11 +117,11 @@
                             <span>批量执行管理</span>
                         </a>
                     </li>
-                    <!-- <li class="sub-menu">
-                        <a class="3-8" href="#">
-                            <span>统计及度量</span>
+                    <li class="sub-menu">
+                        <a class="3-9" href="../build/pages/testplan">
+                            <span>测试计划</span>
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </li>
             <!-- <li class="sub-menu 4">
@@ -147,10 +147,10 @@
                 menu: '',
                 subMenu: ''
             },
-            ready:function(){
-                var caselib_Id = sessionStorage.getItem('caselibid')
+            ready: function(){
+                var caselib_Id = sessionStorage.getItem('caselibId')
                 if(!caselib_Id) {
-                    for(let i = 2; i <= 8; i++) {
+                    for(let i = 2; i <= 9; i++) {
                         $('.3-'+i).css({display: 'none'})
                     }
                 }

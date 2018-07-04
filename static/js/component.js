@@ -1,4 +1,4 @@
-var address='http://10.108.223.23:8080/atfcloud1.0a';
+var address='http://10.108.223.23:8080/atfcloud2.0a';
 var app = new Vue({
     el: '#component',
     data: {
@@ -524,7 +524,7 @@ function getClass() {
         }
     });
 }
-// 勾选控件类型
+// 点击控件类型
 function classClick(event, i) {
     if ($(event.target).attr("checked")) {
         $('#classSection').css('display', 'block');

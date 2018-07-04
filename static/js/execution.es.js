@@ -1,4 +1,4 @@
-var address = 'http://10.108.223.23:8080/atfcloud1.0a/'; 
+// var address = 'http://10.108.223.23:8080/atfcloud1.0a/'; 
 // var address = 'http://10.205.25.141:8080/atfcloud/'
 function generateConst(from, to, ...values) {
     let o = {}, index = 0;
@@ -149,7 +149,7 @@ var app = new Vue({
         toSceneManagement: function(e) {
             var sceneid = $(e.target).parent().prev().prev().prev().children().attr('id'),
                 scenename = $(e.target).parent().prev().prev().html();
-            location.href = "SceneManagement.html?sceneid=" + sceneid + "&" + "scenename=" + scenename;
+            location.href = "scene-setting.html?sceneid=" + sceneid + "&" + "scenename=" + scenename;
         }
 
     },
@@ -160,7 +160,7 @@ var app = new Vue({
 function getScene(page, listnum, order, sort) {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address + '/batchRunCtrlController/selectAllBatchRunCtrlByPage',
+        url: address2 + '/batchRunCtrlController/selectAllBatchRunCtrlByPage',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

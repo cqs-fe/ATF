@@ -246,7 +246,9 @@
                                         <th class="hidden-phone text-center" data-order="id" data-sort="asc" onclick="resort(this)">编号 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center">名称</th>
                                         <th class="hidden-phone text-center">描述</th>
-                                        <th class="hidden">caselibId</th>
+                                        <th class="hidden">caseLibId</th>
+                                        <th class="text-center">创建时间</th>
+                                        <th class="text-center">修改时间</th>
                                     </tr>
                                 </thead>
                                 <tbody id="testProjectTable">
@@ -254,10 +256,12 @@
                                         <td width="5%">
                                             <input type="radio" v-model="" name="chk_list" id="{{project.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="20%">{{ project.codeLong }}</td>
+                                        <td class="center hidden-phone" width="10%">{{ project.codeLong }}</td>
                                         <td width="20%">{{ project.nameMedium }}</td>
-                                        <td class="hidden-phone" width="40%">{{ project.descMedium }}</td>
-                                        <td class="hidden">{{project.caselibId}}</td>
+                                        <td class="hidden-phone" width="25%">{{ project.descMedium }}</td>
+                                        <td class="hidden">{{project.caseLibId}}</td>
+                                        <td width="20%">{{ formatDate(project.createTime) }}</td>
+                                        <td width="20%">{{ formatDate(project.modifiedTime) }}</td>
                                     </tr>
                                 </tbody>
                             </table>

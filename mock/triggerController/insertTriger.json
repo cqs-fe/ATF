@@ -1,0 +1,19 @@
+{
+    "sceneId": "1",
+    "name": "触发器1",
+    "desc": "hello, kitty",
+    "occasions": "[\"1\",\"2\"]",
+    "conditionRelate": "3",
+    "conditions": "[]",
+    "actions": "[{\"actionName\":\"1\",\"actionType\":\"2\",\"scriptContent\":\"hello script\"},{\"actionName\":\"2\",\"actionType\":\"1\",\"scriptContent\":\"ajdsad\"}]"
+}
+
+{
+    "sceneId": "1",
+    "name": "ddd",
+    "desc": "ddd",
+    "occasions": "[\"1\",\"2\"]",
+    "conditionRelate": "1",
+    "conditions": "[{\"objectName\":\"1\",\"matchType\":\"1\",\"value\":\"eeee\"}]",
+    "actions": "[{\"actionname\":\"1\",\"actiontype\":\"2\",\"scriptcontent\":\"eeeeeee\"}]"
+}

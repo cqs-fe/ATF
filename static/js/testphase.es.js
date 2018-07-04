@@ -4,27 +4,18 @@ var vBody = new Vue({
 		rowData: null,
 		selectedRows: [],
 		addRowData: {
-			phasename: '',
-			phasedesc: ''
+			phaseName: '',
+			phaseDesc: ''
 		},
 		// tooltipMessage: '',
 		// alertShow: false
 	},
 	ready: function(){
 		var _this = this;
-		$.ajax({
-			url: address + "testphaseController/selectAll",
-			type: "get",
-			dataType: 'json',
-			success: (data, statusText) => {
-				if(data.success === true){
-					this.rowData = data.obj;
-				}
-			}
-		});
+		this.getData();
 		$('.modal').on('hide.bs.modal', function () {
-		  _this.addRowData.phasedesc = '';
-		  _this.addRowData.phasename = '';
+		  _this.addRowData.phaseDesc = '';
+		  _this.addRowData.phaseName = '';
 		});
 		$('.1').addClass('open')
     $('.1 .arrow').addClass('open')
@@ -35,21 +26,21 @@ var vBody = new Vue({
 		addRow: function(){
 			var _this = this;
 			var data = this.addRowData;
-			$.ajax({
-				url: address + "testphaseController/insert",
+			Vac.ajax({
+				url: address3 + "testphaseController/insertTestphase",
 				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.success === true){
-						$('#add-modal').show('hide')
-						Vac.alert('添加成功')
+				success: function(data){
+					if(data.respCode === '0000'){
 						$('#add-modal').modal('hide')
+						Vac.alert(data.respMsg)
 						_this.getData();
 					}else {
-						Vac.alert('添加失败' + data.msg)
+						Vac.alert(data.respMsg)
 					}
 					
+				},
+				error: function() {
+					Vac.alert("出错了，请稍候再试~")
 				}
 			});
 		},
@@ -60,15 +51,18 @@ var vBody = new Vue({
 				return
 			}
 			Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm').then(function(){
-				$.ajax({
-					url: address + "testphaseController/delete",
-					data: 'id='+_this.selectedRows[0],
-					type: "post",
-					dataType: 'json',
-					success: (data, statusText) => {
-						Vac.alert(data.msg)
-						_this.getData();
-						_this.selectedRows.shift();
+				Vac.ajax({
+					url: address3 + "testphaseController/deleteTestphase",
+					data: {id: +_this.selectedRows[0]},
+					success: (data) => {
+						if (data.respCode === '0000') {
+							_this.getData();
+							_this.selectedRows.shift();
+						}
+						Vac.alert(data.respMsg)
+					},
+					error: function() {
+						Vac.alert("出错了，请稍候再试~")						
 					}
 				});
 			}, function(){
@@ -76,61 +70,47 @@ var vBody = new Vue({
 			})
 		},
 		editRow: function(){
-			var _this = this;
 			if(this.selectedRows.length === 0){
-				Vac.alert('请选择要修改的项目')
+				Vac.alert('请选择要修改的项目');
 				return
 			}
-
 			$('#edit-modal').modal('show');
-			var id = this.selectedRows[0];
-			$.ajax({
-				url: address + 'testphaseController/testphasequery',
-				data: 'id='+id + '&phasename=&phasedesc=',
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.obj.length){
-						console.log(data.obj[0]);
-						$('#edit-id').val(data.obj[0].id);
-						$('#edit-name').val(data.obj[0].phasename);
-						$('#edit-desc').val(data.obj[0].phasedesc);
-					}
-				}
+			$('#edit-id').val(this.selectedRows[0]);
+			const data = this.rowData.find((v) => {
+				return v.id === +this.selectedRows[0];
 			});
+			$('#edit-name').val(data.phaseName);
+			$('#edit-desc').val(data.phaseDesc);			
 		},
 		saveRow: function(){
 			var _this = this;
 			let data = {};
 			data.id = $('#edit-id').val();
-			data.phasename = $('#edit-name').val();
-			data.phasedesc = $('#edit-desc').val();
-			$.ajax({
-				url: address + "testphaseController/update",
+			data.phaseName = $('#edit-name').val();
+			data.phaseDesc = $('#edit-desc').val();
+			Vac.ajax({
+				url: address3 + "testphaseController/updateTestphase",
 				data: data,
-				type: "post",
-				dataType: 'json',
-				success: (data, statusText) => {
-					if(data.success === true) {
-						Vac.alert(data.msg)
+				success: (data,) => {
+					if(data.respCode === '0000') {
 						$('#edit-modal').modal('hide');
 						_this.getData();
 						_this.selectedRows = [];
-					} else {
-						Vac.alert(data.msg)
 					}
-					
+					Vac.alert(data.respMsg)
+				},
+				error: function() {
+					Vac.alert("出错了，请稍候再试~")						
 				}
 			});
 		},
 		getData: function(){
-			$.ajax({
-				url: address + "testphaseController/selectAll",
-				type: "get",
-				dataType: 'json',
-				success: (data, statusText) => {
-					if(data.success === true){
-						this.rowData = data.obj;
+			Vac.ajax({
+				url: address3 + "testphaseController/selectAllTestphase",
+				data: '{}',
+				success: (data) => {
+					if(data.respCode === '0000'){
+						this.rowData = data.testphaseEntityList;
 					}
 				}
 			});

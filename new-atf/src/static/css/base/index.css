@@ -1,0 +1,125 @@
+.top-btn {
+    margin-bottom: 15px;
+}
+
+.btn-white {
+    border-color: #CCC;
+    color: #444;
+    background-color: #FFF;
+}
+
+.btn-white:hover {
+    background-color: #ddd;
+}
+
+.btn-white>i {
+    color: #FF6C60;
+}
+
+.dataTables_paginate.paging_bootstrap.pagination {
+    float: right;
+    margin-right: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.filter-show {
+    margin-left: 18px;
+}
+
+.form-horizontal .control-label {
+    font-weight: 300;
+    font-size: 14px;
+    text-align: right;
+}
+
+.filter {
+    margin-top: 5px;
+}
+
+.btn-filter {
+    border-color: #CCC;
+    color: #444;
+    background-color: #FFF;
+    margin-left: 30px;
+}
+
+.btn-filter:hover {
+    background-color: #41cac0;
+    border-color: #41cac0;
+    color: #fff;
+}
+
+.filter-checkbox>label {
+    margin-left: 15px;
+}
+
+.form-control {
+    border: 1px solid #ccc;
+    box-shadow: none;
+    color: #555;
+}
+
+#show {
+    display: none;
+}
+
+#hide {
+    display: inline-block;
+}
+
+.collapsed #show {
+    display: inline-block;
+}
+
+.collapsed #hide {
+    display: none;
+}
+
+.copy-right {
+    /* position: fixed; */
+    width: 100%;
+    /* bottom: 0; */
+    height: 100px;
+    background: #f1f2f9;
+    /*     padding-top: 20px; */
+    z-index: 2;
+}
+
+#main-content {
+    display: flex;
+    flex-flow: column;
+}
+
+#main-content .wrapper {
+    flex: 1;
+}
+
+.icon-angle-right,
+.icon-angle-left {
+    display: block;
+}
+
+@media screen and (min-width: 768px) {
+    .modal-lg {
+        width: 900px;
+    }
+}
+
+/* 上传按钮 */
+.fileinput-button {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    background-color: #78CD51;
+    border-color: #78CD51;
+    color: #FFF;
+}
+
+.fileinput-button input {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+}

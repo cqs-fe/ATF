@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="./static/css/base/bootstrap.css">
+    <title>接口迁移记录</title>
+</head>
+<body>
+    <!-- 用于记录接口迁移完成情况，用后在 git 中删除 -->
+    <table class="table table-border text-center table-bordered">
+        <thead>
+            <th>页面名称</th>
+            <th>完成情况</th>
+        </thead>
+        <tbody>
+            <tr><td>测试计划与执行</td>
+            <td>
+                接口路径已修改，只有查询执行结果的未修改<br>
+                <!-- 接口返回具体内容后的处理未更改 -->
+            </td>
+            </tr>
+            <tr>
+                <td>测试脚本</td>
+                <td>
+                    1. 修改了表格信息查询<br>
+                    2. 修改了参数化
+                </td>
+            </tr>
+            <tr>
+                <td>测试任务</td>
+                <td>
+                    1. 批量查询接口已更改，具体处理方式未定 <input type="checkbox" name="" id=""> <br>
+                    2. 添加接口已更改，发送数据未知 <input type="checkbox" name="" id=""> <br>
+                    3. 修改接口已改，发送数据位置 <input type="checkbox" name="" id=""> <br>
+                </td>
+            </tr>
+            <tr>
+                <td>场景管理-> 查询场景中的案例</td>
+                <td>
+                    <!-- 未知异常 -->
+                    修改完毕<input type="checkbox" name="" id="">
+                </td>
+            </tr>
+            <tr>
+                <td>场景管理->触发器</td>
+                <td>
+                    1. 添加触发器已修改 添加成功<input type="checkbox" checked name="" id=""><br>
+                    2. 修改触发器已修改 <input type="checkbox" name="" checked id=""><br> 
+                    3. 删除触发器已修改 <input type="checkbox" name="" checked id=""><br>
+                    4. 查询触发器列表已修改, 
+                    <!-- 但是返回数据中没有状态字段, 葛晋鹏已添加，待处理 -->
+                    <input type="checkbox" name="" checked id=""><br>
+                    5. 修改状态已修改<input type="checkbox" checked name="" id=""><br>
+                    6. 查询单个触发器: 已修改 <input type="checkbox" name="" checked id=""><br>
+                </td>
+            </tr>
+            <tr>
+                <td>场景管理->执行策略控制</td>
+                <td>
+                    1. 已修改 <input type="checkbox" name="" checked id="">
+                </td>
+            </tr>
+            <tr>
+                <td>执行机管理</td>
+                <td>
+                    1. 已修改 <input type="checkbox" name="" checked id="">
+                </td>
+            </tr>
+            <tr>
+                <td>测试阶段管理</td>
+                <td>
+                    增, 联调完毕 <input type="checkbox" name="" checked id=""> <br>
+                    删, 联调完毕 <input type="checkbox" name="" checked id=""> <br>
+                    改, 联调完毕 <input type="checkbox" name="" checked id=""> <br>
+                    查, 联调完毕 <input type="checkbox" name="" checked id=""> <br>                    
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

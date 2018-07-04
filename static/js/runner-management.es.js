@@ -1,12 +1,10 @@
-var address = 'http://10.108.223.23:8080/atfcloud1.0a/';
-
 function getJson (data) {
     let o = {};
     data.split('&').forEach((item) => {
         let a = item.split('=');
         o[a[0]] = a[1];
     });
-    return JSON.stringify(o);
+    return decodeURIComponent(JSON.stringify(o));
 }
 var app = new Vue({
     el: '#v-testProject',
@@ -90,15 +88,16 @@ var app = new Vue({
             $('#insertForm input[name="creatorId"]').val(creatorId);
             if(nameMedium=='' || ip=='' || portNo=='' || description==''){
                 alert("所有项均为必填项");
-            }else{console.log(getJson($("#insertForm").serialize()));
+            }else{
+                console.log($("#insertForm").serialize());
                 $.ajax({
-                    url: address + 'autoTestRunner/addAutoTestRunner',
+                    url: address3 + 'autoTestRunner/addAutoTestRunner',
                     type: 'post',
                     contentType: 'application/json',
                     data: getJson($("#insertForm").serialize()),
                     success: function(data) {console.log(data);
                         if (data.respCode === '0000') {
-                            getTestProject(1, app.pageSize, 'id', 'asc');
+                            getTestProject();
                             $('#successModal').modal();
                         } else {
                             $('#failModal').modal();
@@ -114,16 +113,15 @@ var app = new Vue({
         del: function() {
             this.getIds();console.log(app.ids);
             $.ajax({
-                url: address + 'autoTestRunner/deleteAutoTestRunner',
+                url: address3 + 'autoTestRunner/deleteAutoTestRunner',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
                     'id': app.ids
                 }),
                 success: function(data) {
-                    console.info(data);
                     if (data.respCode === '0000') {
-                        getTestProject(1, app.pageSize, 'id', 'asc');
+                        getTestProject();
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -137,14 +135,13 @@ var app = new Vue({
         //修改测试项目
         update: function() {
             $.ajax({
-                url: address + 'autoTestRunner/updateAutoTestRunner',
+                url: address3 + 'autoTestRunner/updateAutoTestRunner',
                 type: 'post',
                 contentType: 'application/json',
                 data: getJson($("#updateForm").serialize()),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
-                        getTestProject(1, app.pageSize, 'id', 'asc');
+                    if (data.respCode === '0000') {
+                        getTestProject();
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -173,10 +170,10 @@ var app = new Vue({
 });
 
 //获取系统
-function getTestProject(page, listnum, order, sort) {
+function getTestProject() {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address + 'autoTestRunner/queryAllAutoTestRunner',
+        url: address3 + 'autoTestRunner/queryAllAutoTestRunner',
         type: 'GET',
         contentType: 'application/json',
         data: {},

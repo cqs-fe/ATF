@@ -60,22 +60,22 @@
                                     <div class="modal-body">
                                         <form class="form-horizontal " role="form" id="addForm">
                                             <div class="form-group">
-                                                <label class="col-lg-3 control-label" for="itemname">测试任务名称</label>
+                                                <label class="col-lg-3 control-label" for="itemname">任务名称</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" required class="form-control" id="itemname" name="missionName">
+                                                    <input type="text" required class="form-control" id="itemname" name="nameMedium">
                                                 </div>
                                                 <!-- <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-itemname" style="color: #b94a48;"></span> -->
                                             </div>
                                             <div class="form-group">
-                                                <label for="createUser" class="col-lg-3 control-label">测试任务编号</label>
+                                                <label for="createUser" class="col-lg-3 control-label">任务编号</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" name="missionCode" class="form-control" id="createUser" value="">
+                                                    <input type="text" name="codeLong" class="form-control" id="codeLong" value="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="projectCode" class="control-label col-lg-3">测试项目编号</label>
+                                                <label for="projectCode" class="control-label col-lg-3">任务描述</label>
                                                 <div class="col-lg-8">
-                                                    <input type="text" class="form-control" name="testProjectId" id="projectCode">
+                                                    <input type="text" class="form-control" name="descMedium" id="descMedium">
                                                 </div>
                                             </div>
                                         </form>
@@ -103,9 +103,9 @@
                                 <div class="form-group" style="padding: 0 15px;margin-bottom: 15px;">
                                     <div class="col-lg-2">
                                         <select id="search-type" class="form-control" style="width: 100%;">
-                                            <option value="missionName">测试任务名称</option>
-                                            <option value="missionCode">测试任务编号</option>
-                                            <option value="testProjectId">测试项目编号</option>
+                                            <option value="nameMedium">任务名称</option>
+                                            <option value="codeLong">任务编号</option>
+                                            <option value="desc">任务描述</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-2">
@@ -123,64 +123,21 @@
                                 </div>
                             </form>
                         </div>
-                        <!-- <div class="table-tool container row">
-                            <form class="table-search col-lg-6"style="padding: 0;">
-                                <div class="col-lg-4">
-                                    <select
-                                        id="search-type"
-                                        class="form-control inline-block"
-                                        style="width: 100%;"
-                                    >
-                                        <option value="missionName">测试任务名称</option>
-                                        <option value="missionCode">测试任务编号</option>
-                                        <option value="testProjectId">测试项目编号</option>
-                                        </select>
-                                </div>
-                                
-                                <div class="col-lg-4">
-                                    <input
-                                        type="text"
-                                        placeholder="请输入关键字"
-                                        class="form-control inline-block"
-                                        id="searchKey"
-                                        style="width: 150px;"
-                                    >
-                                </div>
-                                <div class="col-lg-4">
-                                    <button
-                                        type="button"
-                                        class="btn btn-white "
-                                        id="btn-search"
-                                    >搜索</button>
-                                </div>
-                            </form>
-                            <div class="display-items col-lg-2 col-lg-offset-1">
-                                <label class="control-label">展示条目</label>
-                                <select class="form-control " id="showRows">
-                                    <option value="5">05</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-1">
-                                <button type="button" class="btn btn-white" onclick="updateTableAndPagination(1); ">刷新</button>
-                            </div>
-                        </div> -->
                         <table id="example" class="table  table-bordered table-striped">
                             <style>
                             </style>
                             <thead>
                                 <tr>
-                                    <th style="width: 20%;" data-ordfiser="id" data-sort="desc" data-order="id" onclick="resort(event);">测试任务id&nbsp;
+                                    <th style="width: 20%;" data-ordfiser="id" data-sort="desc" data-order="id" onclick="resort(event);">id&nbsp;
                                         <span class="icon-sort-up" aria-hidden="true"></span>
                                     </th>
-                                    <th style="width: 20%;" data-order="type" data-sort="desc">测试任务编号&nbsp;
+                                    <th style="width: 20%;" data-order="type" data-sort="desc">任务名称&nbsp;
                                         <span class="" aria-hidden="true"></span>
                                     </th>
-                                    <th style="width: 20%;">测试项目编号&nbsp;
+                                    <th style="width: 20%;">任务编号&nbsp;
                                         <span class="" aria-hidden="true"></span>
                                     </th>
-                                    <th style="width: 20%;">测试任务名称&nbsp;
+                                    <th style="width: 20%;">任务描述&nbsp;
                                         <span class="" aria-hidden="true"></span>
                                     </th>
                                     <th>操作&nbsp;
@@ -221,21 +178,7 @@
                                     <input class="form-control" type="number"  id="gotoPage" min="1"><a href="javascript:;" id="btn-gotoPage" class="input-group-btn input-group-addon">Go</a>
                                 </div>
                             </div>
-                            <!-- <div class="go">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="gotoPage" min="1">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" id="btn-gotoPage" type="button">Go</button>
-                                    </span>
-                                </div>
-                            </div> -->
-                            <p class="page-info nowrap"> 当前第 <span class="text-primary" id="currentPageId">1</span> / <span class="text-primary" ></span>页，共有 <span class="text-primary" id="totalPages"></span> 条</p>
-                            <!-- <small class="page-tooltip">
-                                    当前第
-                                    <span id="currentPageId">1</span>页, 共有
-                                    <span id="totalPages">4</span>页
-                                </small> -->
-                        
+                            <p class="page-info nowrap"> 当前第 <span class="text-primary" id="currentPageId">1</span> / <span class="text-primary" id="totalPages"></span>页，共有 <span class="text-primary" id="totalRows"></span> 条</p>
                             </div>
                         </div>
                         <div class="col-lg-12">
@@ -250,27 +193,27 @@
                                         <div class="modal-body">
                                             <form class="form-horizontal" role="form">
                                                 <div class="form-group">
-                                                    <label for="view-itemcode" class="col-lg-3 control-label">测试任务id</label>
+                                                    <label for="view-itemcode" class="col-lg-3 control-label">任务id</label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" id="view-itemcode" class="form-control" value="001" disabled>
+                                                        <input type="text" id="view-itemcode" class="form-control" value="" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="view-itemname">测试任务编号</label>
+                                                    <label class="col-lg-3 control-label" for="view-itemname">任务名称</label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" disabled class="form-control" value="hel" id="view-itemname">
+                                                        <input type="text" disabled class="form-control" value="" id="view-itemname">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="view-itemtype" class="col-lg-3 control-label">测试项目编号</label>
+                                                    <label for="view-itemtype" class="col-lg-3 control-label">任务编号</label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" name="" id="view-itemtype" class="form-control" value="Leixing" disabled>
+                                                        <input type="text" name="" id="view-itemtype" class="form-control" value="" disabled>
                                                     </div>
                                                 </div>
                                                 <!-- </div> -->
                                                 <div class="form-group">
-                                                    <label for="view-projectCode" class="control-label col-lg-3">测试任务名称</label>
+                                                    <label for="view-projectCode" class="control-label col-lg-3">任务描述</label>
                                                     <div class="col-lg-8">
                                                         <input type="text" name="" value="" id="view-projectCode" class="form-control" disabled>
                                                     </div>
@@ -295,22 +238,22 @@
                                         <div class="modal-body">
                                             <form class="form-horizontal " role="form" id="alterForm">
                                                 <div class="form-group">
-                                                    <label class="col-lg-3 control-label" for="alter-itemname">测试任务编号</label>
+                                                    <label class="col-lg-3 control-label" for="alter-itemname">任务名称</label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" required class="form-control" id="alter-itemname" name="missionCode">
+                                                        <input type="text" required class="form-control" id="alter-itemname" name="nameMedium">
                                                         <!-- <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-itemname" style="color: #468847;"></span> -->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="alter-itemtype" class="col-lg-3 control-label">测试项目编号</label>
+                                                    <label for="alter-itemtype" class="col-lg-3 control-label">任务编号</label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" required class="form-control" id="alter-itemtype" name="testProjectId">
+                                                        <input type="text" required class="form-control" id="alter-itemtype" name="codeLong">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="alter-projectCode" class="control-label col-lg-3">测试任务名称</label>
+                                                    <label for="alter-projectCode" class="control-label col-lg-3">任务描述</label>
                                                     <div class="col-lg-8">
-                                                        <input type="text" name="missionName" id="alter-projectCode" class="form-control">
+                                                        <input type="text" name="descMedium" id="alter-projectCode" class="form-control">
                                                     </div>
                                                 </div>
                                             </form>

@@ -273,7 +273,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-1 control-label">搜索</label>
                                             <div class="col-lg-2">
-                                                <input type="text" class="form-control" placeholder="请输入场景名称" name="" v-model="querySceneId">
+                                                <input type="text" class="form-control" placeholder="请输入场景名称" name="" v-model="querySceneName">
                                             </div>
                                             <div class="col-lg-1">
                                                 <a class="btn btn-white" onclick="queryScene()">搜索</a>
@@ -301,6 +301,8 @@
                                         </th>
                                         <th class="hidden-phone text-center">场景名称 </th>
                                         <th class="text-center">场景说明</th>
+                                        <th class="text-center">创建时间</th>
+                                        <th class="text-center">修改时间</th>
                                         <th class="hidden-phone text-center">操作</th>
                                     </tr>
                                 </thead>
@@ -309,9 +311,11 @@
                                         <td width="5%">
                                             <input type="radio" v-model="" name="chk_list" id="{{scene.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="20%">{{ scene.scenename }}</td>
-                                        <td width="55%">{{ scene.description }}</td>
-                                        <td class="hidden-phone" width="20%"><a class="btn btn-primary btn-xs" @click="toSceneManagement($event)">管理</a></td>
+                                        <td class="center hidden-phone" width="20%">{{ scene.nameMedium }}</td>
+                                        <td width="25%">{{ scene.descShort }}</td>
+                                        <td width="15%">{{ formatDate(scene.createTime) }}</td>
+                                        <td width="15%">{{ formatDate(scene.modifiedTime) }}</td>
+                                        <td class="hidden-phone" width="15%"><a class="btn btn-primary btn-xs" @click="toSceneManagement($event)">管理</a></td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -61,10 +61,15 @@ var app = new Vue({
             $('#insertForm input[name="autId"]').val($('#autSelect').val());
             var self=this;
             $.ajax({
-                url: address2 + 'transactController/addSingleTransact',
+                url: address3 + 'transactController/addSingleTransact',
                 type: 'post',
                 contentType: 'application/json',
-                data: getJson($("#insertForm").serialize()),
+                data: JSON.stringify({
+                    autId: $("#insertForm input[name='autId']").val(),
+                    code: $("#insertForm input[name='code']").val(),
+                    nameMedium: $("#insertForm input[name='nameMedium']").val(),
+                    descShort: $("#insertForm textarea[name='descShort']").val()
+                }),
                 success: function(data) {
                     if (data.respCode=='0000') {
                         $('#successModal').modal();
@@ -93,7 +98,7 @@ var app = new Vue({
             this.getIds();
             var self=this;
             $.ajax({
-                url: address2 + 'transactController/deleteSingleTransact',
+                url: address3 + 'transactController/deleteSingleTransact',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -133,12 +138,17 @@ var app = new Vue({
         update: function() {
             var self=this;
             $.ajax({
-                url: address2 + 'transactController/modifySingleTransact',
+                url: address3 + 'transactController/modifySingleTransact',
                 type: 'post',
                 contentType: 'application/json',
-                data: getJson($("#updateForm").serialize()),
+                data: JSON.stringify({
+                    id: $('#updateForm input[name="id"]').val(),
+                    code: $('#updateForm input[name="code"]').val(),
+                    nameMedium: $('#updateForm input[name="nameMedium"]').val(),
+                    descShort: $('#updateForm textarea[name="descShort"]').val()
+                }),
                 success: function(data) {
-                    console.info(data);
+                    // console.info(data);
                     if (data.respCode=='0000') {
                         $('#successModal').modal();
                         // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
@@ -157,8 +167,8 @@ var app = new Vue({
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             $('#updateForm input[name="id"]').val(selectedId);
-            $('#updateForm input[name="code"]').val(selectedInput.parent().next().html());
-            $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm input[name="code"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().next().html());
             $('#updateForm textarea[name="descShort"]').val(selectedInput.parent().next().next().next().next().html());
         },
         //传递当前页选中的测试系统id和功能点id到元素库页面
@@ -210,7 +220,7 @@ function getTransact(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address2 + 'transactController/pagedBatchQueryTransact',
+        url: address3 + 'transactController/pagedBatchQueryTransact',
         type: 'post',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -272,7 +282,7 @@ function resort(target) {
 function autSelect() {
     $.ajax({
         async: false,
-        url: address2 + "/aut/queryListAut",
+        url: address3 + "aut/queryListAut",
         type: "POST",
         success: function(data) {
             // console.log(data)
@@ -297,7 +307,7 @@ function setval() {
     var autId=sessionStorage.getItem("autId");
     $("#autSelect").val(autId);
     $.ajax({
-        url: address2 + 'transactController/pagedBatchQueryTransact',
+        url: address3 + 'transactController/pagedBatchQueryTransact',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -322,7 +332,7 @@ function setval() {
 //通过选择被测系统筛选查询功能点 
 function queryTransact() {
     $.ajax({
-        url: address2 + 'transactController/pagedBatchQueryTransact',
+        url: address3 + 'transactController/pagedBatchQueryTransact',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

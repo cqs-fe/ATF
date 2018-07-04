@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/scene-management.scss">
+    <link rel="stylesheet" type="text/css" href="../static/css/scene-setting.scss">
     <script src="../lib/jquery.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="../lib/vue.js"></script>
@@ -62,8 +62,8 @@
                                     <td>
                                         <input type="checkbox" v-bind:value="item.id" v-model="selectedRows">
                                     </td>
-                                    <td>{{ item.phasename }}</td>
-                                     <td>{{ item.phasedesc }}</td>
+                                    <td>{{ item.phaseName }}</td>
+                                     <td>{{ item.phaseDesc }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -89,13 +89,13 @@
                         <div class="form-group">
                             <label for="testphase-name" class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
-                                <input type="text" name="phasename" v-model="addRowData.phasename" id="testphase-name" class="form-control" oninput="">
+                                <input type="text" name="phasename" v-model="addRowData.phaseName" id="testphase-name" class="form-control" oninput="">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="testphase-desc" class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input type="text" name="" id="testphase-desc" v-model="addRowData.phasedesc" class="form-control">
+                                <input type="text" name="" id="testphase-desc" v-model="addRowData.phaseDesc" class="form-control">
                             </div>
                         </div>
                     </form>
@@ -144,23 +144,11 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
+    <link rel="import" href="./common/copy-right.html?__inline">
     <!-- 提示框 -->
     <link rel="import" href="./common-vac/alert.html?__inline">
     <!-- 确认框 -->
     <link rel="import" href="./common-vac/confirm.html?__inline">
-<!--     <div class="alert" :class="{ show:alertShow, hide:!alertShow }" id="alert" v-cloak>
-        <header class="alert-header bg-info">
-            <span>提示信息</span>
-            <button type="button" class="close" ><i class="icon-remove" @click="hideAlert()"></i></button>
-        </header>
-        <main class="alert-main">
-            <p class="">{{ tooltipMessage }}</p>
-        </main>
-        <footer class="alert-footer">
-            <button type="button" class="btn btn-primary" @click="hideAlert()">确定</button>
-        </footer>
-    </div> -->
 
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>

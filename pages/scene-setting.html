@@ -8,12 +8,12 @@
     <link rel="stylesheet" type="text/css" href="../static/css/base.scss">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/scene-management.scss">
+    <link rel="stylesheet" type="text/css" href="../static/css/scene-setting.scss">
     <script src="../lib/jquery.js"></script>
     <script src="../lib/jquery-ui.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="../lib/vue.js"></script>
-    <title>Scene Manager</title>
+    <title>场景设置</title>
   </head>
   <body id="v-body" v-cloak>
     <div class="editTrigger" id="editTrigger" v-show="triggerShow" style="z-index: 1000;display: none;">
@@ -56,7 +56,7 @@
                 <th scope="col">条件名称</th>
                 <th scope="col">匹配方式</th>
                 <th scope="col">匹配值</th>
-                <th scope="col"><button class="btn btn-default" @click="addTriggerCondition();">增加</button></th>
+                <th scope="col"><button class="btn btn-primary btn-xs" @click="addTriggerCondition();">增加</button></th>
               </tr>
             </thead>
             <tbody id="conditionsBody">
@@ -331,7 +331,6 @@
                 // console.log(e.pageY)
                 _y = e.pageY;
                 var offsetY = _y - y;
-                console.log(offsetY)
                 y = _y;
                 var height = Math.min(tooltipwindow.style.height.slice(0, -2) - offsetY, +tooltipwindow.style.height.slice(0, -2));
                 tooltipwindow.style.height = `${tooltipwindow.style.height.slice(0, -2) - offsetY}px`
@@ -350,7 +349,7 @@
             <i :class="{'icon-resize-full':tooltipFlag,'icon-resize-small':!tooltipFlag}"></i>
             </button>
           </div>
-          <div class="panel-body">
+          <div class="panel-body" style="height: calc(100% - 40px);">
             <!-- 执行时间规划 -->
             <div v-show="tooltipType===1" class="timeArrange">
               <div>
@@ -401,8 +400,8 @@
                       <td>{{item.desc}}</td>
                       <td>
                         <select>
-                          <option value="1">启用</option>
-                          <option value="0">禁用</option>
+                            <option value="1" :selected="item.state === 1">启用</option>
+                            <option value="0" :selected="item.state === 0">禁用</option>
                         </select>
                       </td>
                     </tr>
@@ -570,7 +569,7 @@
     <link rel="import" href="./common-vac/confirm.html?__inline">
     <script src="../static/js/config.js"></script>
     <script src="../static/js/vac-functions.es.js"></script>
-    <script src="../static/js/scene-management.es.js"></script>
+    <script src="../static/js/scene-setting.es.js"></script>
     <script src="../../lib/common-scripts.js"></script>
     <script type="text/javascript">
     document.querySelector('.sidebar-toggle-box').addEventListener('click', function() {

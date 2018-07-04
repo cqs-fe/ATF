@@ -1,4 +1,3 @@
-var address2='http://10.108.223.23:8080/atfcloud1.0a';
 var app = new Vue({
     el: '#v-aut',
     data: {
@@ -84,7 +83,7 @@ var app = new Vue({
                 inheriteArcId=$('#insertForm select[name="inheriteArcId"]').val(),
                 descShort=$('#insertForm textarea[name="descShort"]').val();
             $.ajax({
-                url: address2+'/aut/addSingleAut',
+                url: address3+'aut/addSingleAut',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -123,7 +122,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: address+'autController/delete',
+                url: address3+'autController/delete',
                 type: 'post',
                 data: {
                     'ids': app.ids
@@ -161,7 +160,7 @@ var app = new Vue({
                 inheriteArcId=$('#updateForm select[name="inheriteArcId"]').val(),
                 descShort=$('#updateForm textarea[name="descShort"]').val();
             $.ajax({
-                url: address2+'/aut/modifySingleAut',
+                url: address3+'aut/modifySingleAut',
                 type: 'post',
                 contentType:'application/json',
                 data: JSON.stringify({
@@ -258,7 +257,7 @@ function getAut(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address2+'/aut/pagedBatchQueryAut',
+        url: address3+'aut/pagedBatchQueryAut',
         type: 'post',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -319,20 +318,20 @@ function resort(target) {
 //搜索系统
 function queryAut() {
     $.ajax({
-        url: address+'autController/selectByPageAndCode',
+        url: address3+'aut/pagedBatchQueryAut',
         type: 'POST',
-        data: {
-            'page': app.currentPage,
-            'rows': app.listnum,
-            'order': app.order,
-            'sort': app.sort,
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': app.currentPage,
+            'pageSize': app.pageSize,
+            'orderColumns': 'id',
+            'orderType': 'asc',
             'code': app.queryAutCode
-        },
+        }),
         success: function(data) {
-            app.autList = data.rows;
-            console.log(app.autList)
-            app.tt = data.total;
-            app.totalPage = Math.ceil(app.tt / app.listnum);
+            app.autList = data.autRespDTOList;
+            app.tt = data.totalCount;
+            app.totalPage = data.totalPage;
             app.pageSize = app.listnum;
         }
     });
@@ -341,7 +340,7 @@ function queryAut() {
 //获取addModal 开发架构select下拉列表
 function getAbstr(){
     $.ajax({
-        url: address2+'/abstractArchitecture/queryArchitectureList',
+        url: address3+'abstractArchitecture/queryArchitectureList',
         type:'post',
         success:function(data){
             // console.log(data)

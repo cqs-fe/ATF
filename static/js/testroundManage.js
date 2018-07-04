@@ -45,12 +45,18 @@ var app = new Vue({
         //添加测试轮次
         insert: function() {
             $.ajax({
-                url: address+'testroundController/insert',
+                url: address3+'testroundController/insertTestround',
                 type: 'post',
-                data: $("#insertForm").serializeArray(),
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    roundName: $('#insertForm input[name="roundname"]').val(),
+                    roundDesc: $('#insertForm textarea[name="rounddesc"]').val(),
+                    recordmanagementflag: $('#insertForm select[name="recordmanagementflag"]').val(),
+                    timeexecutesetting: $('#insertForm input[name="timeexecutesetting"]').val() 
+                }),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode==0000) {
                         getTestRound();
                         $('#successModal').modal();
                     } else {
@@ -62,33 +68,37 @@ var app = new Vue({
                 }
             });
         },
-        //删除测试轮次
-        del: function() {
+        checkDel(){
             this.getIds();
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
-            } else {
-                $.ajax({
-                    url: address+'testroundController/delete',
-                    type: 'post',
-                    data: {
-                        'id': app.ids
-                    },
-                    success: function(data) {
-                        console.info(data);
-                        if (data.success) {
-                            getTestRound();
-                            $('#successModal').modal();
-                        } else {
-                            $('#failModal').modal();
-                        }
-                    },
-                    error: function() {
+            } else{
+                $('#deleteModal').modal();
+            }
+        },
+        //删除测试轮次
+        del: function() {
+            $.ajax({
+                url: address3 + 'testroundController/deleteTestround',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'id': app.ids
+                }),
+                success: function(data) {
+                    // console.info(data);
+                    if (data.respCode==0000) {
+                        getTestRound();
+                        $('#successModal').modal();
+                    } else {
                         $('#failModal').modal();
                     }
-                });
-            }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
         },
         //修改测试轮次
         update: function() {
@@ -97,12 +107,18 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: address+'testroundController/update',
+                    url: address3+'testroundController/updateTestround',
                     type: 'post',
-                    data: $('#updateForm').serializeArray(),
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        roundName: $('#updateForm input[name="roundname"]').val(),
+                        roundDesc: $('#updateForm textarea[name="rounddesc"]').val(),
+                        recordmanagementflag: $('#updateForm select[name="recordmanagementflag"]').val(),
+                        timeexecutesetting: $('#updateForm input[name="timeexecutesetting"]').val() 
+                    }),
                     success: function(data) {
-                        console.info(data);
-                        if (data.success) {
+                        // console.info(data);
+                        if (data.respCode==0000) {
                             getTestRound();
                             $('#successModal').modal();
                         } else {
@@ -117,13 +133,19 @@ var app = new Vue({
         },
         //获取当前选中行内容
         getSelected: function() {
+            this.getIds();
             var selectedInput = $('input[name="chk_list"]:checked');
-            var selectedId = selectedInput.attr('id');
-            $('#updateForm input[name="id"]').val(selectedId);
-            $('#updateForm input[name="roundname"]').val(selectedInput.parent().next().html());
-            $('#updateForm textarea[name="rounddesc"]').val(selectedInput.parent().next().next().html());
-            $('#updateForm select[name="recordmanagementflag"]').val(selectedInput.parent().next().next().next().attr('data-value'));
-            $('#updateForm input[name="timeexecutesetting"]').val(selectedInput.parent().next().next().next().next().html());
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else{
+                var selectedId = selectedInput.attr('id');
+                $('#updateForm input[name="id"]').val(selectedId);
+                $('#updateForm input[name="roundname"]').val(selectedInput.parent().next().html());
+                $('#updateForm textarea[name="rounddesc"]').val(selectedInput.parent().next().next().html());
+                $('#updateForm select[name="recordmanagementflag"]').val(selectedInput.parent().next().next().next().attr('data-value'));
+                $('#updateForm input[name="timeexecutesetting"]').val(selectedInput.parent().next().next().next().next().html());
+                $('#updateModal').modal();
+            }
         },
 
     },
@@ -131,11 +153,15 @@ var app = new Vue({
 
 //获取测试轮次
 function getTestRound() {
-    $.ajax({
-        url: address+'testroundController/selectAll',
+    $.ajax({ 
+        url: address3+'testroundController/selectAllTestround',
         type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+
+        }),
         success: function(data) {
-            app.testroundList = data.obj;
+            app.testroundList = data.testroundEntityList;
         }
     });
 }

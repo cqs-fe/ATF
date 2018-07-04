@@ -1,4 +1,4 @@
-var address='http://10.108.223.23:8080/atfcloud1.0a';
+var address='http://10.108.223.23:8080/atfcloud2.0a';
 // var address='http://10.210.81.107:8080/atfcloud';
 var app = new Vue({
     el: '#architecture',
@@ -317,11 +317,15 @@ var app = new Vue({
                                 methodNameTd = $('<td ></td>'),
                                 methodDescriptionTd = $('<td ></td>');
                             methodTr.attr('id', methodList[i].id);
-                            if(methodList[i].overrideFlag==0){
-                                flagTd.html('普通继承');    
-                            }else if(methodList[i].overrideFlag==1){
+                            if (methodList[i].overrideFlag == 1) {
+                                flagTd.html('自身方法');
+                            } else if (methodList[i].overrideFlag == 2) {
+                                flagTd.html('继承自父类');
+                            } else if (methodList[i].overrideFlag == 3) {
+                                flagTd.html('重载继承');
+                            } else if (methodList[i].overrideFlag == 4) {
                                 flagTd.html('禁用');
-                            }else{
+                            } else {
                                 flagTd.html('');
                             }
                             methodNameTd.html(methodList[i].name);
@@ -751,6 +755,17 @@ var setting1 = {
         },
         onClick: function(event, treeId, treeNode, clickFlag) {
             app.archiName = treeNode.name;
+            // 清空method
+            $('#methodProp').children().remove();
+            $('#methodForm input[name="name"]').val('');
+            $('#methodForm input[name="description"]').val('');
+            $('#methodForm select[name="overrideFlag"]').val('');
+            $('#methodForm select[name="visibilityFlag"]').val('');
+            $('#methodForm input[name="labelArgument"]').val('');
+            $('#methodForm input[name="waittime"]').val('');
+            $('#methodForm input[name="timeout"]').val('');
+            $('#methodForm textarea[name="targetCodeContent"]').val('');
+            app.paraList=[];
             //查询class
             $.ajax({
                 url: address+'/arcClass/queryArcVisibleOmClasses',

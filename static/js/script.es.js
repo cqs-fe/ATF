@@ -36,11 +36,16 @@ $(document).ready(function() {
         methods: {
             //初始化获取测试系统和功能点
             getAutandTrans: function() {
-                $.ajax2({
+                Vac.ajax({
                     // async: false,
-                    url: address2 + "/aut/queryListAut",
+                    url: address3 + "/aut/queryListAut",
                     type: "POST",
+                    data: '',
                     success: function(data) {
+                        if (data.respCode !== '0000') {
+                            Vac.alert('查询测试系统失败');
+                            return;
+                        }
                         var autList = data.autRespDTOList;
                         var str = "";
                         for (var i = 0; i < autList.length; i++) {
@@ -51,15 +56,18 @@ $(document).ready(function() {
                         $('#autSelect').html(str);
                         mainVue.autId = sessionStorage.getItem("autId");
                         $("#autSelect").val(mainVue.autId);
-                        $.ajax2({
-                            url: address + 'transactController/showalltransact',
-                            data: { 'autlistselect': mainVue.autId },
-                            type: "POST",
+                        Vac.ajax({
+                            url: address3 + 'transactController/queryTransactsByAutId',
+                            data: { 'id': mainVue.autId },
                             success: function(data) {
-                                var transactList = data.o;
+                                if (data.respCode !== '0000') {
+                                    Vac.alert('查询测试系统失败');
+                                    return;
+                                }
+                                var transactList = data.transactRespDTOs;
                                 var str = "";
                                 for (var i = 0; i < transactList.length; i++) {
-                                    str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                                    str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
                                 }
                                 $('#transactSelect').html(str);
                                 mainVue.transId = sessionStorage.getItem("transactId");
@@ -67,17 +75,23 @@ $(document).ready(function() {
                                 mainVue.getScriptTemplate();
                             }
                         });
+                    },
+                    error: function () {
+                        Vac.alert('网络错误，请稍候重试~');
                     }
                 });
             },
             //获取测试系统
             autSelect: function() {
-                $.ajax2({
+                Vac.ajax({
                     async: true,
-                    url: address + "autController/selectAll",
-                    type: "POST",
+                    url: address3 + "/aut/queryListAut",
                     success: function(data) {
-                        var autList = data.obj;
+                        if (data.respCode !== '0000') {
+                            Vac.alert('查询测试系统失败');
+                            return;
+                        }
+                        var autList = data.list;
                         var str = "";
                         for (var i = 0; i < autList.length; i++) {
 
@@ -95,7 +109,7 @@ $(document).ready(function() {
                 var _this = this;
                 // var val = sessionStorage.getItem('autId');
                 // console.log(this.autId);
-                $.ajax2({
+                Vac.ajax({
                     async: true,
                     url: address + 'transactController/showalltransact',
                     data: { 'autlistselect': val },
@@ -138,7 +152,7 @@ $(document).ready(function() {
                     getTemplate();
                 }
                 function getTemplate() {
-                    $.ajax2({
+                    $.ajax({
                         url: address + 'scripttemplateController/showallscripttemplate',
                         data: { 'transactid': _this.transId },
                         type: "POST",
@@ -231,11 +245,9 @@ $(document).ready(function() {
                             script_id: _this.templateList[templateId].id
                         }
                         editDataVue.operationRows = [];
-                        $.ajax2({
-                            url: address2 + 'scripttemplateController/showScripttemplateTable',
+                        Vac.ajax({
+                            url: address3 + 'scripttemplateController/showScripttemplateTable',
                             data: data,
-                            type: 'post',
-                            dataType: 'json',
                             success: function(data) {
                                 // _this.scriptIsChanged = false
                                 editDataVue.operationRows = []
@@ -279,11 +291,9 @@ $(document).ready(function() {
             },
             showScripttemplateTable: function(args) {
                 var _this = this;
-                $.ajax2({
-                    url: address2 + 'scripttemplateController/showScripttemplateTable',
+                Vac.ajax({
+                    url: address3 + 'scripttemplateController/showScripttemplateTable',
                     data: args,
-                    type: 'post',
-                    dataType: 'json',
                     success: function(data) {
                         // _this.scriptIsChanged = false
                         editDataVue.operationRows = []
@@ -326,7 +336,7 @@ $(document).ready(function() {
             saveTemplate: function() {
                 var _this = this;
                 _this.newTemplate.transId = _this.transId
-                $.ajax2({
+                ajax2({
                     url: address + 'scripttemplateController/insert',
                     data: _this.newTemplate,
                     type: 'post',
@@ -349,7 +359,7 @@ $(document).ready(function() {
                 }
                 var templateId = this.checkedTemplate[0];
                 _this.script_id = _this.templateList[templateId].id;
-                $.ajax2({
+                ajax2({
                     url: address + 'scripttemplateController/delete',
                     data: { 'id': _this.script_id },
                     type: 'post',
@@ -629,7 +639,7 @@ $(document).ready(function() {
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
                 // return
-                $.ajax2({
+                ajax2({
                     url: address + 'scripttemplateController/scripttemplateSave',
                     type: 'post',
                     data: {
@@ -652,8 +662,8 @@ $(document).ready(function() {
             //参数化
             para: function() {
                var sendData = this.generateScriptString();
-                $.ajax2({
-                    url: address2 + 'scripttemplateController/showscripttemplateTableSave',
+                ajax2({
+                    url: address3 + 'scripttemplateController/showscripttemplateTableSave',
                     type: 'post',
                     data: {
                         'autId': mainVue.autId,
@@ -661,7 +671,10 @@ $(document).ready(function() {
                         'content': sendData
                     },
                     success: function(data) {
-                        Vac.alert(data.msg);
+                        if (data.success == true) {
+                            Vac.alert(data.msg);
+                            return;
+                        }
                         mainVue.showScripttemplateTable(mainVue.showScripttemplateTableArgs);
                     },
                     error: function() {
@@ -684,7 +697,7 @@ $(document).ready(function() {
             getUIAndFunctions: function(type){
                 var str = +type === 1 ? '' : 2
                 var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
-                $.ajax2({
+                ajax2({
                     url: address + 'elementlibraryController/showUIandElementforScript',
                     data: 'transid=' + mainVue.transId,
                     type: 'post',
@@ -699,8 +712,8 @@ $(document).ready(function() {
                     }
                 });
                 // 请求函数集
-                $.ajax2({
-                    url: address2 + 'aut/selectFunctionSet',
+                ajax2({
+                    url: address3 + 'aut/selectFunctionSet',
                     contentType: 'application/json',
                     data: JSON.stringify({ 'id': mainVue.autId }),
                     type: 'post',
@@ -826,8 +839,8 @@ $(document).ready(function() {
                         classname: editDataVue.uiOrFunctions.classType, // classname
                     }
                     var getFunctions = new Promise((resolve, reject) => {
-                        $.ajax2({
-                            url: address2 + 'aut/selectMethod',
+                        ajax2({
+                            url: address3 + 'aut/selectMethod',
                             contentType: 'application/json',
                             data: JSON.stringify(data),
                             type: 'post',
@@ -924,8 +937,8 @@ $(document).ready(function() {
                         classType: node.classType
                     }
                     newRow.functions = []
-                    $.ajax2({
-                        url: address2 + 'aut/selectMethod',
+                    ajax2({
+                        url: address3 + 'aut/selectMethod',
                         data: JSON.stringify({ id: mainVue.autId, classname: newRow.operation.classType }),
                         contentType: 'application/json',
                         type: 'post',

@@ -42,8 +42,8 @@ var app = new Vue({
     },
     ready: function() {
         this.setVal();
-        getCase(this.currentPage, this.pageSize, this.order, this.sort);
-        changeListNum();
+        this.getCase(this.currentPage, this.pageSize, this.order, this.sort);
+        this.changeListNum();
         getScene();
         this.getUsers();
         this.getMission(); //获取案例添加表单任务编号下拉列表
@@ -62,27 +62,27 @@ var app = new Vue({
             if(selectedProp=='caseCompositeType'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="cctVal" class="selectpicker val_select" multiple></select>');
-                        $('#cctVal').append('<option value="1">单用例</option><option value="2">流程用例</option><option value="3">节点用例</option>');
+                        $('#cctVal').append('<option value="1">单用例</option><option value="2">流程用例</option>');
                         $('#cctVal').selectpicker('refresh');
                     }else{
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="cctVal" class="selectpicker val_select"></select>')
-                        $('#cctVal').append('<option value="1">单用例</option><option value="2">流程用例</option><option value="3">节点用例</option>');
+                        $('#cctVal').append('<option value="1">单用例</option><option value="2">流程用例</option>');
                         $('#cctVal').selectpicker('refresh');                    
                     }
                 });
             }else if(selectedProp=='casecode'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="contain">包含</option><option value="without">不包含</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="C">包含</option><option value="!C">不包含</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value input
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -94,12 +94,12 @@ var app = new Vue({
             }else if(selectedProp=='priority'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="priorityVal" class="selectpicker val_select" multiple></select>');
                         $('#priorityVal').append('<option value="1">1级</option><option value="2">2级</option><option value="3">3级</option><option value="4">4级</option><option value="5">5级</option><option value="6">6级</option><option value="7">7级</option><option value="8">8级</option><option value="9">9级</option>');
@@ -114,12 +114,12 @@ var app = new Vue({
             }else if(selectedProp=='executeMethod'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="propertyVal" class="selectpicker val_select" multiple></select>');
                         $('#propertyVal').append('<option value="1">手工</option><option value="2">自动化</option><option value="3">配合</option>');
@@ -131,25 +131,29 @@ var app = new Vue({
                         $('#propertyVal').selectpicker('refresh');                    
                     }
                 });            
-            }else if(selectedProp=='submissionId'){
+            }else if(selectedProp=='missionId'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
-                            url: address+"missionController/selectAll",
-                            type: 'get',
+                            url: address3+"missionController/selectMission",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId": sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
+                                if(data.respCode==0000){
+                                    let submissionList=data.missionEntityList;
                                     for(let item of submissionList){
-                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+                                        $('#missVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#missVal').selectpicker('refresh');
                                 }
@@ -159,13 +163,17 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"missionController/selectAll",
-                            type: 'get',
+                            url: address3+"missionController/selectMission",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId": sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
+                                if(data.respCode==0000){
+                                    let submissionList=data.missionEntityList;
                                     for(let item of submissionList){
-                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+                                        $('#missVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#missVal').selectpicker('refresh');
                                 }
@@ -176,22 +184,23 @@ var app = new Vue({
             }else if(selectedProp=='autId'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
-                            url: address+"autController/selectAll",
+                            url: address3+"/aut/queryListAut",
                             type: 'get',
                             success:function(data){
-                                if(data.success){
-                                    let autList=data.obj;
+                                // console.log(data)
+                                if(data.respCode=='0000'){
+                                    let autList=data.autRespDTOList;
                                     for(let item of autList){
-                                        $('#autVal').append(`<option value="${item.id}">${item.autName}</option>`);
+                                        $('#autVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#autVal').selectpicker('refresh');
                                 }
@@ -201,13 +210,14 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"autController/selectAll",
+                            url: address3+"/aut/queryListAut",
                             type: 'get',
                             success:function(data){
-                                if(data.success){
-                                    let autList=data.obj;
+                                // console.log(data)
+                                if(data.respCode=='0000'){
+                                    let autList=data.autRespDTOList;
                                     for(let item of autList){
-                                        $('#autVal').append(`<option value="${item.id}">${item.autName}</option>`);
+                                        $('#autVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#autVal').selectpicker('refresh');
                                 }
@@ -219,7 +229,7 @@ var app = new Vue({
             // else if(selectedProp=='transId'){
             //     // compare select
             //     $(event.target).parent().next().children('select').children().remove();
-            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
             //     $(event.target).parent().next().children('select').selectpicker('refresh');
             //     // value select
             //     let compareSelect=$(event.target).parent().next().children('select');
@@ -264,15 +274,15 @@ var app = new Vue({
             //         }
             //     });  
             // }
-            else if(selectedProp=='caseproperty'){
+            else if(selectedProp=='caseProperty'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="cpVal" class="selectpicker val_select" multiple></select>')
                         $(this).parent().next().next().append('<option value="">正常值</option><option value="">错误值</option><option value="">边界值</option><option value="">要素级</option><option value="">流程级</option>');
@@ -284,15 +294,15 @@ var app = new Vue({
                         $('#cpVal').selectpicker('refresh');                    
                     }
                 });
-            }else if(selectedProp=='casetype'){
+            }else if(selectedProp=='caseType'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="ctVal" class="selectpicker val_select" multiple></select>');
                         $('#ctVal').append('<option value="1">联机</option><option value="2">批量</option><option value="3">接口</option>');
@@ -307,20 +317,24 @@ var app = new Vue({
             }else if(selectedProp=='author'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -332,11 +346,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -349,21 +365,23 @@ var app = new Vue({
             }else if(selectedProp=='reviewer'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 let target=$(event.target);
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -375,11 +393,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -392,20 +412,22 @@ var app = new Vue({
             }else if(selectedProp=='executor'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -417,11 +439,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -434,12 +458,12 @@ var app = new Vue({
             }else if(selectedProp=='scriptMode'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="scriptModeVal" class="selectpicker val_select" multiple></select>');
                         $('#scriptModeVal').append('<option value="1">模板</option><option value="2">自由编写</option>');
@@ -455,12 +479,12 @@ var app = new Vue({
             // else if(selectedProp=='scriptModeFlag'){
             //     // compare select
             //     $(event.target).parent().next().children('select').children().remove();
-            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
             //     $(event.target).parent().next().children('select').selectpicker('refresh');
             //     // value select
             //     let compareSelect=$(event.target).parent().next().children('select');
             //     $(compareSelect).on('change',function(){
-            //         if($(this).val()=='in'||$(this).val()=='notin'){
+            //         if($(this).val()=='in'||$(this).val()=='!in'){
             //             $(this).parent().next().next().remove();
             //             $(this).parent().next().after('<select name="propertyValue" id="smfVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
             //             $.ajax({
@@ -498,12 +522,12 @@ var app = new Vue({
             // else if(selectedProp=='testpoint'){
             //     // compare select
             //     $(event.target).parent().next().children('select').children().remove();
-            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option><option value="contain">包含</option><option value="without">不包含</option>');
+            //     $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option><option value="C">包含</option><option value="!C">不包含</option>');
             //     $(event.target).parent().next().children('select').selectpicker('refresh');
             //     // value select
             //     let compareSelect=$(event.target).parent().next().children('select');
             //     $(compareSelect).on('change',function(){
-            //         if($(this).val()=='in'||$(this).val()=='notin'){
+            //         if($(this).val()=='in'||$(this).val()=='!in'){
             //             $(this).parent().next().next().remove();
             //             $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
             //             $.ajax({
@@ -538,10 +562,10 @@ var app = new Vue({
             //         }
             //     });
             // }
-            else if(selectedProp=='testdesign'){
+            else if(selectedProp=='testDesign'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="contain">包含</option><option value="without">不包含</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="C">包含</option><option value="!C">不包含</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value input
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -550,10 +574,10 @@ var app = new Vue({
                         $(this).parent().next().after('<input type="text" class="form-control val_select">');
                         $(this).parent().next().next().selectpicker('refresh');  
                 });   
-            }else if(selectedProp=='prerequisites'){
+            }else if(selectedProp=='preRequisites'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="contain">包含</option><option value="without">不包含</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="C">包含</option><option value="!C">不包含</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value input
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -562,10 +586,10 @@ var app = new Vue({
                         $(this).parent().next().after('<input type="text" class="form-control val_select">');
                         $(this).parent().next().next().selectpicker('refresh');  
                 });   
-            }else if(selectedProp=='datarequest'){
+            }else if(selectedProp=='dataRequest'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="contain">包含</option><option value="without">不包含</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="C">包含</option><option value="!C">不包含</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value input
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -574,10 +598,10 @@ var app = new Vue({
                         $(this).parent().next().after('<input type="text" class="form-control val_select">');
                         $(this).parent().next().next().selectpicker('refresh');  
                 });
-            }else if(selectedProp=='teststep'){
+            }else if(selectedProp=='testStep'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="contain">包含</option><option value="without">不包含</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="C">包含</option><option value="!C">不包含</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value input
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -586,10 +610,10 @@ var app = new Vue({
                         $(this).parent().next().after('<input type="text" class="form-control val_select">');
                         $(this).parent().next().next().selectpicker('refresh');  
                 });   
-            }else if(selectedProp=='expectresult'){
+            }else if(selectedProp=='expectResult'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="contain">包含</option><option value="without">不包含</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="C">包含</option><option value="!C">不包含</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value input
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -598,10 +622,10 @@ var app = new Vue({
                         $(this).parent().next().after('<input type="text" class="form-control val_select">');
                         $(this).parent().next().next().selectpicker('refresh');  
                 });
-            }else if(selectedProp=='checkpoint'){
+            }else if(selectedProp=='checkPoint'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="contain">包含</option><option value="without">不包含</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="C">包含</option><option value="!C">不包含</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value input
                 let compareSelect=$(event.target).parent().next().children('select');
@@ -613,22 +637,26 @@ var app = new Vue({
             }else if(selectedProp=='sceneId'){
                 // compare select
                 $(event.target).parent().next().children('select').children().remove();
-                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="notin">不属于</option>');
+                $(event.target).parent().next().children('select').append('<option value="">请选择</option><option value="=">等于</option><option value="!=">不等于</option><option value="in">属于</option><option value="!in">不属于</option>');
                 $(event.target).parent().next().children('select').selectpicker('refresh');
                 // value select
                 let compareSelect=$(event.target).parent().next().children('select');
                 $(compareSelect).on('change',function(){
-                    if($(this).val()=='in'||$(this).val()=='notin'){
+                    if($(this).val()=='in'||$(this).val()=='!in'){
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"sceneController/selectAll",
-                            type: 'get',
+                            url: address3+"sceneController/selectAllScene",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId" : sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let sceneList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let sceneList=data.scenequeryDtoList;
                                     for(let item of sceneList){
-                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
+                                        $('#sceneVal').append(`<option value="${item.id}">${item.sceneName}</option>`);
                                     }
                                     $('#sceneVal').selectpicker('refresh');
                                 }
@@ -638,18 +666,22 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"sceneController/selectAll",
-                            type: 'get',
+                            url: address3+"sceneController/selectAllScene",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId" : sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let sceneList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let sceneList=data.scenequeryDtoList;
                                     for(let item of sceneList){
-                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
+                                        $('#sceneVal').append(`<option value="${item.id}">${item.sceneName}</option>`);
                                     }
                                     $('#sceneVal').selectpicker('refresh');
                                 }
                             }
-                        });                  
+                        });                 
                     }
                 });
             }
@@ -661,9 +693,100 @@ var app = new Vue({
             var thisURL = document.URL,
                 getval = thisURL.split('?')[1],
                 keyval = getval.split('&');
-            this.url_parameter = 'SceneManagement.html?' + getval;
+            this.url_parameter = 'scene-setting.html?' + getval;
             this.sceneid = keyval[0].split('=')[1],
             this.scenename = decodeURI(keyval[1].split('=')[1]);
+        },
+        //获取案例
+        getCase:function(currentPage, listnum, order, sort) {
+            $.ajax({
+                url: address3 + '/testcase/pagedBatchQueryTestCase',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'currentPage': currentPage,
+                    'pageSize': listnum,
+                    'orderColumns': order,
+                    'orderType': sort
+                }),
+                success: function(data) {
+                    // console.info(data);
+                    app.caseList = data.testcaseViewRespDTOList;
+                    app.tt = data.totalCount;
+                    app.totalPage = Math.ceil(app.tt / listnum);
+                    app.pageSize = listnum;
+                }
+            });
+        },
+        //获取流程节点
+        getSubCase: function(e) {
+            var flowId = $(e.target).parent().parent().attr('id'),
+                flowTr = $(e.target).parent().parent();
+            // console.log(flowId);
+            var that=this;
+            if ($(e.target).attr("class") === "icon-angle-right") {
+                $.ajax({
+                    url: address3 + '/testcase/queryTestcaseActionList',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'id': flowId }),
+                    success: function(data) {
+                        that.subCaseList = data.testcaseActionViewList;
+                        // console.log(that.subCaseList);
+                        for (var i = 0; i < that.subCaseList.length; i++) {
+                            var subTr = $("<tr class='subShow'></tr>"),
+                                iconTd = $("<td></td>"),
+                                checkTd = $("<td><input type='checkbox' name='chk_list'/></td>"),
+                                codeTd = $("<td></td>"),
+                                autTd = $("<td></td>"),
+                                transTd = $("<td></td>"),
+                                compositeTd = $("<td></td>"),
+                                useTd = $("<td></td>"),
+                                scriptTd=$("<td></td>"),
+                                authorTd = $("<td></td>"),
+                                executorTd = $("<td></td>"),
+                                reviewerTd = $("<td></td>"),
+                                executeMethodTd = $("<td></td>"),
+                                misssionTd = $("<td></td>"),
+                                priorityTd = $("<td></td>"),
+                                caseTypeTd = $("<td></td>"),
+                                casePropertyTd = $("<td></td>"),
+                                testPointTd = $("<td></td>");
+                            codeTd.html(that.subCaseList[i].actioncode);
+                            autTd.html(that.subCaseList[i].autName);
+                            transTd.html(that.subCaseList[i].transName);
+                            compositeTd.html('流程节点');
+                            useTd.html(that.subCaseList[i].useStatus);
+                            scriptTd.html(that.subCaseList[i].scriptTemplateName);
+                            authorTd.html(that.subCaseList[i].authorName);
+                            executorTd.html(that.subCaseList[i].executorName);
+                            reviewerTd.html(that.subCaseList[i].reviewerName);
+                            executeMethodTd.html(that.subCaseList[i].executeMethod);
+                            misssionTd.html(that.subCaseList[i].missionName);
+                            priorityTd.html(that.subCaseList[i].priority);
+                            caseTypeTd.html(that.subCaseList[i].caseType);
+                            casePropertyTd.html(that.subCaseList[i].caseProperty);
+                            testPointTd.html(that.subCaseList[i].testpoint);
+                            subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, scriptTd, authorTd, executorTd, reviewerTd, executeMethodTd, misssionTd, priorityTd, caseTypeTd, casePropertyTd, testPointTd);
+                            flowTr.after(subTr);
+                        }
+
+                    }
+                });
+                $(e.target).removeClass('icon-angle-right').addClass('icon-angle-down');
+            } else {
+                $(".subShow").css("display", "none");
+                $(e.target).removeClass('icon-angle-down').addClass('icon-angle-right');
+            }
+        },
+        //改变页面大小
+        changeListNum:function() {
+            $('#mySelect').change(function() {
+                listnum = $(this).children('option:selected').val();
+                $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+                app.currentPage = 1;
+                app.getCase(1, listnum, 'id', 'asc');
+            });
         },
         //获取用户
         getUsers:function() {
@@ -703,7 +826,7 @@ var app = new Vue({
                     },
                     success: function(data) {
                         if (data.success) {
-                            location.href = "SceneManagement.html?sceneid=" + that.sceneid + "&" + "scenename=" + that.scenename;
+                            location.href = "scene-setting.html?sceneid=" + that.sceneid + "&" + "scenename=" + that.scenename;
                             $('#successModal').modal();
                         } else {
                             $('#failModal').modal();
@@ -726,39 +849,40 @@ var app = new Vue({
         },
         showDetail(event){
                 document.getElementsByTagName('fieldset')[0].setAttribute('disabled', true);
-                $('#detailModal').modal();
-                var id=$(event.target).parent().prev().children().attr('id');
+                $('#detailModal').modal('show');
+                var id=$(event.target).parent().prev().prev().children().attr('id');
                 $.ajax({
-                    url: address+'TestcaseController/viewtestcase',
+                    url: address3+'/testcase/getSingleTestCaseInfo',
                     type: 'post',
-                    data: {
+                    contentType: 'application/json',
+                    data: JSON.stringify({
                         "id": id
-                    },
+                    }),
                     success: function(res){
                         // console.log(res)
-                        var caseData=res.o[1];
+                        var caseData=res.testcaseViewRespDTO;
                         $('#detailForm input[name="casecode"]').val(caseData.casecode);
-                        $('#detailForm select[name="submissionid"]').val(caseData.submissionId);
+                        $('#detailForm select[name="missionId"]').val(caseData.missionId);
                         $('#detailForm select[name="autid"]').val(caseData.autId);
-                        $('#detailForm input[name="versioncode"]').val(caseData.versionCode);
+                        $('#detailForm input[name="versioncode"]').val(caseData.version);
                         $('#detailForm select[name="transid"]').val(caseData.transId);
                         $('#detailForm select[name="scriptmodeflag"]').val(caseData.scriptModeFlag);
-                        $('#detailForm input[name="testpoint"]').val(caseData.testpoint);
-                        $('#detailForm textarea[name="testdesign"]').val(caseData.testdesign);
-                        $('#detailForm textarea[name="prerequisites"]').val(caseData.prerequisites);
-                        $('#detailForm textarea[name="datarequest"]').val(caseData.datarequest);
-                        $('#detailForm textarea[name="teststep"]').val(caseData.teststep);
-                        $('#detailForm textarea[name="expectresult"]').val(caseData.expectresult);
-                        $('#detailForm textarea[name="checkpoint"]').val(caseData.checkpoint);
-                        $('#detailForm select[name="caseproperty"]').val(caseData.caseproperty);
-                        $('#detailForm select[name="casetype"]').val(caseData.casetype);
+                        $('#detailForm input[name="testpoint"]').val(caseData.testPoint);
+                        $('#detailForm textarea[name="testDesign"]').val(caseData.testDesign);
+                        $('#detailForm textarea[name="preRequisites"]').val(caseData.preRequisites);
+                        $('#detailForm textarea[name="dataRequest"]').val(caseData.dataRequest);
+                        $('#detailForm textarea[name="testStep"]').val(caseData.testStep);
+                        $('#detailForm textarea[name="expectResult"]').val(caseData.expectResult);
+                        $('#detailForm textarea[name="checkPoint"]').val(caseData.checkPoint);
+                        $('#detailForm select[name="caseProperty"]').val(caseData.caseProperty);
+                        $('#detailForm select[name="caseType"]').val(caseData.caseType);
                         $('#detailForm select[name="priority"]').val(caseData.priority);
-                        $('#detailForm select[name="author"]').val(caseData.author);
-                        $('#detailForm select[name="reviewer"]').val(caseData.reviewer);
-                        $('#detailForm select[name="executor"]').val(caseData.executor);
-                        $('#detailForm select[name="executemethod"]').val(caseData.executemethod);
-                        $('#detailForm select[name="scriptmode"]').val(caseData.scriptmode);
-                        $('#detailForm select[name="usestatus"]').val(caseData.usestatus);
+                        $('#detailForm select[name="author"]').val(caseData.authorId);
+                        $('#detailForm select[name="reviewer"]').val(caseData.reviewerId);
+                        $('#detailForm select[name="executor"]').val(caseData.executorId);
+                        $('#detailForm select[name="executemethod"]').val(caseData.executeMethod);
+                        $('#detailForm select[name="scriptmode"]').val(caseData.scriptMode);
+                        $('#detailForm select[name="usestatus"]').val(caseData.useStatus);
                         $('#detailForm textarea[name="note"]').val(caseData.note);
                     }
                 });
@@ -789,7 +913,7 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
-            getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
+            this.getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
         },
         //搜索案例
         searchCase: function(id) {
@@ -811,18 +935,16 @@ var app = new Vue({
                                                         <option value="">请选择</option>
                                                         <option value="caseCompositeType">用例组成类型</option>
                                                         <option value="casecode">用例编号</option>
-                                                        <option value="submissionId">测试任务</option>
+                                                        <option value="missionId">测试任务</option>
                                                         <option value="autId">被测系统</option>
-                                                        <option value="transId">功能点</option>
-                                                        <option value="testpoint">测试点</option>
-                                                        <option value="testdesign">测试意图</option>
-                                                        <option value="prerequisites">前置条件</option>
-                                                        <option value="datarequest">数据需求</option>
-                                                        <option value="teststep">测试步骤</option>
-                                                        <option value="expectresult">预期结果</option>
-                                                        <option value="checkpoint">附加检查点</option>
-                                                        <option value="caseproperty">用例性质</option>
-                                                        <option value="casetype">测试用例类型</option>
+                                                        <option value="testDesign">测试意图</option>
+                                                        <option value="preRequisites">前置条件</option>
+                                                        <option value="dataRequest">数据需求</option>
+                                                        <option value="testStep">测试步骤</option>
+                                                        <option value="expectResult">预期结果</option>
+                                                        <option value="checkPoint">附加检查点</option>
+                                                        <option value="caseProperty">用例性质</option>
+                                                        <option value="caseType">测试用例类型</option>
                                                         <option value="priority">优先级</option>
                                                         <option value="author">作者</option>
                                                         <option value="reviewer">评审者</option>
@@ -830,7 +952,7 @@ var app = new Vue({
                                                         <option value="executeMethod">执行方式</option>
                                                         <option value="scriptMode">脚本管理方式</option>
                                                         <option value="scriptModeFlag">所属模板</option>
-                                                        <option value="sceneId">所属场景</option>                                                        </select>                
+                                                    </select>                
                                                     <select name="compareType" class="selectpicker compare_select">
                                                         <option value="">请选择</option>
                                                     </select> 
@@ -849,33 +971,44 @@ var app = new Vue({
                 let data=[];
                 let list=$(".filterList>li");
                 let that=this;
-                console.log(list)
+                // console.log(list)
                 for(let i=0;i<list.length;i++){
-                    let listItem={};
-                    listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
-                    listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
-                    let valType=$(list[i]).find('.val_select')[0].tagName;
-                    if(valType==='INPUT'){
-                        listItem.propertyValues=$(list[i]).find('input.val_select').val();
-                    }else{
-                        listItem.propertyValues=$(list[i]).find('select.val_select').val();
-                    }
-                    data.push(listItem);
+                        let listItem={};
+                        listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
+                        listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
+                        let valType=$(list[i]).find('.val_select')[0].tagName;
+                        if(valType==='INPUT'){
+                            listItem.propertyValueList=[];
+                            let propertyValueList=$(list[i]).find('input.val_select').val();
+                            listItem.propertyValueList.push(propertyValueList);
+                        }else{
+                            let propertyValueList=$(list[i]).find('select.val_select').val();
+                            if(Object.prototype.toString.call(propertyValueList)=='[object Array]'){
+                                listItem.propertyValueList=propertyValueList;
+                            }else{
+                                listItem.propertyValueList=propertyValueList.toString().split('');
+                            }
+                        }
+                        data.push(listItem);
                 }
-                console.log(data)
+                // console.log(data)
+                var filterType=$('input[name="filterType"]').val();
                 $.ajax({
-                    url:address+'TestcaseController/testcaseFilter',
-                    data:{
-                        'filterConditionDtoList':JSON.stringify(data),
-                        'page': 1,
-                        'rows': 10
-                     },
+                    url:address3 + '/testcase/pagedQueryTestCaseByCondition',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'filterType': parseInt(filterType),
+                        'conditionList': data,
+                        'currentPage': 1,
+                        'pageSize': 10,
+                        'orderType': 'asc',
+                        'orderColumn': 'id'
+                     }),
                     type:'post',
-                    dataType:"json",
                     success:function(res){
                         // console.log(res)
-                        that.caseList = res.obj;
-                        that.tt = res.obj.length;
+                        that.caseList = res.testcaseViewRespDTOList;
+                        that.tt = res.testcaseViewRespDTOList.length;
                         that.totalPage = Math.ceil(that.tt / that.listnum);
                         that.pageSize = that.listnum;
                     }
@@ -884,27 +1017,7 @@ var app = new Vue({
         }
     },
 });
-//获取案例
-function getCase(currentPage, listnum, order, sort) {
-    $.ajax({
-        url: address + 'TestcaseController/selectAllByPage',
-        type: 'GET',
-        data: {
-            'page': currentPage,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
-        success: function(data) {
-            // console.info(data);
-            // console.info(data.o.rows);
-            app.caseList = data.o.rows;
-            app.tt = data.o.total;
-            app.totalPage = Math.ceil(app.tt / listnum);
-            app.pageSize = listnum;
-        }
-    });
-}
+
 
 //查询案例
 function queryCase() {

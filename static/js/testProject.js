@@ -1,4 +1,3 @@
-
 var app = new Vue({
     el: '#v-testProject',
     data: {
@@ -84,14 +83,18 @@ var app = new Vue({
                 alert("所有项均为必填项");
             }else{
                 $.ajax({
-                    url: address2 + '/testProjectController/addSingleTestProject',
+                    url: address3 + 'testProjectController/addSingleTestProject',
                     type: 'post',
                     contentType: 'application/json',
-                    data: getJson($("#insertForm").serialize()),
+                    data: JSON.stringify({
+                        codeLong: $('#insertForm input[name="codeLong"]').val(),
+                        nameMedium: $('#insertForm input[name="nameMedium"]').val(),
+                        descMedium: $('#insertForm textarea[name="descMedium"]').val()    
+                    }),
                     success: function(data) {
                         // console.info(data);
                         if (data.respCode=='0000') {
-                            getTestProject(1, app.pageSize, 'id', 'asc');
+                            getTestProject(app.currentPage, app.pageSize, 'id', 'asc');
                             $('#successModal').modal();
                         } else {
                             $('#failModal').modal();
@@ -108,7 +111,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: address2 + '/testProjectController/disableSingleTestProject',
+                url: address3 + '/testProjectController/disableSingleTestProject',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -117,7 +120,7 @@ var app = new Vue({
                 success: function(data) {
                     // console.info(data);
                     if (data.respCode=='0000') {
-                        getTestProject(1, app.pageSize, 'id', 'asc');
+                        getTestProject(app.currentPage, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -131,14 +134,18 @@ var app = new Vue({
         //修改测试项目
         update: function() {
             $.ajax({
-                url: address2 + '/testProjectController/modifySingleTestProject',
+                url: address3 + 'testProjectController/modifySingleTestProject',
                 type: 'post',
                 contentType: 'application/json',
-                data: getJson($("#updateForm").serialize()),
+                data: JSON.stringify({
+                        codeLong: $('#updateForm input[name="codeLong"]').val(),
+                        nameMedium: $('#updateForm input[name="nameMedium"]').val(),
+                        descMedium: $('#updateForm textarea[name="descMedium"]').val()    
+                    }),
                 success: function(data) {
                     // console.info(data);
                     if (data.respCode=='0000') {
-                        getTestProject(1, app.pageSize, 'id', 'asc');
+                        getTestProject(app.currentPage, app.pageSize, 'id', 'asc');
                         $('#successModal').modal();
                     } else {
                         $('#failModal').modal();
@@ -165,14 +172,32 @@ var app = new Vue({
             	 console.log("aaaaaa"+caselibId);
                 $('#selectAlertModal').modal();
             } else {
-                var caselibId = selectedInput.parent().next().next().next().next().html();
+                var caseLibId = selectedInput.parent().next().next().next().next().html();
                 //存储测试项目id到sessionstorage
+<<<<<<< HEAD
                 console.log("aaaaaa"+caselibId);
                 sessionStorage.setItem("caselibid", caselibId);
+=======
+                sessionStorage.setItem("caselibId", caseLibId);
+>>>>>>> 8b0bca367324e35cbf4232ef08bebc85f9edebd8
                 location.href = "caseManagement.html";
             }
+        },
+        //时间格式化
+        formatDate(date){
+            if(date){
+                var date = new Date(date);
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+                return Y+M+D+h+m+s;  
+            }else{
+                return '';
+            }     
         }
-
     },
 
 
@@ -183,17 +208,17 @@ function getTestProject(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address2 + 'testProjectController/pagedBatchQueryTestProject',
+        url: address3 + 'testProjectController/pagedBatchQueryTestProject',
         type: 'post',
         contentType: 'application/json',
         data: JSON.stringify({
             'currentPage': page,
             'pageSize': listnum,
-            'orderColumns': order,
-            'orderType': sort
+            'orderColumns': "modified_time",
+            "orderType":"DESC",
         }),
         success: function(data) {
-            console.info(data);
+            // console.info(data);
             app.testProjectList = data.list;
             app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / listnum);
@@ -240,22 +265,23 @@ function resort(target) {
 }
 //重新排序 结束
 
-//搜索系统
+//根据编号搜索系统
 function queryTestProject() {
     $.ajax({
-        url: address + 'testProjectController/selectAllByPage',
+        url: address3 + 'testProjectController/pagedBatchQueryTestProject',
         type: 'POST',
-        data: {
-            'page': app.currentPage,
-            'rows': app.listnum,
-            'order': app.order,
-            'sort': app.sort,
-            'testProjectCode': app.queryTestProject
-        },
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': 1,
+            'pageSize': 10,
+            'orderColumns': 'id',
+            'orderType': 'asc',
+            'codeLong': app.queryTestProject
+        }),
         success: function(data) {
-            app.testProjectList = data.rows;
-            console.log(app.testProjectList)
-            app.tt = data.total;
+            app.testProjectList = data.list;
+            // console.log(app.testProjectList);
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / app.listnum);
             // app.pageSize = app.listnum;
         }

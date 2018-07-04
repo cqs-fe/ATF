@@ -3,7 +3,7 @@
 	padding-bottom: 1px;
 }
 #menuContent{
-	height: 500px;
+	min-height: 835px;
 	overflow: auto;
 	overflow-x: hidden;
 }
@@ -19,7 +19,7 @@
     height: auto;
 }
 .elementContent{
-	height: 500px;
+	min-height: 835px;
 	overflow: auto;
 	overflow-x: hidden;
 	border: 1px solid rgb(170,170,170);
@@ -29,6 +29,7 @@
 	margin: 0 0 10px 80%;
 }
 .rightContent{
+	min-height: 835px;
 	border: 1px solid rgb(170,170,170);
 }
 .rightBtn{

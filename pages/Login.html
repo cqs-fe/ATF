@@ -30,10 +30,10 @@
     <div id="title">
         <span class="titleATF">
                 ATF
-            </span>
+        </span>
         <span class="titleWord">
                 云测试平台
-            </span>
+        </span>
     </div>
     <div id="main">
         <div id="introduction">
@@ -140,15 +140,15 @@
     <script src="../lib/jquery.js">
     </script>
     <script type="text/javascript">
-    // var address = "http://10.108.222.199:8080/ATFCloud/";
+    // var address3 = "http://10.108.222.199:8080/ATFCloud/";
     var authcode = false;
 
     function chageCode() {
-        $('#codeImage').attr('src', address + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+        $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
         //获取sessionId并将其存放在sessionstorage之中
         $.ajax({
             type: 'post',
-            url: address + "userController/getSessionId", //
+            url: address3 + "userController/getSessionId", //
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
@@ -160,11 +160,11 @@
         $(id).html(msg);
     }
     $(document).ready(function() {
-        console.log(address);
-        $('#codeImage').attr('src', address + 'userController/authCode?abc=' + Math.random());
+        console.log(address3);
+        $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random());
         $.ajax({
             type: 'post',
-            url: address + "userController/getSessionId",
+            url: address3 + "userController/getSessionId",
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
@@ -173,7 +173,7 @@
         $('#authCode').blur(function() {
             $.ajax({
                 type: 'post',
-                url: address + "userController/checkauthcode",
+                url: address3 + "userController/checkauthcode",
                 data: { 
                     "authCode": $("#authCode").val(), 
                     "sessionId": sessionStorage.getItem('sessionId') 
@@ -185,7 +185,6 @@
                     } else {
                         setHtml("#result", data.msg);
                     }
-
                 }
             });
 
@@ -194,7 +193,7 @@
             if (checkform("#form") && authcode) {
                 $.ajax({
                     type: 'post',
-                    url: address + "userController/login",
+                    url: address3 + "userController/login",
                     data: $("#form").serialize() + "&sessionId=" + sessionStorage.getItem('sessionId'),
                     dataType: "json",
                     success: function(data) {
@@ -203,14 +202,14 @@
                             sessionStorage.setItem('sessionId', data.obj.sessionId);
                             console.info(data.success); //跳转到登录成功页
                             $.ajax({
-                                url: address + 'userController/getSessionId',
+                                url: address3 + 'userController/getSessionId',
                                 type: 'get',
                                 dataType: 'json',
                                 success: function(data) {
                                     if (data.success === true) {
                                         sessionStorage.setItem('sessionId', data.obj.sessionId);
                                         $.ajax({
-                                            url: address + 'userController/getUser',
+                                            url: address3 + 'userController/getUser',
                                             type: 'post',
                                             data: 'sessionId=' + data.obj.sessionId,
                                             dataType: 'json',
