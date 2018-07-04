@@ -170,13 +170,17 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
 		                        $.ajax({
-		                            url: address+"missionController/selectAll",
-		                            type: 'get',
+		                            url: address3+"missionController/selectMission",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                "caseLibId": sessionStorage.getItem('caselibId')
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let submissionList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let submissionList=data.missionEntityList;
 		                                    for(let item of submissionList){
-		                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+		                                        $('#missVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
 		                                    }
 		                                    $('#missVal').selectpicker('refresh');
 		                                }
@@ -186,13 +190,17 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true"></select>')
 		                        $.ajax({
-		                            url: address+"missionController/selectAll",
-		                            type: 'get',
+		                            url: address3+"missionController/selectMission",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                "caseLibId": sessionStorage.getItem('caselibId')
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let submissionList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let submissionList=data.missionEntityList;
 		                                    for(let item of submissionList){
-		                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+		                                        $('#missVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
 		                                    }
 		                                    $('#missVal').selectpicker('refresh');
 		                                }
@@ -212,7 +220,7 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
 		                        $.ajax({
-		                            url: address2+"/aut/queryListAut",
+		                            url: address3+"/aut/queryListAut",
 		                            type: 'get',
 		                            success:function(data){
 		                                // console.log(data)
@@ -229,7 +237,7 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true"></select>')
 		                        $.ajax({
-		                            url: address2+"/aut/queryListAut",
+		                            url: address3+"/aut/queryListAut",
 		                            type: 'get',
 		                            success:function(data){
 		                                // console.log(data)
@@ -241,7 +249,7 @@ $(document).ready(function () {
 		                                    $('#autVal').selectpicker('refresh');
 		                                }
 		                            }
-		                        });                  
+		                        });                 
 		                    }
 		                });   
 		            }
@@ -345,11 +353,15 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
 		                        $.ajax({
-		                            url: address+"userController/selectAll",
-		                            type: 'get',
+		                            url: address3+"userController/selectAllUsername",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let userList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let userList=data.list;
 		                                    for(let item of userList){
 		                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
 		                                    }
@@ -361,18 +373,22 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true"></select>')
 		                        $.ajax({
-		                            url: address+"userController/selectAll",
-		                            type: 'get',
+		                            url: address3+"userController/selectAllUsername",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let userList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let userList=data.list;
 		                                    for(let item of userList){
 		                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
 		                                    }
 		                                    $('#authorVal').selectpicker('refresh');
 		                                }
 		                            }
-		                        });                  
+		                        });                 
 		                    }
 		                });  
 		            }else if(selectedProp=='reviewer'){
@@ -388,15 +404,19 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
 		                        $.ajax({
-		                            url: address+"userController/selectAll",
-		                            type: 'get',
+		                            url: address3+"userController/selectAllUsername",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let userList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let userList=data.list;
 		                                    for(let item of userList){
-		                                        $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
+		                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
 		                                    }
-		                                    $('#reviewerVal').selectpicker('refresh');
+		                                    $('#authorVal').selectpicker('refresh');
 		                                }
 		                            }
 		                        });
@@ -404,15 +424,19 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true"></select>')
 		                        $.ajax({
-		                            url: address+"userController/selectAll",
-		                            type: 'get',
+		                            url: address3+"userController/selectAllUsername",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let userList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let userList=data.list;
 		                                    for(let item of userList){
-		                                        $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
+		                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
 		                                    }
-		                                    $('#reviewerVal').selectpicker('refresh');
+		                                    $('#authorVal').selectpicker('refresh');
 		                                }
 		                            }
 		                        });                  
@@ -430,15 +454,19 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
 		                        $.ajax({
-		                            url: address+"userController/selectAll",
-		                            type: 'get',
+		                            url: address3+"userController/selectAllUsername",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let userList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let userList=data.list;
 		                                    for(let item of userList){
-		                                        $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
+		                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
 		                                    }
-		                                    $('#executorVal').selectpicker('refresh');
+		                                    $('#authorVal').selectpicker('refresh');
 		                                }
 		                            }
 		                        });
@@ -446,18 +474,22 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true"></select>')
 		                        $.ajax({
-		                            url: address+"userController/selectAll",
-		                            type: 'get',
+		                            url: address3+"userController/selectAllUsername",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let userList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let userList=data.list;
 		                                    for(let item of userList){
-		                                        $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
+		                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
 		                                    }
-		                                    $('#executorVal').selectpicker('refresh');
+		                                    $('#authorVal').selectpicker('refresh');
 		                                }
 		                            }
-		                        });                  
+		                        });                 
 		                    }
 		                });  
 		            }else if(selectedProp=='scriptMode'){
@@ -651,13 +683,17 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
 		                        $.ajax({
-		                            url: address+"sceneController/selectAll",
-		                            type: 'get',
+		                            url: address3+"sceneController/selectAllScene",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                "caseLibId" : sessionStorage.getItem('caselibId')
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let sceneList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let sceneList=data.scenequeryDtoList;
 		                                    for(let item of sceneList){
-		                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
+		                                        $('#sceneVal').append(`<option value="${item.id}">${item.sceneName}</option>`);
 		                                    }
 		                                    $('#sceneVal').selectpicker('refresh');
 		                                }
@@ -667,13 +703,17 @@ $(document).ready(function () {
 		                        $(this).parent().next().next().remove();
 		                        $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true"></select>')
 		                        $.ajax({
-		                            url: address+"sceneController/selectAll",
-		                            type: 'get',
+		                            url: address3+"sceneController/selectAllScene",
+		                            type: 'post',
+		                            contentType: 'application/json',
+		                            data: JSON.stringify({
+		                                "caseLibId" : sessionStorage.getItem('caselibId')
+		                            }),
 		                            success:function(data){
-		                                if(data.success){
-		                                    let sceneList=data.obj;
+		                                if(data.respCode=='0000'){
+		                                    let sceneList=data.scenequeryDtoList;
 		                                    for(let item of sceneList){
-		                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
+		                                        $('#sceneVal').append(`<option value="${item.id}">${item.sceneName}</option>`);
 		                                    }
 		                                    $('#sceneVal').selectpicker('refresh');
 		                                }
@@ -727,7 +767,10 @@ $(document).ready(function () {
 		        },
 		        //筛选案例
 			    filterCase(){
-	                let data=[];
+			    	let executorId=sessionStorage.getItem('userId');
+	                let data=[{propertyName: "executor", compareType: "=", propertyValueList: [executorId]},
+	                		  {propertyName: "executeMethod", compareType: "=", propertyValueList: ["2"]},
+	                		  {propertyName: "scriptMode", compareType: "=", propertyValueList: ["1"]}];
 	                let list=$(".filterList>li");
 	                let that=this;
 	                // console.log(list)

@@ -498,7 +498,6 @@
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
 <script>
-var address2='http://10.108.223.23:8080/atfcloud2.0a';
 var app = new Vue({
     el: '#elementLibrary',
     data: function() {
@@ -570,7 +569,7 @@ var app = new Vue({
                             $('#UI').css('display', 'block');
                             $('#ele').css('display', 'none');
                             $.ajax({
-                                url: address2 + '/elementRepository/querySingleUI',
+                                url: address3 + 'elementRepository/querySingleUI',
                                 type: 'post',
                                 contentType: 'application/json',
                                 data: JSON.stringify({
@@ -610,7 +609,7 @@ var app = new Vue({
                             $('#ele').css('display', 'block');
                             var transid = !_this.componentMode ? _this.transactId : _this.transid;
                             $.ajax({
-                                url: address2 + '/elementRepository/querySingleElement',
+                                url: address3 + 'elementRepository/querySingleElement',
                                 type: 'post',
                                 contentType: 'application/json',
                                 data: JSON.stringify({
@@ -770,7 +769,7 @@ var app = new Vue({
         getAutandTrans: function() {
             var _this = this;
             $.ajax({
-                url: address2 + "/aut/queryListAut",
+                url: address3 + "aut/queryListAut",
                 type: "POST",
                 contentType:'application/json',
                 success: function(data) {
@@ -785,7 +784,7 @@ var app = new Vue({
                     _this.autId = sessionStorage.getItem("autId");
                     $("#autSelect").val(_this.autId);
                     $.ajax({
-                        url: address2 + '/transactController/pagedBatchQueryTransact',
+                        url: address3 + 'transactController/pagedBatchQueryTransact',
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify({
@@ -807,7 +806,7 @@ var app = new Vue({
                             $("#transactSelect").val(_this.transactId);
                             // 获取ui和element
                             $.ajax({
-                                url: address2 + '/elementRepository/queryAllElementsForATransact',
+                                url: address3 + 'elementRepository/queryAllElementsForATransact',
                                 type: 'post',
                                 contentType: 'application/json',
                                 data: JSON.stringify({ "transactId": _this.transactId }),
@@ -840,7 +839,7 @@ var app = new Vue({
                             });
                             // 获取classtype
                              $.ajax({
-                                url: address2 + '/aut/queryAutVisibleOmClasses',
+                                url: address3 + 'aut/queryAutVisibleOmClasses',
                                 contentType: 'application/json',
                                 data: JSON.stringify({ 'id': _this.autId }),
                                 type: "POST",
@@ -862,7 +861,7 @@ var app = new Vue({
         autSelect: function() {
             $.ajax({
                 async: false,
-                url: address2 + "/aut/queryListAut",
+                url: address3 + "aut/queryListAut",
                 type: "POST",
                 contentType:'application/json',
                 success: function(data) {
@@ -883,7 +882,7 @@ var app = new Vue({
             var val = $('#autSelect').val();
             $.ajax({
                 async: false,
-                url: address2 + '/transactController/pagedBatchQueryTransact',
+                url: address3 + 'transactController/pagedBatchQueryTransact',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -910,7 +909,7 @@ var app = new Vue({
             // var val = $('#autSelect').val();
             var _this = this;
             $.ajax({
-                url: address2 + '/aut/queryAutVisibleOmClasses',
+                url: address3 + 'aut/queryAutVisibleOmClasses',
                 contentType: 'application/json',
                 data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
@@ -951,7 +950,7 @@ var app = new Vue({
                     uis.push(ui);
                 }
                 $.ajax({
-                    url: address2 + '/elementRepository/batchAddUI',
+                    url: address3 + 'elementRepository/batchAddUI',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -981,7 +980,7 @@ var app = new Vue({
             var nodes = treeObj.getSelectedNodes();
             var id = nodes[0].id;
             $.ajax({
-                url: address2 + '/elementRepository/deleteSingleUI',
+                url: address3 + 'elementRepository/deleteSingleUI',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -1026,7 +1025,7 @@ var app = new Vue({
                 relateParentIdentifyObjectId = '';
             }
             $.ajax({
-                url: address2 + '/elementRepository/modifySingleUI',
+                url: address3 + 'elementRepository/modifySingleUI',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -1092,7 +1091,7 @@ var app = new Vue({
                     elements.push(element);
                 }
                 $.ajax({
-                    url: address2 + '/elementRepository/batchAddOrModifyElement',
+                    url: address3 + 'elementRepository/batchAddOrModifyElement',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -1125,7 +1124,7 @@ var app = new Vue({
             var elementId = nodes[0].id;
             var uiId = nodes[0].getParentNode().id;
             $.ajax({
-                url: address2 + '/elementRepository/deleteSingleElement',
+                url: address3 + 'elementRepository/deleteSingleElement',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -1241,7 +1240,7 @@ var app = new Vue({
                 relateProperties.push(relItem);
             });
             $.ajax({
-                url: address2 + '/elementRepository/modifySingleElement',
+                url: address3 + 'elementRepository/modifySingleElement',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -1326,7 +1325,7 @@ var app = new Vue({
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address2 + '/elementRepository/queryAllElementsForATransact',
+                url: address3 + 'elementRepository/queryAllElementsForATransact',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({ "transactId": transid }),
@@ -1376,7 +1375,7 @@ var app = new Vue({
             // var transid = $("#transactSelect").val();
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address2 + '/objectRepository/queryAllObjectForATransact',
+                url: address3 + 'objectRepository/queryAllObjectForATransact',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({ "transactId": transid }),
@@ -1412,7 +1411,7 @@ var app = new Vue({
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address2 + '/objectRepository/queryAllObjectForATransact',
+                url: address3 + 'objectRepository/queryAllObjectForATransact',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({ "transactId": transid }),
@@ -1448,7 +1447,7 @@ var app = new Vue({
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
-                url: address2 + '/objectRepository/queryAllObjectForATransact',
+                url: address3 + 'objectRepository/queryAllObjectForATransact',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({ "transactId": transid }),

@@ -1,4 +1,3 @@
-var address2 = 'http://10.108.223.23:8080/atfcloud2.0a/';
 var app = new Vue({
     el: '#v-testProject',
     data: {
@@ -84,10 +83,14 @@ var app = new Vue({
                 alert("所有项均为必填项");
             }else{
                 $.ajax({
-                    url: address2 + '/testProjectController/addSingleTestProject',
+                    url: address3 + 'testProjectController/addSingleTestProject',
                     type: 'post',
                     contentType: 'application/json',
-                    data: getJson($("#insertForm").serialize()),
+                    data: JSON.stringify({
+                        codeLong: $('#insertForm input[name="codeLong"]').val(),
+                        nameMedium: $('#insertForm input[name="nameMedium"]').val(),
+                        descMedium: $('#insertForm textarea[name="descMedium"]').val()    
+                    }),
                     success: function(data) {
                         // console.info(data);
                         if (data.respCode=='0000') {
@@ -108,7 +111,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids)
             $.ajax({
-                url: address2 + '/testProjectController/disableSingleTestProject',
+                url: address3 + '/testProjectController/disableSingleTestProject',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -131,10 +134,14 @@ var app = new Vue({
         //修改测试项目
         update: function() {
             $.ajax({
-                url: address2 + '/testProjectController/modifySingleTestProject',
+                url: address3 + 'testProjectController/modifySingleTestProject',
                 type: 'post',
                 contentType: 'application/json',
-                data: getJson($("#updateForm").serialize()),
+                data: JSON.stringify({
+                        codeLong: $('#updateForm input[name="codeLong"]').val(),
+                        nameMedium: $('#updateForm input[name="nameMedium"]').val(),
+                        descMedium: $('#updateForm textarea[name="descMedium"]').val()    
+                    }),
                 success: function(data) {
                     // console.info(data);
                     if (data.respCode=='0000') {
@@ -169,8 +176,22 @@ var app = new Vue({
                 sessionStorage.setItem("caselibId", caseLibId);
                 location.href = "caseManagement.html";
             }
+        },
+        //时间格式化
+        formatDate(date){
+            if(date){
+                var date = new Date(date);
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+                return Y+M+D+h+m+s;  
+            }else{
+                return '';
+            }     
         }
-
     },
 
 
@@ -181,14 +202,14 @@ function getTestProject(page, listnum, order, sort) {
 
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
-        url: address2 + 'testProjectController/pagedBatchQueryTestProject',
+        url: address3 + 'testProjectController/pagedBatchQueryTestProject',
         type: 'post',
         contentType: 'application/json',
         data: JSON.stringify({
             'currentPage': page,
             'pageSize': listnum,
-            'orderColumns': order,
-            'orderType': sort
+            'orderColumns': "modified_time",
+            "orderType":"DESC",
         }),
         success: function(data) {
             // console.info(data);
@@ -241,7 +262,7 @@ function resort(target) {
 //根据编号搜索系统
 function queryTestProject() {
     $.ajax({
-        url: address2 + 'testProjectController/pagedBatchQueryTestProject',
+        url: address3 + 'testProjectController/pagedBatchQueryTestProject',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

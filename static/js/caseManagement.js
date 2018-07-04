@@ -1,4 +1,3 @@
-var address2='http://10.108.223.23:8080/atfcloud2.0a';
 var app = new Vue({
     el: '#caseManagement',
     data: {
@@ -143,13 +142,17 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
-                            url: address+"missionController/selectAll",
-                            type: 'get',
+                            url: address3+"missionController/selectMission",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId": sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
+                                if(data.respCode==0000){
+                                    let submissionList=data.missionEntityList;
                                     for(let item of submissionList){
-                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+                                        $('#missVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#missVal').selectpicker('refresh');
                                 }
@@ -159,13 +162,17 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="missVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"missionController/selectAll",
-                            type: 'get',
+                            url: address3+"missionController/selectMission",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId": sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let submissionList=data.obj;
+                                if(data.respCode==0000){
+                                    let submissionList=data.missionEntityList;
                                     for(let item of submissionList){
-                                        $('#missVal').append(`<option value="${item.id}">${item.missionName}</option>`);
+                                        $('#missVal').append(`<option value="${item.id}">${item.nameMedium}</option>`);
                                     }
                                     $('#missVal').selectpicker('refresh');
                                 }
@@ -185,7 +192,7 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true" multiple></select>')
                         $.ajax({
-                            url: address2+"/aut/queryListAut",
+                            url: address3+"/aut/queryListAut",
                             type: 'get',
                             success:function(data){
                                 // console.log(data)
@@ -202,7 +209,7 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="autVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address2+"/aut/queryListAut",
+                            url: address3+"/aut/queryListAut",
                             type: 'get',
                             success:function(data){
                                 // console.log(data)
@@ -318,11 +325,15 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -334,11 +345,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="authorVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -361,11 +374,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -377,11 +392,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="reviewerVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -403,11 +420,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -419,11 +438,13 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="executorVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"userController/selectAll",
-                            type: 'get',
+                            url: address3+"userController/selectAllUsername",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({}),
                             success:function(data){
-                                if(data.success){
-                                    let userList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let userList=data.list;
                                     for(let item of userList){
                                         $('#executorVal').append(`<option value="${item.id}">${item.username}</option>`);
                                     }
@@ -624,13 +645,17 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true" multiple></select>');
                         $.ajax({
-                            url: address+"sceneController/selectAll",
-                            type: 'get',
+                            url: address3+"sceneController/selectAllScene",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId" : sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let sceneList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let sceneList=data.scenequeryDtoList;
                                     for(let item of sceneList){
-                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
+                                        $('#sceneVal').append(`<option value="${item.id}">${item.sceneName}</option>`);
                                     }
                                     $('#sceneVal').selectpicker('refresh');
                                 }
@@ -640,18 +665,22 @@ var app = new Vue({
                         $(this).parent().next().next().remove();
                         $(this).parent().next().after('<select name="propertyValue" id="sceneVal" class="selectpicker val_select" data-live-search="true"></select>')
                         $.ajax({
-                            url: address+"sceneController/selectAll",
-                            type: 'get',
+                            url: address3+"sceneController/selectAllScene",
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                "caseLibId" : sessionStorage.getItem('caselibId')
+                            }),
                             success:function(data){
-                                if(data.success){
-                                    let sceneList=data.obj;
+                                if(data.respCode=='0000'){
+                                    let sceneList=data.scenequeryDtoList;
                                     for(let item of sceneList){
-                                        $('#sceneVal').append(`<option value="${item.id}">${item.scenename}</option>`);
+                                        $('#sceneVal').append(`<option value="${item.id}">${item.sceneName}</option>`);
                                     }
                                     $('#sceneVal').selectpicker('refresh');
                                 }
                             }
-                        });                  
+                        });                 
                     }
                 });
             }
@@ -661,7 +690,7 @@ var app = new Vue({
         //获取案例
         getCase:function(currentPage, listnum, order, sort) {
             $.ajax({
-                url: address2 + '/testcase/pagedBatchQueryTestCase',
+                url: address3 + 'testcase/pagedBatchQueryTestCase',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -682,10 +711,12 @@ var app = new Vue({
         //获取用户
         getUsers:function() {
             $.ajax({
-                url: address + 'userController/selectAll',
-                type: 'GET',
+                url: address3+"userController/selectAllUsername",
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({}),
                 success: function(data) {
-                    app.users = data.obj;
+                    app.users = data.list;
                 }
             });
         },
@@ -824,7 +855,7 @@ var app = new Vue({
             var that=this;
             if ($(e.target).attr("class") === "icon-angle-right") {
                 $.ajax({
-                    url: address2 + '/testcase/queryTestcaseActionList',
+                    url: address3 + 'testcase/queryTestcaseActionList',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({ 'id': flowId }),
@@ -930,7 +961,7 @@ var app = new Vue({
                 });
                 $('#executeMethodForm input[name="ids"]').val(id_array.join(','));
                 $.ajax({
-                    url: address2 + '/testcase/batchModifyTestCaseProperty',
+                    url: address3 + 'testcase/batchModifyTestCaseProperty',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -964,7 +995,7 @@ var app = new Vue({
                 $('#detailModal').modal('show');
                 var id=$(event.target).parent().prev().prev().children().attr('id');
                 $.ajax({
-                    url: address2+'/testcase/getSingleTestCaseInfo',
+                    url: address3+'testcase/getSingleTestCaseInfo',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -1049,7 +1080,7 @@ var app = new Vue({
         //搜索案例
         searchCase: function(id) {
             $.ajax({
-                url: address + 'TestcaseController/viewtestcase',
+                url: address3 + 'TestcaseController/viewtestcase',
                 type: 'GET',
                 data: { 'id': id },
                 success: function() {
@@ -1061,7 +1092,7 @@ var app = new Vue({
         queryCase:function() {
 
             $.ajax({
-                url: address2 + '/testcase/pagedQueryTestCaseByCondition',
+                url: address3 + 'testcase/pagedQueryTestCaseByCondition',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -1099,11 +1130,15 @@ var app = new Vue({
         //获取添加案例任务编号下拉列表
         getMission: function(){
             $.ajax({
-                url: address+"missionController/selectAll",
-                type: 'GET',
+                url: address3+"missionController/selectMission",
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "caseLibId": sessionStorage.getItem('caselibId')
+                }),
                 success:function(data){
                     // console.log(data)
-                    app.missionList=data.obj;
+                    app.missionList=data.missionEntityList;
                 }
             });
         },
@@ -1176,7 +1211,7 @@ var app = new Vue({
                 // console.log(data)
                 var filterType=$('input[name="filterType"]').val();
                 $.ajax({
-                    url:address2 + '/testcase/pagedQueryTestCaseByCondition',
+                    url:address3 + 'testcase/pagedQueryTestCaseByCondition',
                     contentType: 'application/json',
                     data: JSON.stringify({
                         'filterType': parseInt(filterType),
@@ -1209,7 +1244,7 @@ var app = new Vue({
         });
         $('#executorForm input[name="ids"]').val(id_array.join(','));
         $.ajax({
-            url: address2 + '/testcase/batchModifyTestCaseProperty',
+            url: address3 + 'testcase/batchModifyTestCaseProperty',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -1235,7 +1270,7 @@ var app = new Vue({
         });
         $('#executorForm input[name="ids"]').val(id_array.join(','));
         $.ajax({//transId
-            url: address2 + '/testcase/batchModifyTestCaseProperty',
+            url: address3 + 'testcase/batchModifyTestCaseProperty',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -1253,7 +1288,7 @@ var app = new Vue({
             }
         });
         $.ajax({//scriptModeFlag
-            url: address2 + '/testcase/batchModifyTestCaseProperty',
+            url: address3 + 'testcase/batchModifyTestCaseProperty',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -1293,8 +1328,9 @@ $(document).ready(function(e) {
 function yiji() {
     $.ajax({
         async: false,
-        url: address2+"/aut/queryListAut",
+        url: address3+"aut/queryListAut",
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
             // console.log(data)
             var autList = data.autRespDTOList;
@@ -1315,15 +1351,22 @@ function erji() {
     var val = $('select[name="autid"]').val();
     $.ajax({
         async: false,
-        url: address + 'transactController/showalltransact',
-        data: { 'autlistselect': val },
+        url: address3 + 'transactController/pagedBatchQueryTransact',
+        data: JSON.stringify({ 
+            autId: val,
+            currentPage: 1,
+            orderColumns: 'id',
+            orderType: 'asc',
+            pageSize: 100000
+        }),
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
-            var transactList = data.o;
+            var transactList = data.list;
             var str = "";
             for (var i = 0; i < transactList.length; i++) {
 
-                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
             }
             $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').html(str);
 
@@ -1338,9 +1381,10 @@ function sanji() {
     var val = $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').val();
 
     $.ajax({
-        url: address + "scripttemplateController/showallscripttemplate",
+        url: address3 + "scripttemplateController/showallscripttemplate",
         data: { "transactid": val },
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
 
             var lie = data.o;
@@ -1376,8 +1420,9 @@ $(document).ready(function(e) {
 function first() {
     $.ajax({
         async: false,
-        url:address2+"/aut/queryListAut",
+        url:address3+"aut/queryListAut",
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
             var autList = data.autRespDTOList;
             var str = "";
@@ -1398,15 +1443,22 @@ function second() {
     var val = $("#1ji").val();
     $.ajax({
         async: false,
-        url: address + 'transactController/showalltransact',
-        data: { 'autlistselect': val },
+        url: address3 + 'transactController/pagedBatchQueryTransact',
+        data: JSON.stringify({ 
+            autId: val,
+            currentPage: 1,
+            orderColumns: 'id',
+            orderType: 'asc',
+            pageSize: 100000
+        }),
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
-            var transactList = data.o;
+            var transactList = data.list;
             var str = "";
             for (var i = 0; i < transactList.length; i++) {
 
-                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
             }
             $("#2ji").html(str);
 
@@ -1421,9 +1473,10 @@ function third() {
     var val = $("#2ji").val();
 
     $.ajax({
-        url: address + "scripttemplateController/showallscripttemplate",
+        url: address3 + "scripttemplateController/showallscripttemplate",
         data: { "transactid": val },
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
 
             var lie = data.o;
@@ -1445,8 +1498,9 @@ function third() {
 function diyi() {
     $.ajax({
         async: false,
-        url: address2+"/aut/queryListAut",
+        url: address3+"aut/queryListAut",
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
             var autList = data.autRespDTOList;
             var str = "";
@@ -1466,15 +1520,22 @@ function dier() {
     var val = $('select[name="subautid"]').val();
     $.ajax({
         async: false,
-        url: address + 'transactController/showalltransact',
-        data: { 'autlistselect': val },
+        url: address3 + 'transactController/pagedBatchQueryTransact',
+        data: JSON.stringify({ 
+            autId: val,
+            currentPage: 1,
+            orderColumns: 'id',
+            orderType: 'asc',
+            pageSize: 100000
+        }),
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
-            var transactList = data.o;
+            var transactList = data.list;
             var str = "";
             for (var i = 0; i < transactList.length; i++) {
 
-                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
             }
             $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').html(str);
 
@@ -1489,9 +1550,10 @@ function disan() {
     var val = $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').val();
 
     $.ajax({
-        url: address + "scripttemplateController/showallscripttemplate",
+        url: address3 + "scripttemplateController/showallscripttemplate",
         data: { "transactid": val },
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
 
             var lie = data.o;

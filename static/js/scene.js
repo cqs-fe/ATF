@@ -89,26 +89,25 @@ var app = new Vue({
             var self=this;
             var scenename = $('#insertForm input[name="scenename"]').val();
             var description = $('#insertForm textarea[name="description"]').val();
-            var caselibid=sessionStorage.getItem('caselibid');
+            var caselibid=sessionStorage.getItem('caselibId');
             if(scenename==""){
                 alert("场景名称不能为空");
             }else if(description==""){
                 alert("场景描述不能为空");
             }else{
                 $.ajax({
-                    url: address + 'sceneController/insertSelective',
+                    url: address3 + 'sceneController/insertScene',
                     type: 'post',
-                    data: {
-                        'scenename': scenename,
-                        'description': description,
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'nameMedium': scenename,
+                        'descShort': description,
                         'caselibid': caselibid,
-                        'exeStrategyTestcase': '',
-                        'exeStrategyTestcaseaction': '',
-                        'errStrategy': ''
-                    },
+                        'creatorId': sessionStorage.getItem('userId')
+                    }),
                     success: function(data) {
                         console.log(data);
-                        if (data.success) {
+                        if (data.respCode==0000) {
                             $('#successModal').modal();
                             getScene(self.currentPage, self.pageSize, self.order, self.sort);
                         } else {
@@ -136,14 +135,15 @@ var app = new Vue({
             this.getIds();
             var self=this;
             $.ajax({
-                url: address + 'sceneController/delete',
+                url: address3 + 'sceneController/deleteScene',
                 type: 'post',
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     'id': app.ids
-                },
+                }),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode==0000) {
                         $('#successModal').modal();
                         getScene(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
@@ -167,13 +167,23 @@ var app = new Vue({
         },
         update: function() {
             var self=this;
+            var id=$('#updateForm input[name="id"]').val();
+            var scenename = $('#updateForm input[name="scenename"]').val();
+            var description = $('#updateForm textarea[name="description"]').val();
+            var caselibid=sessionStorage.getItem('caselibId');
             $.ajax({
-                url: address + 'sceneController/update',
+                url: address3 + 'sceneController/updateScene',
                 type: 'post',
-                data: $("#updateForm").serializeArray(),
+                contentType: 'application/json',
+                data: JSON.stringify({
+                      "id" : id,
+                      "nameMedium" : scenename,
+                      "descShort" : description,
+                      "modifierId" : sessionStorage.getItem('userId')
+                }),
                 success: function(data) {
                     console.info(data);
-                    if (data.success) {
+                    if (data.respCode==0000) {
                         $('#successModal').modal();
                          getScene(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
@@ -205,9 +215,24 @@ var app = new Vue({
         },
         //传递当前页选中的场景id到场景管理页面
         toSceneManagement: function(e) {
-            var sceneid = $(e.target).parent().prev().prev().prev().children().attr('id'),
-                scenename = $(e.target).parent().prev().prev().html();
+            var sceneid = $(e.target).parent().parent().attr('id'),
+                scenename = $(e.target).parent().prev().prev().prev().prev().html();
             location.href = "scene-setting.html?sceneid=" + sceneid + "&" + "scenename=" + scenename;
+        },
+        //时间格式化
+        formatDate(date){
+            if(date){
+                var date = new Date(date);
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+                return Y+M+D+h+m+s;  
+            }else{
+                return '';
+            }     
         }
 
     },
@@ -216,19 +241,22 @@ var app = new Vue({
 
 //获取场景
 function getScene(page, listnum, order, sort) {
-    //获取list通用方法，只需要传入多个所需参数
+    // var caseLibId=sessionStorage.getItem('caselibId');
     $.ajax({
-        url: address + 'sceneController/selectAllByPage',
-        type: 'GET',
-        data: {
-            'page': page,
-            'rows': listnum,
-            'order': order,
-            'sort': sort
-        },
+        url: address3 + 'sceneController/selectAllSceneByPage',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            'currentPage': page,
+            'pageSize': listnum,
+            "orderType":"DESC",
+            "orderColumns":"modified_time",
+            // "caseLibId": caseLibId
+        }),
         success: function(data) {
-            app.sceneList = data.rows;
-            app.tt = data.total;
+            console.log(data)
+            app.sceneList = data.sceneEntityList;
+            app.tt = data.totalCount;
             app.totalPage = Math.ceil(app.tt / listnum);
             app.pageSize = listnum;
         }
@@ -239,14 +267,15 @@ function getScene(page, listnum, order, sort) {
 //获取案例
 function getCase(currentPage, listnum, order, sort) {
     $.ajax({
-        url: address + 'TestcaseController/selectAllByPage',
+        url: address3 + 'TestcaseController/selectAllByPage',
         type: 'GET',
-        data: {
+        contentType: 'application/json',
+        data: JSON.stringify({
             'page': currentPage,
             'rows': listnum,
             'order': order,
             'sort': sort
-        },
+        }),
         success: function(data) {
             // console.info(data);
             // console.info(data.o.rows);

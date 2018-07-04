@@ -45,12 +45,18 @@ var app = new Vue({
         //添加测试轮次
         insert: function() {
             $.ajax({
-                url: address+'testroundController/insert',
+                url: address3+'testroundController/insertTestround',
                 type: 'post',
-                data: $("#insertForm").serializeArray(),
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    roundName: $('#insertForm input[name="roundname"]').val(),
+                    roundDesc: $('#insertForm textarea[name="rounddesc"]').val(),
+                    recordmanagementflag: $('#insertForm select[name="recordmanagementflag"]').val(),
+                    timeexecutesetting: $('#insertForm input[name="timeexecutesetting"]').val() 
+                }),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode==0000) {
                         getTestRound();
                         $('#successModal').modal();
                     } else {
@@ -74,14 +80,15 @@ var app = new Vue({
         //删除测试轮次
         del: function() {
             $.ajax({
-                url: address + 'testroundController/delete',
+                url: address3 + 'testroundController/deleteTestround',
                 type: 'post',
-                data: {
+                contentType: 'application/json',
+                data: JSON.stringify({
                     'id': app.ids
-                },
+                }),
                 success: function(data) {
-                    console.info(data);
-                    if (data.success) {
+                    // console.info(data);
+                    if (data.respCode==0000) {
                         getTestRound();
                         $('#successModal').modal();
                     } else {
@@ -100,12 +107,18 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: address+'testroundController/update',
+                    url: address3+'testroundController/updateTestround',
                     type: 'post',
-                    data: $('#updateForm').serializeArray(),
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        roundName: $('#updateForm input[name="roundname"]').val(),
+                        roundDesc: $('#updateForm textarea[name="rounddesc"]').val(),
+                        recordmanagementflag: $('#updateForm select[name="recordmanagementflag"]').val(),
+                        timeexecutesetting: $('#updateForm input[name="timeexecutesetting"]').val() 
+                    }),
                     success: function(data) {
-                        console.info(data);
-                        if (data.success) {
+                        // console.info(data);
+                        if (data.respCode==0000) {
                             getTestRound();
                             $('#successModal').modal();
                         } else {
@@ -140,11 +153,15 @@ var app = new Vue({
 
 //获取测试轮次
 function getTestRound() {
-    $.ajax({
-        url: address+'testroundController/selectAll',
+    $.ajax({ 
+        url: address3+'testroundController/selectAllTestround',
         type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+
+        }),
         success: function(data) {
-            app.testroundList = data.obj;
+            app.testroundList = data.testroundEntityList;
         }
     });
 }
