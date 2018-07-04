@@ -162,10 +162,12 @@ var app = new Vue({
         to: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
+            	 console.log("aaaaaa"+caselibId);
                 $('#selectAlertModal').modal();
             } else {
                 var caselibId = selectedInput.parent().next().next().next().next().html();
                 //存储测试项目id到sessionstorage
+                console.log("aaaaaa"+caselibId);
                 sessionStorage.setItem("caselibid", caselibId);
                 location.href = "caseManagement.html";
             }

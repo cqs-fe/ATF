@@ -525,24 +525,27 @@
                                         <h4 class="modal-title">导入</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form role="form" id="importForm" method='post' action='http://10.108.226.152:8080/ATFCloud/TestcaseController/importexcel' enctype="multipart/form-data" target="rfFrame">
-                                            <div class="form-group hidden">
-                                                <label class="control-label">caselibId</label>
-                                                <input type="text" name="caselibId" class="form-control" id="caselibid">
+                                        <form role="form" id="importForm" method='post' action='http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase' enctype="multipart/form-data" >
+                                        
+                                    <div class="modal-body">
+                                            
+                                            <div class="form-group hidden"> 
+                                                 <input type="text" class="text" name="caseLibId" value="1">
+																								 <input type="text" class="text" name="uploadUserId" value="1">
                                             </div>
+                                            
                                             <div class="form-group">        
                                                 <div class="col-lg-6">
                                                     <input type="text" class="form-control show" disabled>
                                                 </div>
                                                 <span class="btn  btn-white fileinput-button"><span>选择文件</span>
-                                                <input type="file" class="myFileUpload" name="file">
+                                                <input type="file" class="myFileUpload" name="file" id='theFile'>
                                                 </span>
                                             </div>
                                             <input type="submit" value="submit" class="hide">
-                                        </form>
-                                        <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
-                                    </div>
-                                    <div>
+                                       
+                                       
+                                    </div> 
                                     	<hr>
                                     	  <div class="row">
 	                                    	  	<div class="col-lg-12">
@@ -553,18 +556,19 @@
 				                                          </div> 
 				                                          <div class="col-lg-4">
 				                                           <form>
-																											<input type="radio" name="muban" value="0" checked>简约版 
-																											<input type="radio" name="muban" value="1">标准版
+																											<input type="radio" name="templateType" value="0" checked>简单版 
+																											<input type="radio" name="templateType" value="1">标准版 
 																									</form> 
 				                                          </div>  
 	                                          </div> 
                                         </div> 
                                      
                                     <div class="modal-footer">
-                                    	 <a class="  btn  btn-white" style="float:left" id="exampleDownload">模板下载</a> 
-                                        <a class="btn  btn-white" id="submit">上传</a>
-                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                    	 <a class="  btn  btn-white" style="float:left" id="exampleDownload">模板下载</a>  
+                                       <a class="  btn  btn-white"     id="submitFile"  @click="import()">导入</a>  
+                                       <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
                                     </div>
+                                  </form>
                                 </div>
                             </div>
                         </div>
@@ -922,19 +926,27 @@
                         <!-- detailModal end -->
 
                         <!-- successModal start -->
-                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">操作成功</h4>
+                                        <h4 class="modal-title">导入</h4>
                                     </div>
+                                       
                                     <div class="modal-body">
-                                        <h4>操作成功！</h4>
+                                            
+                                            
+                                             
+                                                 操作成功
+                                               
+                                       
+                                       
                                     </div>
-                                    <div class="modal-footer">
-                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
-                                    </div>
+                                       
+                                    <div class="modal-footer">  
+                                       <button data-dismiss="modal" class="btn btn-default" type="button">确定</button>
+                                    </div> 
                                 </div>
                             </div>
                         </div>
@@ -1193,24 +1205,5 @@
 <script type="text/javascript" src="../lib/jquery.form.min.js"></script>
 <script type="text/javascript" src="../lib/bootstrap-select.min.js"></script>
 <script type="text/javascript">
-$("#submit").click(function() {
-    console.log('hehe');
-    var options = {
-        url: address + 'TestcaseController/importexcel', //同action 
-        type: 'post',
-        dataType: "json",
-        success: function(data) {
-            if (data.success) {
-                $('#importModal').modal('hide');
-                $('#successModal').modal();
-                app.getCase(app.currentPage, app.pageSize, 'id', 'asc');
-            }
-        },
-        error: function(xhr, status, msg) {
-            $('#importModal').modal('hide');
-            $('#failModal').modal();
-        }
-    };
-    $("#importForm").ajaxSubmit(options);
-});
+
 </script>
