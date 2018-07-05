@@ -4,12 +4,15 @@
 <link rel="import" href="../common-vac/confirm.html?__inline">
 <link rel="import" href="../common-vac/alert.html?__inline">
 <script type="text/javascript">
-	// window.addEventListener('load', function(){
-	// 	var userId = sessionStorage.getItem('userId')
-	// 	if(userId == null || userId == "") {
-	// 		window.location.href = 'Login.html'
-	// 	}
-	// })
+	window.addEventListener('load', function(){
+		var userId = sessionStorage.getItem('userId')
+		if(userId == null || userId == "") {
+			window.location.href = 'Login.html'
+		}else{
+			var userName=sessionStorage.getItem('userName');
+			$('#curUserName').text(userName);
+		}
+	})
 </script>
 <style type="text/css">
 	.copy-right {

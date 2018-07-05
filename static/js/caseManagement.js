@@ -994,6 +994,7 @@ var app = new Vue({
                 document.getElementsByTagName('fieldset')[0].setAttribute('disabled', true);
                 $('#detailModal').modal('show');
                 var id=$(event.target).parent().prev().prev().children().attr('id');
+                $('#detailForm input[name="id"]').val(id);
                 $.ajax({
                     url: address3+'testcase/getSingleTestCaseInfo',
                     type: 'post',
@@ -1032,6 +1033,46 @@ var app = new Vue({
         },
         edit(){
             document.getElementsByTagName('fieldset')[0].removeAttribute('disabled');
+        },
+        // 修改用例
+        update(){
+            $.ajax({
+                url: address3+ 'testcase/modifySingleTestCaseInfo',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                        id: $('#detailForm input[name="id"]').val(),
+                        casecode:$('#detailForm input[name="casecode"]').val(),
+                        missionId:$('#detailForm select[name="missionId"]').val(),
+                        autId: $('#detailForm select[name="autid"]').val(),
+                        version: $('#detailForm input[name="versioncode"]').val(),
+                        transId: $('#detailForm select[name="transid"]').val(),
+                        scriptModeFlag:$('#detailForm select[name="scriptmodeflag"]').val(),
+                        testPoint:$('#detailForm input[name="testpoint"]').val(),
+                        testDesign:$('#detailForm textarea[name="testDesign"]').val(),
+                        preRequisites:$('#detailForm textarea[name="preRequisites"]').val(),
+                        dataRequest:$('#detailForm textarea[name="dataRequest"]').val(),
+                        testStep:$('#detailForm textarea[name="testStep"]').val(),
+                        expectResult:$('#detailForm textarea[name="expectResult"]').val(),
+                        checkPoint:$('#detailForm textarea[name="checkPoint"]').val(),
+                        caseProperty:$('#detailForm select[name="caseProperty"]').val(),
+                        caseType:$('#detailForm select[name="caseType"]').val(),
+                        priority:$('#detailForm select[name="priority"]').val(),
+                        authorId:$('#detailForm select[name="author"]').val(),
+                        reviewerId:$('#detailForm select[name="reviewer"]').val(),
+                        executorId:$('#detailForm select[name="executor"]').val(),
+                        executeMethod:$('#detailForm select[name="executemethod"]').val(),
+                        scriptMode:$('#detailForm select[name="scriptmode"]').val(),
+                        useStatus:$('#detailForm select[name="usestatus"]').val(),
+                        note:$('#detailForm textarea[name="note"]').val()
+                }),
+                success: function(data){
+                    $('#successModal').modal();
+                },
+                error: function(){
+                    $('#failModal').modal();
+                }
+            })
         },
         // 排序
         sortBy: function(sortparam) {
@@ -1381,13 +1422,12 @@ function sanji() {
     var val = $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').val();
 
     $.ajax({
-        url: address3 + "scripttemplateController/showallscripttemplate",
-        data: { "transactid": val },
+        url: address3 + "scripttemplateController/queryTemplateByTransId",
+        data: JSON.stringify({ "id": val }),
         type: "POST",
         contentType: 'application/json',
         success: function(data) {
-
-            var lie = data.o;
+            var lie = data.scriptTemplateList;
             var str = "";
             for (var i = 0; i < lie.length; i++) {
 
@@ -1471,15 +1511,14 @@ function second() {
 function third() {
 
     var val = $("#2ji").val();
-
     $.ajax({
-        url: address3 + "scripttemplateController/showallscripttemplate",
-        data: { "transactid": val },
+        url: address3 + "scripttemplateController/queryTemplateByTransId",
+        data: JSON.stringify({ "id": val }),
         type: "POST",
         contentType: 'application/json',
         success: function(data) {
 
-            var lie = data.o;
+            var lie = data.scriptTemplateList;
             var str = "";
             for (var i = 0; i < lie.length; i++) {
 
@@ -1550,13 +1589,13 @@ function disan() {
     var val = $('select[name="subautid"]').parent().parent().next().find('select[name="subtransid"]').val();
 
     $.ajax({
-        url: address3 + "scripttemplateController/showallscripttemplate",
-        data: { "transactid": val },
+        url: address3 + "scripttemplateController/queryTemplateByTransId",
+        data: JSON.stringify({ "id": val }),
         type: "POST",
         contentType: 'application/json',
         success: function(data) {
 
-            var lie = data.o;
+            var lie = data.scriptTemplateList;
             var str = "";
             for (var i = 0; i < lie.length; i++) {
 

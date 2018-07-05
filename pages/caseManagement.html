@@ -171,7 +171,7 @@
                                                                 <div class="col-lg-4">
                                                                     <!-- <input type="text" class="form-control" name="submissionId"> -->
                                                                     <select type="text" class="form-control" name="submissionId">
-                                                                        <option v-for="item in missionList" value="{{item.id}}">{{item.missionName}}</option>
+                                                                        <option v-for="item in missionList" value="{{item.id}}">{{item.nameMedium}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -277,7 +277,7 @@
                                                                 <label class="col-lg-2 control-label">作者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="author">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -285,13 +285,13 @@
                                                                 <label class="col-lg-2 control-label">评审者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" name="reviewer">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">执行者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" name="executor">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -454,7 +454,7 @@
                                                                 <label class="col-lg-2 control-label">作者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="author">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -462,13 +462,13 @@
                                                                 <label class="col-lg-2 control-label">评审者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" name="reviewer">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">执行者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" name="executor">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -609,7 +609,7 @@
                                                 <div class="col-lg-4">
                                                     <select class="form-control" name="executor">
                                                         <option value="">-- 请选择执行者 --</option>
-                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -721,6 +721,12 @@
                                                     <div class="tab-pane active" id="single-case">
                                                         <fieldset disabled>
                                                         <form class="form-horizontal" role="form" id="detailForm">
+                                                            <div class="form-group hidden">
+                                                                <label class="col-lg-2 control-label hidden">案例id</label>
+                                                                <div class="col-lg-4 hidden">
+                                                                    <input type="text" class="form-control" name="id" value="">
+                                                                </div>
+                                                            </div>
                                                             <div class="form-group">
                                                                 <label class="col-lg-2 control-label hidden">案例组成类型</label>
                                                                 <div class="col-lg-4 hidden">
@@ -734,7 +740,7 @@
                                                                 <div class="col-lg-4">
                                                                     <!-- <input type="text" class="form-control" name="submissionId"> -->
                                                                     <select type="text" class="form-control" name="submissionId">
-                                                                        <option v-for="item in missionList" value="{{item.id}}">{{item.missionName}}</option>
+                                                                        <option v-for="item in missionList" value="{{item.id}}">{{item.nameMedium}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -840,7 +846,7 @@
                                                                 <label class="col-lg-2 control-label">作者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="author">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -848,13 +854,13 @@
                                                                 <label class="col-lg-2 control-label">评审者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" name="reviewer">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                                 <label class="col-lg-2 control-label">执行者</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" name="executor">
-                                                                        <option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option>
+                                                                        <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -899,7 +905,7 @@
                                     <div class="modal-footer">
                                         <a class="btn btn-default" data-dismiss="modal">取消</a>
                                         <a class="btn btn-success" @click="edit">修改</a>
-                                        <a data-dismiss="modal" class="btn btn-info" v-on:click="">保存</a>
+                                        <a data-dismiss="modal" class="btn btn-info" v-on:click="update">保存</a>
                                     </div>
                                     </div>
                                 </div>
