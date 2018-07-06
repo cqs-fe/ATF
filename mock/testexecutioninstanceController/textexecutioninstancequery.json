@@ -1,0 +1,241 @@
+{
+    "retCode": null,
+    "retMsg": null,
+    "testCaseList": [
+        {
+            "caseId": 251,
+            "caseCompositeType": "2",
+            "state": 0,
+            "casecode": 13323,
+            "isSelectedRun": "1",
+            "isInTestRound": "1",
+            "combineGroupName": "noone",
+            "orderNumber": 2,
+            "runTotalNumber": 4,
+            "executeTime": "",
+            "executeDateFlag": "",
+            "flowNodes": [
+                {
+                    "flowNodeId": 42,
+                    "casecode": 127,
+                    "state": 3
+                },
+                {
+                    "flowNodeId": 34,
+                    "casecode": 126,
+                    "state": 1
+                },
+                {
+                    "flowNodeId": 53,
+                    "casecode": 125,
+                    "state": 2
+                }
+            ]
+        },
+        {
+            "caseId": 269,
+            "caseCompositeType": "1",
+            "state": 0,
+            "casecode": 1663,
+            "flowNodes": null,
+            "isSelectedRun": "1",
+            "isInTestRound": "1",
+            "combineGroupName": "noone",
+            "orderNumber": 2,
+            "runTotalNumber": 4,
+            "executeTime": "",
+            "executeDateFlag": ""
+        },
+        {
+            "caseId": 268,
+            "caseCompositeType": "1",
+            "casecode": 3333,
+            "state": 1,
+            "flowNodeDtos": null,
+            "isSelectedRun": "1",
+            "isInTestRound": "1",
+            "combineGroupName": "noone",
+            "orderNumber": 2,
+            "runTotalNumber": 4,
+            "executeTime": "",
+            "executeDateFlag": ""
+        }
+    ],
+    "testSceneList": [
+        {
+            "sceneId": 29,
+            "sceneName": "测试登录场景",
+            "sceneSaveMode": 0,
+            "testCaseList": [
+                {
+                    "caseId": 2439,
+                    "caseCompositeType": 1,
+                    "casecode": 123,
+                    "flowNodes": null,
+                    "isSelectedRun": "1",
+                    "combineGroupName": null,
+                    "orderNumber": 0,
+                    "runTotalNumber": 1,
+                    "executeTime": null,
+                    "executeDateFlag": null,
+                    "isInTestRound": "1"
+                },
+                {
+                    "caseId": 2470,
+                    "caseCompositeType": 1,
+                    "casecode": 124,
+                    "flowNodes": null,
+                    "isSelectedRun": "1",
+                    "combineGroupName": null,
+                    "orderNumber": 0,
+                    "runTotalNumber": 1,
+                    "executeTime": null,
+                    "executeDateFlag": null,
+                    "isInTestRound": "1"
+                },
+                {
+                    "caseId": 2752,
+                    "caseCompositeType": 2,
+                    "flowNodes": [
+                        {
+                            "flowNodeId": 122,
+                            "casecode": 123,
+                            "state": 3
+                        },
+                        {
+                            "flowNodeId": 124,
+                            "casecode": 123,
+                            "state": 1
+                        },
+                        {
+                            "flowNodeId": 123,
+                            "casecode": 123,
+                            "state": 2
+                        },
+                        {
+                            "flowNodeId": 1122,
+                            "casecode": 123,
+                            "state": 3
+                        },
+                        {
+                            "flowNodeId": 1124,
+                            "casecode": 123,
+                            "state": 1
+                        },
+                        {
+                            "flowNodeId": 1223,
+                            "casecode": 123,
+                            "state": 2
+                        },
+                        {
+                            "flowNodeId": 1222,
+                            "casecode": 123,
+                            "state": 3
+                        },
+                        {
+                            "flowNodeId": 1125,
+                            "casecode": 123,
+                            "state": 1
+                        },
+                        {
+                            "flowNodeId": 1228,
+                            "casecode": 123,
+                            "state": 2
+                        }
+                    ],
+                    "isSelectedRun": "1",
+                    "combineGroupName": null,
+                    "orderNumber": 0,
+                    "runTotalNumber": 1,
+                    "executeTime": null,
+                    "executeDateFlag": null,
+                    "isInTestRound": "1"
+                },
+                {
+                    "caseId": 2731,
+                    "caseCompositeType": 2,
+                    "flowNodes": [
+                        {
+                            "flowNodeId": 232,
+                            "casecode": 123,
+                            "state": 3
+                        },
+                        {
+                            "flowNodeId": 233,
+                            "casecode": 123,
+                            "state": 1
+                        },
+                        {
+                            "flowNodeId": 234,
+                            "casecode": 123,
+                            "state": 2
+                        }
+                    ],
+                    "isSelectedRun": "1",
+                    "combineGroupName": null,
+                    "orderNumber": 0,
+                    "runTotalNumber": 1,
+                    "executeTime": null,
+                    "executeDateFlag": null,
+                    "isInTestRound": "1"
+                },
+                {
+                    "caseId": 2625,
+                    "caseCompositeType": 2,
+                    "flowNodes": [
+                        {
+                            "flowNodeId": 110,
+                            "casecode": 123,
+                            "state": 2
+                        },
+                        {
+                            "flowNodeId": 111,
+                            "casecode": 123,
+                            "state": 3
+                        }
+                    ],
+                    "isSelectedRun": "1",
+                    "combineGroupName": null,
+                    "orderNumber": 0,
+                    "runTotalNumber": 1,
+                    "executeTime": null,
+                    "executeDateFlag": null,
+                    "isInTestRound": "1"
+                }
+            ]
+        },
+        {
+            "sceneId": 30,
+            "sceneName": "测试注册场景",
+            "sceneSaveMode": 0,
+            "testCaseList": [
+                {
+                    "caseId": 2260,
+                    "caseCompositeType": 1,
+                    "flowNodes": null,
+                    "casecode": 123,
+                    "isSelectedRun": "1",
+                    "combineGroupName": null,
+                    "orderNumber": 0,
+                    "runTotalNumber": 1,
+                    "executeTime": null,
+                    "executeDateFlag": null,
+                    "isInTestRound": "1"
+                },
+                {
+                    "caseId": 2636,
+                    "caseCompositeType": 1,
+                    "flowNodes": null,
+                    "casecode": 123,
+                    "isSelectedRun": "1",
+                    "combineGroupName": null,
+                    "orderNumber": 0,
+                    "runTotalNumber": 1,
+                    "executeTime": null,
+                    "executeDateFlag": null,
+                    "isInTestRound": "1"
+                }
+            ]
+        }
+    ]
+}

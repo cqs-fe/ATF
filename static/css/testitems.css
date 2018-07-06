@@ -1,0 +1,30 @@
+.select-name {
+  width: 100px; }
+
+.input-search {
+  width: 150px; }
+
+.panel-padding {
+  padding-left: 0; }
+
+table th,
+table td {
+  text-align: center; }
+table .btn-alter, table .btn-view {
+  margin: 0 5px;
+  padding: 4px;
+  font-size: 12px; }
+
+.table-tool {
+  padding: 10px 0; }
+
+.inline-block {
+  display: inline-block;
+  width: auto; }
+
+.page-tooltip {
+  position: relative;
+  top: -32px;
+  margin: 0 10px; }
+
+/*# sourceMappingURL=testitems.css.map */

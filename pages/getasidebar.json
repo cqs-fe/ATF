@@ -1,0 +1,100 @@
+{
+    "items_list":[
+    {	"item_name":"测试项目",
+        "item_icon":"icon-book",
+        "item_address":"testProject.html",
+        "item_id":"item1",
+		"item_child_list":[
+			
+		]
+	},
+
+    {	"item_name":"测试任务",
+        "item_icon":"icon-bookmark",
+        "item_address":"testitems.html",
+        "item_id":"item2",        
+		"item_child_list":[
+			
+		]
+    },
+    
+    {	"item_name":"系统管理",
+        "item_icon":"icon-th",        
+        "item_address":"",
+		"item_child_list":[
+			{
+                "item_child_name":"开发架构",
+				"item_child_address":"architecture.html"
+            },
+            
+            {
+				"item_child_name":"测试系统",
+				"item_child_address":"aut.html"
+            }
+            
+		]
+    },
+    
+    {	"item_name":"用例管理",
+        "item_icon":"icon-th",
+        "item_address":"",
+		"item_child_list":[
+            
+            {
+				"item_child_name":"案例管理",
+				"item_child_address":"caseManagement.html"
+            },
+
+            {
+				"item_child_name":"数据中心",
+				"item_child_address":"datatable.html"
+            },
+
+            {
+				"item_child_name":"场景管理",
+				"item_child_address":"scene.html"
+            }
+			
+		]
+    },
+    
+    {	"item_name":"测试管理",
+        "item_icon":"icon-th",
+        "item_address":"",
+		"active":"",
+		"item_child_list":[
+           
+            {
+				"item_child_name":"测试阶段",
+				"item_child_address":"testphase.html"
+            },
+
+            {
+				"item_child_name":"测试轮次",
+				"item_child_address":"testroundManage.html"
+            },
+
+            {
+				"item_child_name":"测试计划与执行",
+				"item_child_address":"testplan-execute.html"
+            }
+		]
+    },
+
+    {	"item_name":"记录单管理",
+        "item_icon":"icon-tasks",
+        "item_address":"testRecord.html",
+		"item_child_list":[
+			
+		]
+    },
+    
+    {	"item_name":"用户管理",
+        "item_icon":"icon-male",
+        "item_address":"usermanagement.html",
+		"item_child_list":[
+			
+		]
+	}
+]
+}

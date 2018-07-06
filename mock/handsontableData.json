@@ -1,0 +1,25 @@
+{
+    "msg": "",
+    "success": true,
+    "o": {
+        "tableHead": [
+            ["[待删除]", "百度查询"],
+            ["[待删除]", "商品设置"],
+            ["[待删除]", "商品价格"]
+        ],
+        "tableDatas": [
+        {
+            "id": "2",
+            "expectresult": "1",
+            "testpoint": "6",
+            "百度查询": "@before\nUI(\"aa\").WebElement(\"bb\").click(\"a\",\"b\",\"c\");\nUI(\"a2\").WebElement(\"b2\").click(\"a\",\"b\",\"c\");\n@value\n{expr= asdfsdf}\n@after\nUI(\"aa\").WebElement(\"bb\").click(\"a\",\"b\",\"c\");\nUI(\"a2\").WebElement(\"b2\").click(\"a\",\"b\",\"c\");",
+            "teststep": "1",
+            "商品设置": "@before\nUI(\"aa\").WebElement(\"bb\").click(\"a\",\"b\",\"c\");\nUI(\"a2\").WebElement(\"b2\").click(\"a\",\"b\",\"c\");\n@value\n{expr= good morning }\n@after\nUI(\"aa\").WebElement(\"bb\").click(\"a\",\"b\",\"c\");\nUI(\"a2\").WebElement(\"b2\").click(\"a\",\"b\",\"c\");",
+            "商品价格": "@before\nUI(\"aa\").WebElement(\"bb\").click(\"a\",\"b\",\"c\");\nUI(\"a2\").WebElement(\"b2\").click(\"a\",\"b\",\"c\");\n@value\n{expr= asdfjkjslkdf}\n@after\nUI(\"这是UI\").WebElement(\"这是元素\").click(\"event\",\"target\",\"cancelable\");\nUI(\"a2\").WebElement(\"b2\").click(\"a\",\"b\",\"c\");",
+            "checkpoint": "1",
+            "testdesign": "111",
+            "casecode": "4"
+        }
+        ]
+    }
+}

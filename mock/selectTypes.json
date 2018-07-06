@@ -1,0 +1,13 @@
+{
+    "success":true,
+    "data": [
+        {
+            "name": "测试点",
+            "value": 1
+        },
+        {
+            "name": "执行状态",
+            "value": 2
+        }
+    ]
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="import" href="./common/header.html?__inline">
+  <!-- css for this page only -->
+  <!-- 引入样式 -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css"> -->
+  <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+  <link rel="stylesheet" href="text/css" href="../static/css/case-operation.scss">
+  <title>objectRepo</title>
+  <style>
+    #menuContent,
+    .elementContent,
+    .tab-content {
+      height: calc(100vh - 190px);
+      background-color: #fff;
+    }
+  </style>
+</head>
+
+<body id="" v-cloak>
+  <di class="content" id="app1">
+    <!--header start-->
+    <link rel="import" href="./common/header-guide.html?__inline">
+    <!--header end-->
+    <!--sidebar start-->
+    <!-- <link rel="import" href="./common/aside-guide.html?__inline"> -->
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content" style="margin-left: 0;">
+      <section class="wrapper">
+        <ul class="nav nav-tabs" role="tablist">
+          <!-- <li role="presentation" :class="{active: activeName=='object-rep'}">
+            <a href="#object-rep" aria-controls="object-rep" role="tab" data-toggle="tab">对象库</a>
+          </li>
+          <li role="presentation" :class="{active: activeName=='element-library'}">
+            <a href="#element-library" aria-controls="element-library" role="tab" data-toggle="tab">元素库</a>
+          </li>
+          <li role="presentation" :class="{active: activeName=='messages'}">
+            <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">用例数据</a>
+          </li> -->
+          <li role="presentation" :class="{active: activeName=='exec-record'}">
+            <a href="#exec-record" aria-controls="exec-record" role="tab" data-toggle="tab">执行记录</a>
+          </li>
+          <li role="presentation" :class="{active: activeName=='view-script'}">
+              <a href="#view-script" aria-controls="view-script" role="tab" data-toggle="tab">查看脚本</a>
+          </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <di class="tab-content">
+          <div role="tabpanel" class="tab-pane" :class="{active: activeName=='object-rep'}" id="object-rep">
+            <object-repo :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></object-repo>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="element-library" :class="{active: activeName=='element-library'}">
+            <element-library :bread-show="false" :top-select="false" :component-mode="true" :transid="79"></element-library>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="messages" :class="{active: activeName=='messages'}">
+            <case-data></case-data>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="exec-record" :class="{active: activeName=='exec-record'}">
+            <exec-record :recorddata="recordData"></exec-record>
+          </div>
+          <di role="tabpanel" class="tab-pane" id="view-script" :class="{active: activeName=='view-script'}">
+            <view-script :testcaseid="viewScriptTestcaseId"></view-script>
+          </di>
+        </di>
+
+        <!-- <el-tab-pane label="对象库" name="first"><object-repo></object-repo></el-tab-pane> -->
+        <!-- <el-tab-pane label="元素库" name="second"><element-library></element-library></el-tab-pane> -->
+
+        </el-tabs>
+      </section>
+    </section>
+    <!-- <object-repo></object-repo> -->
+
+    <!--main content end-->
+    <div class="footer">
+      <link rel="import" href="./common/copy-right.html?__inline">
+    </div>
+  </di>
+
+<script type="text/x-template" id="case-data">
+	<div class="tab-content">
+		<div class="top-selector">
+			<label class="checkbox-inline">
+					<input type="checkbox" id="" v-model="checkall" @change="toggleCheckAll"> 全选
+				</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox1" value="input-data" v-model="conditions"> 输入数据
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox2" value="flow-data" v-model="conditions"> 流程数据
+			</label>
+			<label class="checkbox-inline">
+					<input type="checkbox" id="inlineCheckbox2" value="scene-data" v-model="conditions"> 场景数据
+				</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox3" value="global-data" v-model="conditions"> 全局数据
+			</label>
+			<label class="checkbox-inline">
+					<button type="button" class="btn btn-info"> 搜 索 </button>
+			</label>
+			<label class="checkbox-inline">
+					<button type="button" class="btn btn-info"> 刷 新 </button>
+			</label>
+			<label class="checkbox-inline">
+				<button type="button" class="btn btn-info"> 保 存 </button>
+			</label>
+		</div>
+		<div class="table-wrapper">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>数据名称</th>
+            <th>数据值</th>
+            <th>数据池名称</th>
+            <th>对象名称</th>
+            <th>描述</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(index,item) in dataList">
+            <td>{{ item.dataName }}</td>
+            <td>{{ item.dataValue }}</td>
+            <td>{{ item.dataPoolName }}</td>
+            <td>{{ item.objectName }}</td>
+            <td>{{ item.description }}</td>
+            <td><button class="btn btn-info" @click="alterData()">修改</button></td>
+          </tr>
+          <tr v-if="dataList.length === 0"></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="alterModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">修改数据</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" id="alter-form">
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="data-name">数据名</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="email" id="data-name" placeholder="" name="data-name" required>
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="data-value">数据值</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="url" id="data-value" placeholder="" name="data-value" required>
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="formGroupInputLarge">数据池名称</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="text" id="formGroupInputLarge" placeholder="Large input">
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="formGroupInputSmall">对象名称</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="text" id="formGroupInputSmall" placeholder="Small input">
+                </div>
+              </div>
+              <div class="form-group form-group">
+                <label class="col-sm-3 control-label" for="formGroupInputLarge">数据描述</label>
+                <div class="col-sm-8">
+                  <input class="form-control" type="text" id="formGroupInputLarge" placeholder="Large input">
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-default " data-dismiss="modal">取 消</button>
+                <button type="submit" class="btn btn-info">保 存</button>
+              </div>
+            </form>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	</div>
+</script>
+<script type="text/x-template" id="view-script-template">
+  <div class="tab-content">
+      <table class="table table-bordered" v-if="tableData.length">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>操作项</th>
+              <th>方法</th>
+              <th>参数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(index, row) in tableData">
+              <td class="index">{{ +index + 1 }}</td>
+              <td class="operations">
+                  <template v-if="row.ui != '' && row.element != ''">
+                      <label >UI:</label>
+                      <span class="operation-ui">{{row.ui}}</span>
+                      <label>元素:</label>
+                      <span class="operation-element" :data-classtype="row.classType">{{row.element}}</span>
+                  </template>
+                  <template v-else>
+                      <label >公共函数:</label>
+                      <span class="operation-ui" style="display: none;">{{row.ui}}</span>
+                      <span class="operation-element"  style="display: none;" :data-classtype="row.classType">{{row.element}}</span>
+                  </template>
+              </td>
+              <td class="functions">{{ row.method }}</td>
+              <td class="parameters">
+                  <div class="param-show">
+                    <span v-for="(index,parameter) in row.parameters" class="param-name-show">参数{{index+1}}: <b class="param-value-show">{{parameter}}</b>;&nbsp;&nbsp;</span>
+                  </div>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+      <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
+  </div>
+</script>
+  
+<script type="text/x-template" id="execution-record">
+  <div class="tab-content" style="display: flex; flex-direction: column;">
+    <!-- <iframe src="http://10.108.223.23:8080/ATFCloud/Record/reporter.html" frameborder="0" style="width: 100%; height: 300px;"></iframe> -->
+    <!-- <iframe class="record-iframe" frameborder="0" :srcdoc="srcDoc"></iframe> -->
+    <table class="table table-striped table-bordered border-top text-center" id="sample_1">
+      <thead>
+          <tr>
+              <th class="text-center">场景ID</th>
+              <th class="text-center">测试阶段</th>
+              <th class="text-center">测试轮次</th>
+              <th class="text-center">执行轮次</th>
+              <th class="text-center">用例编号</th>
+              <th class="text-center">节点名称</th>
+              <th class="text-center">记录单状态</th>
+              <th class="text-center">执行结果状态</th>
+              <th class="text-center">来源渠道</th>
+              <th class="text-center">资源路径</th>
+              <!-- <th class="text-center">执行实例ID</th> -->
+          </tr>
+      </thead>
+      <tbody id="recordTable">
+          <tr class="odd gradeX">
+              <td class="center" width="5%">{{ item.sceneId }}</td>
+              <td class="center" width="10%">{{ item.testPhaseId }}</td>
+              <td width="">{{ item.testRoundId }}</td>
+              <td class="" width="">{{item.executeRound}}</td>
+              <td class="" width="">{{item.caseId}}</td>
+              <td class="" width="">{{item.flownodeName}}</td>
+              <td class="" width="">{{item.recorderStatus}}</td>
+              <td class="" width="">{{item.executeStatus}}</td>
+              <td class="" width="">{{item.sourceChannel}}</td>
+              <td class="" width="">{{item.resourcePath}}</td>
+              <!-- <td class="" width="">{{item.testexeinsid}}</td> -->
+          </tr>
+      </tbody>
+  </table>
+    <iframe v-for="src in srcs" :src="address+src" frameborder="0" style="width: 100%; height: 300px; flex: 1 0 auto"></iframe>
+  </div>
+</script>
+
+</body>
+
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+<!-- 先引入 Vue -->
+<!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+<!--script for this page only-->
+<script type="text/javascript" src="../static/js/objectRepo.js"></script>
+<script type="text/javascript" src="../static/js/elementLibrary.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/case-data.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/execution-record.js"></script>
+<script type="text/javascript" src="../static/js/case-operation/view-script.js"></script>
+<!-- ztree -->
+<script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+<link rel="import" href="./common-vac/alert.html?__inline">
+<link rel="import" href="./common-vac/confirm.html?__inline">
+<script src="../static/js/config.js"></script>
+<script src="../static/js/vac-functions.es.js"></script>
+<!-- 引入组件库 -->
+<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+<script>
+  var app = new Vue({
+    el: '#app1',
+    data: function () {
+      return {
+        activeName: 'object-repo',
+        recordData: '',
+        viewScriptTestcaseId: ''
+      }
+    },
+    ready: function() {
+      var queryArgs = location.search.slice(1);
+      var o = {};
+      var arr = queryArgs.split('&');
+      for (let item of arr) {
+        let a = item.split('=');
+        o[a[0]] = a[1];
+      }
+      this.recordData = o.viewcaseargs ?  o.viewcaseargs : '';console.log( this.recordData);
+      this.activeName = o.activeName;
+      switch(this.activeName) {
+        case 'exec-record': {
+          this.caseId = o.caseid;
+          this.caseCompositeType = o.type;
+        }
+        case 'view-script': {
+          this.viewScriptTestcaseId = o.testcaseId;
+        }
+      }
+      // $('#'+this.activeName).tab('show')
+    }
+  })
+</script>

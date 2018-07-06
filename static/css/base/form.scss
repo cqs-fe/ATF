@@ -1,0 +1,22 @@
+/* 表单 */
+.form{
+	padding-left: 1rem;
+}
+.form .form-line{
+	height: 3.6rem;
+	line-height: 3.6rem;
+	border-bottom: 1px solid #eee;
+	padding-right: 1rem;
+}
+.form .form-line .label{
+	width: 6rem;
+	text-align: left;
+}
+.form .form-line .form-ele{
+	width: 100%;
+	border: 0;
+	font-size: 1rem;
+}
+.form .form-line .form-ele::-webkit-input-placeholder {
+	line-height: 1.2;
+}

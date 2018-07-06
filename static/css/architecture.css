@@ -1,0 +1,61 @@
+.panel-pad{
+	padding-top: 10px;
+	padding-bottom: 1px;
+}
+#menuContent{
+	min-height: 835px;
+	overflow: auto;
+	overflow-x: hidden;
+}
+.treeMenu {
+    width: 100%;
+    border: 1px solid rgb(170, 170, 170);
+    z-index: 10;
+}
+
+.tree {
+    margin-top: 0;
+    width: 100%;
+    height: auto;
+}
+.elementContent{
+	min-height: 835px;
+	overflow: auto;
+	overflow-x: hidden;
+	border: 1px solid rgb(170,170,170);
+	z-index: 10;
+}
+.elementContent>a{
+	margin: 0 0 10px 80%;
+}
+.rightContent{
+	min-height: 835px;
+	border: 1px solid rgb(170,170,170);
+}
+.rightBtn{
+	margin: 0 0 10px 18px;
+}
+.saveBtn{
+	margin: 5px 5px 5px 550px;
+}
+.property{
+	padding: 10px 20px 0 20px;
+}
+.small-panel{
+	padding: 0 25px 0 25px;
+}
+.property a{
+	margin-right: 5px;
+	margin-bottom: 10px;
+}
+.archi{
+	padding-left: 0;
+	padding-right: 0
+}
+.archi-btn{
+	display: inline-block;
+	float: right;
+}
+.archi-title{
+	margin-left: 15px;
+}

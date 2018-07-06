@@ -1,0 +1,115 @@
+/* body {
+  width: 1200px;
+ } */
+
+.breadcrumb {
+  margin: 0 0 5px 0; }
+
+.top-form {
+  margin-bottom: 5px;
+  margin-left: 20px; }
+  .top-form .form-group {
+    width: 300px; }
+    .top-form .form-group .form-control {
+      width: auto; }
+  .top-form label {
+    font-weight: normal; }
+
+/* #top_table {
+  width: 800px;
+ } */
+  #top_table .index {
+    width: 50px; }
+  #top_table .number {
+    width: 200px; }
+  #top_table td label {
+    font-weight: normal; }
+  #top_table th {
+    font-weight: normal;
+    font-size: 14px; }
+
+#main-content i[class^="icon-"] {
+  color: #ff6c60; }
+
+.btn {
+  border: 1px solid #dddddd;
+  color: #333; }
+  .btn i {
+    color: #ff6c60; }
+
+#newtable {
+  margin-top: 10px;
+  text-align: center;
+  width: 800px;
+  font-size: 12px; }
+  #newtable th {
+    text-align: center;
+    font-size: 13px;
+    font-weight: normal; }
+  #newtable tbody {
+    font-size: 13px; }
+  #newtable table {
+    float: right;
+    font-size: 13px;
+    width: 90%;
+    margin-bottom: 0px; }
+  #newtable td {
+    text-align: left; }
+  #newtable td:last-child, #newtable td:nth-child(-n+2) {
+    text-align: center; }
+  #newtable .check {
+    width: 40px; }
+    #newtable .check span {
+      display: inline-block;
+      height: 20px;
+      width: 20px;
+      color: #ff6c60; }
+  #newtable .move {
+    width: 40px; }
+    #newtable .move span {
+      color: #ff6c60; }
+  #newtable .index {
+    width: 40px;
+    text-align: center; }
+  #newtable .operations {
+    width: 220px; }
+    #newtable .operations i {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      font-size: 18px; }
+    #newtable .operations span {
+      display: inline-block;
+      min-width: 30px; }
+  #newtable .parameters > span {
+    vertical-align: center;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 18px;
+    float: right; }
+  #newtable .parameters .param-table td {
+    padding: 0;
+    max-width: 120px; }
+  #newtable .parameters .param-table td:first-child {
+    width: 90px; }
+  #newtable .parameters .param-table td:last-child {
+    width: 120px;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word; }
+  #newtable .parameters .param-table .bottom-row {
+    display: none; }
+  #newtable .delete-row i {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 16px; }
+  #newtable .functions {
+    width: 150px; }
+    #newtable .functions .functions-select {
+      padding: 1px;
+      height: 22px; }
+
+/*# sourceMappingURL=script.css.map */

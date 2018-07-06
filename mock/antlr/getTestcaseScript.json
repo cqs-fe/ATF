@@ -1,0 +1,78 @@
+{
+    "success": true,
+    "msg": "",
+    "obj": [
+        {
+            "ui": "\"bookstore-注册界面\"",
+            "element": "\"会员密码\"",
+            "classType": "webedit",
+            "method": "set",
+            "parameters": [
+                "\"123456\""
+            ]
+        },
+        {
+            "ui": "",
+            "element": "",
+            "classType": "",
+            "method": "set",
+            "parameters": [
+                "\"lll\""
+            ]
+        },
+        {
+            "ui": "\"bookstore-注册界面\"",
+            "element": "\"密码确认\"",
+            "classType": "webedit",
+            "method": "set",
+            "parameters": [
+                "\"123456\""
+            ]
+        },
+        {
+            "ui": "\"bookstore-注册界面\"",
+            "element": "\"手机号码\"",
+            "classType": "webedit",
+            "method": "set",
+            "parameters": [
+                "\"18888834344\""
+            ]
+        },
+        {
+            "ui": "\"bookstore-注册界面\"",
+            "element": "\"Email\"",
+            "classType": "webedit",
+            "method": "set",
+            "parameters": [
+                "\"358223504@qq.com\""
+            ]
+        },
+        {
+            "ui": "\"bookstore-注册界面\"",
+            "element": "\"真实姓名\"",
+            "classType": "webedit",
+            "method": "set",
+            "parameters": [
+                "\"林\""
+            ]
+        },
+        {
+            "ui": "\"bookstore-注册界面\"",
+            "element": "\"身份证号\"",
+            "classType": "webedit",
+            "method": "set",
+            "parameters": [
+                "\"350111111111111111\""
+            ]
+        },
+        {
+            "ui": "\"bookstore-注册界面\"",
+            "element": "\"提交\"",
+            "classType": "webbutton",
+            "method": "click",
+            "parameters": [
+                "#addPicture"
+            ]
+        }
+    ]
+}

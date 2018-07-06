@@ -1,0 +1,267 @@
+{
+    "success": true,
+    "msg": "",
+    "obj": {
+        "id": 34,
+        "caselibid": 14,
+        "scenename": "测试注册场景",
+        "description": "",
+        "exeStrategy1Status": 1,
+        "exeStrategy2Start": 1,
+        "exeStrategy2Order": 2,
+        "exeStrategy2Status": 2,
+        "exeStrategy3Start": 1,
+        "exeStrategy3Order": 1,
+        "exeStrategy3Status": 1,
+        "exeStrategyErr": 1,
+        "caseDtos": [
+            {
+                "id": 305,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": null
+                ,"group": "1","time": "T+0"
+            },
+            {
+                "id": 306,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": null
+                ,"group": "1","time": "T+0"
+            },
+            {
+                "id": 304,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": null
+                ,"group": "2"
+                ,"time": "T+0"
+            },
+            {
+                "id": 307,
+                "caseCompositeType": "2",
+                "casecode": 20180119,
+                "state": 0,
+                "group": "2",
+                "flowNodeDtos": [
+                    {
+                        "casecode": 20190119001,
+                        "id": 410
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 411
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 413
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 414
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 415
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 416
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 417
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 418
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 419
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 420
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 421
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 422
+                        ,"time": "T+3"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 423
+                        ,"time": "T+3"
+                    }
+                ]
+            },
+            {
+                "id": 308,
+                "caseCompositeType": "2",
+                "casecode": 20180120,
+                "state": 0,
+                "group": "3",
+                "flowNodeDtos": [
+                    {
+                        "casecode": 20190119001,
+                        "id": 410
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 411
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 413
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 414
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 415
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 416
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 417
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 418
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 419
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 420
+                        ,"time": "T+3"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 421
+                        ,"time": "T+3"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 422
+                        ,"time": "T+3"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 423
+                        ,"time": "T+4"
+                    }
+                ]
+            },
+            {
+                "id": 309,
+                "caseCompositeType": "2",
+                "casecode": 20180121,
+                "state": 0,
+                "group": "3",
+                "flowNodeDtos": [
+                    {
+                        "casecode": 20190119001,
+                        "id": 410
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 411
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 413
+                        ,"time": "T+0"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 414
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 415
+                        ,"time": "T+1"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 416
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 417
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 418
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 419
+                        ,"time": "T+2"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 420
+                        ,"time": "T+3"
+                    },
+                    {
+                        "casecode": 20190119001,
+                        "id": 421
+                        ,"time": "T+4"
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 422
+                        ,"time": "T+4"
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 423
+                        ,"time": "T+4"
+                    }
+                ]
+            }
+        ]
+    }
+}

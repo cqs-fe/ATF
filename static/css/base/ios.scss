@@ -1,0 +1,62 @@
+/*ios模糊*/
+.ios-blur{
+	-webkit-filter: blur(5px);   
+    -moz-filter: blur(5px);   
+    -ms-filter: blur(5px);   
+    -o-filter: blur(5px);   
+    filter: blur(5px);
+}
+/* ios开关 */
+.dz-switch {
+	-webkit-appearance: none;
+	 -moz-appearance: none;
+	      appearance: none;
+	position: relative;
+	width: 3.25rem;
+	height: 2rem;
+	border: 1px solid #DFDFDF;
+	outline: 0;
+	border-radius: 1rem;
+	box-sizing: border-box;
+	background: #DFDFDF;
+	margin-top: 1.5rem;
+}
+.dz-switch:before {
+	content: " ";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 3.125rem;
+	height: 1.875rem;
+	border-radius: 0.94rem;
+	background-color: #FDFDFD;
+	-webkit-transition: -webkit-transform .3s;
+	      transition: transform .3s;
+}
+.dz-switch:after {
+	content: " ";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1.875rem;
+	height: 1.875rem;
+	border-radius: 0.94rem;
+	background-color: #FFFFFF;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+	-webkit-transition: -webkit-transform .3s;
+	      transition: transform .3s;
+}
+.dz-switch:checked {
+	border-color: #38d774;
+	background-color: #38d774;
+}
+.dz-switch:checked:before {
+	-webkit-transform: scale(0);
+	  -ms-transform: scale(0);
+	      transform: scale(0);
+}
+.dz-switch:checked:after {
+	-webkit-transform: translateX(1.25rem);
+	  -ms-transform: translateX(1.25rem);
+	      transform: translateX(1.25rem);
+}

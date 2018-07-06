@@ -1,0 +1,26 @@
+/* 初始化 */
+@import './base/bootstrap.min.css';
+/* 初始化 */
+@import './base/bootstrap-reset.css';
+// /* 初始化 */
+// @import './base/jquery.easy-pie-chart.css';
+/* 初始化 */
+@import './base/owl.carousel.css';
+/* 初始化 */
+@import './base/style.css';
+// /* 初始化 */
+// @import './base/style-responsive.css';
+/* 字体 */
+@import './fonts/font-awesome.css';
+// //switch按钮
+// @import './base/bootstrap-switch.css'
+td {
+  position: relative;
+  min-width: 35px;
+}
+td>input[type='radio'] {
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  top: 0;bottom: 0; left: 0; right: 0;margin: auto;
+}

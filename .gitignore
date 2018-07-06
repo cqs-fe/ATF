@@ -1,0 +1,9 @@
+.vscode/
+debug.log
+dist/
+public/
+output/
+**.zip
+.DS_Store
+**/node_modules/
+

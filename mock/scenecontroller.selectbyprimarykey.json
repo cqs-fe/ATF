@@ -1,0 +1,61 @@
+{
+    "success": true,
+    "msg": "",
+    "obj": {
+        "id": 34,
+        "caselibid": 14,
+        "scenename": "测试注册场景",
+        "description": "",
+        "exeStrategy1Status": 1,
+        "exeStrategy2Start": 1,
+        "exeStrategy2Order": 2,
+        "exeStrategy2Status": 2,
+        "exeStrategy3Start": 1,
+        "exeStrategy3Order": 1,
+        "exeStrategy3Status": 1,
+        "exeStrategyErr": 1,
+        "caseDtos": [
+            {
+                "id": 305,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 306,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 304,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 307,
+                "caseCompositeType": "2",
+                "casecode": 20180119,
+                "state": 0,
+                "flowNodeDtos": [
+                    {
+                        "casecode": 20190119001,
+                        "id": 410
+                    },
+                    {
+                        "casecode": 20190119002,
+                        "id": 411
+                    },
+                    {
+                        "casecode": 20190119003,
+                        "id": 413
+                    }
+                ]
+            }
+        ]
+    }
+}

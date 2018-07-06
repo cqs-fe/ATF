@@ -1,0 +1,83 @@
+@import 'mixins.scss';
+/*弹窗 z-index 78 79*/
+.bottom-pop .bottom-pop-body{
+	position: fixed;
+	z-index: 79;
+	bottom: 0;
+	width: 100%;
+	background: transparent;
+	@include transformXY(0,100%);
+	@include transition(0.3s);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	overflow: auto;
+	text-align: center;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	padding: 1rem;
+}
+.bottom-pop .bottom-pop-body.pay-step{
+	padding: 0rem;
+}
+.bottom-pop .bg{
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 78;
+	display: none;
+}
+.bottom-pop.active .bottom-pop-body{
+	@include transformXY(0,0);
+}
+.bottom-pop.active .bg{
+	display: block;
+}
+.bottom-pop .bottom-pop-body .pop-content{
+	background: #fff;
+	border-radius: 0.3rem;
+}
+.bottom-pop .bottom-pop-body .pop-btn{
+	background: #fff;
+	margin-top: 1rem;
+	padding: 1rem;
+	border-radius: 0.3rem;
+	color: #fc4548;
+}
+.bottom-pop .bottom-pop-body .pop-btn.success{
+	background: #11cd6e;
+	color: #fff;
+}
+.bottom-pop .bottom-pop-body .pop-content .head{
+	padding: 0.8rem 0.8rem 0;
+	font-weight: bold;
+}
+.bottom-pop .bottom-pop-body .pop-content .body{
+	padding: 0.8rem;
+	padding-bottom: 1.5rem;
+}
+.bottom-pop .bottom-pop-body .pop-content .footer{
+	padding: 0.8rem 0;
+	border-top: 1px dashed #eee;
+}
+/* 侧滑框 */
+.slide-left{
+	top: 0;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	z-index: 990;
+	@include transformXY(100%,0);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	@include transition(0.3s);
+	overflow: auto;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+.slide-left.show{
+	@include transformXY(0,0);
+}

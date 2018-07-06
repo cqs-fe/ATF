@@ -1,0 +1,40 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  font-family: Helvetica;
+  color: #333;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  outline: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+[v-cloak] {
+  display: none;
+}
+html {
+  font-size: 14px;
+}
+html,body,.content{
+  height: 100%;
+}
+input {
+  -webkit-appearance: none;
+}
+body {
+  background: #efeff4;
+  line-height: normal;
+}
+a, a:hover {
+  text-decoration: none;
+  outline: none
+}
+a:focus {
+  text-decoration: none;
+  outline: none;
+}
+select {
+  appearance: none;
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari 和 Chrome */
+}

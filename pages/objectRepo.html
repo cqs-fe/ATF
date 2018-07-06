@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="import" href="./common/header.html?__inline">
+    <!-- css for this page only -->
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+    <title>objectRepo</title>
+</head>
+
+<body id="objectRepo" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <link rel="import" href="./common/header-guide.html?__inline">
+        <!--header end-->
+        <!--sidebar start-->
+        <link rel="import" href="./common/aside-guide.html?__inline">
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <object-repo :bread-show="true" :top-select="true" :component-mode="false"></object-repo>
+            </section>
+        </section>
+        <!--main content end-->
+        <div class="footer">
+            <link rel="import" href="./common/copy-right.html?__inline">
+        </div>
+        </div>
+</body>
+
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+<!--script for this page only-->
+<script type="text/javascript" src="../static/js/objectRepo.js"></script>
+
+<!-- ztree -->
+<script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#objectRepo',
+        component: {
+            'object-repo': objectRepo
+        }
+    })
+</script>
