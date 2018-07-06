@@ -33,19 +33,20 @@ var app = new Vue({
         checkboxModel: [],
         checked: "",
         subCaseList: [], //流程节点
-        caselibid: '', //案例库id
+        caselibid: sessionStorage.getItem('caselibId'), //案例库id
+        userId:sessionStorage.getItem('userId'),
     },
     ready: function() {
         this.getCase(this.currentPage, this.pageSize, this.order, this.sort);
         this.changeListNum();
         this.getUsers();
+        this.getCaseLibId();
         this.getMission(); //获取案例添加表单任务编号下拉列表
         $(".myFileUpload").change(function() {
             var arrs = $(this).val().split('\\');
             var filename = arrs[arrs.length - 1];
             $(".show").val(filename);
         });
-
         $('.3').addClass('open');
         $('.3 .arrow').addClass('open');
         $('.3-ul').css({display: 'block'});
@@ -720,6 +721,24 @@ var app = new Vue({
                 }
             });
         },
+        //上传
+         upload:function() {
+                              $.ajax({
+                            url: 'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase',
+                            type: 'POST',
+                            cache: false,
+                            data: new FormData($('#importForm')[0]),
+                            processData: false,
+                            contentType: false, 
+                            success: function(data) {                        
+                        $('#importModal').modal('hide');
+                        $('#successModal').modal('show');
+                     }, error: function(data) { 
+                     $('#importModal').modal('hide');
+                        $('#failModal').modal('show');
+                }
+                        }) ;  
+        },
         //添加单案例
         insert: function() {
             var self = this;
@@ -817,8 +836,8 @@ var app = new Vue({
 
         //获取caseLibid
         getCaseLibId: function() {
-            var caselibid = sessionStorage.getItem('caselibid');
-            // console.log(caselibid);
+            var caselibid = sessionStorage.getItem('caselibId');
+             console.log("caselibId的Id:="+caselibid);
             $('#caselibid').val(caselibid);
             this.caselibid = caselibid;
         },
