@@ -827,7 +827,7 @@ var app = new Vue({
             var self = this;
             var formData = new FormData($('#importForm')[0]);
             $.ajax({
-                url:'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase',
+                url: address + 'TestcaseController/importexcel',
                 type: 'post',
                 data: formData,
                 async: false,
@@ -835,9 +835,12 @@ var app = new Vue({
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                		console.log(data.retMsg);   
-                	$('#importModal').modal('hide');
-               		$('#successModal').modal('show');
+                    if (data.success) {
+                        $('#successModal').modal();
+                        this.getCase(self.currentPage, self.pageSize, self.order, self.sort);
+                    } else {
+                        $('#failModal').modal();
+                    }
                 },
                 error: function() {
                     $('#failModal').modal();

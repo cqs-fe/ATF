@@ -169,17 +169,11 @@ var app = new Vue({
         to: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
-            	 console.log("aaaaaa"+caselibId);
                 $('#selectAlertModal').modal();
             } else {
                 var caseLibId = selectedInput.parent().next().next().next().next().html();
                 //存储测试项目id到sessionstorage
-<<<<<<< HEAD
-                console.log("aaaaaa"+caselibId);
-                sessionStorage.setItem("caselibid", caselibId);
-=======
                 sessionStorage.setItem("caselibId", caseLibId);
->>>>>>> 8b0bca367324e35cbf4232ef08bebc85f9edebd8
                 location.href = "caseManagement.html";
             }
         },

@@ -24,6 +24,7 @@ var app = new Vue({
         this.getAllUploadUser();
         this.getCase();
         this.changeListNum();
+ 		 
  			  this.downloadTemplate();
        // this.getMission(); //获取案例添加表单任务编号下拉列表
         $(".myFileUpload").change(function() {
@@ -46,8 +47,12 @@ var app = new Vue({
                 data: {
                    },
                     success: function(data) {
+                      
                     app.allUploadUser=data.userNames;
-                }, error: function() { 
+                     console.log("success"); 
+                     
+                }, error: function( ) { 
+                      console.log("error"); 
                    } 
             });
         	},
@@ -55,8 +60,7 @@ var app = new Vue({
             $.ajax({ 
                 url:   'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/queryBatchImportStatus', 
                 type: 'post',
-                contentType: 'application/json',
-                data: JSON.stringify({
+                data: {
                     'pageNum': this.currentPage,
                     'pageSize': this.pageSize,
                     'orderColumn': 'batch_import_no',
@@ -65,12 +69,12 @@ var app = new Vue({
                     'importStatus': $('#importStatus').val(),
                     'createTimeLower': $('#createTimeLower').val().replace( '-','/' ).replace( '-','/' ) ,
                     'createTimeUpper': $('#createTimeUpper').val().replace( '-','/' ).replace( '-','/' ) 
-                }),
-               
+                },
                 success: function(data) {
-                    app.tt = data.totalCount; 
-                    app.caseList = data.rows; 
-                    app.totalPage =data.totalPage;
+                    console.log(data); 
+                    app.tt = data.retData.totalCount; 
+                    app.caseList = data.retData.rows; 
+                    app.totalPage =data.retData.totalPage;
                 }, error: function(XMLHttpRequest, textStatus, errorThrown) { 
                     data={"retCode":"tcmRet00000","retMsg":"查询成功!","retData":[{"batchImportNo":"2018010574eb0a5966074e6","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":3,"failNum":5,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2018-01-05 15:02:39","finishTime":"2018-01-05 15:02:40"},{"batchImportNo":"201801056c399a7c4f644dd","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":3,"failNum":5,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2018-01-05 15:05:56","finishTime":"2018-01-05 15:05:57"},{"batchImportNo":"201801040c8b38548754465","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":3,"failNum":5,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2018-01-04 14:36:28","finishTime":"2018-01-04 14:36:31"},{"batchImportNo":"20171224fb6714620662425","caseLibId":1,"uploadUserName":"杨梁","totalNum":9,"successNum":3,"failNum":6,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2017-12-24 17:27:13","finishTime":"2017-12-24 17:27:15"},{"batchImportNo":"20171224aadd2b79502f485","caseLibId":1,"uploadUserName":"杨梁","totalNum":9,"successNum":3,"failNum":3,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2017-12-24 17:21:26","finishTime":"2017-12-24 17:21:28"},{"batchImportNo":"20171224a3b586769c17437","caseLibId":1,"uploadUserName":"杨梁","totalNum":9,"successNum":3,"failNum":3,"errMsg":"用例部分导入失败","importStatus":"部分成功","createTime":"2017-12-24 17:17:18","finishTime":"2017-12-24 17:17:20"},{"batchImportNo":"20171224182a4e2b5d684f6","caseLibId":1,"uploadUserName":"杨梁","totalNum":8,"successNum":8,"failNum":0,"errMsg":"全部用例导入成功！","importStatus":"全部成功","createTime":"2017-12-24 17:27:42","finishTime":"2017-12-24 17:27:44"}]};
                     app.caseList = data.retData;
@@ -90,7 +94,7 @@ var app = new Vue({
             $('#mySelect').change(function() {
                  console.log(app.pageSize);
                  app.listnum=app.pageSize;
-                 app.getCase();
+                app.getCase();
             });
         },
           //下载模板
@@ -103,7 +107,7 @@ var app = new Vue({
                 return false;
             }
              		else if(val==0){
-             	  let url = "http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
+             	 	  let url = "http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
 			          window.location.href = url;
             		 } 
             		 else{ 
@@ -128,7 +132,7 @@ var app = new Vue({
                		 
                		 	$('#importModal').modal('hide');
                		 	$('#successModal').modal('show');
-                	 }, error: function(data) {
+                	 }, error: function(data) { 
                		 $('#importModal').modal('hide');
                		 	$('#failModal').modal('show');
                   }
