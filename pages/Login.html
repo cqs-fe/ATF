@@ -190,6 +190,7 @@
 
         });
         $('#loginInput').click(function() {
+            let userName=$('#username').val();
             if (checkform("#form") && authcode) {
                 $.ajax({
                     type: 'post',
@@ -216,6 +217,7 @@
                                             success: function(data, textStatus) {
                                                 if (data.success === true) {
                                                     sessionStorage.setItem('userId', data.obj.id)
+                                                    sessionStorage.setItem('userName', userName);
                                                     window.location.href = "testProject.html";
                                                 } else {
                                                     setHtml("#result", "登录失败，请重新登录");
