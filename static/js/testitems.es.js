@@ -663,6 +663,7 @@ function search(){
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
+    data[key] = searchkey;
     Vac.ajax({
         url: address3 + "missionController/pagedBatchQueryTestMission",
         data: data,
@@ -740,7 +741,10 @@ function getSendData(page, rows){
         pageSize: rows,
         currentPage: page,
         orderType: sendData.sort,
-        orderColumns: sendData.order
+        orderColumns: sendData.order,
+        nameMedium: '',
+        descMedium: '',
+        codeLong: ''
     };
     // return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&missionName="+sendData.missionName+"&missionCode="+sendData.missionCode+"&testProjectId="+sendData.testProjectId;
 }

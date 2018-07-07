@@ -155,9 +155,9 @@ var vBody = new Vue({
             if (!getval) {
             	var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm', "请从场景管理页面进入！");
             	promise.then(() => {
-            		location.href = "scene.html"
+            		// location.href = "scene.html"
             	}, () => {
-            		location.href = "scene.html"
+            		// location.href = "scene.html"
             	})
             	
             }
@@ -675,8 +675,6 @@ var vBody = new Vue({
 				$.ajax({
 					url: address + 'dataPoolController/selectByCondition',
 					data: data,
-					type: 'post',
-					dataType: 'json',
 					success: function(data, statusText){
 						if(data.obj instanceof Array){
 							// _this.poolData = data.obj[0];
@@ -705,6 +703,15 @@ var vBody = new Vue({
 			}
 			$('#editDataPool').modal('show');
 		},
+		// /dataPoolController/addSingleDataPool
+
+		// /dataPoolController/deleteSingleDataPool
+
+		// /dataPoolController/modifySingleDataPool
+
+		// /dataPoolController/querySingleDataPool
+
+		// /dataPoolController/pagedBatchQueryDataPool
 		getDataPool: function(){
 			var _this = this;
 			var data = {
@@ -712,14 +719,12 @@ var vBody = new Vue({
 				poolobjid: '2',
 				dataname: '',
 			};
-			$.ajax({
-				url: address + 'dataPoolController/selectByCondition',
-				type: 'post',
-				dataType: 'json',
+			Vac.ajax({
+				url: address3 + 'dataPoolController/pagedBatchQueryDataPool',
 				data: data,
-				success: function(data, statusText){
-					if(data.obj instanceof Array){
-						_this.poolDatas = data.obj;
+				success: function(data){
+					if(data.respCode === '0000'){
+						// _this.poolDatas = data.obj;
 					}
 				},
 				error: function(){
@@ -740,13 +745,11 @@ var vBody = new Vue({
 			if(_this.editPoolType == 2){
 				data.id = _this.selectedPoolId;
 			}
-			var url = _this.editPoolType === 1 ? 'dataPoolController/insert' : 'dataPoolController/update';
-			$.ajax({
-				url: address + url,
+			var url = _this.editPoolType === 1 ? 'dataPoolController/addSingleDataPool' : 'dataPoolController/modifySingleDataPool';
+			Vac.ajax({
+				url: address3 + url,
 				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
+				success: function(data){
 					if(data.success === true) {
 						$('#editDataPool').modal('hide');
 					}
@@ -766,12 +769,12 @@ var vBody = new Vue({
 					poolobjid: '2',
 					dataname: _this.selectedPool[0]
 				};
-				$.ajax({
-					url: address + 'dataPoolController/selectByCondition',
+				Vac.ajax({
+					url: address3 + 'dataPoolController/querySingleDataPool',
 					data: data,
 					type: 'post',
 					dataType: 'json',
-					success: function(data, statusText){
+					success: function(data){
 						if(data.obj instanceof Array){
 							// _this.poolData = data.obj[0];
 							({
@@ -785,11 +788,9 @@ var vBody = new Vue({
 
 							var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm');
 							promise.then(() => {
-								$.ajax({
-									url: address + 'dataPoolController/delete',
-									data: 'id='+ _this.selectedPoolId,
-									type: 'post',
-									dataType: 'json',
+								Vac.ajax({
+									url: address3 + 'dataPoolController/deleteSingleDataPool',
+									data: {id:  _this.selectedPoolId},
 									success: function(data, statusText){
 										Vac.alert(data.msg);
 										_this.getDataPool();
