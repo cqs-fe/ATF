@@ -138,11 +138,11 @@
     var authcode = false;
 
     function chageCode() {
-        $('#codeImage').attr('src', address + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+        $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
         //获取sessionId并将其存放在sessionstorage之中
         $.ajax({
             type: 'post',
-            url: address + "userController/getSessionId", //
+            url: address3 + "userController/getSessionId", //
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
@@ -155,10 +155,10 @@
 
     }
     $(document).ready(function() {
-        $('#codeImage').attr('src', address + 'userController/authCode?abc=' + Math.random());
+        $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random());
         $.ajax({
             type: 'post',
-            url: address + "userController/getSessionId",
+            url: address3 + "userController/getSessionId",
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
@@ -167,7 +167,7 @@
         $('#authCode').blur(function() {
             $.ajax({
                 type: 'post',
-                url: address + "userController/checkauthcode",
+                url: address3 + "userController/checkauthcode",
                 data: { "authCode": $("#authCode").val(), "sessionId": sessionStorage.getItem('sessionId') },
                 dataType: "json",
                 success: function(data) {
@@ -189,7 +189,7 @@
             if ($("#form").valid() && authcode) {
                 $.ajax({
                     type: 'post',
-                    url: address + "userController/register",
+                    url: address3 + "userController/register",
                     data: $("#form").serialize() + "&sessionId=" + sessionStorage.getItem('sessionId'),
                     dataType: "json",
                     success: function(data) {

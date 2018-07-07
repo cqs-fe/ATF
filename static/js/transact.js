@@ -337,7 +337,7 @@ function queryTransact() {
         contentType: 'application/json',
         data: JSON.stringify({
             'currentPage': 1,
-            'pageSize': 10,
+            'pageSize': app.pageSize,
             'orderColumns': 'id',
             'orderType': 'asc',
             'autId': $('#autSelect').val(),
