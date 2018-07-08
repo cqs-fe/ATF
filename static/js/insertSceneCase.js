@@ -700,7 +700,7 @@ var app = new Vue({
         //获取案例
         getCase:function(currentPage, listnum, order, sort) {
             $.ajax({
-                url: address3 + '/testcase/pagedBatchQueryTestCase',
+                url: address3 + 'testcase/pagedBatchQueryTestCase',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -726,7 +726,7 @@ var app = new Vue({
             var that=this;
             if ($(e.target).attr("class") === "icon-angle-right") {
                 $.ajax({
-                    url: address3 + '/testcase/queryTestcaseActionList',
+                    url: address3 + 'testcase/queryTestcaseActionList',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({ 'id': flowId }),
@@ -791,41 +791,54 @@ var app = new Vue({
         //获取用户
         getUsers:function() {
             $.ajax({
-                url: address + 'userController/selectAll',
-                type: 'GET',
+                url: address3+"userController/selectAllUsername",
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({}),
                 success: function(data) {
-                    app.users = data.obj;
+                    app.users = data.list;
                 }
             });
         },
         //获取添加案例任务编号下拉列表
         getMission: function(){
             $.ajax({
-                url: address+"missionController/selectAll",
-                type: 'GET',
+                url: address3+"missionController/selectMission",
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "caseLibId": sessionStorage.getItem('caselibId')
+                }),
                 success:function(data){
-                    console.log(data)
-                    app.missionList=data.obj;
+                    // console.log(data)
+                    app.missionList=data.missionEntityList;
                 }
             });
         },
         //添加场景案例
         insert: function() {
-            this.getIds();
+            // this.getIds();
+            var id_array = new Array();
+            $('input[name="chk_list"]:checked').each(function() {
+                id_array.push($(this).attr('id'));
+            });
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
             } else{
                 let that=this;
                 $.ajax({
-                    url: address + 'testexecutioninstanceController/inserttestcasetoscene',
+                    url: address3 + 'sceneController/insertTestcaseToScene',
                     type: 'post',
-                    data: {
-                        'sceneid': that.sceneid,
-                        'caseidList': '['+that.ids+']',
-                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        "id" : that.sceneid,
+                        "creatorId" : sessionStorage.getItem("userId"),
+                        // "caseIds" :'['+that.ids+']'
+                        "caseIds" :id_array
+                    }),
                     success: function(data) {
-                        if (data.success) {
+                        if (data.respCode=='0000') {
                             location.href = "scene-setting.html?sceneid=" + that.sceneid + "&" + "scenename=" + that.scenename;
                             $('#successModal').modal();
                         } else {
@@ -852,7 +865,7 @@ var app = new Vue({
                 $('#detailModal').modal('show');
                 var id=$(event.target).parent().prev().prev().children().attr('id');
                 $.ajax({
-                    url: address3+'/testcase/getSingleTestCaseInfo',
+                    url: address3+'testcase/getSingleTestCaseInfo',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -994,7 +1007,7 @@ var app = new Vue({
                 // console.log(data)
                 var filterType=$('input[name="filterType"]').val();
                 $.ajax({
-                    url:address3 + '/testcase/pagedQueryTestCaseByCondition',
+                    url:address3 + 'testcase/pagedQueryTestCaseByCondition',
                     contentType: 'application/json',
                     data: JSON.stringify({
                         'filterType': parseInt(filterType),
@@ -1059,10 +1072,14 @@ function queryCase() {
 //获取场景
 function getScene(){
     $.ajax({
-        url: address+'sceneController/selectAll',
-        type: 'get',
+        url: address3+'sceneController/selectAllScene',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            "caseLibId" : sessionStorage.getItem('caselibId')
+        }),
         success:function(data){
-            app.sceneList=data.obj;
+            app.sceneList=data.scenequeryDtoList;
         }
     });
 }
@@ -1124,14 +1141,16 @@ $(document).ready(function(e) {
 function yiji() {
     $.ajax({
         async: false,
-        url: address + "autController/selectAll",
+        url: address3+"aut/queryListAut",
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
-            var autList = data.obj;
+            // console.log(data)
+            var autList = data.autRespDTOList;
             var str = "";
             for (var i = 0; i < autList.length; i++) {
 
-                str += " <option value='" + autList[i].id + "' >" + autList[i].autName + "</option> ";
+                str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
             }
 
             $('select[name="autid"]').html(str);
@@ -1145,15 +1164,22 @@ function erji() {
     var val = $('select[name="autid"]').val();
     $.ajax({
         async: false,
-        url: address + 'transactController/showalltransact',
-        data: { 'autlistselect': val },
+        url: address3 + 'transactController/pagedBatchQueryTransact',
+        data: JSON.stringify({ 
+            autId: val,
+            currentPage: 1,
+            orderColumns: 'id',
+            orderType: 'asc',
+            pageSize: 100000
+        }),
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
-            var transactList = data.o;
+            var transactList = data.list;
             var str = "";
             for (var i = 0; i < transactList.length; i++) {
 
-                str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
             }
             $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').html(str);
 
@@ -1168,18 +1194,20 @@ function sanji() {
     var val = $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').val();
 
     $.ajax({
-        url: address + "scripttemplateController/showallscripttemplate",
-        data: { "transactid": val },
+        url: address3 + "scripttemplateController/queryTemplateByTransId",
+        data: JSON.stringify({ "id": val }),
         type: "POST",
+        contentType: 'application/json',
         success: function(data) {
-
-            var lie = data.o;
+            var lie = data.scriptTemplateList;
             var str = "";
             for (var i = 0; i < lie.length; i++) {
 
                 str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
             }
             $('select[name="autid"]').parent().parent().next().find('select[name="scriptmodeflag"]').html(str);
+
+
         }
 
     });

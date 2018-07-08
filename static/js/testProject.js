@@ -133,11 +133,14 @@ var app = new Vue({
         },
         //修改测试项目
         update: function() {
+            var selectedInput = $('input[name="chk_list"]:checked');
+            var id = selectedInput.attr('id');
             $.ajax({
                 url: address3 + 'testProjectController/modifySingleTestProject',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
+                        id: id,
                         codeLong: $('#updateForm input[name="codeLong"]').val(),
                         nameMedium: $('#updateForm input[name="nameMedium"]').val(),
                         descMedium: $('#updateForm textarea[name="descMedium"]').val()    

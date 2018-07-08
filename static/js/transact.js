@@ -210,7 +210,21 @@ var app = new Vue({
                 location.href = "script.html";
             }
         },
-
+        //时间格式化
+        formatDate(date){
+            if(date){
+                var date = new Date(date);
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                var m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                var s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+                return Y+M+D+h+m+s;  
+            }else{
+                return '';
+            }     
+        }
     },
 
 });
@@ -226,8 +240,8 @@ function getTransact(page, listnum, order, sort) {
         data: JSON.stringify({
             'currentPage': page,
             'pageSize': listnum,
-            'orderColumns': order,
-            'orderType': sort
+            'orderColumns': "modified_time",
+            "orderType":"DESC",
         }),
         success: function(data) {
             console.info(data);
@@ -336,7 +350,7 @@ function queryTransact() {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
-            'currentPage': 1,
+            'currentPage': app.currentPage,
             'pageSize': app.pageSize,
             'orderColumns': 'id',
             'orderType': 'asc',
