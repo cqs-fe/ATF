@@ -71,25 +71,31 @@ var vBody = new Vue({
 	},
 	created: function(){
 		var _this = this;
-		let getCaseId = new Promise((resolve, reject) => {
-			_this.caselibId = sessionStorage.getItem('caselibid');
-			resolve(_this.caselibId);
-		})
-		getCaseId.then((id) => {
+		_this.caselibId = sessionStorage.getItem('caselibId');
+		var getPlans = new Promise((resolve, reject) => {
 			Vac.ajax({
-				url: address2 + 'testPlanController/selectAllTestPlan',
-				data: { caseLibId: id },
+				url: address3 + 'testPlanController/queryTestPlan',
+				data: { 
+					caseLibId: _this.caselibId,
+					"nameMedium": "",
+					"descMedium": "",
+				},
 				success: function(data){
-					console.log(data);
-					// _this.testrounds = data.obj;
-					// if(_this.testrounds[0]) {
-					// 	_this.testroundValue = _this.testrounds[0].id
-					// 	resolve()
-					// }
-					resolve();
+					if (data.respCode === '0000') {
+						_this.testPlans = data.testPlanEntityList;
+						if (_this.testPlans.length) {
+							_this.testPlanId = data.testPlanEntityList[0].id;
+							resolve();
+						} else {
+							reject('请添加测试计划！');
+						}
+						return;
+					}
+					reject();
 				}
 			});
-		}).then(() => {
+		});
+		getPlans.then(() => {
 			_this.getCases();
 		}).catch(err => { Vac.alert(err); });
 		// init the modal 
@@ -246,9 +252,9 @@ var vBody = new Vue({
 			Vac.ajax({
 				url: address2 + 'sceneController/selectAllScene',
 				data: { caseLibId: this.caselibId },
-				success: function(data, statusText){
+				success: function(data){
 					if(data.respCode == '0000'){
-						_this.allscenes = data.list;
+						_this.allscenes = data.scenequeryDtoList;
 						$('#add-modal').modal('show');
 					}
 				}
@@ -257,42 +263,41 @@ var vBody = new Vue({
 		},
 		removeSceneAndCase: function() {
 			var _this = this;
-			let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
-			let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
-			let sceneCaseList = new Array();
-			let o = {};
-			for (let sceneCase of this.selectedSceneCases) {
-				let arr = sceneCase.split('-');
-				if (arr.length !== 2) {continue;}
-				o[arr[0]] ? o[arr[0]].push(+arr[1]) : o[arr[0]] = [+arr[1]];
-			}
-			for (let key of Object.keys(o)) {
-				sceneCaseList.push({
-					sceneId: +key, 
-					testcaseList: o[key].length === 0 ? '' : o[key]
-				})
-			}
-			sceneCaseList = sceneCaseList.length === 0 ? '' : JSON.stringify(sceneCaseList);
-			// 
-			if (!sceneCaseList.length && !sceneList.length && !testcaseList.length) {
-				Vac.alert('请至少选择一项进行删除');
+			if (!this.selectedScenes.length && !this.selectedCases) {
+				Vac.alert('请选择要删除的场景或用例，只选择场景中的用例无效！');
 				return;
 			}
+			// let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
+			// let testcaseList = this.selectedCases.length === 0 ? '' : JSON.stringify(this.selectedCases);
+			// let sceneCaseList = new Array();
+			// let o = {};
+			// for (let sceneCase of this.selectedSceneCases) {
+			// 	let arr = sceneCase.split('-');
+			// 	if (arr.length !== 2) {continue;}
+			// 	o[arr[0]] ? o[arr[0]].push(+arr[1]) : o[arr[0]] = [+arr[1]];
+			// }
+			// for (let key of Object.keys(o)) {
+			// 	sceneCaseList.push({
+			// 		sceneId: +key, 
+			// 		testcaseList: o[key].length === 0 ? '' : o[key]
+			// 	})
+			// }
+			// sceneCaseList = sceneCaseList.length === 0 ? '' : JSON.stringify(sceneCaseList);
+			// // 
+			// if (!sceneCaseList.length && !sceneList.length && !testcaseList.length) {
+			// 	Vac.alert('请至少选择一项进行删除');
+			// 	return;
+			// }
 			Vac.confirm('', '', '', '确认要移除场景和用例吗？').then(() => {
-				
 				let data = {
-					removeFlag: 1,
-					caselibId: this.caselibId,
-					testPhase: this.testphaseValue,
-					testRound: this.testroundValue,
-					sceneList,
-					testcaseList,
-					sceneCaseList
+					testPlanId: this.testPlanId,
+					sceneList: this.selectedScenes,
+					testcaseList: this.selectedCases
 				}
 				Vac.ajax({
-					url: address2 + 'caseExecuteInstance/deleteCaseExecuteInstance',
+					url: address3 + 'caseExecuteInstance/deleteCaseExecuteInstance',
 					data: data,
-					success: function(data, statusText){
+					success: function(data){
 						if(data.respCode === '0000'){
 							$('#add-modal').modal('hide');
 							Vac.alert('移除成功')
@@ -309,16 +314,14 @@ var vBody = new Vue({
 		sendSceneData: function(){
 			var _this = this;
 			var data = {
-				caselibId: this.caselibId,
-				testPhase: this.testphaseValue,
-				testRound: this.testroundValue,
-				testcaseList: '',				// 暂时为空   [1,2]
-				sceneList: '[' + this.selectedScene.toString() + ']',     // [3]
-				scenecaseList: ''			//  暂时为空 [{"sceneId":1,"testcaseList":[1,2]}]
+				testPlanId: +this.testPlanId,
+				testcaseList: [],				// 暂时为空   [1,2]
+				sceneList: this.selectedScene,     // [3]
+				creatorId: +sessionStorage.getItem('userId')
 			};
 			// send data and display the modal 
 			Vac.ajax({
-				url: address2 + 'caseExecuteInstance/insertCaseExecuteInstance',
+				url: address3 + 'caseExecuteInstance/insertCaseExecuteInstance',
 				data: data,
 				success: function(data){
 					if(data.respCode === '0000'){
@@ -360,7 +363,7 @@ var vBody = new Vue({
 			$( '.sortable_scene_caselist' ).disableSelection();
 			$('#testround-main').disableSelection();
 		},
-		getCases: function(){
+		getCases() {
 			var data = {
 				caselibId: this.caselibId,
 				testPlanId: this.testPlanId,
@@ -369,17 +372,19 @@ var vBody = new Vue({
 			};
 			var _this = this;
 			Vac.ajax({
-				url: address2 + 'caseExecuteInstance/queryCaseExecuteInstance',
+				url: address3 + 'caseExecuteInstance/queryCaseExecuteInstance',
 				data: data,
 				success: function(data){
-					_this.testCaseList = data.testCaseList;
-					_this.testSceneList = data.testSceneList;
+					_this.testCaseList = data.executeInstanceResult.testCaseList;
+					_this.testSceneList = data.executeInstanceResult.testSceneList;
 
 					if(!(data.testCaseList && data.testCaseList.length)) {
 						// Vac.alert('未查询到相关的用例信息！')
+						return;
 					}
 					if(!(data.testSceneList && data.testSceneList.length)) {
 						// Vac.alert('未查询到相关的场景信息！')
+						return;
 					}
 					_this.caseIds.length = 0
 					_this.flowNodeIds.clear();

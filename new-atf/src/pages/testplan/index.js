@@ -11,13 +11,12 @@ import { Select, Option } from 'element-ui';
 Vue.use(Select);
 Vue.use(Option);
 
+
 const initialAddRowData = {
     nameMedium: '',
     descMedium: '',
     testPhaseId: '',
-    testRoundId: '',
-    creatorId: sessionStorage.getItem('userId') || 1,
-    caseLibId: sessionStorage.getItem('caselibId') || 1
+    testRoundId: ''
 };
 const initialAddRoundRowData = {
     roundName: '',
@@ -43,12 +42,14 @@ new Vue({
         testRoundArray: []
     },
     created() {
+    },
+    mounted() {
+        initialAddRowData.creatorId = sessionStorage.getItem('userId');
+        initialAddRowData.caseLibId = sessionStorage.getItem('caselibId');
+        this.addRowData = {...initialAddRowData};
         this.getTestPlans();
         this.getTestPhases();
         this.getTestRound();
-    },
-    mounted() {
-
     },
     methods: {
         add(type) {
