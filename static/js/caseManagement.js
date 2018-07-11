@@ -690,11 +690,13 @@ var app = new Vue({
     methods: {
         //获取案例
         getCase:function(currentPage, listnum, order, sort) {
+            let caseLibId=sessionStorage.getItem('caselibId');
             $.ajax({
                 url: address3 + 'testcase/pagedBatchQueryTestCase',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
+                    'caseLibId': caseLibId,
                     'currentPage': currentPage,
                     'pageSize': listnum,
                     'orderColumns': order,
@@ -709,6 +711,94 @@ var app = new Vue({
                 }
             });
         },
+        // 执行方式数据处理
+        convertExecMe(em){
+            switch(em){
+                case 1:
+                    return '手工';
+                    break;
+                case 2:
+                    return '自动化';
+                    break;
+                case 3:
+                    return '配合';
+                    break;
+                default:
+                    return '';
+            }
+        },
+        // 优先级数据处理
+        convertPri(em){
+            switch(em){
+                case 1:
+                    return '1级';
+                    break;
+                case 2:
+                    return '2级';
+                    break;
+                case 3:
+                    return '3级';
+                    break;
+                case 4:
+                    return '4级';
+                    break;
+                case 5:
+                    return '5级';
+                    break;
+                case 6:
+                    return '6级';
+                    break;
+                case 7:
+                    return '7级';
+                    break;
+                case 8:
+                    return '8级';
+                    break;
+                case 9:
+                    return '9级';
+                    break;
+                default:
+                    return '';
+            }
+        },
+        // 用例类型数据处理
+        convertCaseType(em){
+            switch(em){
+                case 1:
+                    return '联机';
+                    break;
+                case 2:
+                    return '批量';
+                    break;
+                case 3:
+                    return '接口';
+                    break;
+                default:
+                    return '';
+            }
+        },
+        // 用例性质数据处理
+        convertCasePro(em){
+            switch(em){
+                case 1:
+                    return '正常值';
+                    break;
+                case 2:
+                    return '错误值';
+                    break;
+                case 3:
+                    return '边界值';
+                    break;
+                case 4:
+                    return '要素级';
+                    break;
+                case 5:
+                    return '流程级';
+                    break;
+                default:
+                    return '';
+            }
+        },
         //获取用户
         getUsers:function() {
             $.ajax({
@@ -722,8 +812,8 @@ var app = new Vue({
             });
         },
         //上传
-         upload:function() {
-                              $.ajax({
+        upload:function() {
+                        $.ajax({
                             url: 'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase',
                             type: 'POST',
                             cache: false,

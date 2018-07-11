@@ -103,6 +103,7 @@ var app = new Vue({
         //修改测试轮次
         update: function() {
             var selectedInput = $('input[name="chk_list"]:checked');
+            var id = selectedInput.attr('id');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
             } else {
@@ -111,6 +112,7 @@ var app = new Vue({
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
+                        id: id,
                         roundName: $('#updateForm input[name="roundname"]').val(),
                         roundDesc: $('#updateForm textarea[name="rounddesc"]').val(),
                         recordmanagementflag: $('#updateForm select[name="recordmanagementflag"]').val(),

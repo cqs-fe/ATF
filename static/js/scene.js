@@ -102,7 +102,7 @@ var app = new Vue({
                     data: JSON.stringify({
                         'nameMedium': scenename,
                         'descShort': description,
-                        'caselibid': caselibid,
+                        'caseLibId': caselibid,
                         'creatorId': sessionStorage.getItem('userId')
                     }),
                     success: function(data) {

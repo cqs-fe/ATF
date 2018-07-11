@@ -242,20 +242,20 @@
                                                 <input type="checkbox" v-model="" name="chk_list" id="{{case.id}}" />
                                             </td>
                                             <td><span class="icon-angle-right" v-show="case.caseCompositeType=='2'" @click="getSubCase($event)"></span></td>
-                                            <td class="center hidden-phone"><a @click="showDetail($event)" class="detail-link">{{ case.casecode }}</a></td>
+                                            <td class="center"><a @click="showDetail($event)" class="detail-link">{{ case.casecode }}</a></td>
                                             <td>{{ case.autName }}</td>
                                             <td class="hidden-phone">{{ case.transName }}</td>
                                             <td>{{ case.caseCompositeType=='1'?'单用例':'流程用例' }}</td>
-                                            <td class="center hidden-phone">{{ case.useStatus }}</td>
+                                            <td class="center">{{ case.useStatus=='0'?'新增':'评审通过' }}</td>
                                             <td class="center">{{case.scriptTemplateName}}</td>
-                                            <td class="center hidden-phone">{{ case.authorName }}</td>
-                                            <td class="center hidden-phone">{{ case.executorName }}</td>
-                                            <td class="center hidden-phone">{{ case.reviewerName }}</td>
-                                            <td class="center hidden-phone">{{ case.executeMethod }}</td>
+                                            <td class="center">{{ case.authorName }}</td>
+                                            <td class="center">{{ case.executorName }}</td>
+                                            <td class="center">{{ case.reviewerName }}</td>
+                                            <td class="center">{{ convertExecMe(case.executeMethod) }}</td>
                                             <td class="center">{{ case.missionName }}</td>
-                                            <td class="center">{{ case.priority }}</td>
-                                            <td class="center">{{ case.caseType }}</td>
-                                            <td class="center">{{ case.caseProperty }}</td>
+                                            <td class="center">{{ convertPri(case.priority) }}</td>
+                                            <td class="center">{{ convertCaseType(case.caseType) }}</td>
+                                            <td class="center">{{ convertCasePro(case.caseProperty) }}</td>
                                             <td class="center">{{ case.testPoint }}</td>
 
                                         </tr>
