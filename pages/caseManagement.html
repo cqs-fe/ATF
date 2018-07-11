@@ -906,8 +906,8 @@
                                                                 <label class="col-lg-2 control-label">案例使用状态</label>
                                                                 <div class="col-lg-4">
                                                                     <select class="form-control" size="1" name="usestatus">
-                                                                        <option value="1">新增</option>
-                                                                        <option value="2">评审通过</option>
+                                                                        <option value="0">新增</option>
+                                                                        <option value="1">评审通过</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -1114,16 +1114,16 @@
                                             <td>{{ case.autName }}</td>
                                             <td class="hidden-phone">{{ case.transName }}</td>
                                             <td>{{ case.caseCompositeType=='1'?'单用例':'流程用例' }}</td>
-                                            <td class="center hidden-phone">{{ case.useStatus }}</td>
+                                            <td class="center hidden-phone">{{ case.useStatus=='0'?'新增':'评审通过' }}</td>
                                             <td class="center">{{case.scriptTemplateName}}</td>
                                             <td class="center hidden-phone">{{ case.authorName }}</td>
                                             <td class="center hidden-phone">{{ case.executorName }}</td>
                                             <td class="center hidden-phone">{{ case.reviewerName }}</td>
-                                            <td class="center hidden-phone">{{ case.executeMethod }}</td>
+                                            <td class="center hidden-phone">{{ convertExecMe(case.executeMethod) }}</td>
                                             <td class="center">{{ case.missionName }}</td>
-                                            <td class="center">{{ case.priority }}</td>
-                                            <td class="center">{{ case.caseType }}</td>
-                                            <td class="center">{{ case.caseProperty }}</td>
+                                            <td class="center">{{ convertPri(case.priority) }}</td>
+                                            <td class="center">{{ convertCaseType(case.caseType) }}</td>
+                                            <td class="center">{{ convertCasePro(case.caseProperty) }}</td>
                                             <td class="center">{{ case.testPoint }}</td>
 
                                         </tr>
