@@ -17,7 +17,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const isDevelopment = 'development' === process.env.NODE_ENV;
 const isProduction = 'production' === process.env.NODE_ENV;
-console.log(isProduction);
+
 const entryConfig = util.getEntryConfig('src/pages/**/*.html'); // 获得入口文件配置
 
 const htmlPlugins = entryConfig.html.map(item => {

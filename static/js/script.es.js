@@ -152,23 +152,26 @@ $(document).ready(function() {
                     getTemplate();
                 }
                 function getTemplate() {
-                    $.ajax({
-                        url: address + 'scripttemplateController/showallscripttemplate',
-                        data: { 'transactid': _this.transId },
-                        type: "POST",
+                    Vac.ajax({
+                        url: address3 + 'scripttemplateController/queryTemplateByTransId',
+                        data: { 'id': _this.transId },
                         success: function(data) {
                             _this.templateList = data.o;
-                            // _this.checkedTemplate = [];
-                            if (_this.templateList.length > 0) {
-                                _this.checkedTemplate = [0];
-                                _this.showScripttemplateTable({
-                                    "aut_id": $('#autSelect').val(), 
-                                    "script_id": _this.templateList[0].id
-                                });
-                                editDataVue.selectedScript = 1;
+                            if (data.respCode == '0000') {
+                                _this.templateList = data.scriptTemplateList;
+                                if (_this.templateList.length) {
+                                    _this.checkedTemplate = [0];
+                                    _this.showScripttemplateTable({
+                                        "aut_id": $('#autSelect').val(), 
+                                        "script_id": _this.templateList[0].id
+                                    });
+                                    editDataVue.selectedScript = 1;
+                                } else {
+                                    _this.checkedTemplate = [];
+                                    editDataVue.selectedScript = 0;
+                                }
                             } else {
-                                _this.checkedTemplate = [];
-                                editDataVue.selectedScript = 0;
+                                Vac.alert(data.respMsg);
                             }
                         }
                     });
@@ -336,18 +339,20 @@ $(document).ready(function() {
             saveTemplate: function() {
                 var _this = this;
                 _this.newTemplate.transId = _this.transId
-                ajax2({
-                    url: address + 'scripttemplateController/insert',
+                Vac.ajax({
+                    url: address3 + 'scripttemplateController/insert',
                     data: _this.newTemplate,
-                    type: 'post',
-                    dataType: 'json',
                     success: function(data) {
+                        if (data.respCode === '0000') {
                         Vac.alert('添加成功！')
                         $('#addtemplateModal').modal('hide')
                         _this.getScriptTemplate();
+                        } else {
+                            Vac.alert('添加失败！');
+                        }
                     },
                     error: function() {
-                        Vac.alert('添加失败！')
+                        Vac.alert('添加失败！');
                     }
                 })
             },
@@ -359,13 +364,11 @@ $(document).ready(function() {
                 }
                 var templateId = this.checkedTemplate[0];
                 _this.script_id = _this.templateList[templateId].id;
-                ajax2({
-                    url: address + 'scripttemplateController/delete',
+                Vac.ajax({
+                    url: address3 + 'scripttemplateController/delete',
                     data: { 'id': _this.script_id },
-                    type: 'post',
-                    dataType: 'json',
                     success: function(data) {
-                        if (data) {
+                        if (data.respCode === '0000') {
                             Vac.alert('删除成功！')
                             _this.getScriptTemplate();
                         }

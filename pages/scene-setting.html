@@ -130,7 +130,7 @@
               <div class="form-group col-sm-12">
                 <label class="col-sm-4 control-label">数据池名称</label>
                 <div class="col-sm-8">
-                  <select class="form-control" v-model="poolData.poolname">
+                  <select class="form-control" v-model="poolData.poolName">
                     <option value="场景数据池">场景数据池</option>
                   </select>
                   <!-- <input type="text" class="form-control " name="" v-model="poolData.poolname"> -->
@@ -140,7 +140,7 @@
               <div class="form-group col-sm-12">
                 <label class="col-sm-4 control-label">数据池对象Id</label>
                 <div class="col-sm-8">
-                  <select class="form-control" v-model="poolData.poolobjid">
+                  <select class="form-control" v-model="poolData.poolObjId">
                     <option value="2">2</option>
                   </select>
                   <!-- <input type="text" class="form-control " name="" v-model="poolData.poolobjid"> -->
@@ -149,19 +149,19 @@
               <div class="form-group col-sm-12">
                 <label class="col-sm-4 control-label">数据名称</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control " name="" v-model="poolData.dataname">
+                  <input type="text" class="form-control " name="" v-model="poolData.dataName">
                 </div>
               </div>
               <div class="form-group col-sm-12">
                 <label class="col-sm-4 control-label">数据值</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control " name="" v-model="poolData.datavalue">
+                  <input type="text" class="form-control " name="" v-model="poolData.dataValue">
                 </div>
               </div>
               <div class="form-group col-sm-12">
                 <label class="col-sm-4 control-label">数据描述</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control " name="" v-model="poolData.datadesc">
+                  <input type="text" class="form-control " name="" v-model="poolData.dataDesc">
                 </div>
               </div>
             </form>
@@ -539,16 +539,16 @@
                   <tbody v-if="poolDatas.length>0">
                     <tr v-for="item in poolDatas">
                       <td>
-                        <input type="checkbox" :value="item.dataname" v-model="selectedPool">
+                        <input type="checkbox" :value="item.id" v-model="selectedPool">
                       </td>
                       <td>
-                        {{item.dataname}}
+                        {{item.dataName}}
                       </td>
                       <td>
-                        {{item.datavalue}}
+                        {{item.dataValue}}
                       </td>
                       <td>
-                        {{item.datadesc}}
+                        {{item.dataDesc}}
                       </td>
                     </tr>
                   </tbody>

@@ -617,7 +617,10 @@ function changeShowRows(event){
 
 }
 // 改变每一页显示的行数 结束
-
+function getDate(time) {console.log(time);
+    var date = new Date(time);
+    return date.toLocaleDateString() + ' ' + date.toTimeString().slice(0, 8);
+}
 function createTable(dataSet){
     var tbody = $("#example tbody");
     tbody.empty();
@@ -626,9 +629,13 @@ function createTable(dataSet){
     let tdId = $(`<td class="td-itemId"></td>`).text(value.id); // id
     let tdName = $(`<td class="td-name"></td>`).text(value.nameMedium);  // 编号
     let tdType = $(`<td class="td-type"></td>`).text(value.codeLong); // 项目id
+    let createTime = $(`<td class="td-name"></td>`).text(getDate(value.createTime));  // 编号
+    let modifiedTime = $(`<td class="td-type"></td>`).text(getDate(value.modifiedTime)); // 项目id
     let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.descMedium);    // 名称
-    let tdOperation = $(`<td class="td-operation" style="padding-bottom: 7px;padding-top: 7px;"><a data-toggle="modal" class="btn btn-xs btn-view btn-success" onclick="showViewModal(this);" href=''>详情</a>    <a class="btn btn-xs btn-alter btn-primary" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
-    tr.append(tdId, tdName, tdType, tdProjectCode,tdOperation);
+    let tdOperation = $(`<td class="td-operation" style="padding-bottom: 7px;padding-top: 7px;">
+    <a data-toggle="modal" class="btn btn-xs btn-view btn-success" onclick="showViewModal(this);" href=''>详情</a> 
+        <a class="btn btn-xs btn-alter btn-primary" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
+    tr.append(tdId, tdName, tdType, tdProjectCode, createTime, modifiedTime, tdOperation);
     tbody.append(tr);
     });
 }
@@ -642,6 +649,8 @@ function destructe(data){
             nameMedium:  newValue.nameMedium,
             codeLong: newValue.codeLong,
             descMedium: newValue.descMedium,
+            createTime: newValue.createTime,
+            modifiedTime: newValue.modifiedTime
         } = value);
         return newValue;
     });
@@ -663,6 +672,7 @@ function search(){
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
+    data[key] = searchkey;
     Vac.ajax({
         url: address3 + "missionController/pagedBatchQueryTestMission",
         data: data,
@@ -740,7 +750,10 @@ function getSendData(page, rows){
         pageSize: rows,
         currentPage: page,
         orderType: sendData.sort,
-        orderColumns: sendData.order
+        orderColumns: sendData.order,
+        nameMedium: '',
+        descMedium: '',
+        codeLong: ''
     };
     // return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&missionName="+sendData.missionName+"&missionCode="+sendData.missionCode+"&testProjectId="+sendData.testProjectId;
 }

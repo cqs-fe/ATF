@@ -100,13 +100,11 @@ $(document).ready(function() {
         if (!data.status) {
             Vac.alert('请选择用户状态');return;
         }
-        $.ajax({
-            url: address + 'userController/updateByPrimaryKey',
-            type: 'post',
-            dataType: 'json',
+        Vac.ajax({
+            url: address3 + 'userController/updateByPrimaryKey',
             data: data,
-            success: function(data, statusText){
-                if(data.success === true){
+            success: function(data){
+                if(data.respCode === '0000'){
                     Vac.alert('修改成功！')
                     $('#alterModal').modal('hide');
                      sendQuery(1,updatePagination); 
@@ -287,13 +285,11 @@ $(document).ready(function() {
         if (!data.status) {
             Vac.alert('请选择用户状态');return;
         }
-        $.ajax({
-            url: address + 'userController/insert',
-            type: 'post',
-            dataType: 'json',
+        Vac.ajax({
+            url: address3 + 'userController/insert',
             data: data,
-            success: (jsonDdata, textStatus) => {
-                if (jsonDdata.success === true) {
+            success: (jsonDdata) => {
+                if (jsonDdata.respCode === '0000') {
                     Vac.alert('添加成功!');
                     $('#addModal').modal('hide');
                      sendQuery(1,updatePagination); 
@@ -368,23 +364,30 @@ function sendQuery(sendPage,func){
     var page = parseInt(sendPage);
     var rows = showRows;
     var data = getSendData(page, rows);
-    $.ajax({
-        url: address + "userController/selectAllByPage",
-        type: "post",
+    Vac.ajax({
+        url: address3 + "userController/pagedBatchQueryUser",
         data: data,
-        dataType: "json",
-        success: function(data, statusText){
-            dataSet = data.rows;
-            var totalRows = data.total;
-            createTable(dataSet);
-            func(totalRows, page);
+        success: function(data){
+            if (data.respCode === '0000') {
+                dataSet = data.list;
+                var totalRows = data.totalCount;
+                createTable(dataSet);
+                func(totalRows, page);
+            } else {
+                Vac.alert('查询失败');
+            }
+            
         }
     });
 }
 //获取发送数据
 function getSendData(page, rows){
-    // &username=&reallyname=&role=&tel=&dept=
-    return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&username="+sendData.username+"&reallyname="+sendData.reallyname+"&dept="+sendData.dept+"&role="+sendData.role+"&tel="+sendData.tel;
+    return {
+        pageSize: rows,
+        currentPage: page,
+        "orderType":"desc",
+        "orderColumns":"id"
+    };
 }
 //控制首页尾页等的可用性
 function paginationControl(totalPage, currentPage){
@@ -426,37 +429,23 @@ function createTable(dataArray){
 }
 // 显示修改模态显示修改模态框
 function showAlterModal(target){
-    loginDetect().then(
-        function(response){
-            if(response.success === true){
-                initialForm(target);
-            }else{
-                $("#vac-nologin-alert").modal('show');
-                return;
-            }
-        },
-        function(){
-            $("#vac-nologin-alert").modal('show');
-            return;
-        });
+    initialForm(target);
     function initialForm(target){
         $("#alterModal").modal("show");
         var id = target.parentNode.parentNode.getElementsByClassName("td-id")[0].innerHTML;
-        $.ajax({
-            url: address + "userController/selectByPrimaryKey",
-            type: "post",
-            data: "id=" + id,
-            dataType: "json",
-            success: (data, textStatus) => {
-                $("#alter-id").val(data.obj.id);
-                $("#alter-username").val(data.obj.username);
-                $("#alter-name").val(data.obj.reallyname);
-                $("#alter-role").val(data.obj.role);
-                $("#alter-department").val(data.obj.dept);
-                $("#alter-state").val(data.obj.status);
-                $("#alter-phonenumber").val(data.obj.phone);
-                $("#alter-telephone").val(data.obj.tel);
-                $("#alter-email").val(data.obj.email);
+        Vac.ajax({
+            url: address3 + "userController/selectByPrimaryKey",
+            data: {id},
+            success: (data) => {
+                $("#alter-id").val(data.id);
+                $("#alter-username").val(data.username);
+                $("#alter-name").val(data.reallyname);
+                $("#alter-role").val(data.role);
+                $("#alter-department").val(data.dept);
+                $("#alter-state").val(data.status);
+                $("#alter-phonenumber").val(data.phone);
+                $("#alter-telephone").val(data.tel);
+                $("#alter-email").val(data.email);
             }
         });
     }
@@ -485,20 +474,18 @@ function showViewModal(target){
      $("#viewModal").modal("show");
      // $('#vac-alert').modal("show");
     var id = target.parentNode.parentNode.getElementsByClassName("td-id")[0].innerHTML;
-    $.ajax({
-        url: address + "userController/selectByPrimaryKey",
-        type: "post",
-        data: "id=" + id,
-        dataType: "json",
-        success: (data, textStatus) => {
-            $("#view-username").val(data.obj.username);
-            $("#view-name").val(data.obj.reallyname);
-            $("#view-role").val(data.obj.role);
-            $("#view-department").val(data.obj.dept);
-            $("#view-state").val(data.obj.status);
-            $("#view-phonenumber").val(data.obj.phone);
-            $("#view-telephone").val(data.obj.tel);
-            $("#view-email").val(data.obj.email);
+    Vac.ajax({
+        url: address3 + "userController/selectByPrimaryKey",
+        data: {id},
+        success: (data) => {
+            $("#view-username").val(data.username);
+            $("#view-name").val(data.reallyname);
+            $("#view-role").val(data.role);
+            $("#view-department").val(data.dept);
+            $("#view-state").val(data.status);
+            $("#view-phonenumber").val(data.phone);
+            $("#view-telephone").val(data.tel);
+            $("#view-email").val(data.email);
         }
     });
 }
@@ -518,16 +505,18 @@ function search(){
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
-    $.ajax({
-        url: address + "userController/selectAllByPage",
-        type: "post",
+    Vac.ajax({
+        url: address3 + "userController/pagedBatchQueryUser",
         data: data,
-        dataType: 'json',
-        success: function(data, statusText){
-            dataSet = data.rows;
-            var totalRows = data.total;
-            createTable(dataSet);
-            // func(totalRows, page);
+        success: function(data){
+            if (data.respCode === '0000') {
+                dataSet = data.list;
+                var totalRows = data.totalCount;
+                createTable(dataSet);
+                // func(totalRows, page);
+            } else {
+                Vac.alert('查询失败');
+            }
         }
     });
 

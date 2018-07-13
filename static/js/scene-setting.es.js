@@ -68,13 +68,13 @@ var vBody = new Vue({
 		selectedPool:[],
 		selectedPoolId: null,
 		poolData: {
-			poolname: null,
-			datadesc: null,
-			poolobjid: null,
-			dataname: null,
-			datavalue: null
+			poolName: null,
+			dataDesc: null,
+			poolObjId: null,
+			dataName: null,
+			dataValue: null
 		},
-		poolDatas: null,
+		poolDatas: [],
 
 		//场景id和名称
 		url: '',
@@ -105,11 +105,11 @@ var vBody = new Vue({
 		this.getCases();
 		// 数据池模态框消失
 		$('#editDataPool').on('hidden.bs.modal', function(e){
-			_this.poolData.poolname = '';
-			_this.poolData.poolobjid = '';
-			_this.poolData.dataname = '';
-			_this.poolData.datavalue = '';
-			_this.poolData.datadesc = '';
+			_this.poolData.poolName = '';
+			_this.poolData.poolObjId = '';
+			_this.poolData.dataName = '';
+			_this.poolData.dataValue = '';
+			_this.poolData.dataDesc = '';
 			// _this.selectedPool = [];
 		});
 		// Vac.startDrag(document.querySelector('#editTrigger-header'), document.querySelector('#editTrigger'))
@@ -634,25 +634,28 @@ var vBody = new Vue({
 
 		},
 		saveExecuteTime: function(){
+			if (!this.selectedCases.length) {
+				Vac.alert('场景中没有案例，无需规划时间');
+				return;
+			}
 			var data = {
-				sceneid: this.sceneid,
+				sceneId: +this.sceneid,
 				caseIds: '[' + this.selectedCases + ']',
 				executeTime: this.executeTime,
 				executeDateFlag: this.executeDateFlag,
 				combineGroupName: '',
-				orderNumber: 1,
-				runTotalNumber: 2
+				orderNum: 1,
+				runTotalNumber: 2,
+				modifierId: sessionStorage.getItem('userId')
 			};
-			$.ajax({
-				url: address + 'testexecutioninstanceController/settextexecutioninstance',
+			Vac.ajax({
+				url: address3 + 'sceneController/sceneTestcaseSetting',
 				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.success === true){
-						Vac.alert('保存成功！' + data.msg);
+				success: function(data){
+					if(data.respCode === '0000'){
+						Vac.alert(data.respMsg);
 					} else {
-						Vac.alert('保存失败！')
+						Vac.alert(data.respMsg)
 					}
 				},
 				error: function(){
@@ -667,59 +670,48 @@ var vBody = new Vue({
 				if(_this.selectedPool.length == 0){return;}
 				_this.editPoolType = 2;
 				_this.dataPoolTitle = '设置';
-				var data = {
-					poolname: '场景数据池',
-					poolobjid: '2',
-					dataname: _this.selectedPool[0]
-				};
-				$.ajax({
-					url: address + 'dataPoolController/selectByCondition',
-					data: data,
-					type: 'post',
-					dataType: 'json',
-					success: function(data, statusText){
-						if(data.obj instanceof Array){
-							// _this.poolData = data.obj[0];
-							({
-								poolname: _this.poolData.poolname,
-								poolobjid: _this.poolData.poolobjid,
-								dataname: _this.poolData.dataname,
-								datavalue: _this.poolData.datavalue,
-								datadesc: _this.poolData.datadesc
-							} = data.obj[0]);
-							_this.selectedPoolId = data.obj[0].id;
-						}
-					},
-					error: function(){
-						Vac.alert('获取场景数据池失败！')
-					}
-				});
+				let data = _this.poolDatas.find(item => +item.id === +_this.selectedPool[0]);console.log(_this.poolData);
+				({
+					poolName: _this.poolData.poolName,
+					poolObjId: _this.poolData.poolObjId,
+					dataName: _this.poolData.dataName,
+					dataValue: _this.poolData.dataValue,
+					dataDesc: _this.poolData.dataDesc,
+				} = data);
 			}else{
 				_this.editPoolType = 1;
 				_this.dataPoolTitle = '新增';
-				_this.poolData.poolname = '';
-				_this.poolData.poolobjid = ''
-				_this.poolData.dataname = ''
-				_this.poolData.datavalue = ''
-				_this.poolData.datadesc = ''
+				_this.poolData.poolName = '';
+				_this.poolData.poolObjId = ''
+				_this.poolData.dataName = ''
+				_this.poolData.dataValue = ''
+				_this.poolData.dataDesc = ''
 			}
 			$('#editDataPool').modal('show');
 		},
+		// /dataPoolController/querySingleDataPool
 		getDataPool: function(){
 			var _this = this;
 			var data = {
-				poolname: '场景数据池',
-				poolobjid: '2',
-				dataname: '',
+				pageSize: 10000,
+        		currentPage: 1,
+        		orderType: 'asc',
+				orderColumns: 'id',
+				poolName: '场景数据池',
+				poolObjId: 2,
+				dataName: '',
+				dataValue: '',
+				dataDesc: ''
 			};
-			$.ajax({
-				url: address + 'dataPoolController/selectByCondition',
-				type: 'post',
-				dataType: 'json',
+			Vac.ajax({
+				url: address3 + 'dataPoolController/pagedBatchQueryDataPool',
 				data: data,
-				success: function(data, statusText){
-					if(data.obj instanceof Array){
-						_this.poolDatas = data.obj;
+				success: function(data){
+					if(data.respCode === '0000'){
+						_this.poolDatas = data.list;
+					} else {
+						Vac.alert(data.respMsg)
+						_this.poolDatas = [];
 					}
 				},
 				error: function(){
@@ -731,26 +723,24 @@ var vBody = new Vue({
 			var _this = this;
 			var data = {};
 			({
-				poolname: data.poolname,
-				poolobjid: data.poolobjid,
-				dataname: data.dataname,
-				datavalue:data.datavalue,
-				datadesc: data.datadesc
+				poolName: data.poolName,
+				poolObjId: data.poolObjId,
+				dataName: data.dataName,
+				dataValue: data.dataValue,
+				dataDesc: data.dataDesc
 			} = _this.poolData);
 			if(_this.editPoolType == 2){
-				data.id = _this.selectedPoolId;
+				data.id = _this.selectedPool[0];
 			}
-			var url = _this.editPoolType === 1 ? 'dataPoolController/insert' : 'dataPoolController/update';
-			$.ajax({
-				url: address + url,
+			var url = _this.editPoolType === 1 ? 'dataPoolController/addSingleDataPool' : 'dataPoolController/modifySingleDataPool';
+			Vac.ajax({
+				url: address3 + url,
 				data: data,
-				type: 'post',
-				dataType: 'json',
-				success: function(data, statusText){
-					if(data.success === true) {
+				success: function(data){
+					if(data.respCode === '0000') {
 						$('#editDataPool').modal('hide');
 					}
-					Vac.alert(data.msg)
+					Vac.alert(data.respMsg)
 					_this.getDataPool();
 				},
 				error: function(){
@@ -761,44 +751,47 @@ var vBody = new Vue({
 		removeDatapool: function(){
 			var _this = this;
 			if(_this.selectedPool.length > 0){
-				var data = {
-					poolname: '场景数据池',
-					poolobjid: '2',
-					dataname: _this.selectedPool[0]
-				};
-				$.ajax({
-					url: address + 'dataPoolController/selectByCondition',
+				let data = _this.poolDatas.find(item => +item.id === +_this.selectedPool[0]);console.log(_this.poolData);
+				({
+					poolName: _this.poolData.poolName,
+					poolObjId: _this.poolData.poolObjId,
+					dataName: _this.poolData.dataName,
+					dataValue: _this.poolData.dataValue,
+					dataDesc: _this.poolData.dataDesc,
+				} = data);
+				Vac.ajax({
+					url: address3 + 'dataPoolController/deleteSingleDataPool',
+					data: {id:  _this.selectedPool[0]},
+					success: function(data){
+						if (data.respCode === '0000') {
+							_this.getDataPool();
+							_this.selectedPool.shift();
+						}
+						Vac.alert(data.respMsg);										
+					},
+					error: function(){
+						Vac.alert('移除数据池数据失败！')
+					}
+				});
+				return;
+				Vac.ajax({
+					url: address3 + 'dataPoolController/querySingleDataPool',
 					data: data,
-					type: 'post',
-					dataType: 'json',
-					success: function(data, statusText){
-						if(data.obj instanceof Array){
+					success: function(data){
+						if(data.list instanceof Array){
 							// _this.poolData = data.obj[0];
 							({
-								poolname: _this.poolData.poolname,
-								poolobjid: _this.poolData.poolobjid,
-								dataname: _this.poolData.dataname,
-								datavalue: _this.poolData.datavalue,
-								datadesc: _this.poolData.datadesc
+								poolName: _this.poolData.poolName,
+								poolObjId: _this.poolData.poolObjId,
+								dataName: _this.poolData.dataName,
+								dataValue: _this.poolData.dataValue,
+								dataDesc: _this.poolData.dataDesc
 							} = data.obj[0]);
-							_this.selectedPoolId = data.obj[0].id;
+							_this.selectedPoolId = data.list[0].id;
 
 							var promise = Vac.confirm('#vac-confirm', '.okConfirm', '.cancelConfirm');
 							promise.then(() => {
-								$.ajax({
-									url: address + 'dataPoolController/delete',
-									data: 'id='+ _this.selectedPoolId,
-									type: 'post',
-									dataType: 'json',
-									success: function(data, statusText){
-										Vac.alert(data.msg);
-										_this.getDataPool();
-										_this.selectedPool.shift();
-									},
-									error: function(){
-										Vac.alert('移除数据池数据失败！')
-									}
-								});
+								
 							}, () => {
 								
 							});

@@ -45,7 +45,7 @@
                   <label class="option-name control-label col-sm-3">测试计划</label>
                   <div class="col-sm-9">
                     <select class="testphase form-control" v-model="testPlanId">
-                      <option v-for="(index,item) in testPlans" v-bind:value="item.phasename">{{item}}</option>
+                      <option v-for="(index,item) in testPlans" v-bind:value="item.id">{{item.nameMedium}}</option>
                     </select>
                   </div>
                 </div>
