@@ -143,7 +143,7 @@
     var authcode = false;
 
     function chageCode() {
-        $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+         //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
         //获取sessionId并将其存放在sessionstorage之中
         $.ajax({
             type: 'post',
@@ -151,6 +151,7 @@
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
+                $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()+"&sessionId=" + sessionStorage.getItem('sessionId'));
             }
         });
     }
@@ -159,14 +160,15 @@
         $(id).html(msg);
     }
     $(document).ready(function() {
-        console.log(address3);
-        $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random());
+        // console.log(address3);
+        
         $.ajax({
             type: 'post',
             url: address3 + "userController/getSessionId",
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
+                $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()+"&sessionId=" + sessionStorage.getItem('sessionId'));
             }
         });
         $('#authCode').blur(function() {

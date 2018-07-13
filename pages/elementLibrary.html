@@ -580,9 +580,9 @@ var app = new Vue({
                                     var relateObjectId = data.relateIdentifyObjectId;
                                     var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
                                     if (relateObjectId !== null && relateObjectId !== undefined && relateObjectId !== '') {
-                                        treeObj.selectNode(treeObj.getNodeByParam("id", relateObjectId, null));
+                                        treeObj.selectNode(treeObj.getNodeByParam("objectId", relateObjectId, null));
                                         var nodes = treeObj.getSelectedNodes();
-                                        var obj = nodes[0].name;
+                                        var obj = nodes[0].objectName;
                                         $('#UILinkedInput').val(obj);
                                     }
                                 }
@@ -626,17 +626,17 @@ var app = new Vue({
                                     if (relateParentObjectId !== null && relateParentObjectId !== undefined && relateParentObjectId !== '') {
                                         //父对象
                                         var elePtree = $.fn.zTree.getZTreeObj("eleParentTree");
-                                        elePtree.selectNode(elePtree.getNodeByParam("id", relateParentObjectId, null));
+                                        elePtree.selectNode(elePtree.getNodeByParam("objectId", relateParentObjectId, null));
                                         var pNodes = elePtree.getSelectedNodes(),
-                                            pObj = pNodes[0].name;
+                                            pObj = pNodes[0].objectName;
                                         $('#eleParentInput').val(pObj);
                                     }
                                     if (relateObjectId !== null && relateObjectId !== undefined && relateObjectId !== '') {
                                         //关联对象
                                         var eleLtree = $.fn.zTree.getZTreeObj("eleLinkedTree");
-                                        eleLtree.selectNode(eleLtree.getNodeByParam("id", relateObjectId, null));
+                                        eleLtree.selectNode(eleLtree.getNodeByParam("objectId", relateObjectId, null));
                                         var lNodes = eleLtree.getSelectedNodes(),
-                                            lObj = lNodes[0].name;
+                                            lObj = lNodes[0].objectName;
                                         $('#eleLinkedInput').val(lObj);
                                     }
 
@@ -737,6 +737,7 @@ var app = new Vue({
                     // 禁止拖拽
                     beforeDrag: _this.zTreeBeforeDrag,
                     onClick: function(event, treeId, treeNode, clickFlag) {
+                        // console.log(treeNode)
                         _this.UILinked = treeNode.objectName;
                     },
 
@@ -1013,8 +1014,8 @@ var app = new Vue({
             if (LtreeObj) {
                 Lnodes = LtreeObj.getSelectedNodes();
                 if (Lnodes.length !== 0) {
-                    relateIdentifyObjectId = Lnodes[0].id;
-                    relateParentIdentifyObjectId = Lnodes[0].parentid;
+                    relateIdentifyObjectId = Lnodes[0].objectId;
+                    relateParentIdentifyObjectId = Lnodes[0].parentObjectId;
                 } else {
                     relateIdentifyObjectId = '';
                     relateParentIdentifyObjectId = '';
@@ -1164,7 +1165,7 @@ var app = new Vue({
             if (LtreeObj) {
                 Lnodes = LtreeObj.getSelectedNodes();
                 if (Lnodes.length !== 0) {
-                    relateIdentifyObjectId = Lnodes[0].id;
+                    relateIdentifyObjectId = Lnodes[0].objectId;
                 } else {
                     relateIdentifyObjectId = '';
                 }
@@ -1176,7 +1177,7 @@ var app = new Vue({
             if (PtreeObj) {
                 Pnodes = PtreeObj.getSelectedNodes();
                 if (Pnodes.length !== 0) {
-                    relateParentIdentifyObjectId = Pnodes[0].id;
+                    relateParentIdentifyObjectId = Pnodes[0].objectId;
                 } else {
                     relateParentIdentifyObjectId = '';
                 }
