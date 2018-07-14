@@ -1,6 +1,7 @@
 // 查看脚本
 // document.getElementById('viewScript').onclick = function () {
-	var tooltipwindow;
+var tooltipwindow;
+var vac_conditionList = null;
 function viewScriptHandler (event) {
 	var testcaseId = event.target.getAttribute('data-id');
 	// var data = { testcaseId
@@ -793,7 +794,8 @@ $(document).ready(function () {
 	                    }
 	                    data.push(listItem);
 	                }
-	                // console.log(data)
+					// console.log(data)
+					vac_conditionList = data;
 	                $.ajax({
 	                    url:address3 + '/dataCenter/queryFilterTree',
 	                    contentType: 'application/json',
@@ -801,10 +803,46 @@ $(document).ready(function () {
 	                        'conditionList': data
 	                     }),
 	                    type:'post',
-	                    success:function(res){
-	                    	var filterTree=res.filterTree;
-	                        console.log(filterTree);
-	                    }
+	                    success: function (data) {
+							if ('0000' !== data.respCode) {
+								Vac.alert(data.respMsg);
+								return;
+							}
+							var treeData = [];
+							if (data.filterTree.length == 0) {
+								Vac.alert('返回结果为空！')
+								return
+							}
+							data.filterTree.forEach((value) => {
+								var item = {};  //解构第一层
+								item.open = true;
+								item.children = [];
+								value.transactList.forEach((value1) => {
+									var subData = {};  //解构第二层
+									subData.children = [];
+									subData.open = true;
+									({
+										transId: subData.id,
+										transName: subData.name,
+									} = value1);
+									value1.scriptTemplateList.forEach((value2 => {
+										var ssubData = {};		 //解构第二层
+										({
+											scriptId: ssubData.id,
+											scriptName: ssubData.name
+										} = value2);
+										subData.children.push(ssubData);
+									}));
+									item.children.push(subData);
+								});
+								({
+									autId: item.id,
+									autName: item.name,
+								} = value);
+								treeData.push(item);
+							});
+							zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+						},
 
 	                });
 	        	}
@@ -1630,107 +1668,107 @@ $(document).ready(function () {
 
 			},
 			ready: function () {
-				var _this = this;
-				var data = [
-					{
-						"name": "测试点",
-						"value": 1
-					},
-					{
-						"name": "执行状态",
-						"value": 2
-					}
-				];
-				_this.selectItems = data;
-				_this.getInfo();
-				_this.changeSelect({target: {value: 1 }});
+				// var _this = this;
+				// var data = [
+				// 	{
+				// 		"name": "测试点",
+				// 		"value": 1
+				// 	},
+				// 	{
+				// 		"name": "执行状态",
+				// 		"value": 2
+				// 	}
+				// ];
+				// _this.selectItems = data;
+				// _this.getInfo();
+				// _this.changeSelect({target: {value: 1 }});
 			},
 			watch: {
-				checkedArray(newVal) {
-					var _this = this;
-					if (newVal.length > 1) {
-						newVal.shift()
-						return
-					}
-					if(newVal.length == 0) {
-						zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, []);
-						return
-					}
-					_this.systemInfo.valueList = newVal;
-					_this.systemInfo.executorId = sessionStorage.getItem('userId');
-					_this.systemInfo.caseLibId = sessionStorage.getItem;
-					var data = {
-						propertyName: 'testPoint',
-						valueList: newVal,
-						executorId: sessionStorage.getItem('userId'),
-						caseLibId: sessionStorage.getItem('caselibId')
-					}
-					Vac.ajax({
-						url: address3 + "dataCenter/queryFilterTree",
-						data: data,
-						success: function (data) {
-							if ('0000' !== data.respCode) {
-								Vac.alert(data.respMsg);
-								return;
-							}
-							var treeData = [];
-							if (data.filterTree.length == 0) {
-								Vac.alert('返回结果为空！')
-								return
-							}
-							data.filterTree.forEach((value) => {
-								var item = {};  //解构第一层
-								item.open = true;
-								item.children = [];
-								value.transactList.forEach((value1) => {
-									var subData = {};  //解构第二层
-									subData.children = [];
-									subData.open = true;
-									({
-										transId: subData.id,
-										transName: subData.name,
-									} = value1);
-									value1.scriptTemplateList.forEach((value2 => {
-										var ssubData = {};		 //解构第二层
-										({
-											scriptId: ssubData.id,
-											scriptName: ssubData.name
-										} = value2);
-										subData.children.push(ssubData);
-										if (newVal.length > _this.testpointLength) {
-											var testpointMapVal = `${value.autid}-${value1.transactid}-${value2.scriptid}`
-											// testpointsMap的格式：
-											// {
-											// 	"登录": {"22-57-1167"}
-											// }
-											// 注： 键名是其所属的testpoint,键值是set，
-											// 	set中的数据格式： "autid-transid-scriptid"
-											if (_this.testpointsMap.has(newVal[newVal.length - 1])) {
-												_this.testpointsMap.get(newVal[newVal.length - 1]).add(testpointMapVal)
-											} else {
-												_this.testpointsMap.set(newVal[newVal.length - 1], new Set())
-												_this.testpointsMap.get(newVal[newVal.length - 1]).add(testpointMapVal)
-											}
-										}
-										// 生成关于testpoint的Map
+				// checkedArray(newVal) {
+				// 	var _this = this;
+				// 	if (newVal.length > 1) {
+				// 		newVal.shift()
+				// 		return
+				// 	}
+				// 	if(newVal.length == 0) {
+				// 		zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, []);
+				// 		return
+				// 	}
+				// 	_this.systemInfo.valueList = newVal;
+				// 	_this.systemInfo.executorId = sessionStorage.getItem('userId');
+				// 	_this.systemInfo.caseLibId = sessionStorage.getItem;
+				// 	var data = {
+				// 		propertyName: 'testPoint',
+				// 		valueList: newVal,
+				// 		executorId: sessionStorage.getItem('userId'),
+				// 		caseLibId: sessionStorage.getItem('caselibId')
+				// 	}
+				// 	Vac.ajax({
+				// 		url: address3 + "dataCenter/queryFilterTree",
+				// 		data: data,
+				// 		success: function (data) {
+				// 			if ('0000' !== data.respCode) {
+				// 				Vac.alert(data.respMsg);
+				// 				return;
+				// 			}
+				// 			var treeData = [];
+				// 			if (data.filterTree.length == 0) {
+				// 				Vac.alert('返回结果为空！')
+				// 				return
+				// 			}
+				// 			data.filterTree.forEach((value) => {
+				// 				var item = {};  //解构第一层
+				// 				item.open = true;
+				// 				item.children = [];
+				// 				value.transactList.forEach((value1) => {
+				// 					var subData = {};  //解构第二层
+				// 					subData.children = [];
+				// 					subData.open = true;
+				// 					({
+				// 						transId: subData.id,
+				// 						transName: subData.name,
+				// 					} = value1);
+				// 					value1.scriptTemplateList.forEach((value2 => {
+				// 						var ssubData = {};		 //解构第二层
+				// 						({
+				// 							scriptId: ssubData.id,
+				// 							scriptName: ssubData.name
+				// 						} = value2);
+				// 						subData.children.push(ssubData);
+				// 						if (newVal.length > _this.testpointLength) {
+				// 							var testpointMapVal = `${value.autid}-${value1.transactid}-${value2.scriptid}`
+				// 							// testpointsMap的格式：
+				// 							// {
+				// 							// 	"登录": {"22-57-1167"}
+				// 							// }
+				// 							// 注： 键名是其所属的testpoint,键值是set，
+				// 							// 	set中的数据格式： "autid-transid-scriptid"
+				// 							if (_this.testpointsMap.has(newVal[newVal.length - 1])) {
+				// 								_this.testpointsMap.get(newVal[newVal.length - 1]).add(testpointMapVal)
+				// 							} else {
+				// 								_this.testpointsMap.set(newVal[newVal.length - 1], new Set())
+				// 								_this.testpointsMap.get(newVal[newVal.length - 1]).add(testpointMapVal)
+				// 							}
+				// 						}
+				// 						// 生成关于testpoint的Map
 
-									}));
-									item.children.push(subData);
-								});
-								({
-									autId: item.id,
-									autName: item.name,
-								} = value);
-								treeData.push(item);
-							});
-							zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
-							_this.testpointLength = newVal.length
-						},
-						error: function () {
-							Vac.alert('查询数据失败！')
-						}
-					});
-				}
+				// 					}));
+				// 					item.children.push(subData);
+				// 				});
+				// 				({
+				// 					autId: item.id,
+				// 					autName: item.name,
+				// 				} = value);
+				// 				treeData.push(item);
+				// 			});
+				// 			zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
+				// 			_this.testpointLength = newVal.length
+				// 		},
+				// 		error: function () {
+				// 			Vac.alert('查询数据失败！')
+				// 		}
+				// 	});
+				// }
 			},
 			methods: {
 				getInfo: function () {
@@ -1806,37 +1844,37 @@ $(document).ready(function () {
 						url: address3 + "dataCenter/queryFilterTree",
 						data: _this.systemInfo,
 						success: function (data) {
-							if (data.success) {
+							if (data.respCode === '0000') {
 								var treeData = [];
-								if (data.o.length == 0) {
-									Vac.alert('该测试点下未查询到相关数据！')
+								if (data.filterTree.length == 0) {
+									Vac.alert(data.respMsg);
 									return
 								}
-								data.o.forEach((value) => {
+								data.filterTree.forEach((value) => {
 									var item = {};  //解构第一层
 									item.open = true;
 									item.children = [];
-									value.children.forEach((value) => {
+									value.transactList.forEach((value) => {
 										var subData = {};  //解构第二层
 										subData.children = [];
 										subData.open = true;
 										({
-											transactid: subData.id,
-											name: subData.name,
+											transId: subData.id,
+											transName: subData.name,
 										} = value);
-										value.children.forEach((value => {
+										value.scriptTemplateList.forEach((value => {
 											var ssubData = {};
 											({
-												scriptid: ssubData.id,
-												name: ssubData.name
+												scriptId: ssubData.id,
+												scriptName: ssubData.name
 											} = value);
 											subData.children.push(ssubData);
 										}));
 										item.children.push(subData);
 									});
 									({
-										autid: item.id,
-										name: item.name,
+										autId: item.id,
+										autName: item.name,
 									} = value);
 									treeData.push(item);
 								});
@@ -2024,52 +2062,42 @@ $(document).ready(function () {
 
 			return dataKey;
 		};
-		function zTreeOnDblClick(event, treeId, treeNode) {console.log(treeNode);
+		function zTreeOnDblClick(event, treeId, treeNode) {
 			if (treeNode && !treeNode.isParent) {
 				autId = treeNode.getParentNode().getParentNode().id;
 				transid = treeNode.getParentNode().id;
 				var scriptId = treeNode.id;
 				var data = {
-					testpoint: sub.checkedArray[0],
+					conditionList: vac_conditionList,
 					executorId: sessionStorage.getItem('userId'),
 					caseLibId: sessionStorage.getItem('caselibId'),
 					autId: autId,
 					transId: transid,
 					scriptId: scriptId
 				};
-				tooltipwindow.scriptSelected = true;
-				tooltipwindow.testPoint = sub.checkedArray[0];
-				tooltipwindow.executor = sub.systemInfo.executor;
-				tooltipwindow.caselibId = sub.systemInfo.caseLib_id;
-				tooltipwindow.autId = autId;
-				tooltipwindow.transId = transid;
-				tooltipwindow.scriptId = scriptId;
 				Vac.ajax({
 					url: address3 + "dataCenter/queryTestcaseInfo",
 					data: data,
 					success: function (data) {
 						if ('0000' === data.respCode) {
 							var dataKey = [];
-							if (data.o.tableHead) {
-								// [ ["[待删除]","商品"], ["[待删除]","t1"] ]
-								dataKey = getDataKey(data.o.tableHead);
-							}
+							dataKey = getDataKey(data.tableHead);
 							var destrutData = [];
-							if (data.o.tableDatas) {
-								if (data.o.tableDatas.length == 0) {
+							if (data.tableData) {
+								if (data.tableData.length == 0) {
 									Vac.alert('该脚本下未查询到相关数据！')
 									$('#no-data-tip').css({display: 'block'});
 								}
-								data.o.tableDatas.forEach((value) => {
+								data.tableData.forEach((value) => {
 									var data = {};
 									({
 										id: data.testcaseId,
-										expectresult: data.expectresult,
-										testpoint: data.testpoint,
-										teststep: data.teststep,
-										checkpoint: data.checkpoint,
-										testdesign: data.testdesign,
-										casecode: data.casecode
+										expectResult: data.expectresult,
+										testPoint: data.testpoint,
+										testStep: data.teststep,
+										checkPoint: data.checkpoint,
+										testDesign: data.testdesign,
+										caseCode: data.casecode
 									} = value);
 									dataKey.forEach((key) => {
 										data[key] = value[key];
@@ -2081,9 +2109,9 @@ $(document).ready(function () {
 							dataSource = destrutData;
 							// console.log(dataSource)
 							rowSelectFlags.length = dataSource.length;
-							getTotalColHeaders(data.o.tableHead);
+							getTotalColHeaders(data.tableHead);
 							// console.log(totalColumnsHeaders);
-							var totalColumnsOptions = getColumnsOptions(data.o.tableHead);
+							var totalColumnsOptions = getColumnsOptions(data.tableHead);
 							// handsontable 配置与生成
 							if (handsontable === null) {
 								handsontable = new Handsontable(tableContainer, {
@@ -2316,14 +2344,11 @@ $(document).ready(function () {
 		//保存按钮
 		document.getElementById('saveAll').onclick = function () {
 			var data = { data: changedData };
-			console.log(encodeURIComponent(JSON.stringify(data)));
-			$.ajax({
-				url: address + 'scripttemplateController/scripttemplateInf',
-				data: "jsonStr=" + encodeURIComponent(JSON.stringify(data), 'utf-8'),
-				dataType: 'json',
-				type: 'post',
+			Vac.ajax({
+				url: address3 + 'scripttemplateController/scripttemplateInf',
+				data: { jsonStr: JSON.stringify(data) },
 				success: function (data, textStatus) {
-					if (data.success === true) {
+					if (data.respCode === '0000') {
 						Vac.alert('保存成功')
 					}
 				}

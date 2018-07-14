@@ -111,20 +111,24 @@ $(document).ready(function() {
                 // console.log(this.autId);
                 Vac.ajax({
                     async: true,
-                    url: address + 'transactController/showalltransact',
-                    data: { 'autlistselect': val },
+                    url: address3 + 'transactController/queryTransactsByAutId',
+                    data: { 'id': val },
                     type: "POST",
                     success: function(data) {
-                        // console.log(data.o)
-                        var transactList = data.o;
-                        var str = "";
-                        for (var i = 0; i < transactList.length; i++) {
+                        if (data.respCode === '0000') {
+                            var transactList = data.transactRespDTOs;
+                            var str = "";
+                            for (var i = 0; i < transactList.length; i++) {
 
-                            str += " <option value='" + transactList[i].id + "'>" + transactList[i].transname + "</option> ";
+                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
+                            }
+                            $('#transactSelect').html(str);
+                            _this.transId = $('#transactSelect').val();
+                            _this.getScriptTemplate()
+                        } else {
+                            Vac.alert(respMsg);
                         }
-                        $('#transactSelect').html(str);
-                        _this.transId = $('#transactSelect').val();
-                        _this.getScriptTemplate()
+                        
                     }
                 });
                 

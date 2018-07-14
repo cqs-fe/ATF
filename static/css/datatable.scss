@@ -440,28 +440,28 @@ html, body{
 			margin-left: 0px;
 			font-size: 0;
 			z-index: 1;
-			.selectDiv {
-				width: 190px;
-				height: 50%;
-				overflow: scroll;
-				font-size: 14px;
-				color: #333;
-				padding: 5px;
-				border-bottom: 2px solid #ddd;
-				select {
-					padding: 2px 4px;
-				}
-				.checkedItem {
-					display: block;
-					margin-left: 10px;
-					font-size: 14px;
-					font-weight: normal;
-					color: black;
-				}
-			}
+			// .selectDiv {
+			// 	width: 190px;
+			// 	height: 50%;
+			// 	overflow: scroll;
+			// 	font-size: 14px;
+			// 	color: #333;
+			// 	padding: 5px;
+			// 	border-bottom: 2px solid #ddd;
+			// 	select {
+			// 		padding: 2px 4px;
+			// 	}
+			// 	.checkedItem {
+			// 		display: block;
+			// 		margin-left: 10px;
+			// 		font-size: 14px;
+			// 		font-weight: normal;
+			// 		color: black;
+			// 	}
+			// }
 			.tree-wrapper{
 				display: inline-block;
-				height: 50%;
+				height: 100%;
 				width: 190px;
 				overflow: auto;
 			}
