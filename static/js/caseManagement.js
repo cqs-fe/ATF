@@ -39,6 +39,7 @@ var app = new Vue({
     ready: function() {
         this.getCase(this.currentPage, this.pageSize, this.order, this.sort);
         this.changeListNum();
+        this.downloadTemplate();
         this.getUsers();
         this.getCaseLibId();
         this.getMission(); //获取案例添加表单任务编号下拉列表
@@ -710,6 +711,25 @@ var app = new Vue({
                     app.pageSize = listnum;
                 }
             });
+        },  
+        //下载模板
+        downloadTemplate:function() {
+            $('#exampleDownload').click(function() {
+                 
+            var val=$('input:radio[name="templateType"]:checked').val();
+            
+            if(val==null){
+                return false;
+            }
+                    else if(val==0){
+                      let url = address3+"testcase/batchImport/file/template/simple";
+                      window.location.href = url;
+                     } 
+                     else{ 
+                      let url =address3+"testcase/batchImport/file/template/standard";
+                       window.location.href = url;
+                     } 
+            });
         },
         // 执行方式数据处理
         convertExecMe(em){
@@ -1353,7 +1373,11 @@ var app = new Vue({
                             if(Object.prototype.toString.call(propertyValueList)=='[object Array]'){
                                 listItem.propertyValueList=propertyValueList;
                             }else{
-                                listItem.propertyValueList=propertyValueList.toString().split('');
+                                if(propertyValueList!=null){
+                                    listItem.propertyValueList=propertyValueList.toString().split(' ');
+                                }else{
+                                    listItem.propertyValueList=[];
+                                }
                             }
                         }
                         data.push(listItem);
