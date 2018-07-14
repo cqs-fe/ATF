@@ -108,11 +108,11 @@ var app = new Vue({
                 return false;
             }
              		else if(val==0){
-             	 	  let url = "http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
+             	 	  let url = address3+"testcase/batchImport/file/template/simple";
 			          window.location.href = url;
             		 } 
             		 else{ 
-             	   var let = "http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/file/template/standard";
+             	      let url =address3+"testcase/batchImport/file/template/standard";
 			           window.location.href = url;
             		 } 
             });
@@ -121,7 +121,7 @@ var app = new Vue({
          //上传
           upload:function() {
 							  $.ajax({
-						    url: 'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase',
+						    url: address3+'testcase/batchImportTestcase',
 						    type: 'POST',
 						    cache: false,
 						    data: new FormData($('#importForm')[0]),
@@ -137,29 +137,6 @@ var app = new Vue({
 						}) ;  
         },
 
-        //   upload:function() {
-        //         $.ajax({
-        //         url: 'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase',
-        //         type: 'POST',
-        //         cache: false,
-        //         data:{
-        //             'file': $('#file').val(),
-        //             'templateType': $('#templateType').val(),
-        //             caseLibId:sessionStorage.getItem('caselibId'),
-        //             uploadUserId:sessionStorage.getItem('userId'),
-        //         },
-        //         processData: false,
-        //         contentType: false, 
-        //         success: function(data) {                    
-        //             $('#importModal').modal('hide');
-        //             $('#successModal').modal('show');
-        //            }, error: function(data) { 
-        //            $('#importModal').modal('hide');
-        //             $('#failModal').modal('show');
-        //         }
-        //     }) ;  
-        // },
-        //导出错误文件
           downloadError :function (ID) {
           	 var url = address3+"testcase/batchImport/file/errorFile/";
 			       window.location.href = url+ID;
