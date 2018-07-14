@@ -777,6 +777,9 @@ $(document).ready(function () {
 	                for(let i=0;i<list.length;i++){
 	                    let listItem={};
 	                    listItem.propertyName=$(list[i]).find('select[name="propertyName"]').val();
+	                    if(listItem.propertyName==''){
+	                    	break;
+	                    }
 	                    listItem.compareType=$(list[i]).find('select[name="compareType"]').val();
 	                    let valType=$(list[i]).find('.val_select')[0].tagName;
 	                    if(valType==='INPUT'){
@@ -788,14 +791,18 @@ $(document).ready(function () {
 	                        if(Object.prototype.toString.call(propertyValueList)=='[object Array]'){
 	                    		listItem.propertyValueList=propertyValueList;
 		                    }else{
-		                    	listItem.propertyValueList=propertyValueList.toString().split('');
+		                    	if(propertyValueList!=null){
+                                    listItem.propertyValueList=propertyValueList.toString().split(' ');
+                                }else{
+                                    listItem.propertyValueList=[];
+                                }
 		                    }
 	                    }
 	                    data.push(listItem);
 	                }
 	                // console.log(data)
 	                $.ajax({
-	                    url:address3 + '/dataCenter/queryFilterTree',
+	                    url:address3 + 'dataCenter/queryFilterTree',
 	                    contentType: 'application/json',
 	                    data: JSON.stringify({
 	                        'conditionList': data

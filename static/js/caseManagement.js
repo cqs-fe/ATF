@@ -1353,7 +1353,11 @@ var app = new Vue({
                             if(Object.prototype.toString.call(propertyValueList)=='[object Array]'){
                                 listItem.propertyValueList=propertyValueList;
                             }else{
-                                listItem.propertyValueList=propertyValueList.toString().split('');
+                                if(propertyValueList!=null){
+                                    listItem.propertyValueList=propertyValueList.toString().split(' ');
+                                }else{
+                                    listItem.propertyValueList=[];
+                                }
                             }
                         }
                         data.push(listItem);

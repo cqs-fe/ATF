@@ -1090,7 +1090,7 @@ var app = new Vue({
                             if(Object.prototype.toString.call(propertyValueList)=='[object Array]'){
                                 listItem.propertyValueList=propertyValueList;
                             }else{
-                                listItem.propertyValueList=propertyValueList.toString().split('');
+                                listItem.propertyValueList=propertyValueList.toString().split(' ');
                             }
                         }
                         data.push(listItem);
