@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta content="telephone=no" name="format-detection"/>
+<meta content="email=no" name="format-detection"/>
+
+    <div class="modal fade" id="vac-nologin-alert" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				用户尚未登录，请点击<a href="Login.html" style="color:#b94a48;">这里</a>进行登录！
+			</div>
+			<div class="modal-footer" style="text-align: center;">
+				<button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>    
+    <!--dataTables libs start-->
+    <!-- <link rel="stylesheet" type="text/css" href="../static/css/jquery.dataTables.min.css"> -->    <!--dataTables libs  ends-->    <title>Case Manager</title>
+    <style>
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="/public/static/css/base_63a6f74.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/index_b22c8a6.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/pagination_3ed9388.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/testitems_4c2cb15.css" />
+    <style type="text/css">
+    .active-item {
+        color: #ff6c60;
+    }
+    ul.sidebar-menu li ul.sub li a {
+        color: #a3acb6;
+    }
+
+
+    .vac-confirm .modal-dialog {
+        margin-top: 80px;
+    }
+    .vac-confirm .modal-content {
+        width: 500px;
+        margin: auto;
+        border: 1px solid #ddd;
+        /*box-shadow: 5px 5px 2px #d9edf7;*/
+    }
+    .vac-confirm .modal-header {
+        padding: 10px 15px;
+        background-color: #55A8A1;
+    }
+    .vac-confirm .modal-body {
+        padding: 15px 15px;
+        color: #a94442;
+    }
+    .vac-confirm .modal-footer {
+        padding: 10px 20px;
+    }
+
+
+	.vac-alert .modal-dialog {
+		margin-top: 80px;
+		z-index: 100;
+	}
+	.vac-alert .modal-content {
+		width: 500px;
+		margin: auto;
+		border: 1px solid #ddd;
+	}
+	.vac-alert .modal-header {
+		padding: 10px 15px;
+		background-color: #55A8A1;
+	}
+	.vac-alert .modal-body {
+		padding: 15px 15px;
+		color: #a94442;
+	}
+	.vac-alert .modal-footer {
+		padding: 10px 20px;
+	}
+
+
+	.copy-right {
+		height: 50px;
+	}
+
+
+	.vac-alert .modal-dialog {
+		margin-top: 80px;
+		z-index: 100;
+	}
+	.vac-alert .modal-content {
+		width: 500px;
+		margin: auto;
+		border: 1px solid #ddd;
+	}
+	.vac-alert .modal-header {
+		padding: 10px 15px;
+		background-color: #55A8A1;
+	}
+	.vac-alert .modal-body {
+		padding: 15px 15px;
+		color: #a94442;
+	}
+	.vac-alert .modal-footer {
+		padding: 10px 20px;
+	}
+</style>
+</head>
+
+<body id="v-demo" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <header class="header white-bg">
+    <div class="sidebar-toggle-box">
+        <div data-original-title="点击折叠" data-placement="right" class="icon-reorder tooltips"></div>
+    </div>
+    <!--logo start-->
+    <a href="#" class="logo"><span>ATF</span></a>
+    <!--logo end-->
+
+    <div class="top-nav ">
+        <!--user info start-->
+        <ul class="nav pull-right top-menu">
+            <!-- user login dropdown start-->
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <img alt="" src="/public/static/images/avatar1_small_64c14fd.jpg">
+                    <span class="username" id="curUserName">chai</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <div class="log-arrow-up"></div>
+                    <li><a href="#"><i class="icon-suitcase"></i>个人中心</a></li>
+                    <li><a href="#"><i class="icon-cog"></i>设置</a></li>
+                    <li><a href="#"><i class="icon-bell-alt"></i> 通知</a></li>
+                    <li><a id="logout"><i class="icon-key"></i> 注销</a></li>
+                </ul>
+            </li>
+            <!-- user login dropdown end -->
+        </ul>
+        <!--search & user info end-->
+    </div></header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+    <div id="sidebar" class="nav-collapse">
+        <ul class="sidebar-menu">
+            <li class="sub-menu 0">
+                <a href="javascript:;" class="">
+                    <span class="">系统管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 0-ul">
+                    <li class="sub-menu">
+                        <a class="0-0" href="usermanagement.html">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                    <!-- <li class="sub-menu">
+                        <a class="0-1" href="#">
+                            <span>权限设置</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="0-2" href="#">
+                            <span>数据字典设置</span>
+                        </a>
+                    </li> -->
+                </ul>
+            </li>
+            <li class="sub-menu 1">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试过程配置</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 1-ul">
+                    <li class="sub-menu">
+                        <a class="1-0" href="testphase.html">
+                            <span>测试阶段</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="1-1" href="productLine.html">
+                            <span>业务线管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="1-2" href="runner-management.html">
+                            <span>执行机管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu 2">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试基础设施</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 2-ul">
+                    <li class="sub-menu">
+                        <a class="2-0" href="aut.html">
+                            <span>被测系统管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="2-1" href="architecture.html">
+                            <span>自动化构件管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu 3">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>项目测试</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 3-ul">
+                    <li class="sub-menu">
+                        <a class="3-0" href="testitems.html">
+                            <span>测试任务</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-1" href="testProject.html">
+                            <span>测试项目管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-2" href="caseManagement.html">
+                            <span>测试用例管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-3" href="datatable.html">
+                            <span>测试资源管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-4" href="scene.html">
+                            <span>测试场景管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-5" href="testroundManage.html">
+                            <span>测试轮次管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-6" href="testplan-execute.html">
+                            <span>测试计划及执行</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-7" href="testRecord.html">
+                            <span>执行记录管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-8" href="execution.html">
+                            <span>批量执行管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-9" href="../build/pages/testplan">
+                            <span>测试计划</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li class="sub-menu 4">
+                <a href="javascript:;" class="">
+                    <span>测试资产库</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 4-ul">
+                    
+                </ul>
+            </li> -->
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- breadcrumb start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="breadcrumb" style="margin-bottom: 15px;">
+                            <li>
+                                <a href="#">
+                                    <i class="icon-home"></i> 项目测试</a>
+                            </li>
+                            <li class="active">
+                                <a href="#">测试任务</a>
+                            </li>
+                            <!-- <li class="active"> 对象库</li> -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 top-btn" style="width: auto;">
+                        <a class="btn btn-white" data-toggle="modal" id="addModalBtn">
+                            <i class="icon-plus"></i> 添加</a>
+                        <div class="modal fade " id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">添加任务</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal " role="form" id="addForm">
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label" for="itemname">任务名称</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" required class="form-control" id="itemname" name="nameMedium">
+                                                </div>
+                                                <!-- <span class="col-lg-1 glyphicon glyphicon-remove " id="add-feedback-itemname" style="color: #b94a48;"></span> -->
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="createUser" class="col-lg-3 control-label">任务编号</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" name="codeLong" class="form-control" id="codeLong" value="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="projectCode" class="control-label col-lg-3">任务描述</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control" name="descMedium" id="descMedium">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="alert alert-danger" style="margin-bottom: 0;" id="add-input-detecting">
+                                            输入信息不完整！
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                        <button class="btn btn-success" type="button" disabled id="btn-add">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- addModal end -->
+                    </div>
+                    <!--topbutton end-->
+                    <!-- table start -->
+                    <div class="col-lg-12 panel" style="margin-left: 15px;margin-right: 15px;padding: 0; width: auto;">
+                        <header class="panel-heading">
+                            测试任务
+                        </header>
+                        <div class="row">
+                            <form action="" class="form-horizontal col-lg-12" style="margin-top: 15px;">
+                                <div class="form-group" style="padding: 0 15px;margin-bottom: 15px;">
+                                    <div class="col-sm-2">
+                                        <select id="search-type" class="form-control" style="width: 100%;">
+                                            <option value="nameMedium">任务名称</option>
+                                            <option value="codeLong">任务编号</option>
+                                            <option value="descMedium">任务描述</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" placeholder="请输入关键字" class="form-control" id="searchKey" style="">
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-white " id="btn-search">搜索</button>
+                                    </div>
+                                    <!-- <div class="col-lg-2" style="text-align: right;">
+                                        <label class="control-label" style="font-size: 14px; font-weight: 300;">展示条目</label>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button type="button" class="btn btn-white" onclick="updateTableAndPagination(1); ">刷新</button>
+                                    </div> -->
+                                </div>
+                            </form>
+                        </div>
+                        <table id="example" class="table  table-bordered table-striped">
+                            <style>
+                            </style>
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;" data-ordfiser="id" data-sort="desc" data-order="id" onclick="resort(event);">id&nbsp;
+                                        <span class="icon-sort-up" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;" data-order="type" data-sort="desc">任务名称&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;">任务编号&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;">任务描述&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;">创建时间&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th style="width: 20%;">修改时间&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                    <th>操作&nbsp;
+                                        <span class="" aria-hidden="true"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <div class="col-lg-12 col-md-12 text-center">
+                            <div class="pagination-wrap">
+                            <div class="num" style="top: -30px;">
+                                <select class="form-control" size="1" id="showRows">
+                                    <option value="5">5条 / 页</option>
+                                    <option value="10">10条 / 页</option>
+                                    <option value="20">20条 / 页</option>
+                                    <option value="50">50条 / 页</option>
+                                </select>
+                            </div>
+                            <ul class="pagination " id="pagination">
+                                <li>
+                                    <a href="javascript:void(0)" id="firstPage">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" id="previousPage">上一页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" id="nextPage">下一页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" id="lastPage">尾页</a>
+                                </li>
+                            </ul>
+                            <div class="go">
+                                <div class="input-group">
+                                    <input class="form-control" type="number"  id="gotoPage" min="1"><a href="javascript:;" id="btn-gotoPage" class="input-group-btn input-group-addon">Go</a>
+                                </div>
+                            </div>
+                            <p class="page-info nowrap"> 当前第 <span class="text-primary" id="currentPageId">1</span> / <span class="text-primary" id="totalPages"></span>页，共有 <span class="text-primary" id="totalRows"></span> 条</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <!-- viewModal start -->
+                            <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">查看任务</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label for="view-itemcode" class="col-lg-3 control-label">任务id</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" id="view-itemcode" class="form-control" value="" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label" for="view-itemname">任务名称</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" disabled class="form-control" value="" id="view-itemname">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="view-itemtype" class="col-lg-3 control-label">任务编号</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" name="" id="view-itemtype" class="form-control" value="" disabled>
+                                                    </div>
+                                                </div>
+                                                <!-- </div> -->
+                                                <div class="form-group">
+                                                    <label for="view-projectCode" class="control-label col-lg-3">任务描述</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" name="" value="" id="view-projectCode" class="form-control" disabled>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer" style="text-align: center;">
+                                            <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- viewModal end -->
+                            <!-- alterModal start -->
+                            <div class="modal fade " id="alterModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">修改任务</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form-horizontal " role="form" id="alterForm">
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label" for="alter-itemname">任务名称</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" required class="form-control" id="alter-itemname" name="nameMedium">
+                                                        <!-- <span class="col-lg-1 glyphicon glyphicon-ok hide" id="alter-feedback-itemname" style="color: #468847;"></span> -->
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="alter-itemtype" class="col-lg-3 control-label">任务编号</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" required class="form-control" id="alter-itemtype" name="codeLong">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="alter-projectCode" class="control-label col-lg-3">任务描述</label>
+                                                    <div class="col-lg-8">
+                                                        <input type="text" name="descMedium" id="alter-projectCode" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="alert alert-danger hide" style="margin-bottom: 0;" id="alter-input-detecting">
+                                                输入信息不完整！
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                            <button class="btn btn-success" type="button" id="btn-alter">修改</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- alterModal end -->
+                        </div>
+                    </div>
+                    <!-- table end -->
+                </div>
+            </section>
+            <div class="copy-right text-center">
+    <span class="color-96">Copyright &copy; 1998－2018 BUPT All Rights Reserved <br>北京邮电大学物流工程实验室 版权所有</span> 
+</div>
+<div class="modal fade vac-confirm" tabindex="-1" role="dialog" id="vac-confirm" >    
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cancelConfirm" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4  class="modal-title">警告信息</h4>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message">确认要进行此操作吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary cancelConfirm">取消</button>
+                <button type="button" class="btn btn-info okConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade vac-alert" tabindex="-1" role="dialog" id="vac-alert" >	  
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4  class="modal-title">提示信息</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-message"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#vac-alert">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+        </section>
+        <!--main content end-->
+
+    </div>
+    <!--content end -->
+
+    <!--<link rel="import" href="./common/footer.html?__inline">-->
+    <div class="modal fade vac-alert" tabindex="-1" role="dialog" id="vac-alert" >	  
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4  class="modal-title">提示信息</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-message"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#vac-alert">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+    <!--script for this page only-->
+<script src="/public/lib/jquery_9f7c65c.js"></script>
+<script src="/public/lib/bootstrap.min_9e25e8e.js"></script>
+<script type="text/javascript" src="/public/lib/vue_b5d791e.js"></script>
+<script src="//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js"></script>
+<script>
+        document.querySelector('#logout').onclick = function() {
+            if(sessionStorage.getItem('userId')) {
+                sessionStorage.setItem('userId', '')
+                document.location.href = 'Login.html'
+            }
+        }
+    
+
+    var sidebarVue 
+    window.addEventListener('load', function(){
+        sidebarVue = new Vue({
+            el: '#sidebar',
+            data: {
+                menu: '',
+                subMenu: ''
+            },
+            ready: function(){
+                var caselib_Id = sessionStorage.getItem('caselibId')
+                if(!caselib_Id) {
+                    for(let i = 2; i <= 9; i++) {
+                        $('.3-'+i).css({display: 'none'})
+                    }
+                }
+            }
+        })
+    })
+
+
+    var Vac = Vac || {};
+    Vac.confirm = function(divSelector, okSelector, cancelSelector, confirmString) {
+        divSelector = divSelector || '#vac-confirm';
+        okSelector = okSelector || '.okConfirm';
+        cancelSelector = cancelSelector || '.cancelConfirm';
+        var confirmDiv = document.querySelector(divSelector);
+        if(confirmString) {
+            document.querySelector(divSelector + ' ' + ".modal-message").innerHTML = confirmString;
+        }
+        // console.log('hakjadkjhakjsd')
+        $(divSelector).modal('show');
+        return new Promise(function(resolve, reject) {
+            confirmDiv.querySelector(okSelector).onclick = function() {
+                resolve();
+                $(divSelector).modal('hide');
+            };
+            var cancelButtons = confirmDiv.querySelectorAll(cancelSelector);
+            for (var i = 0; i < cancelButtons.length; i++) {
+                cancelButtons[i].onclick = function() {
+                    reject();
+                    $(divSelector).modal('hide');
+                }
+            }
+        });
+    }
+
+
+	var Vac = Vac || {};
+	Vac.alert = function(message) {
+		$('.vac-alert .modal-message').html(message);
+		$('#vac-alert').modal('show');
+		return this;
+	};
+	Vac.removeAlert = function(msec) {
+		setTimeout(function() {
+			$('#vac-alert').modal('hide');
+		}, msec);
+	}
+
+
+	window.addEventListener('load', function(){
+		var userId = sessionStorage.getItem('userId')
+		if(userId == null || userId == "") {
+			window.location.href = 'Login.html'
+		}else{
+			var userName=sessionStorage.getItem('userName');
+			$('#curUserName').text(userName);
+		}
+	})
+
+
+	var Vac = Vac || {};
+	Vac.alert = function(message) {
+		$('.vac-alert .modal-message').html(message);
+		$('#vac-alert').modal('show');
+		return this;
+	};
+	Vac.removeAlert = function(msec) {
+		setTimeout(function() {
+			$('#vac-alert').modal('hide');
+		}, msec);
+	}
+</script>
+<script src="/public/static/js/config_b5e705e.js"></script>
+<script src="/public/static/js/vac-functions.es_353bfcf.js"></script>
+<script src="/public/static/js/testitems.es_6d3d274.js"></script>
+<script src="/public/lib/jquery.scrollTo.min_bd938d0.js"></script>
+<script type="text/javascript" src="/public/lib/jquery.nicescroll_c984421.js"></script>
+<script src="/public/lib/owl.carousel_ecd7bf6.js"></script>
+<script src="/public/lib/common-scripts_042ab5a.js"></script>
+</body>
+
+</html>

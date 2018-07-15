@@ -1,0 +1,66 @@
+<div class="modal fade vac-confirm" tabindex="-1" role="dialog" id="vac-confirm" >    
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cancelConfirm" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4  class="modal-title">警告信息</h4>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message">确认要进行此操作吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary cancelConfirm">取消</button>
+                <button type="button" class="btn btn-info okConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .vac-confirm .modal-dialog {
+        margin-top: 80px;
+    }
+    .vac-confirm .modal-content {
+        width: 500px;
+        margin: auto;
+        border: 1px solid #ddd;
+        /*box-shadow: 5px 5px 2px #d9edf7;*/
+    }
+    .vac-confirm .modal-header {
+        padding: 10px 15px;
+        background-color: #55A8A1;
+    }
+    .vac-confirm .modal-body {
+        padding: 15px 15px;
+        color: #a94442;
+    }
+    .vac-confirm .modal-footer {
+        padding: 10px 20px;
+    }
+</style>
+<script type="text/javascript">
+    var Vac = Vac || {};
+    Vac.confirm = function(divSelector, okSelector, cancelSelector, confirmString) {
+        divSelector = divSelector || '#vac-confirm';
+        okSelector = okSelector || '.okConfirm';
+        cancelSelector = cancelSelector || '.cancelConfirm';
+        var confirmDiv = document.querySelector(divSelector);
+        if(confirmString) {
+            document.querySelector(divSelector + ' ' + ".modal-message").innerHTML = confirmString;
+        }
+        // console.log('hakjadkjhakjsd')
+        $(divSelector).modal('show');
+        return new Promise(function(resolve, reject) {
+            confirmDiv.querySelector(okSelector).onclick = function() {
+                resolve();
+                $(divSelector).modal('hide');
+            };
+            var cancelButtons = confirmDiv.querySelectorAll(cancelSelector);
+            for (var i = 0; i < cancelButtons.length; i++) {
+                cancelButtons[i].onclick = function() {
+                    reject();
+                    $(divSelector).modal('hide');
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,286 @@
+{
+    "success": true,
+    "msg": "",
+    "obj": {
+        "id": 29,
+        "caselibid": 1,
+        "scenename": "测试登录场景",
+        "description": "对进货系统的测试登录流程进行顺次测试",
+        "exeStrategy1Status": 2,
+        "exeStrategy2Start": 1,
+        "exeStrategy2Order": null,
+        "exeStrategy2Status": 1,
+        "exeStrategy3Start": 1,
+        "exeStrategy3Order": null,
+        "exeStrategy3Status": 1,
+        "exeStrategyErr": 2,
+        "caseDtos": [
+            {
+                "id": 251,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": [
+                    {
+                        "id": 42,
+                        "casecode": 127,
+                        "state": 3
+                    },
+                    {
+                        "id": 44,
+                        "casecode": 126,
+                        "state": 1
+                    },
+                    {
+                        "id": 63,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 304,
+                        "casecode": 126,
+                        "state": 1
+                    },
+                    {
+                        "id": 51,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 37,
+                        "casecode": 126,
+                        "state": 1
+                    },
+                    {
+                        "id": 56,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 81,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 77,
+                        "casecode": 126,
+                        "state": 1
+                    },
+                    {
+                        "id": 66,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 108,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 107,
+                        "casecode": 126,
+                        "state": 1
+                    },
+                    {
+                        "id": 96,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 109,
+                        "casecode": 125,
+                        "state": 2
+                    },
+                    {
+                        "id": 110,
+                        "casecode": 126,
+                        "state": 1
+                    },
+                    {
+                        "id": 111,
+                        "casecode": 125,
+                        "state": 2
+                    }
+                ]
+            },
+            {
+                "id": 269,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 268,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 1,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 273,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 2,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 270,
+                "caseCompositeType": "1",
+                "casecode": null,
+                "state": 1,
+                "flowNodeDtos": null
+            },
+            {
+                "id": 272,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "state": 3,
+                "flowNodeDtos": [
+                    {
+                        "id": 110,
+                        "casecode": 123,
+                        "state": 2
+                    },
+                    {
+                        "id": 111,
+                        "casecode": 123,
+                        "state": 3
+                    }
+                ]
+            },
+            {
+                "id": 271,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "state": 0,
+                "flowNodeDtos": [
+                    {
+                        "id": 12,
+                        "casecode": 123,
+                        "state": 3
+                    },
+                    {
+                        "id": 14,
+                        "casecode": 123,
+                        "state": 1
+                    },
+                    {
+                        "id": 13,
+                        "casecode": 123,
+                        "state": 2
+                    }
+                ]
+            },
+            {
+                "id": 265,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 22,
+                        "casecode": 124,
+                        "state": 3
+                    },
+                    {
+                        "id": 23,
+                        "casecode": 125,
+                        "state": 1
+                    },
+                    {
+                        "id": 24,
+                        "casecode": 126,
+                        "state": 0
+                    }
+                ]
+            },{
+                "id": 265,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 22,
+                        "casecode": 124,
+                        "state": 3
+                    },
+                    {
+                        "id": 23,
+                        "casecode": 125,
+                        "state": 1
+                    },
+                    {
+                        "id": 24,
+                        "casecode": 126,
+                        "state": 0
+                    }
+                ]
+            },
+            {
+                "id": 265,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 22,
+                        "casecode": 124,
+                        "state": 3
+                    },
+                    {
+                        "id": 23,
+                        "casecode": 125,
+                        "state": 1
+                    },
+                    {
+                        "id": 24,
+                        "casecode": 126,
+                        "state": 0
+                    }
+                ]
+            },
+            {
+                "id": 265,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 22,
+                        "casecode": 124,
+                        "state": 3
+                    },
+                    {
+                        "id": 23,
+                        "casecode": 125,
+                        "state": 1
+                    },
+                    {
+                        "id": 24,
+                        "casecode": 126,
+                        "state": 0
+                    }
+                ]
+            },
+            {
+                "id": 265,
+                "caseCompositeType": "2",
+                "casecode": null,
+                "flowNodeDtos": [
+                    {
+                        "id": 22,
+                        "casecode": 124,
+                        "state": 3
+                    },
+                    {
+                        "id": 23,
+                        "casecode": 125,
+                        "state": 1
+                    },
+                    {
+                        "id": 24,
+                        "casecode": 126,
+                        "state": 0
+                    }
+                ]
+            }
+        ]
+    }
+}

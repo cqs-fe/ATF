@@ -1,0 +1,170 @@
+<style>
+    .active-item {
+        color: #ff6c60;
+    }
+    ul.sidebar-menu li ul.sub li a {
+        color: #a3acb6;
+    }
+</style>
+<aside>
+    <div id="sidebar" class="nav-collapse">
+        <ul class="sidebar-menu">
+            <li class="sub-menu 0">
+                <a href="javascript:;" class="">
+                    <span class="">系统管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 0-ul">
+                    <li class="sub-menu">
+                        <a class="0-0" href="usermanagement.html">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                    <!-- <li class="sub-menu">
+                        <a class="0-1" href="#">
+                            <span>权限设置</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="0-2" href="#">
+                            <span>数据字典设置</span>
+                        </a>
+                    </li> -->
+                </ul>
+            </li>
+            <li class="sub-menu 1">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试过程配置</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 1-ul">
+                    <li class="sub-menu">
+                        <a class="1-0" href="testphase.html">
+                            <span>测试阶段</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="1-1" href="productLine.html">
+                            <span>业务线管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="1-2" href="runner-management.html">
+                            <span>执行机管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu 2">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试基础设施</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 2-ul">
+                    <li class="sub-menu">
+                        <a class="2-0" href="aut.html">
+                            <span>被测系统管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="2-1" href="architecture.html">
+                            <span>自动化构件管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu 3">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>项目测试</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 3-ul">
+                    <li class="sub-menu">
+                        <a class="3-0" href="testitems.html">
+                            <span>测试任务</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-1" href="testProject.html">
+                            <span>测试项目管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-2" href="caseManagement.html">
+                            <span>测试用例管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-3" href="datatable.html">
+                            <span>测试资源管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-4" href="scene.html">
+                            <span>测试场景管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-5" href="testroundManage.html">
+                            <span>测试轮次管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-6" href="testplan-execute.html">
+                            <span>测试计划及执行</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-7" href="testRecord.html">
+                            <span>执行记录管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-8" href="execution.html">
+                            <span>批量执行管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-9" href="../build/pages/testplan">
+                            <span>测试计划</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li class="sub-menu 4">
+                <a href="javascript:;" class="">
+                    <span>测试资产库</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 4-ul">
+                    
+                </ul>
+            </li> -->
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>
+
+<script>
+    var sidebarVue 
+    window.addEventListener('load', function(){
+        sidebarVue = new Vue({
+            el: '#sidebar',
+            data: {
+                menu: '',
+                subMenu: ''
+            },
+            ready: function(){
+                var caselib_Id = sessionStorage.getItem('caselibId')
+                if(!caselib_Id) {
+                    for(let i = 2; i <= 9; i++) {
+                        $('.3-'+i).css({display: 'none'})
+                    }
+                }
+            }
+        })
+    })
+</script>

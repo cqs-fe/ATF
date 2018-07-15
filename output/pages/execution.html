@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta content="telephone=no" name="format-detection"/>
+<meta content="email=no" name="format-detection"/>    <title>批量执行管理</title>
+
+    <link rel="stylesheet" type="text/css" href="/public/static/css/base_63a6f74.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/index_b22c8a6.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/pagination_3ed9388.css" />
+    <link rel="stylesheet" type="text/css" href="/public/static/css/scene_d8b672c.css" />
+    <style type="text/css">
+    .active-item {
+        color: #ff6c60;
+    }
+    ul.sidebar-menu li ul.sub li a {
+        color: #a3acb6;
+    }
+
+
+                                #sample_1 th,
+                                #sample_1 td {
+                                    word-break: keep-all;
+                                }
+                            
+
+    .vac-confirm .modal-dialog {
+        margin-top: 80px;
+    }
+    .vac-confirm .modal-content {
+        width: 500px;
+        margin: auto;
+        border: 1px solid #ddd;
+        /*box-shadow: 5px 5px 2px #d9edf7;*/
+    }
+    .vac-confirm .modal-header {
+        padding: 10px 15px;
+        background-color: #55A8A1;
+    }
+    .vac-confirm .modal-body {
+        padding: 15px 15px;
+        color: #a94442;
+    }
+    .vac-confirm .modal-footer {
+        padding: 10px 20px;
+    }
+
+
+	.vac-alert .modal-dialog {
+		margin-top: 80px;
+		z-index: 100;
+	}
+	.vac-alert .modal-content {
+		width: 500px;
+		margin: auto;
+		border: 1px solid #ddd;
+	}
+	.vac-alert .modal-header {
+		padding: 10px 15px;
+		background-color: #55A8A1;
+	}
+	.vac-alert .modal-body {
+		padding: 15px 15px;
+		color: #a94442;
+	}
+	.vac-alert .modal-footer {
+		padding: 10px 20px;
+	}
+
+
+	.copy-right {
+		height: 50px;
+	}
+</style>
+</head>
+
+<body id="scene" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <header class="header white-bg">
+    <div class="sidebar-toggle-box">
+        <div data-original-title="点击折叠" data-placement="right" class="icon-reorder tooltips"></div>
+    </div>
+    <!--logo start-->
+    <a href="#" class="logo"><span>ATF</span></a>
+    <!--logo end-->
+
+    <div class="top-nav ">
+        <!--user info start-->
+        <ul class="nav pull-right top-menu">
+            <!-- user login dropdown start-->
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <img alt="" src="/public/static/images/avatar1_small_64c14fd.jpg">
+                    <span class="username" id="curUserName">chai</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <div class="log-arrow-up"></div>
+                    <li><a href="#"><i class="icon-suitcase"></i>个人中心</a></li>
+                    <li><a href="#"><i class="icon-cog"></i>设置</a></li>
+                    <li><a href="#"><i class="icon-bell-alt"></i> 通知</a></li>
+                    <li><a id="logout"><i class="icon-key"></i> 注销</a></li>
+                </ul>
+            </li>
+            <!-- user login dropdown end -->
+        </ul>
+        <!--search & user info end-->
+    </div></header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+    <div id="sidebar" class="nav-collapse">
+        <ul class="sidebar-menu">
+            <li class="sub-menu 0">
+                <a href="javascript:;" class="">
+                    <span class="">系统管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 0-ul">
+                    <li class="sub-menu">
+                        <a class="0-0" href="usermanagement.html">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                    <!-- <li class="sub-menu">
+                        <a class="0-1" href="#">
+                            <span>权限设置</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="0-2" href="#">
+                            <span>数据字典设置</span>
+                        </a>
+                    </li> -->
+                </ul>
+            </li>
+            <li class="sub-menu 1">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试过程配置</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 1-ul">
+                    <li class="sub-menu">
+                        <a class="1-0" href="testphase.html">
+                            <span>测试阶段</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="1-1" href="productLine.html">
+                            <span>业务线管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="1-2" href="runner-management.html">
+                            <span>执行机管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu 2">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>测试基础设施</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 2-ul">
+                    <li class="sub-menu">
+                        <a class="2-0" href="aut.html">
+                            <span>被测系统管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="2-1" href="architecture.html">
+                            <span>自动化构件管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub-menu 3">
+                <a href="javascript:;" class="">
+                    <!-- <i class="icon-th"></i> -->
+                    <span>项目测试</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 3-ul">
+                    <li class="sub-menu">
+                        <a class="3-0" href="testitems.html">
+                            <span>测试任务</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-1" href="testProject.html">
+                            <span>测试项目管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-2" href="caseManagement.html">
+                            <span>测试用例管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-3" href="datatable.html">
+                            <span>测试资源管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-4" href="scene.html">
+                            <span>测试场景管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-5" href="testroundManage.html">
+                            <span>测试轮次管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-6" href="testplan-execute.html">
+                            <span>测试计划及执行</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-7" href="testRecord.html">
+                            <span>执行记录管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-8" href="execution.html">
+                            <span>批量执行管理</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="3-9" href="../build/pages/testplan">
+                            <span>测试计划</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li class="sub-menu 4">
+                <a href="javascript:;" class="">
+                    <span>测试资产库</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub 4-ul">
+                    
+                </ul>
+            </li> -->
+        </ul>
+        <!-- sidebar menu end-->
+    </div>
+</aside>        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- breadcrumb start -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#">
+                                    <i class="icon-home"></i> 项目测试</a>
+                            </li>
+                            <li class="active">
+                                <a href="#"> 批量执行管理</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- breadcrumb end -->
+                <!-- table start -->
+                <div class="row" v-if="!addshow">
+                    <div class="col-lg-12">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                批量执行管理
+                            </header>
+                            <!-- 表格 -->
+                                                        <div style="overflow-x: auto;">
+                                <table class="table table-striped table-bordered border-top text-center" id="sample_1">
+                                    <thead>
+                                        <tr>
+                                            <th class="hidden-phone text-center" data-order="casecode" data-sort="desc">操作</th>
+                                            <th class="text-center" data-order="autId" data-sort="desc">发起用户</th>
+                                            <th class="hidden-phone text-center" data-order="transId">创建日期</th>
+                                            <th class="hidden-phone text-center" data-order="transId">创建时间</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行产品</th>
+                                            <th class="hidden-phone text-center" data-order="transId">用例来源</th>
+                                            <th class="hidden-phone text-center" data-order="transId">用例库</th>
+                                            <th class="hidden-phone text-center" data-order="transId">测试阶段</th>
+                                            <th class="hidden-phone text-center" data-order="transId">测试轮次</th>
+                                            <th class="hidden-phone text-center" data-order="transId">场景名称</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行轮次</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行范围</th>
+                                            <th class="hidden-phone text-center" data-order="transId">用例总数</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行单保存类型</th>
+                                            <th class="hidden-phone text-center" data-order="transId">轮次最大执行单数</th>
+                                            <th class="hidden-phone text-center" data-order="transId">记录单保存库</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行单详细度</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行状态</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行结果</th>
+                                            <th class="hidden-phone text-center" data-order="transId">执行结果信息</th>
+                                            <th class="hidden-phone text-center" data-order="transId">完成日期</th>
+                                            <th class="hidden-phone text-center" data-order="transId">完成时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sceneTable">
+                                        <tr class="odd gradeX" v-for="scene in sceneList" id="{{scene.id}}">
+                                            <td class="center " width="" :data-id="scene.id">
+                                                <button class="btn btn-xs btn-success" @click="getRecord(scene.id)">记录单</button>
+                                            </td>
+                                            <td class="center " width="">{{ scene.creatorId }}</td>
+                                            <td class="center " width="">{{ scene.createDate }}</td>
+                                            <td class="center " width="">{{ scene.createTime }}</td>
+                                            <td class="center " width="">{{ executeProduct[scene.executeProduct] }}</td>
+                                            <td class="center " width="">{{ caseSourceChannel[scene.caseSourceChannel] }}</td>
+                                            <td class="center " width="">{{ scene.caseLibId }}</td>
+                                            <td class="center " width="">{{ scene.testPhase }}</td>
+                                            <td class="center " width="">{{ scene.testRound }}</td>
+                                            <td class="center " width="">{{ scene.sceneId }}</td>
+                                            <td class="center " width="">{{ scene.executeRound }}</td>
+                                            <td class="center " width="">{{ runScopeFlag[scene.runScopeFlag] }}</td>
+                                            <td class="center " width="">{{ scene.totalCount }}</td>
+                                            <td class="center " width="">{{ recordSaveType[scene.recordSaveType] }}</td>
+                                            <td class="center " width="">{{ scene.maxRecordPerRound }}</td>
+                                            <td class="center " width="">{{ recordVerboseType[scene.recordVerboseType] }}</td>
+                                            <td class="center " width="">{{ runStatus[scene.runStatus] }}</td>
+                                            <td class="center " width="">{{ runResult[scene.runResult] }}</td>
+                                            <td class="center " width="">{{ scene.runResultMessage }}</td>
+                                            <td class="center " width="">{{ scene.creatorId }}</td>
+                                            <td class="center " width="">{{ scene.finishDate }}</td>
+                                            <td class="center " width="">{{ scene.finishTime }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 分页 -->
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <div class="pagination-wrap" v-if="totalPage!=0">
+                                        <div class="num">
+                                            <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control" v-model="pageSize" id="mySelect">
+                                                <option value="5" selected>5条/页</option>
+                                                <option value="10">10条/页</option>
+                                                <option value="20">20条/页</option>
+                                                <option value="50">50条/页</option>
+                                            </select>
+                                        </div>
+                                        <ul class="pagination">
+                                            <li :class="currentPage==1?'disabled':''">
+                                                <a href="javascript:;" @click="turnToPage(1)">首页</a>
+                                            </li>
+                                            <li :class="currentPage==1?'disabled':''">
+                                                <a @click="turnToPage(currentPage-1)" href="javascript:;">上一页</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-3)" v-text="currentPage-3" v-if="currentPage-3>0"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-2)" v-text="currentPage-2" v-if="currentPage-2>0"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage-1)" v-text="currentPage-1" v-if="currentPage-1>0"></a>
+                                            </li>
+                                            <li class="active">
+                                                <a href="javascript:;" @click="turnToPage(currentPage)" v-text="currentPage">3</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+1)" v-text="currentPage+1" v-if="currentPage+1<=totalPage"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+2)" v-text="currentPage+2" v-if="currentPage+2<=totalPage"></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" @click="turnToPage(currentPage+3)" v-text="currentPage+3" v-if="currentPage+3<=totalPage"></a>
+                                            </li>
+                                            <li :class="currentPage==totalPage?'disabled':''">
+                                                <a href="javascript:;" @click="turnToPage(currentPage+1)">下一页</a>
+                                            </li>
+                                            <li :class="currentPage==totalPage?'disabled':''">
+                                                <a href="javascript:;" @click="turnToPage(totalPage)">尾页</a>
+                                            </li>
+                                        </ul>
+                                        <div class="go">
+                                            <div :class="isPageNumberError?'input-group error':'input-group'">
+                                                <input class="form-control" type="number" v-model="goToPage" min="1">
+                                                <a href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
+                                            </div>
+                                        </div>
+                                        <small class="small nowrap"> 当前第
+                                            <span class="text-primary" v-text="currentPage"></span> /
+                                            <span class="text-primary" v-text="totalPage"></span>页，共有
+                                            <span class="text-primary" v-text="tt"></span> 条</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!-- table end -->
+                 <!-- updateModal start -->
+                 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">修改测试项目</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- modal-body start -->
+                                    <section class="panel">
+                                        <form id="updateForm" class="form-horizontal" role="form">
+                                            <div class="form-group hidden">
+                                                <label class="col-lg-3 control-label">测试项目编号</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="id" value="{{ selectedId}}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">测试项目编号</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="testProjectCode">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">测试项目名称</label>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" name="testProjectName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">描述</label>
+                                                <div class="col-lg-5">
+                                                    <textarea class="form-control" rows="3" name="taskDescription"></textarea>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </section>
+                                    <!-- modal-body end -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                    <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="update">修改</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- updateModal end -->
+            </section>
+            <div class="copy-right text-center">
+    <span class="color-96">Copyright &copy; 1998－2018 BUPT All Rights Reserved <br>北京邮电大学物流工程实验室 版权所有</span> 
+</div>
+<div class="modal fade vac-confirm" tabindex="-1" role="dialog" id="vac-confirm" >    
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cancelConfirm" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4  class="modal-title">警告信息</h4>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message">确认要进行此操作吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary cancelConfirm">取消</button>
+                <button type="button" class="btn btn-info okConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade vac-alert" tabindex="-1" role="dialog" id="vac-alert" >	  
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4  class="modal-title">提示信息</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-message"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#vac-alert">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+        </section>
+    </div>
+
+<script type="text/javascript" src="/public/lib/mod_36ad799.js"></script>
+<script>/*resourcemap*/
+
+
+        document.querySelector('#logout').onclick = function() {
+            if(sessionStorage.getItem('userId')) {
+                sessionStorage.setItem('userId', '')
+                document.location.href = 'Login.html'
+            }
+        }
+    
+
+    var sidebarVue 
+    window.addEventListener('load', function(){
+        sidebarVue = new Vue({
+            el: '#sidebar',
+            data: {
+                menu: '',
+                subMenu: ''
+            },
+            ready: function(){
+                var caselib_Id = sessionStorage.getItem('caselibId')
+                if(!caselib_Id) {
+                    for(let i = 2; i <= 9; i++) {
+                        $('.3-'+i).css({display: 'none'})
+                    }
+                }
+            }
+        })
+    })
+
+
+    var Vac = Vac || {};
+    Vac.confirm = function(divSelector, okSelector, cancelSelector, confirmString) {
+        divSelector = divSelector || '#vac-confirm';
+        okSelector = okSelector || '.okConfirm';
+        cancelSelector = cancelSelector || '.cancelConfirm';
+        var confirmDiv = document.querySelector(divSelector);
+        if(confirmString) {
+            document.querySelector(divSelector + ' ' + ".modal-message").innerHTML = confirmString;
+        }
+        // console.log('hakjadkjhakjsd')
+        $(divSelector).modal('show');
+        return new Promise(function(resolve, reject) {
+            confirmDiv.querySelector(okSelector).onclick = function() {
+                resolve();
+                $(divSelector).modal('hide');
+            };
+            var cancelButtons = confirmDiv.querySelectorAll(cancelSelector);
+            for (var i = 0; i < cancelButtons.length; i++) {
+                cancelButtons[i].onclick = function() {
+                    reject();
+                    $(divSelector).modal('hide');
+                }
+            }
+        });
+    }
+
+
+	var Vac = Vac || {};
+	Vac.alert = function(message) {
+		$('.vac-alert .modal-message').html(message);
+		$('#vac-alert').modal('show');
+		return this;
+	};
+	Vac.removeAlert = function(msec) {
+		setTimeout(function() {
+			$('#vac-alert').modal('hide');
+		}, msec);
+	}
+
+
+	window.addEventListener('load', function(){
+		var userId = sessionStorage.getItem('userId')
+		if(userId == null || userId == "") {
+			window.location.href = 'Login.html'
+		}else{
+			var userName=sessionStorage.getItem('userName');
+			$('#curUserName').text(userName);
+		}
+	})
+</script>
+<script src="/public/lib/jquery_9f7c65c.js"></script>
+<script src="/public/lib/jquery-1.8.3.min_24bd97b.js"></script>
+<script src="/public/lib/bootstrap.min_9e25e8e.js"></script>
+<script src="/public/lib/jquery.scrollTo.min_bd938d0.js"></script>
+<script type="text/javascript" src="/public/lib/jquery.nicescroll_c984421.js"></script>
+<script type="text/javascript" src="/public/lib/jquery.sparkline_f684675.js"></script>
+<script src="/public/lib/jquery.easy-pie-chart_3c93cce.js"></script>
+<script src="/public/lib/owl.carousel_ecd7bf6.js"></script>
+<script src="/public/lib/jquery.customSelect.min_f90c1f4.js"></script>
+<script src="/public/lib/approve.min_a71c3d0.js"></script>
+<script src="/public/lib/common-scripts_042ab5a.js"></script>
+<script type="text/javascript" src="/public/lib/vue_b5d791e.js"></script>
+<script type="text/javascript" src="/public/static/js/constant_1179c29.js"></script>
+<script type="text/javascript" src="/public/lib/form-component_e441093.js"></script>
+<script type="text/javascript" src="/public/static/js/config_b5e705e.js"></script>
+<script src="/public/lib/vue-resource.min_e8fc461.js"></script>
+<script type="text/javascript" src="/public/static/js/execution.es_777c4b9.js"></script>
+</body>
+
+</html>
+<!--common script for all pages-->
