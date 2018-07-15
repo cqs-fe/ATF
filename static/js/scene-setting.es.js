@@ -5,7 +5,7 @@ var vBody = new Vue({
 	data: {
 		isSelect: false,
 		tooltipFlag: true,
-		tooltipType: 4,
+		tooltipType: 1,
 		triggerShow: false,
 		saveTriggerType: 1,
 
@@ -58,8 +58,6 @@ var vBody = new Vue({
 		selectedCases: [],
 		// save the checked flow nodes
 		checkedFlowNodes: [],
-		// 执行时间设置的相关参数
-		executeTime: null,
 		executeDateFlag: null,
 
 		// 数据池数据
@@ -117,7 +115,6 @@ var vBody = new Vue({
 			handle: '.handle'
 		})
 		$( "#sortable" ).disableSelection();
-
 		$('.3').addClass('open')
 		$('.3 .arrow').addClass('open')
 		$('.3-ul').css({display: 'block'})
@@ -174,33 +171,31 @@ var vBody = new Vue({
 			var _this = this;
 			Vac.ajax({
 				url: address3 + 'sceneController/selectScene',
-				// url: '/api/getcaseinscene',
 				data: { id: +_this.sceneid },
-				success: function(data, statusText){
-					if(data.success == true){
-						// _this.sceneInfo = data.obj;
+				success: function(data){
+					if(data.respCode == '0000'){
 						let caseGroup = {}, caseMaxLength = {};
-						for(var i = 0; i < data.obj.caseDtos.length; i++) {
-							if(caseGroup[data.obj.caseDtos[i].group]) {
+						for(var i = 0; i < data.selectSceneDto.caseDtos.length; i++) {
+							if(caseGroup[data.selectSceneDto.caseDtos[i].group]) {
 								// 已经有 group
 							} else {
-								caseGroup[data.obj.caseDtos[i].group] = [];
+								caseGroup[data.selectSceneDto.caseDtos[i].group] = [];
 							}
-							let group = caseGroup[data.obj.caseDtos[i].group];
+							let group = caseGroup[data.selectSceneDto.caseDtos[i].group];
 							let o = {};
-							Object.defineProperty(o, "id", {value: data.obj.caseDtos[i].id });
-							Object.defineProperty(o, "caseCompositeType", {value: data.obj.caseDtos[i].caseCompositeType });
-							if (data.obj.caseDtos[i].caseCompositeType+'' === '1') {
-								let time = data.obj.caseDtos[i].time || 'T+0';
-								o[time] = [data.obj.caseDtos[i]];
+							Object.defineProperty(o, "id", {value: data.selectSceneDto.caseDtos[i].id });
+							Object.defineProperty(o, "caseCompositeType", {value: data.selectSceneDto.caseDtos[i].caseCompositeType });
+							if (data.selectSceneDto.caseDtos[i].caseCompositeType+'' === '1') {
+								let time = data.selectSceneDto.caseDtos[i].time || 'T+0';
+								o[time] = [data.selectSceneDto.caseDtos[i]];
 								group.push(o);
 							} else {
-								for (var j = 0; j < data.obj.caseDtos[i].flowNodeDtos.length; j++) {
-									let time = data.obj.caseDtos[i].flowNodeDtos[j].time;
+								for (var j = 0; j < data.selectSceneDto.caseDtos[i].flowNodeDtos.length; j++) {
+									let time = data.selectSceneDto.caseDtos[i].flowNodeDtos[j].time;
 									if (o[time]) {
-										o[time].push(data.obj.caseDtos[i].flowNodeDtos[j]);
+										o[time].push(data.selectSceneDto.caseDtos[i].flowNodeDtos[j]);
 									} else {
-										o[time] = [data.obj.caseDtos[i].flowNodeDtos[j]];
+										o[time] = [data.selectSceneDto.caseDtos[i].flowNodeDtos[j]];
 									}
 								}
 								group.push(o);
@@ -214,27 +209,27 @@ var vBody = new Vue({
 							}
 						}
 						_this.caseMaxLength = caseMaxLength;
-						data.obj.caseGroup = caseGroup;
-						_this.sceneInfo = data.obj;
-						_this.exeStrategy1Status= data.obj.exe_strategy1_status || 1;
-						_this.exeStrategy2Start=data.obj.exe_strategy2_start || '1';
-						_this.exeStrategy2Order= data.obj.exe_strategy2_order || '1';
-						_this.exeStrategy2Status= data.obj.exe_strategy2_status || '1';
-						_this.exeStrategy3Start= data.obj.exe_strategy3_start || '1';
-						_this.exeStrategy3Order= data.obj.exe_strategy3_order || '1';
-						_this.exeStrategy3Status= data.obj.exe_strategy3_status || '1';
-						_this.exeStrategyErr= data.obj.exe_strategy_err || '1';
-						if(!(data.obj.caseDtos && data.obj.caseDtos.length)) {
+						data.selectSceneDto.sceneEntity.caseGroup = caseGroup;
+						_this.sceneInfo = data.selectSceneDto.sceneEntity;
+						_this.exeStrategy1Status= data.selectSceneDto.sceneEntity.exe_strategy1_status || 1;
+						_this.exeStrategy2Start=data.selectSceneDto.sceneEntity.exe_strategy2_start || '1';
+						_this.exeStrategy2Order= data.selectSceneDto.sceneEntity.exe_strategy2_order || '1';
+						_this.exeStrategy2Status= data.selectSceneDto.sceneEntity.exe_strategy2_status || '1';
+						_this.exeStrategy3Start= data.selectSceneDto.sceneEntity.exe_strategy3_start || '1';
+						_this.exeStrategy3Order= data.selectSceneDto.sceneEntity.exe_strategy3_order || '1';
+						_this.exeStrategy3Status= data.selectSceneDto.sceneEntity.exe_strategy3_status || '1';
+						_this.exeStrategyErr= data.selectSceneDto.sceneEntity.exe_strategy_err || '1';
+						if(!(data.selectSceneDto.caseDtos && data.selectSceneDto.caseDtos.length)) {
 							Vac.alert('未查询到相关的用例信息')
 						}
-						for (var i = data.obj.caseDtos.length - 1; i >= 0; i--) {
-							_this.caseIds.includes(data.obj.caseDtos[i].id) ? 1 : (_this.caseIds.push(data.obj.caseDtos[i].id))
-							if(data.obj.caseDtos[i].caseCompositeType == 2) {
+						for (var i = data.selectSceneDto.caseDtos.length - 1; i >= 0; i--) {
+							_this.caseIds.includes(data.selectSceneDto.caseDtos[i].id) ? 1 : (_this.caseIds.push(data.selectSceneDto.caseDtos[i].id))
+							if(data.selectSceneDto.caseDtos[i].caseCompositeType == 2) {
 								let arr = []
-								for (var j = data.obj.caseDtos[i].flowNodeDtos.length - 1; j >= 0; j--) {
-									arr.push(data.obj.caseDtos[i].flowNodeDtos[j].id)
+								for (var j = data.selectSceneDto.caseDtos[i].flowNodeDtos.length - 1; j >= 0; j--) {
+									arr.push(data.selectSceneDto.caseDtos[i].flowNodeDtos[j].id)
 								}
-								_this.flowNodeIds.set(+data.obj.caseDtos[i].id, arr)
+								_this.flowNodeIds.set(+data.selectSceneDto.caseDtos[i].id, arr)
 							}
 						}
 						Vue.nextTick(() => {
@@ -279,6 +274,7 @@ var vBody = new Vue({
 		},
 		//打开tooltipWindow，并根据传入的参数显示相应的操作内容
 		operationType: function(type){
+		// 时间规划
 			this.tooltipType = type;
 			this.tooltipFlag = false;
 			// 触发器设置
@@ -288,6 +284,10 @@ var vBody = new Vue({
 				this.getDataPool();
 			} else if (type === 3) {
 				this.getExecuteStrategy();
+			} else if (type == 1) {
+				setTimeout(() => {
+					$('#datetimepicker').datetimepicker();
+				}, 500);
 			}
 		},
 		// 获取执行策略
@@ -635,18 +635,18 @@ var vBody = new Vue({
 		},
 		saveExecuteTime: function(){
 			if (!this.selectedCases.length) {
-				Vac.alert('场景中没有案例，无需规划时间');
+				Vac.alert('');
 				return;
 			}
 			var data = {
 				sceneId: +this.sceneid,
-				caseIds: '[' + this.selectedCases + ']',
-				executeTime: this.executeTime,
+				caseIds: this.selectedCases,
+				executeTime: $('#datetimepicker').val(),
 				executeDateFlag: this.executeDateFlag,
 				combineGroupName: '',
 				orderNum: 1,
 				runTotalNumber: 2,
-				modifierId: sessionStorage.getItem('userId')
+				modifierId: +sessionStorage.getItem('userId')
 			};
 			Vac.ajax({
 				url: address3 + 'sceneController/sceneTestcaseSetting',
