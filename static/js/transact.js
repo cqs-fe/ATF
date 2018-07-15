@@ -75,11 +75,11 @@ var app = new Vue({
                         $('#successModal').modal();
                         queryTransact();
                     } else {
-                        $('#failModal').modal();
+                        alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                    alert(data.respMsg)
                 }
             });
         },
@@ -111,11 +111,11 @@ var app = new Vue({
                         // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
                         queryTransact();
                     } else {
-                        $('#failModal').modal();
+                        alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                    alert(data.respMsg)
                 }
             });
         },
@@ -154,11 +154,11 @@ var app = new Vue({
                         // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
                         queryTransact();
                     } else {
-                        $('#failModal').modal();
+                        alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                    alert(data.respMsg)
                 }
             });
         },
@@ -339,7 +339,7 @@ function setval() {
             app.pageSize = app.listnum;
         },
         error: function() {
-            $('#failModal').modal();
+            alert(data.respMsg)
         }
     });
 }
@@ -363,7 +363,7 @@ function queryTransact() {
             // app.pageSize = app.listnum;
         },
         error: function() {
-            $('#failModal').modal();
+            alert(data.respMsg)
         }
     });
 }

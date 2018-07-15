@@ -98,11 +98,13 @@ var app = new Vue({
                         $('#successModal').modal();
                         getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
-                        $('#failModal').modal();
+                        // alert(data.respMsg)
+                        alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                    // alert(data.respMsg)
+                    alert(data.respMsg)
                 }
             });
         },
@@ -133,11 +135,13 @@ var app = new Vue({
                         $('#successModal').modal();
                         getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
-                        $('#failModal').modal();
+                        // alert(data.respMsg)
+                        alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                    // alert(data.respMsg)
+                    alert(data.respMsg)
                 }
             });
         },
@@ -175,11 +179,11 @@ var app = new Vue({
                         $('#successModal').modal();
                         getAut(self.currentPage, self.pageSize, self.order, self.sort);
                     } else {
-                        $('#failModal').modal();
+                        alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                    alert(data.respMsg)
                 }
             });
         },
