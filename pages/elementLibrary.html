@@ -643,57 +643,66 @@ var app = new Vue({
                                     //主属性
                                     _this.mainList = [];
                                     _this.mainList = data.element.mainProperties;
-                                    _this.mainListLength = _this.mainList.length;
-                                    for (let i = 0; i < _this.mainListLength; i++) {
-                                        let paraTr = $('<tr></tr>'),
-                                            paraCheckTd = $('<td><input type="checkbox" name="mainProp"/></td>'),
-                                            paraNameTd = $('<td contenteditable="true"></td>'),
-                                            paraValTd = $('<td contenteditable="true"></td>');
-                                        paraNameTd.html(_this.mainList[i].name);
-                                        paraValTd.html(_this.mainList[i].value);
-                                        paraTr.append(paraCheckTd, paraNameTd, paraValTd);
-                                        $('#mainTbody').append(paraTr);
+                                    if(_this.mainList){
+                                        _this.mainListLength = _this.mainList.length;
+                                        for (let i = 0; i < _this.mainListLength; i++) {
+                                            let paraTr = $('<tr></tr>'),
+                                                paraCheckTd = $('<td><input type="checkbox" name="mainProp"/></td>'),
+                                                paraNameTd = $('<td contenteditable="true"></td>'),
+                                                paraValTd = $('<td contenteditable="true"></td>');
+                                            paraNameTd.html(_this.mainList[i].name);
+                                            paraValTd.html(_this.mainList[i].value);
+                                            paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                            $('#mainTbody').append(paraTr);
+                                        }
                                     }
 
                                     //附加属性
                                     _this.addiList = data.element.additionalProperties;
-                                    _this.addiListLength = _this.addiList.length;
-                                    for (let i = 0; i < _this.addiListLength; i++) {
-                                        let paraTr = $('<tr></tr>'),
-                                            paraCheckTd = $('<td><input type="checkbox" name="addiProp"/></td>'),
-                                            paraNameTd = $('<td contenteditable="true"></td>'),
-                                            paraValTd = $('<td contenteditable="true"></td>');
-                                        paraNameTd.html(_this.addiList[i].name);
-                                        paraValTd.html(_this.addiList[i].value);
-                                        paraTr.append(paraCheckTd, paraNameTd, paraValTd);
-                                        $('#addiTbody').append(paraTr);
+                                    if(_this.addiList){
+                                        _this.addiListLength = _this.addiList.length;
+                                        for (let i = 0; i < _this.addiListLength; i++) {
+                                            let paraTr = $('<tr></tr>'),
+                                                paraCheckTd = $('<td><input type="checkbox" name="addiProp"/></td>'),
+                                                paraNameTd = $('<td contenteditable="true"></td>'),
+                                                paraValTd = $('<td contenteditable="true"></td>');
+                                            paraNameTd.html(_this.addiList[i].name);
+                                            paraValTd.html(_this.addiList[i].value);
+                                            paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                            $('#addiTbody').append(paraTr);
+                                        }
                                     }
-
+                                    
                                     //辅助属性
                                     _this.assiList = data.element.assistantProperties;
-                                    _this.assiListLength = _this.assiList.length;
-                                    for (var i = 0; i < _this.assiListLength; i++) {
-                                        var paraTr = $('<tr></tr>'),
-                                            paraCheckTd = $('<td><input type="checkbox" name="assiProp"/></td>'),
-                                            paraNameTd = $('<td contenteditable="true"></td>'),
-                                            paraValTd = $('<td contenteditable="true"></td>');
-                                        paraNameTd.html(_this.assiList[i].name);
-                                        paraValTd.html(_this.assiList[i].value);
-                                        paraTr.append(paraCheckTd, paraNameTd, paraValTd);
-                                        $('#assiTbody').append(paraTr);
+                                    if(_this.assiList){
+                                       _this.assiListLength = _this.assiList.length;
+                                        for (var i = 0; i < _this.assiListLength; i++) {
+                                            var paraTr = $('<tr></tr>'),
+                                                paraCheckTd = $('<td><input type="checkbox" name="assiProp"/></td>'),
+                                                paraNameTd = $('<td contenteditable="true"></td>'),
+                                                paraValTd = $('<td contenteditable="true"></td>');
+                                            paraNameTd.html(_this.assiList[i].name);
+                                            paraValTd.html(_this.assiList[i].value);
+                                            paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                            $('#assiTbody').append(paraTr);
+                                        } 
                                     }
+                                    
                                     //关联属性
                                     _this.assiList = data.element.relateProperties;
-                                    _this.assiListLength = _this.assiList.length;
-                                    for (var i = 0; i < _this.assiListLength; i++) {
-                                        var paraTr = $('<tr></tr>'),
-                                            paraCheckTd = $('<td><input type="checkbox" name="assiProp"/></td>'),
-                                            paraNameTd = $('<td contenteditable="true"></td>'),
-                                            paraValTd = $('<td contenteditable="true"></td>');
-                                        paraNameTd.html(_this.assiList[i].name);
-                                        paraValTd.html(_this.assiList[i].value);
-                                        paraTr.append(paraCheckTd, paraNameTd, paraValTd);
-                                        $('#relatePropTbody').append(paraTr);
+                                    if(_this.assiList){
+                                        _this.assiListLength = _this.assiList.length;
+                                        for (var i = 0; i < _this.assiListLength; i++) {
+                                            var paraTr = $('<tr></tr>'),
+                                                paraCheckTd = $('<td><input type="checkbox" name="assiProp"/></td>'),
+                                                paraNameTd = $('<td contenteditable="true"></td>'),
+                                                paraValTd = $('<td contenteditable="true"></td>');
+                                            paraNameTd.html(_this.assiList[i].name);
+                                            paraValTd.html(_this.assiList[i].value);
+                                            paraTr.append(paraCheckTd, paraNameTd, paraValTd);
+                                            $('#relatePropTbody').append(paraTr);
+                                        }
                                     }
 
                                 }
@@ -751,7 +760,7 @@ var app = new Vue({
         var _this = this;
         $('#autSelect').change(function() {
             _this.transactSelect();
-            _this.autId = $('#autSelect').val();
+            _this.autId = $('#autSelect').val(); 
             _this.transactId = $('#transactSelect').val();
             _this.getElementTree();
             _this.classtypeSelect();
@@ -964,12 +973,12 @@ var app = new Vue({
                             _this.getElementTree();
                             $("#addUIName").val('');
                         } else {
-                            $('#failModalEle').modal('show');
+                            alert(data.respMsg)
                             $("#addUIName").val('');
                         }
                     },
                     error: function() {
-                        $('#failModalEle').modal('show');
+                        alert(data.respMsg)
                         $("#addUIName").val('');
                     }
                 });
@@ -993,11 +1002,11 @@ var app = new Vue({
                         $('#successModalEle').modal();
                         _this.getElementTree();
                     } else {
-                        $('#failModalEle').modal();
+                       alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModalEle').modal();
+                   alert(data.respMsg)
                 }
             });
         },
@@ -1043,11 +1052,11 @@ var app = new Vue({
                         $('#UI').css('display', 'none');
                         $('#ele').css('display', 'none');
                     } else {
-                        $('#failModalEle').modal();
+                       alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModalEle').modal();
+                   alert(data.respMsg)
                     $('#blank').css('display', 'block');
                     $('#UI').css('display', 'none');
                     $('#ele').css('display', 'none');
@@ -1101,19 +1110,17 @@ var app = new Vue({
                         "elements": elements
                     }),
                     success: function(data) {
-                        // console.info(data);
                         if (data.respCode==0000) {
+                            
                             $('#successModalEle').modal();
-                            _this.getElementTree();
-                            var treeObj = $.fn.zTree.getZTreeObj("elementtree");
-                            var pNode=treeObj.getNodeByParam('name', selectedUIName, null);
-                            treeObj.expandNode(pNode);
+                            _this.getElementTree(selectedUIName);
+                             
                         } else {
-                            $('#failModalEle').modal();
+                           alert(data.respMsg)
                         }
                     },
                     error: function() {
-                        $('#failModalEle').modal();
+                       alert(data.respMsg)
                     }
                 });
             }
@@ -1122,6 +1129,7 @@ var app = new Vue({
             var _this = this;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
             var nodes = treeObj.getSelectedNodes();
+            var UIName = nodes[0].getParentNode().name;
             var elementId = nodes[0].id;
             var uiId = nodes[0].getParentNode().id;
             $.ajax({
@@ -1137,13 +1145,13 @@ var app = new Vue({
                     console.info(data);
                     if (data.respCode==0000) {
                         $('#successModalEle').modal();
-                        _this.getElementTree();
+                        _this.getElementTree(UIName);
                     } else {
-                        $('#failModalEle').modal();
+                       alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModalEle').modal();
+                   alert(data.respMsg)
                 }
             });
         },
@@ -1152,6 +1160,7 @@ var app = new Vue({
             var transid = !this.componentMode ? this.transactId : this.transid;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes();
+            var selectedUIName = nodes[0].getParentNode().name;
             if(nodes.length==0){
                 alert('请先选中元素');
             }else{
@@ -1216,7 +1225,7 @@ var app = new Vue({
             });
             //辅助属性
             var assiTd,
-                assitantProperties=[],
+                assistantProperties=[],
                 assiItem={};
             $('#assiTbody').find('tr').each(function() {
                 assiTd = $(this).children();
@@ -1225,7 +1234,7 @@ var app = new Vue({
                 assiItem.method='';
                 assiItem.isRelative=null;
                 assiItem.toolName='';
-                assitantProperties.push(assiItem);
+                assistantProperties.push(assiItem);
             });
             //关联属性 
             var relTd,
@@ -1255,7 +1264,7 @@ var app = new Vue({
                         "relateParentIdentifyObjectId": relateParentIdentifyObjectId,
                         "mainProperties": mainProperties,
                         "additionalProperties": additionalProperties,
-                        "assitantProperties": assitantProperties,
+                        "assistantProperties": assistantProperties,
                         "relateProperties": relateProperties
                     }
                 }),
@@ -1263,17 +1272,17 @@ var app = new Vue({
                     // console.log(data);
                     if (data.respCode==0000) {
                         $('#successModalEle').modal();
-                        _this.getElementTree();
+                        _this.getElementTree(selectedUIName);
                         // treeObj.selectNode(nodes[0]);
                         $('#blank').css('display', 'block');
                         $('#UI').css('display', 'none');
                         $('#ele').css('display', 'none');
                     } else {
-                        $('#failModalEle').modal();
+                       alert(data.respMsg)
                     }
                 },
                 error: function() {
-                    $('#failModalEle').modal();
+                   alert(data.respMsg)
                     $('#blank').css('display', 'block');
                     $('#UI').css('display', 'none');
                     $('#ele').css('display', 'none');
@@ -1322,7 +1331,7 @@ var app = new Vue({
         },
 
         // 页面初始化获取元素库
-        getElementTree: function() {
+        getElementTree: function(uiName) {
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
@@ -1352,6 +1361,14 @@ var app = new Vue({
                         }
                         $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
                         app.elementRepositoryId = data.elementRepositoryId;
+                        console.log(uiName+"123456");
+                         if(uiName!=null){
+                            var zTree = $.fn.zTree.getZTreeObj("elementtree");
+                            console.log(zTree);
+                            var pNode=zTree.getNodeByParam('name', uiName, null);
+                            console.log(pNode);
+                            zTree.expandNode(pNode,true,true,true,false);
+                        }
                     }
                 }
             });

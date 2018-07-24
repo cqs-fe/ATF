@@ -1197,6 +1197,7 @@ var app = new Vue({
                 }),
                 success: function(data){
                     $('#successModal').modal();
+                    app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
                 },
                 error: function(){
                     $('#failModal').modal();
