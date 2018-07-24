@@ -760,7 +760,7 @@ var app = new Vue({
         var _this = this;
         $('#autSelect').change(function() {
             _this.transactSelect();
-            _this.autId = $('#autSelect').val();
+            _this.autId = $('#autSelect').val(); 
             _this.transactId = $('#transactSelect').val();
             _this.getElementTree();
             _this.classtypeSelect();
@@ -1110,13 +1110,11 @@ var app = new Vue({
                         "elements": elements
                     }),
                     success: function(data) {
-                        // console.info(data);
                         if (data.respCode==0000) {
+                            
                             $('#successModalEle').modal();
-                            _this.getElementTree();
-                            var treeObj = $.fn.zTree.getZTreeObj("elementtree");
-                            var pNode=treeObj.getNodeByParam('name', selectedUIName, null);
-                            treeObj.expandNode(pNode);
+                            _this.getElementTree(selectedUIName);
+                             
                         } else {
                            alert(data.respMsg)
                         }
@@ -1131,6 +1129,7 @@ var app = new Vue({
             var _this = this;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
             var nodes = treeObj.getSelectedNodes();
+            var UIName = nodes[0].getParentNode().name;
             var elementId = nodes[0].id;
             var uiId = nodes[0].getParentNode().id;
             $.ajax({
@@ -1146,7 +1145,7 @@ var app = new Vue({
                     console.info(data);
                     if (data.respCode==0000) {
                         $('#successModalEle').modal();
-                        _this.getElementTree();
+                        _this.getElementTree(UIName);
                     } else {
                        alert(data.respMsg)
                     }
@@ -1161,6 +1160,7 @@ var app = new Vue({
             var transid = !this.componentMode ? this.transactId : this.transid;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes();
+            var selectedUIName = nodes[0].getParentNode().name;
             if(nodes.length==0){
                 alert('请先选中元素');
             }else{
@@ -1272,7 +1272,7 @@ var app = new Vue({
                     // console.log(data);
                     if (data.respCode==0000) {
                         $('#successModalEle').modal();
-                        _this.getElementTree();
+                        _this.getElementTree(selectedUIName);
                         // treeObj.selectNode(nodes[0]);
                         $('#blank').css('display', 'block');
                         $('#UI').css('display', 'none');
@@ -1331,7 +1331,7 @@ var app = new Vue({
         },
 
         // 页面初始化获取元素库
-        getElementTree: function() {
+        getElementTree: function(uiName) {
             var _this = this;
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
@@ -1361,6 +1361,14 @@ var app = new Vue({
                         }
                         $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
                         app.elementRepositoryId = data.elementRepositoryId;
+                        console.log(uiName+"123456");
+                         if(uiName!=null){
+                            var zTree = $.fn.zTree.getZTreeObj("elementtree");
+                            console.log(zTree);
+                            var pNode=zTree.getNodeByParam('name', uiName, null);
+                            console.log(pNode);
+                            zTree.expandNode(pNode,true,true,true,false);
+                        }
                     }
                 }
             });
