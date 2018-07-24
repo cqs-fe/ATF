@@ -381,13 +381,22 @@ function sendQuery(sendPage,func){
     });
 }
 //获取发送数据
-function getSendData(page, rows){
-    return {
+function getSendData(page, rows, key, value){
+    const a = {
         pageSize: rows,
         currentPage: page,
         "orderType":"desc",
-        "orderColumns":"id"
+        "orderColumns":"id",
+        "reallyname": '',
+        username: '',
+        role: '',
+        dept: '',
+        tel: ''
     };
+    if (key) {
+        a[key] = value;
+    }
+    return a;
 }
 //控制首页尾页等的可用性
 function paginationControl(totalPage, currentPage){
@@ -495,16 +504,11 @@ function showViewModal(target){
 function search(){
     var key = $("#search-type").val();           //select value
     var searchkey = $("#searchKey").val();  //input value
-    for(var data in sendData){
-        sendData[data] = "";
-    }
-    sendData[key] = searchkey;
-    sendData["sort"] = "asc";
-    sendData["order"] = "id";
 
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
-    var data =getSendData(page,rows);
+    // sendData[]
+    var data =getSendData(page,rows, key, searchkey);
     Vac.ajax({
         url: address3 + "userController/pagedBatchQueryUser",
         data: data,

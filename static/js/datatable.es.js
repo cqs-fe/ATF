@@ -2,6 +2,7 @@
 // document.getElementById('viewScript').onclick = function () {
 var tooltipwindow;
 var vac_conditionList = null;
+var autId = null;
 function viewScriptHandler (event) {
 	var testcaseId = event.target.getAttribute('data-id');
 	// var data = { testcaseId
@@ -878,10 +879,10 @@ $(document).ready(function () {
 						callback: {
 						},
 						data: {
-							simpleData: {
-								enable: true,
-								idKey: 'id',
-								pIdKey: 'parentid',
+							key: {
+								children: 'children',
+								isParent: 'isParent',
+								name: 'name',
 								rootPId: 0
 							}
 						}
@@ -906,10 +907,10 @@ $(document).ready(function () {
 					uiAndElement: {
 						callback: {},
 						data: {
-							simpleData: {
-								enable: true,
-								idKey: 'id',
-								pIdKey: 'parentid',
+							key: {
+								children: 'children',
+								isParent: 'isParent',
+								name: 'name',
 								rootPId: 0
 							}
 						},
@@ -1175,9 +1176,6 @@ $(document).ready(function () {
 					this.uiOrFunctions.target = event.target;
 					this.uiOrFunctions.changed = false;
 					this.uiOrFunctions.table = type;
-					// var dataT = {
-					// 	transid: transid
-					// }
 					// 请求Ui和Elment
 					this.getUIAndFunctions(1)
 
@@ -1191,29 +1189,41 @@ $(document).ready(function () {
 				getUIAndFunctions: function (type) {
 					var str = +type === 1 ? '' : 2
 					var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
-					$.ajax({
-						url: address + 'elementlibraryController/showUIandElementforScript',
-						data: 'transid=' + transid,
-						type: 'post',
-						dataType: 'json',
-						success: (data, statusText) => {
-							if (data && data.success === true && (data.obj instanceof Array)) {
-								var ztreeUI = $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+					Vac.ajax({
+						url: address3 + 'elementRepository/queryAllElementsForATransact',
+						data: { transactId: 126 },
+						success: (data) => {
+							if ('0000' === data.respCode) {
+								let treeDate = data.uis.map((ui) => {
+									let parent = {
+										isParent: true,
+										name: ui.uiName,
+										id: ui.uiId
+									};
+									parent.children = ui.elements ? ui.elements.map((element) => {
+										return {
+											classType: element.classType,
+											name: element.elementName,
+											id: element.elementId,
+											isParent: false,
+											children: null
+										}
+									}) : null;
+									return parent;
+								});
+								var ztreeUI = $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, treeDate);
 								ztreeUI.expandAll(true);
-								// var da = [{ "id": 1, "parentid": 0, "name": "ui-chai" }, { "id": 2, "parentid": 1, "name": "ele-chai", "classType": 'webedit' }]
 							}
 						}
 					})
 					// 请求函数集
 					// var autId = $("#autSelect").val();
-					$.ajax({
-						url: address + 'autController/selectFunctionSet',
-						data: { 'id': sessionStorage.getItem('autId') },
-						type: 'post',
-						dataType: 'json',
-						success: (data, statusText) => {
-							if (data.success && data.obj) {
-								var ztreeFunc = $.fn.zTree.init($('#functions-ul' + str), setting.functions, data.obj);
+					Vac.ajax({
+						url: address3 + 'aut/selectFunctionSet',
+						data: { 'id': autId },
+						success: (data) => {
+							if (data.respCode === '0000') {
+								var ztreeFunc = $.fn.zTree.init($('#functions-ul' + str), setting.functions, data.omMethodRespDTOList);
 								ztreeFunc.expandAll(true);
 							} else {
 								// Vac.alert('');
@@ -1435,18 +1445,21 @@ $(document).ready(function () {
 						}
 
 						var getFunctions = new Promise((resolve, reject) => {
-							$.ajax({
-								url: address + 'autController/selectMethod',
+							Vac.ajax({
+								url: address3 + 'aut/selectMethod',
 								data: data,
-								type: 'post',
-								dataType: 'json',
-								success: function (data, statusText) {
-									var { functions, parameterlist } = _this.setFunctionAndParameter(data);
-									operationRows[index].parameters = parameterlist;
-									operationRows[index].functions = functions;
-									operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
-									_this.updateRow(operationRows, index);
-									resolve();
+								success: function (data) {
+									if (data.respCode === '0000' && data.omMethodRespDTOList) {
+										var { functions, parameterlist } = modalVue.setFunctionAndParameter(data.omMethodRespDTOList);
+										operationRows[index].parameters = parameterlist;
+										operationRows[index].functions = functions;
+										operationRows[index].selectedFunc = functions.length ? functions[0].name : '';
+										_this.updateRow(operationRows, index);
+										resolve();
+									} else {
+										reject(data.respMsg);
+										Vac.alert(data.respMsg);
+									}
 								}
 							})
 						});
@@ -1531,17 +1544,19 @@ $(document).ready(function () {
 							classType: node.classType
 						}
 						newRow.functions = []
-						$.ajax({
-							url: address + 'autController/selectMethod',
+						Vac.ajax({
+							url: address3 + 'aut/selectMethod',
 							data: { id: autId, classname: newRow.operation.classType },
-							type: 'post',
-							dataType: 'json',
 							success: function (data, statusText) {
-								var { functions, parameterlist } = modalVue.setFunctionAndParameter(data);
-								newRow.functions = functions;
-								newRow.parameters = parameterlist;
-								newRow.selectedFunc = functions.length ? functions[0].name : '';
-								operationRows.push(newRow)
+								if (data.respCode === '0000' && data.omMethodRespDTOList) {
+									var { functions, parameterlist } = modalVue.setFunctionAndParameter(data.omMethodRespDTOList);
+									newRow.functions = functions;
+									newRow.selectedFunc = functions.length ? functions[0].name : '';
+									newRow.parameters = parameterlist;
+									operationRows.push(newRow);
+								} else {
+									Vac.alert(data.respMsg);
+								}
 							}
 						})
 					}
@@ -1689,93 +1704,6 @@ $(document).ready(function () {
 				// _this.selectItems = data;
 				// _this.getInfo();
 				// _this.changeSelect({target: {value: 1 }});
-			},
-			watch: {
-				// checkedArray(newVal) {
-				// 	var _this = this;
-				// 	if (newVal.length > 1) {
-				// 		newVal.shift()
-				// 		return
-				// 	}
-				// 	if(newVal.length == 0) {
-				// 		zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, []);
-				// 		return
-				// 	}
-				// 	_this.systemInfo.valueList = newVal;
-				// 	_this.systemInfo.executorId = sessionStorage.getItem('userId');
-				// 	_this.systemInfo.caseLibId = sessionStorage.getItem;
-				// 	var data = {
-				// 		propertyName: 'testPoint',
-				// 		valueList: newVal,
-				// 		executorId: sessionStorage.getItem('userId'),
-				// 		caseLibId: sessionStorage.getItem('caselibId')
-				// 	}
-				// 	Vac.ajax({
-				// 		url: address3 + "dataCenter/queryFilterTree",
-				// 		data: data,
-				// 		success: function (data) {
-				// 			if ('0000' !== data.respCode) {
-				// 				Vac.alert(data.respMsg);
-				// 				return;
-				// 			}
-				// 			var treeData = [];
-				// 			if (data.filterTree.length == 0) {
-				// 				Vac.alert('返回结果为空！')
-				// 				return
-				// 			}
-				// 			data.filterTree.forEach((value) => {
-				// 				var item = {};  //解构第一层
-				// 				item.open = true;
-				// 				item.children = [];
-				// 				value.transactList.forEach((value1) => {
-				// 					var subData = {};  //解构第二层
-				// 					subData.children = [];
-				// 					subData.open = true;
-				// 					({
-				// 						transId: subData.id,
-				// 						transName: subData.name,
-				// 					} = value1);
-				// 					value1.scriptTemplateList.forEach((value2 => {
-				// 						var ssubData = {};		 //解构第二层
-				// 						({
-				// 							scriptId: ssubData.id,
-				// 							scriptName: ssubData.name
-				// 						} = value2);
-				// 						subData.children.push(ssubData);
-				// 						if (newVal.length > _this.testpointLength) {
-				// 							var testpointMapVal = `${value.autid}-${value1.transactid}-${value2.scriptid}`
-				// 							// testpointsMap的格式：
-				// 							// {
-				// 							// 	"登录": {"22-57-1167"}
-				// 							// }
-				// 							// 注： 键名是其所属的testpoint,键值是set，
-				// 							// 	set中的数据格式： "autid-transid-scriptid"
-				// 							if (_this.testpointsMap.has(newVal[newVal.length - 1])) {
-				// 								_this.testpointsMap.get(newVal[newVal.length - 1]).add(testpointMapVal)
-				// 							} else {
-				// 								_this.testpointsMap.set(newVal[newVal.length - 1], new Set())
-				// 								_this.testpointsMap.get(newVal[newVal.length - 1]).add(testpointMapVal)
-				// 							}
-				// 						}
-				// 						// 生成关于testpoint的Map
-
-				// 					}));
-				// 					item.children.push(subData);
-				// 				});
-				// 				({
-				// 					autId: item.id,
-				// 					autName: item.name,
-				// 				} = value);
-				// 				treeData.push(item);
-				// 			});
-				// 			zTreeObj = $.fn.zTree.init($("#tree-wrapper"), setting, treeData);
-				// 			_this.testpointLength = newVal.length
-				// 		},
-				// 		error: function () {
-				// 			Vac.alert('查询数据失败！')
-				// 		}
-				// 	});
-				// }
 			},
 			methods: {
 				getInfo: function () {

@@ -643,7 +643,7 @@ $(document).ready(function() {
             tableSave: function() {
                 //UI("denglu").webedit("username").set(1,"123");
                 var sendData = this.generateScriptString();
-                Vac.alert('这是生成的脚本代码:\n' + sendData)
+                // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
                 // return
                 Vac.ajax({
@@ -673,7 +673,7 @@ $(document).ready(function() {
                     type: 'post',
                     data: {
                         'autId': mainVue.autId,
-                        'scriptId': mainVue.script_id|| mainVue.templateList[0].id,
+                        'script_id': mainVue.script_id|| mainVue.templateList[0].id,
                         'content': sendData
                     },
                     success: function(data) {
@@ -739,7 +739,7 @@ $(document).ready(function() {
                     data: JSON.stringify({ 'id': mainVue.autId }),
                     type: 'post',
                     dataType: 'json',
-                    success: (data, statusText) => {console.log(data);
+                    success: (data) => {
                         if (data.respCode === '0000') {
                             $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.omMethodRespDTOList);
                         }
@@ -866,7 +866,7 @@ $(document).ready(function() {
                         Vac.ajax({
                             url: address3 + 'aut/selectMethod',
                             data: data,
-                            success: function(data, statusText) {
+                            success: function(data) {
                                 if (data.respCode === '0000' && data.omMethodRespDTOList) {
                                     var { functions, parameterlist } = _this.setFunctionAndParameter(data.omMethodRespDTOList);
                                     operationRows[index].parameters = parameterlist;
