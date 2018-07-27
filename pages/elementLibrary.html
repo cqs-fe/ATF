@@ -65,10 +65,10 @@
                                 </header>
                                 <div id="menuContent" class="menuContent treeMenu">
                                     <div class="form-group panel-pad form-horizontal">
-                                        <div class="col-xs-6">
-                                            <input type="text" name="" id="keyword" value="" class="form-control empty input-sm">
+                                        <div class="col-xs-10">
+                                            <input type="text" name="" id="keyword" value="" class="form-control" placeHolder="输入搜索关键字">
                                         </div>
-                                        <a class="btn btn-info btn-sm" id="search-btn" @click="searchNodes()">搜索</a>
+                                        <br>
                                     </div>
                                     <div class="form-group form-horizontal">
                                         <div class="col-xs-12">
@@ -497,6 +497,8 @@
 <!-- <script type="text/javascript" src="../static/js/elementLibrary.js"></script> -->
 <!-- ztree -->
 <script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
+<script type="text/javascript" src="../static/js/fuzzysearch.js"></script>
+<script type="text/javascript" src="../lib/jquery.ztree.exhide.min.js"></script>
 <script>
 var app = new Vue({
     el: '#elementLibrary',
@@ -561,8 +563,11 @@ var app = new Vue({
                         if (treeNode.level == 0) { //选择的是UI
                             $(':input', '#UIForm').val('');
                             _this.getUILinkedObjectTree();
-                            _this.UIName = treeNode.name;
-                            _this.UITitle = treeNode.name;
+                            console.log( treeNode.name);
+                            console.log( _this.replacemess(treeNode.name));
+                            var namestr= _this.replacemess(treeNode.name);
+                            _this.UIName = namestr;
+                            _this.UITitle = namestr;
                             var uiId=treeNode.id;
                             $('#UIForm input[name="UIName"]').val(treeNode.name);
                             $('#blank').css('display', 'none');
@@ -581,7 +586,6 @@ var app = new Vue({
                                     var treeObj = $.fn.zTree.getZTreeObj("UILinkedTree");
                                     if (relateObjectId !== null && relateObjectId !== undefined && relateObjectId !== '') {
                                         treeObj.selectNode(treeObj.getNodeByParam("objectId", relateObjectId, null));
-                                        var nodes = treeObj.getSelectedNodes();
                                         var obj = nodes[0].objectName;
                                         $('#UILinkedInput').val(obj);
                                     }
@@ -595,10 +599,10 @@ var app = new Vue({
                             _this.getEleLinkedObjectTree();
                             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
                             var nodes = treeObj.getSelectedNodes();
-                            _this.eleName = treeNode.name;
+                            _this.eleName = _this.replacemess(treeNode.name);
                             _this.elementId=treeNode.id;
                             var parentNode = nodes[0].getParentNode();
-                            _this.UIName = parentNode.name;
+                            _this.UIName = _this.replacemess(parentNode.name);
                             var uiId=parentNode.id;
                             $("#mainTbody").children().remove();
                             $("#addiTbody").children().remove();
@@ -628,7 +632,7 @@ var app = new Vue({
                                         var elePtree = $.fn.zTree.getZTreeObj("eleParentTree");
                                         elePtree.selectNode(elePtree.getNodeByParam("objectId", relateParentObjectId, null));
                                         var pNodes = elePtree.getSelectedNodes(),
-                                            pObj = pNodes[0].objectName;
+                                            pObj = data.element.classType;
                                         $('#eleParentInput').val(pObj);
                                     }
                                     if (relateObjectId !== null && relateObjectId !== undefined && relateObjectId !== '') {
@@ -639,7 +643,6 @@ var app = new Vue({
                                             lObj = lNodes[0].objectName;
                                         $('#eleLinkedInput').val(lObj);
                                     }
-
                                     //主属性
                                     _this.mainList = [];
                                     _this.mainList = data.element.mainProperties;
@@ -704,7 +707,6 @@ var app = new Vue({
                                             $('#relatePropTbody').append(paraTr);
                                         }
                                     }
-
                                 }
                             });
                         }
@@ -844,6 +846,8 @@ var app = new Vue({
                                         // console.log(nodes)
                                         $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
                                         app.elementRepositoryId = data.elementRepositoryId;
+                                        console.log("aaaaa");
+                                        fuzzySearch('elementtree','#keyword',null,true); 
                                     }
                                 }
                             });
@@ -1160,12 +1164,12 @@ var app = new Vue({
             var transid = !this.componentMode ? this.transactId : this.transid;
             var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
                 nodes = treeObj.getSelectedNodes();
-            var selectedUIName = nodes[0].getParentNode().name;
+            var selectedUIName = _this.replacemess(nodes[0].getParentNode().name);
             if(nodes.length==0){
                 alert('请先选中元素');
             }else{
                 var uiId = nodes[0].getParentNode().id,
-                    eleName = nodes[0].name,
+                    eleName = _this.replacemess(nodes[0].name),
                     elementId=nodes[0].id;
             }
             var rEleName = $('#rEleName').val(),
@@ -1258,7 +1262,7 @@ var app = new Vue({
                     "uiId": uiId,
                     "element": {
                         "elementId": elementId,
-                        "elementName": eleName,
+                        "elementName": rEleName,
                         "classType": ClassType,
                         "relateIdentifyObjectId": relateIdentifyObjectId,
                         "relateParentIdentifyObjectId": relateParentIdentifyObjectId,
@@ -1361,7 +1365,6 @@ var app = new Vue({
                         }
                         $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
                         app.elementRepositoryId = data.elementRepositoryId;
-                        console.log(uiName+"123456");
                          if(uiName!=null){
                             var zTree = $.fn.zTree.getZTreeObj("elementtree");
                             console.log(zTree);
@@ -1372,6 +1375,8 @@ var app = new Vue({
                     }
                 }
             });
+            console.log("aaaaa");
+            fuzzySearch('elementtree','#keyword',null,true); 
         },
         //禁止拖动
         zTreeBeforeDrag: function(treeId, treeNodes) {
@@ -1382,9 +1387,11 @@ var app = new Vue({
             var treeObj = $.fn.zTree.getZTreeObj("elementtree");
             var keywords = $("#keyword").val();
             var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);
-            if (nodes.length > 0) {
-                treeObj.selectNode(nodes[0]);
-            }
+            fuzzySearch('elementtree','#keyword',null,true); 
+            // if (nodes.length > 0) {
+            //     treeObj.selectNode(nodes[0]);
+            //     treeObj.selectNode(nodes[1]);
+            // }
         },
         /*elementtree end*/
         // 页面初始化获取对象库
@@ -1508,6 +1515,10 @@ var app = new Vue({
         // 跳转到基础脚本页面配置上级页面选中的功能点的基础脚本
         toScript: function() {
             location.href = "script.html";
+        },
+        replacemess(str) {
+            var name =str.replace(/<span style="color: whitesmoke;background-color: darkred;">/g,"").replace(/<\/span>/g,"");
+            return name;
         },
     }
 });
