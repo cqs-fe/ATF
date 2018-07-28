@@ -604,16 +604,14 @@ var vBody = new Vue({
 				return;}
 			Vac.confirm('', '', '', '确认要移除所选用例吗？').then(() => {
 				var data = {
-					sceneid: _this.sceneid,
-					caseidList: '[' + _this.selectedCases.toString() + ']'
+					id: _this.sceneid,
+					caseIds: _this.selectedCases
 				};
-				$.ajax({
-					url: address + 'testexecutioninstanceController/deletetestcaseinscene',
+				Vac.ajax({
+					url: address3 + 'sceneController/deleteTestcaseFromScene',
 					data: data,
-					type: 'post',
-					dataType: 'json',
-					success: function(data, statusText){
-						if(data.success === true){
+					success: function(data){
+						if(data.respCode === '0000'){
 							Vac.alert("删除成功！");
 							_this.selectedCases = [];
 							_this.getCases()

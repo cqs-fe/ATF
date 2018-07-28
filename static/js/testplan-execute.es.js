@@ -250,7 +250,7 @@ var vBody = new Vue({
 			var _this = this;
 			
 			Vac.ajax({
-				url: address2 + 'sceneController/selectAllScene',
+				url: address3 + 'sceneController/selectAllScene',
 				data: { caseLibId: this.caselibId },
 				success: function(data){
 					if(data.respCode == '0000'){

@@ -481,7 +481,7 @@ $(document).ready(function() {
             this.zTreeSettings.uiAndElement.callback.onClick = this.zTreeOnClick;
             this.zTreeSettings.functions.callback.onClick = this.zTreeOnClick;
             // 设置table可以拖拽行
-            $(function() {
+            setTimeout (function() { console.log($('.icon-move'));
                 $("#sortable").sortable({
                     stop: (event, ui) => {
                         if (+(ui.item[0].rowIndex - 1) === +ui.item[0].getAttribute('data-index')) {
@@ -501,7 +501,7 @@ $(document).ready(function() {
                     }
                 });
                 // $("#sortable").disableSelection();
-            });
+            }, 2000);
             $('.2').addClass('open')
             $('.2 .arrow').addClass('open')
             $('.2-ul').css({display: 'block'})

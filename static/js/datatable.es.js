@@ -2131,7 +2131,7 @@ $(document).ready(function () {
 								$('#no-data-tip').css({display: 'none'});
 							}
 						} else {
-							Vac.alert(data.msg);
+							Vac.alert(data.respCode);
 						}
 					},
 					error: function () {
@@ -2269,12 +2269,6 @@ $(document).ready(function () {
 			if (handsontable !== null) {
 				handsontable.render();
 			}
-			try {
-				var submenuHeight = document.querySelector('#submenu').offsetHeight;
-				document.querySelector('#submenu').children[0].style.height = submenuHeight / 2 + 'px';
-				document.querySelector('#submenu').children[1].style.height = submenuHeight / 2 + 'px';
-			} catch (e) { }
-
 		};
 		//保存按钮
 		document.getElementById('saveAll').onclick = function () {
