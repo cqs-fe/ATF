@@ -370,7 +370,7 @@ function sendQuery(sendPage,func){
         success: function(data){
             if (data.respCode === '0000') {
                 dataSet = data.list;
-                var totalRows = data.totalCount;
+                totalRows = data.totalCount;
                 createTable(dataSet);
                 func(totalRows, page);
             } else {
@@ -385,13 +385,13 @@ function getSendData(page, rows, key, value){
     const a = {
         pageSize: rows,
         currentPage: page,
-        "orderType":"desc",
-        "orderColumns":"id",
-        "reallyname": '',
-        username: '',
-        role: '',
-        dept: '',
-        tel: ''
+        "orderType":sendData.sort,
+        "orderColumns":sendData.order,
+        "username":"",
+        "reallyname":"",
+        "role":"",
+        "tel":"",
+        "dept":""
     };
     if (key) {
         a[key] = value;
@@ -402,6 +402,7 @@ function getSendData(page, rows, key, value){
 function paginationControl(totalPage, currentPage){
     document.getElementById("currentPageId").innerHTML = currentPage;
     document.getElementById("totalPages").innerHTML = totalPage;
+    document.getElementById("totalRows").innerHTML = totalRows;
     document.getElementById("gotoPage").setAttribute("max",totalPage);
     if(currentPage >= totalPage){
         $("#nextPage").parent("li").addClass("disabled");
@@ -504,19 +505,24 @@ function showViewModal(target){
 function search(){
     var key = $("#search-type").val();           //select value
     var searchkey = $("#searchKey").val();  //input value
-
+    for(var data in sendData){
+        sendData[data] = "";
+     }
+     sendData["sort"] = "asc";
+     sendData["order"] = "id";
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
-    // sendData[]
-    var data =getSendData(page,rows, key, searchkey);
+    var data =getSendData(page,rows);
+    data[key] = searchkey;
     Vac.ajax({
         url: address3 + "userController/pagedBatchQueryUser",
         data: data,
         success: function(data){
             if (data.respCode === '0000') {
                 dataSet = data.list;
-                var totalRows = data.totalCount;
+                totalRows = data.totalCount;
                 createTable(dataSet);
+                updatePagination(data.totalCount,data.currentPage);
                 // func(totalRows, page);
             } else {
                 Vac.alert('查询失败');
