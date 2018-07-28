@@ -20,27 +20,26 @@ var app = new Vue({
         },
         getCode (){
             $.ajax({
-                url:address+'toolController/query',
+                url:address3+'tool/querySingleTool',
                 type:'post',
                 data:{
-                    'autid':this.autId
+                    'id':this.autId
                 },
                 success:function(data){
                     console.log(data);
-                    if(data){
-                        app.execodeId=data.obj.id;
-                        $('textarea[name="maincodeBegin"]').val(data.obj.maincodeBegin);
-                        $('textarea[name="maincodeEnd"]').val(data.obj.maincodeEnd);
+                    if(data.respCode=="0000"){
+                        app.execodeId=data.id;
+                        $('textarea[name="maincodeBegin"]').val(data.maincodeBegin);
+                        $('textarea[name="maincodeEnd"]').val(data.maincodeEnd);
                     }
                 }
-
             });
         },
         update (){
             const maincodeBegin=$('textarea[name="maincodeBegin"]').val();
             const maincodeEnd=$('textarea[name="maincodeEnd"]').val();
             $.ajax({
-                url:address+'toolController/update',
+                url:address3+'tool/updateToolInfo',
                 type:'post',
                 data:{
                     'id':app.execodeId,
