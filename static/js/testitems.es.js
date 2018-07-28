@@ -10,7 +10,7 @@ var totalPage = 0;
 var itemId;
 
 var sendData = {
-    order:"id",
+    order:"modifiedTime",
     sort:"asc",
     missionName:"",
     missionCode:"",
@@ -629,8 +629,8 @@ function createTable(dataSet){
     let tdId = $(`<td class="td-itemId"></td>`).text(value.id); // id
     let tdName = $(`<td class="td-name"></td>`).text(value.nameMedium);  // 编号
     let tdType = $(`<td class="td-type"></td>`).text(value.codeLong); // 项目id
-    let createTime = $(`<td class="td-name"></td>`).text(getDate(value.createTime));  // 编号
-    let modifiedTime = $(`<td class="td-type"></td>`).text(getDate(value.modifiedTime)); // 项目id
+    let createTime = $(`<td class="td-name" style="word-break: keep-all;"></td>`).text(getDate(value.createTime));  // 编号
+    let modifiedTime = $(`<td class="td-type" style="word-break: keep-all;"></td>`).text(getDate(value.modifiedTime)); // 项目id
     let tdProjectCode = $(`<td class="td-projectCode"></td>`).text(value.descMedium);    // 名称
     let tdOperation = $(`<td class="td-operation" style="padding-bottom: 7px;padding-top: 7px;">
     <a data-toggle="modal" class="btn btn-xs btn-view btn-success" onclick="showViewModal(this);" href=''>详情</a> 
@@ -755,6 +755,5 @@ function getSendData(page, rows){
         descMedium: '',
         codeLong: ''
     };
-    // return "page="+page+"&rows="+rows+"&order="+sendData.order+"&sort="+sendData.sort+"&missionName="+sendData.missionName+"&missionCode="+sendData.missionCode+"&testProjectId="+sendData.testProjectId;
 }
 //得到发送的data

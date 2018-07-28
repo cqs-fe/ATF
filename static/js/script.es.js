@@ -404,10 +404,10 @@ $(document).ready(function() {
                 uiAndElement: {
                     callback: {},
                     data: {
-                        simpleData: {
-                            enable: true,
-                            idKey: 'id',
-                            pIdKey: 'parentid',
+                        key: {
+                            children: 'children',
+                            isParent: 'isParent',
+                            name: 'name',
                             rootPId: 0
                         }
                     }
@@ -431,10 +431,10 @@ $(document).ready(function() {
                 uiAndElement: {
                     callback: {},
                     data: {
-                        simpleData: {
-                            enable: true,
-                            idKey: 'id',
-                            pIdKey: 'parentid',
+                        key: {
+                            children: 'children',
+                            isParent: 'isParent',
+                            name: 'name',
                             rootPId: 0
                         }
                     },
@@ -481,7 +481,7 @@ $(document).ready(function() {
             this.zTreeSettings.uiAndElement.callback.onClick = this.zTreeOnClick;
             this.zTreeSettings.functions.callback.onClick = this.zTreeOnClick;
             // 设置table可以拖拽行
-            $(function() {
+            setTimeout (function() { console.log($('.icon-move'));
                 $("#sortable").sortable({
                     stop: (event, ui) => {
                         if (+(ui.item[0].rowIndex - 1) === +ui.item[0].getAttribute('data-index')) {
@@ -501,7 +501,7 @@ $(document).ready(function() {
                     }
                 });
                 // $("#sortable").disableSelection();
-            });
+            }, 2000);
             $('.2').addClass('open')
             $('.2 .arrow').addClass('open')
             $('.2-ul').css({display: 'block'})
@@ -646,15 +646,14 @@ $(document).ready(function() {
                 // Vac.alert('这是生成的脚本代码:\n' + sendData)
                 // UI(""登录页面"").webedit("webedit").set("3");UI(""登录页面"").webedit("webedit").set("444");UI("welcome to the system").webedit("webedit").set("333")
                 // return
-                ajax2({
-                    url: address + 'scripttemplateController/scripttemplateSave',
-                    type: 'post',
+                Vac.ajax({
+                    url: address3 + 'scripttemplateController/saveScriptTemplate',
                     data: {
-                        'script_id': mainVue.script_id || mainVue.templateList[0].id,
+                        'scriptId': mainVue.script_id || mainVue.templateList[0].id,
                         'content': sendData
                     },
                     success: function(data) {
-                        if (data.success) {
+                        if (data.respCode === '0000') {
                             $('#success').modal();
                             mainVue.scriptIsChanged = false
                         } else {
@@ -704,14 +703,29 @@ $(document).ready(function() {
             getUIAndFunctions: function(type){
                 var str = +type === 1 ? '' : 2
                 var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
-                ajax2({
-                    url: address + 'elementlibraryController/showUIandElementforScript',
-                    data: 'transid=' + mainVue.transId,
-                    type: 'post',
-                    dataType: 'json',
-                    success: (data, statusText) => {
-                        if (data && data.success === true && (data.obj instanceof Array)) {
-                            var tree = $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, data.obj);
+                Vac.ajax({
+                    url: address3 + 'elementRepository/queryAllElementsForATransact',
+                    data: { transactId: mainVue.transId },
+                    success: (data) => {
+                        if ( data.respCode === '0000') {
+                            let treeDate = data.uis.map((ui) => {
+                                let parent = {
+                                    isParent: true,
+                                    name: ui.uiName,
+                                    id: ui.uiId
+                                };
+                                parent.children = ui.elements ? ui.elements.map((element) => {
+                                    return {
+                                        classType: element.classType,
+                                        name: element.elementName,
+                                        id: element.elementId,
+                                        isParent: false,
+                                        children: null
+                                    }
+                                }) : null;
+                                return parent;
+                            });
+                            var tree = $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, treeDate);
                             tree.expandAll(true);
                             // var da = [{"id":1,"parentid":0,"name":"ui-chai"},{"id":2,"parentid":1,"name":"ele-chai", "classType": 'webedit'}]
                             // $.fn.zTree.init($('#ui-element-ul'+str), setting.uiAndElement, da);
@@ -725,7 +739,7 @@ $(document).ready(function() {
                     data: JSON.stringify({ 'id': mainVue.autId }),
                     type: 'post',
                     dataType: 'json',
-                    success: (data, statusText) => {console.log(data);
+                    success: (data) => {
                         if (data.respCode === '0000') {
                             $.fn.zTree.init($('#functions-ul'+str), setting.functions, data.omMethodRespDTOList);
                         }
@@ -787,7 +801,6 @@ $(document).ready(function() {
                 var trs = [...$('.param-row', tbody)]
                 var parentRow = target.parents('table').parents('tr')
                 var valueShows = $('.param-value-show', parentRow)
-                console.log(valueShows)
                 this.operationRows[parentRow.attr('data-index')].parameters.length = 0
                 trs.forEach((row, index) => {
                     var data = {}
@@ -845,14 +858,15 @@ $(document).ready(function() {
                         id: mainVue.autId, // autid
                         classname: editDataVue.uiOrFunctions.classType, // classname
                     }
+                    if (!data.classname) {
+                        Vac.alert('请在元素库界面设置方法的类型');
+                        return;
+                    }
                     var getFunctions = new Promise((resolve, reject) => {
-                        ajax2({
+                        Vac.ajax({
                             url: address3 + 'aut/selectMethod',
-                            contentType: 'application/json',
-                            data: JSON.stringify(data),
-                            type: 'post',
-                            dataType: 'json',
-                            success: function(data, statusText) {
+                            data: data,
+                            success: function(data) {
                                 if (data.respCode === '0000' && data.omMethodRespDTOList) {
                                     var { functions, parameterlist } = _this.setFunctionAndParameter(data.omMethodRespDTOList);
                                     operationRows[index].parameters = parameterlist;

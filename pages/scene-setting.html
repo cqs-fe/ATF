@@ -9,9 +9,11 @@
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
     <link rel="stylesheet" type="text/css" href="../static/css/scene-setting.scss">
+    <link rel="stylesheet" type="text/css" href="../static/css/jquery.datetimepicker.min.css">
     <script src="../lib/jquery.js"></script>
     <script src="../lib/jquery-ui.js"></script>
     <script src="../lib/bootstrap.min.js"></script>
+    <script src="../lib/jquery.datetimepicker.full.min.js"></script>
     <script type="text/javascript" src="../lib/vue.js"></script>
     <title>场景设置</title>
   </head>
@@ -354,7 +356,7 @@
             <div v-show="tooltipType===1" class="timeArrange">
               <div>
                 <label>执行时间</label>
-                <input type="date" v-model="executeTime">
+                <input id="datetimepicker" type="text" >
               </div>
               <div>
                 <label>执行时间标识</label>

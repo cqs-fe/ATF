@@ -381,8 +381,8 @@ function sendQuery(sendPage,func){
     });
 }
 //获取发送数据
-function getSendData(page, rows){
-    return {
+function getSendData(page, rows, key, value){
+    const a = {
         pageSize: rows,
         currentPage: page,
         "orderType":sendData.sort,
@@ -393,6 +393,10 @@ function getSendData(page, rows){
         "tel":"",
         "dept":""
     };
+    if (key) {
+        a[key] = value;
+    }
+    return a;
 }
 //控制首页尾页等的可用性
 function paginationControl(totalPage, currentPage){
@@ -516,8 +520,9 @@ function search(){
         success: function(data){
             if (data.respCode === '0000') {
                 dataSet = data.list;
-                var totalRows = data.totalCount;
+                totalRows = data.totalCount;
                 createTable(dataSet);
+                updatePagination(data.totalCount,data.currentPage);
                 // func(totalRows, page);
             } else {
                 Vac.alert('查询失败');
