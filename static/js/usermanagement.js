@@ -370,7 +370,7 @@ function sendQuery(sendPage,func){
         success: function(data){
             if (data.respCode === '0000') {
                 dataSet = data.list;
-                var totalRows = data.totalCount;
+                totalRows = data.totalCount;
                 createTable(dataSet);
                 func(totalRows, page);
             } else {
@@ -385,14 +385,20 @@ function getSendData(page, rows){
     return {
         pageSize: rows,
         currentPage: page,
-        "orderType":"desc",
-        "orderColumns":"id"
+        "orderType":sendData.sort,
+        "orderColumns":sendData.order,
+        "username":"",
+        "reallyname":"",
+        "role":"",
+        "tel":"",
+        "dept":""
     };
 }
 //控制首页尾页等的可用性
 function paginationControl(totalPage, currentPage){
     document.getElementById("currentPageId").innerHTML = currentPage;
     document.getElementById("totalPages").innerHTML = totalPage;
+    document.getElementById("totalRows").innerHTML = totalRows;
     document.getElementById("gotoPage").setAttribute("max",totalPage);
     if(currentPage >= totalPage){
         $("#nextPage").parent("li").addClass("disabled");
@@ -493,18 +499,17 @@ function showViewModal(target){
 
 // 点击搜索按钮
 function search(){
-    var key = $("#search-type").val();           //select value
+    var key = $("#search-type").val();      //select value
     var searchkey = $("#searchKey").val();  //input value
     for(var data in sendData){
         sendData[data] = "";
     }
-    sendData[key] = searchkey;
     sendData["sort"] = "asc";
     sendData["order"] = "id";
-
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
+    data[key] = searchkey;
     Vac.ajax({
         url: address3 + "userController/pagedBatchQueryUser",
         data: data,
