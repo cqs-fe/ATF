@@ -17,6 +17,8 @@ var sendData = {
     dept:"",
     tel: ""
 };
+const ROLE = {1: "测试主管", 2: "测试经理", 3: "测试组长", 4: "自动化技术人员", 5: "功能测试人员"};
+const STATUS = {0: '正常', 1: '异常'};
 $(document).ready(function() {
       // 获取服务器数据
     (function(){
@@ -427,10 +429,10 @@ function createTable(dataArray){
         var tdId =  $(`<td class="td-id"></td>`).text(value.id);
         var tdUsername = $(`<td class="td-username"></td>`).text(value.username);
         var tdReallyname = $(`<td class="td-reallyname"></td>`).text(value.reallyname);
-        var tdrole = $(`<td class="td-role"></td>`).text(value.role);
-        var tdDept = $(`<td class="td-dept"></td>`).text(value.dept);
-        var tdTel = $(`<td class="td-tel"></td>`).text(value.tel);
-        var tdState = $(`<td class="td-state"></td>`).text(value.role);
+        var tdrole = $(`<td class="td-role"></td>`).text(ROLE[value.role]);
+        var tdDept = $(`<td class="td-dept"></td>`).text(value.dept || '');
+        var tdTel = $(`<td class="td-tel"></td>`).text(value.tel || '');
+        var tdState = $(`<td class="td-state"></td>`).text(STATUS[value.status]);
         var tdOperation = $(`<td class="td-operation" style="padding-bottom: 7px;padding-top: 7px;"><a class="btn btn-xs btn-view btn-success" onclick="showViewModal(this);" data-toggle="modal" href=''>详情</a>    <a class="btn btn-xs btn-alter btn-primary" onclick="showAlterModal(this);" data-toggle="modal" href=''>修改</a></td>`);
         tr.append(tdId, tdUsername, tdReallyname, tdrole, tdDept, tdTel, tdState,tdOperation);
         tbody.append(tr);
@@ -517,7 +519,7 @@ function search(){
                 dataSet = data.list;
                 var totalRows = data.totalCount;
                 createTable(dataSet);
-                // func(totalRows, page);
+                updatePagination(totalRows, page);
             } else {
                 Vac.alert('查询失败');
             }
