@@ -65,7 +65,7 @@ var app = new Vue({
                 data: JSON.stringify({
                     'pageNum': this.currentPage,
                     'pageSize': this.pageSize,
-                    'orderColumn': 'batch_import_no',
+                    'orderColumn': 'create_time',
                     'orderType':'desc',
                     'uploadUserReallyName': $('#sortuploadUserName').val(),
                     'importStatus': $('#importStatus').val(),

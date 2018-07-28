@@ -21,10 +21,10 @@ var app = new Vue({
         getCode (){
             $.ajax({
                 url:address3+'tool/querySingleTool',
-                type:'post',
-                data:{
+                type:'post',contentType: 'application/json',
+                data: JSON.stringify({
                     'id':this.autId
-                },
+                }),
                 success:function(data){
                     console.log(data);
                     if(data.respCode=="0000"){
@@ -40,16 +40,16 @@ var app = new Vue({
             const maincodeEnd=$('textarea[name="maincodeEnd"]').val();
             $.ajax({
                 url:address3+'tool/updateToolInfo',
-                type:'post',
-                data:{
+                 type:'post',contentType: 'application/json',
+                data: JSON.stringify({
                     'id':app.execodeId,
                     'toolname': 'groovy',
                     'autId':this.autId,
                     'maincodeBegin':maincodeBegin,
                     'maincodeEnd':maincodeEnd
-                },
+                }),
                 success:function(data){
-                    if(data.success){
+                    if(data.respCode==0000){
                         $('#successModal').modal();
                     }else{
                         $('#failModal').modal();
