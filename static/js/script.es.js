@@ -481,31 +481,16 @@ $(document).ready(function() {
             this.zTreeSettings.uiAndElement.callback.onClick = this.zTreeOnClick;
             this.zTreeSettings.functions.callback.onClick = this.zTreeOnClick;
             // 设置table可以拖拽行
-            setTimeout (function() { console.log($('.icon-move'));
-                $("#sortable").sortable({
-                    stop: (event, ui) => {
-                        if (+(ui.item[0].rowIndex - 1) === +ui.item[0].getAttribute('data-index')) {
-                            return
-                        }
-                        // 拖拽停止后，改变绑定的数组中元素的顺序
-                        var target = ui.item[0].rowIndex - 1
-                        console.log(target)
-                        var start = ui.item[0].getAttribute('data-index');
-                        // console.log(`target: ${target} -- start: ${start}--end: ${end}`)
-                        if (target < 0) {
-                            _this.operationRows.unshift(_this.operationRows.splice(start, 1)[0])
-                        } else {
-                            _this.operationRows.splice(target, 0, _this.operationRows.splice(start, 1)[0])
-                        }
-                        _this.setChanged()
-                    }
-                });
-                // $("#sortable").disableSelection();
-            }, 2000);
+            this.setDrag();
             $('.2').addClass('open')
             $('.2 .arrow').addClass('open')
             $('.2-ul').css({display: 'block'})
             $('.2-0').css({color: '#ff6c60'})
+        },
+        watch: {
+            operationRows: function() {
+                this.setDrag();
+            }
         },
         methods: {
             setChanged: function(){
@@ -568,6 +553,29 @@ $(document).ready(function() {
                     operationRows.splice(+originIndex + 1, 0, operationRows.splice(+originIndex, 1)[0])
                 }
                 this.setChanged()
+            },
+            setDrag() {
+                setTimeout (function() {
+                    $("#sortable").sortable({
+                        stop: (event, ui) => {
+                            if (+(ui.item[0].rowIndex - 1) === +ui.item[0].getAttribute('data-index')) {
+                                return
+                            }
+                            // 拖拽停止后，改变绑定的数组中元素的顺序
+                            var target = ui.item[0].rowIndex - 1
+                            console.log(target)
+                            var start = ui.item[0].getAttribute('data-index');
+                            // console.log(`target: ${target} -- start: ${start}--end: ${end}`)
+                            if (target < 0) {
+                                _this.operationRows.unshift(_this.operationRows.splice(start, 1)[0])
+                            } else {
+                                _this.operationRows.splice(target, 0, _this.operationRows.splice(start, 1)[0])
+                            }
+                            _this.setChanged()
+                        }
+                    });
+                    // $("#sortable").disableSelection();
+                }, 1000);
             },
             // 更改方法时改变参数
             changeFunction: function(target, index) {
