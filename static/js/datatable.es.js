@@ -2131,7 +2131,7 @@ $(document).ready(function () {
 								$('#no-data-tip').css({display: 'none'});
 							}
 						} else {
-							Vac.alert(data.respCode);
+							Vac.alert(data.respMsg);
 						}
 					},
 					error: function () {
