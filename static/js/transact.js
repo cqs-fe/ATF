@@ -327,8 +327,8 @@ function setval() {
         data: JSON.stringify({
             'currentPage': 1,
             'pageSize': 10,
-            'orderColumns': 'id',
-            'orderType': 'asc',
+            'orderColumns': 'modified_time',
+            'orderType': 'desc',
             'autId': $('#autSelect').val(),
         }),
         success: function(data) {
@@ -352,8 +352,8 @@ function queryTransact() {
         data: JSON.stringify({
             'currentPage': app.currentPage,
             'pageSize': app.pageSize,
-            'orderColumns': 'id',
-            'orderType': 'asc',
+            'orderColumns': 'modified_time',
+            'orderType': 'desc',
             'autId': $('#autSelect').val(),
         }),
         success: function(data) {

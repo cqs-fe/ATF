@@ -125,7 +125,7 @@ var app = new Vue({
                         if(methodList[i].overrideFlag==0){
                                 flagTd.html('普通继承');    
                             }else if(methodList[i].overrideFlag==1){
-                                flagTd.html('禁用');
+                                flagTd.html('自身方法');
                             }else{
                                 flagTd.html('');
                             }

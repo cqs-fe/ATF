@@ -210,11 +210,11 @@ new Vue({
                             this.addRoundModalShow = false;
                             this.getTestRound();
                         } else {
-                            Alert('出错啦~');
+                            Alert(data.respMsg);
                         }
                     },
                     error: () => {
-                        Alert('出错啦~');
+                        Alert('网络错误，请稍候再试');
                     }
                 });
             }

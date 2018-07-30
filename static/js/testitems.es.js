@@ -10,8 +10,8 @@ var totalPage = 0;
 var itemId;
 
 var sendData = {
-    order:"modifiedTime",
-    sort:"asc",
+    order:"modified_time",
+    sort:"desc",
     missionName:"",
     missionCode:"",
     testProjectId:""
