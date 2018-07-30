@@ -687,9 +687,9 @@ $(document).ready(function() {
                     success: function(data) {
                         if (data.success == true) {
                             Vac.alert(data.msg);
+                           mainVue.showScripttemplateTable(mainVue.showScripttemplateTableArgs);
                             return;
                         }
-                        mainVue.showScripttemplateTable(mainVue.showScripttemplateTableArgs);
                     },
                     error: function() {
                         Vac.alert('参数化失败，请求未成功');
