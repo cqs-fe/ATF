@@ -527,7 +527,10 @@ function search(){
                 updatePagination(data.totalCount,data.currentPage);
                 // func(totalRows, page);
             } else {
-                Vac.alert('查询失败');
+                Vac.alert('搜索结果不存在');
+                let tbody = $("#example tbody");
+                tbody.empty();
+                updatePagination(0,1);
             }
         }
     });
