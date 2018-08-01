@@ -111,8 +111,9 @@ var vBody = new Vue({
 	ready: function(){
 		// console.log("ready")
 		this.setSelectListener();
-		this.setDraggable();
-
+		Vue.nextTick(() => {
+			this.setDraggable()
+		})
 		$('.3').addClass('open')
 		$('.3 .arrow').addClass('open')
 		$('.3-ul').css({display: 'block'})
@@ -351,8 +352,7 @@ var vBody = new Vue({
 				});
 			}
 		},
-		setDraggable: function () {
-			setTimeout(function() {
+		setDraggable: function () {	
 				$('#sortable_caselist').sortable({
 					handle: '.handle'
 				})
@@ -363,7 +363,6 @@ var vBody = new Vue({
 				})
 				$( '.sortable_scene_caselist' ).disableSelection();
 				$('#testround-main').disableSelection();
-			}, 1000);
 		},
 		getCases() {
 			var data = {
@@ -379,7 +378,9 @@ var vBody = new Vue({
 				success: function(data){
 					_this.testCaseList = data.executeInstanceResult.testCaseList;
 					_this.testSceneList = data.executeInstanceResult.testSceneList;
-
+					Vue.nextTick(() => {
+						_this.setDraggable()
+					})
 					if(!(data.testCaseList && data.testCaseList.length)) {
 						// Vac.alert('未查询到相关的用例信息！')
 						return;
@@ -439,9 +440,6 @@ var vBody = new Vue({
 							
 						}
 					}
-					Vue.nextTick(() => {
-						_this.setDraggable()
-					})
 				}
 			});
 		},
