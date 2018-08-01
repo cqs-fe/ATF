@@ -21,18 +21,21 @@ var view = new Vue({
 	methods: {
 		getData: function(testcaseId) {
 			var _this = this;
-			var data = {testcaseId: testcaseId };$('#view-script').modal('show');
+			//var data = {"testcaseId":testcaseId,"caseCompositeType":1};
+			$('#view-script').modal('show');
       $.ajax({
-        url: address + 'antlr/getTestcaseScript',
-        data: data,
+        url: address3 + 'dataCenter/getTestcaseScript',
+        data: JSON.stringify({
+			"testcaseId":testcaseId,
+			"caseCompositeType":1
+		}),
         type: 'post',
-        dataType: 'json',
-        success: function (data, statusText) {
-          if (!data.success) {
+		contentType:"application/json",
+        success: function (data) {
+          if (!data) {
             Vac.alert(data.msg || '查询失败');
             return;
-          }
-					
+          }	
 			_this.tableData = data.obj;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
