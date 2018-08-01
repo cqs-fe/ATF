@@ -39,7 +39,12 @@ new Vue({
         editType: 1,   // 1: add  2: update
         testPlanArray: [],
         testPhaseArray: [],
-        testRoundArray: []
+        testRoundArray: [],
+        page: {
+            totalCount: 1,
+            currentPage: 1,
+            totalPage: 1
+        }
     },
     created() {
     },
@@ -147,7 +152,17 @@ new Vue({
                 },
 				success: (data) => {
 					if ('0000' === data.respCode) {
-						this.testPlanArray = data.testPlanEntityList;
+                        this.testPlanArray = data.testPlanEntityList;
+                        if (data.testPlanEntityList.length) {
+                            var o = { 
+                                totalCount: +data.testPlanEntityList[0].page.totalCount,
+                                totalPage: +data.testPlanEntityList[0].page.totalPage,
+                                currentPage: +data.testPlanEntityList[0].page.currentPage
+                            }
+                            this.page = o;
+                        } else {
+                            this.page = { totalCount: 1, totalPage: 1, currentPage: 1 };
+                        }
 					} else {
 						Alert('出错啦~');
 					}

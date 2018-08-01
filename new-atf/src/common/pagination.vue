@@ -1,9 +1,9 @@
 <template>
 <div class="pagination-wrap" >
     <div class="num">
-            <select class="form-control" v-model="pageSize">
-                <option v-for="item of pageSizeArray" :value="item.value" :key="item.value">{{item.label}}</option>
-            </select> 
+        <select class="form-control" v-model="pageSize">
+            <option v-for="item of pageSizeArray" :value="item.value" :key="item.value">{{item.label}}</option>
+        </select> 
     </div>
     <ul class="pagination">
         <li :class="currentPage == 1 ? 'disabled':''"><a class="page-item" @click="go(1)">首页</a></li>
@@ -20,7 +20,7 @@
             <a class="page-item input-group-addon" @click="go(targetPage)">Go</a>
         </div>
     </div>
-    <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalPage"></span>页，共有 <span class="text-primary"></span> 条</small>
+    <small class="small nowrap"> 当前第 <span class="text-primary" v-text="currentPage"></span> / <span class="text-primary" v-text="totalCount"></span>页，共有 <span class="text-primary" v-text="totalCount"></span> 条</small>
 </div>
 </template>
 <script>
@@ -30,6 +30,10 @@ export default {
         maxSize: {
             type: Number,
             default: 6
+        },
+        totalCount: {
+            type: Number,
+            default: 0
         },
         totalPage: {
             type: Number,

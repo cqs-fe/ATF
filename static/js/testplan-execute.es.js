@@ -352,16 +352,18 @@ var vBody = new Vue({
 			}
 		},
 		setDraggable: function () {
-			$('#sortable_caselist').sortable({
-				handle: '.handle'
-			})
-			$( "#sortable_caselist" ).disableSelection();
-	
-			$('.sortable_scene_caselist').sortable({
-				handle: '.handle1'
-			})
-			$( '.sortable_scene_caselist' ).disableSelection();
-			$('#testround-main').disableSelection();
+			setTimeout(function() {
+				$('#sortable_caselist').sortable({
+					handle: '.handle'
+				})
+				$( "#sortable_caselist" ).disableSelection();
+		
+				$('.sortable_scene_caselist').sortable({
+					handle: '.handle1'
+				})
+				$( '.sortable_scene_caselist' ).disableSelection();
+				$('#testround-main').disableSelection();
+			}, 1000);
 		},
 		getCases() {
 			var data = {
