@@ -15,7 +15,8 @@ var sendData = {
     reallyname:"",
     role: "",
     dept:"",
-    tel: ""
+    tel: "",
+    roleCn: ""
 };
 const ROLE = {1: "测试主管", 2: "测试经理", 3: "测试组长", 4: "自动化技术人员", 5: "功能测试人员"};
 const STATUS = {0: '正常', 1: '异常'};
@@ -87,6 +88,7 @@ $(document).ready(function() {
         data.tel = $('#alter-phonenumber').val();
         data.status = $('#alter-state').val();
         data.phone = $('#alter-telephone').val();
+        data.roleCn = ROLE[data.role];
         if (!data.username) {
             Vac.alert('请输入用户名');return;
         }
@@ -267,7 +269,8 @@ $(document).ready(function() {
             tel: tel,
             phone: phone,
             email: email,
-            status: status
+            status: status,
+            roleCn: ROLE[role]
         };
         if (!data.username) {
             Vac.alert('请输入用户名');return;
@@ -505,17 +508,19 @@ function showViewModal(target){
 
 // 点击搜索按钮
 function search(){
-    var key = $("#search-type").val();           //select value
+    var key = $("#search-type").val();      //select value
     var searchkey = $("#searchKey").val();  //input value
     for(var data in sendData){
         sendData[data] = "";
-     }
-     sendData["sort"] = "asc";
-     sendData["order"] = "id";
+    }
+    sendData["sort"] = "asc";
+    sendData["order"] = "id";
     var page = 1; // 页码
     var rows = showRows;  //每页的大小
     var data =getSendData(page,rows);
-    data[key] = searchkey;
+    if(key == "role") data["roleCn"] = searchkey;//角色搜索
+    else data[key] = searchkey; //其他搜索
+
     Vac.ajax({
         url: address3 + "userController/pagedBatchQueryUser",
         data: data,
@@ -524,13 +529,16 @@ function search(){
                 dataSet = data.list;
                 totalRows = data.totalCount;
                 createTable(dataSet);
-                updatePagination(totalRows, page);
+                updatePagination(data.totalCount,data.currentPage);
+                // func(totalRows, page);
             } else {
-                Vac.alert('查询失败');
+                Vac.alert('搜索结果不存在');
+                let tbody = $("#example tbody");
+                tbody.empty();
+                updatePagination(0,1);
             }
         }
     });
-
 }
 // 点击搜索按钮结束
 // var addModalVue

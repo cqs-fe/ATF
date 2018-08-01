@@ -33,8 +33,7 @@ fis3 release -wl
 > **注意**： `new-atf`中的代码打包时需要`node`版本最低为`8.9.0`。考虑到部分同学没有安装`nvm`，所以我将`new-atf`中打包好的`build`文件夹纳入了`git`的管理。
 
 1. 使用`fis3`打包`new-atf`外部代码。
-```
-fis3 release -d output
+```fis3 release -d output
 ```
 2. 将`output`中的`public`、`assets`、`pages`以及`new-atf`中的`build`打包发给后台人员。
 

@@ -1399,10 +1399,10 @@ var app = new Vue({
                     type:'post',
                     success:function(res){
                         // console.log(res)
-                        that.caseList = res.testcaseViewRespDTOList;
-                        that.tt = res.testcaseViewRespDTOList.length;
-                        that.totalPage = Math.ceil(that.tt / that.listnum);
-                        that.pageSize = that.listnum;
+                        app.caseList = res.testcaseViewRespDTOList;
+                        appappapp.tt = res.testcaseViewRespDTOList.length;
+                        appapp.totalPage = Math.ceil(that.tt / that.listnum);
+                        app.pageSize = that.listnum;
                     }
 
                 });
