@@ -36,7 +36,7 @@ var view = new Vue({
             Vac.alert(data.msg || '查询失败');
             return;
           }	
-			_this.tableData = data.obj;
+			_this.tableData = data.scriptList;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           Vac.alert(`查询出错！\n 错误信息：${textStatus}`);
