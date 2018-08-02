@@ -112,7 +112,7 @@
                         <div class="case" @click="changeCase(case_wrapper.caseId, 1)"  @mousedown.stop="1">
                           <div class="case-header">
                             <img :src="exeImgs[0]" :id="'img' + '-' + case_wrapper.caseId">
-                            <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
+                            <p :title="case_wrapper.casecode">{{case_wrapper.caseCode}}</p>
                             <input type="checkbox" v-bind:value="case_wrapper.caseId" class="check-case single-case-incaselib" v-model="selectedCases" @change="checkChanged($event)">
                           </div>
                           <div class="case-main">
@@ -179,7 +179,7 @@
                           <div class="case"  @click="changeCase(scene.sceneId+'-'+case_wrapper.caseId, 3)" @mousedown.stop="1">
                             <div class="case-header">
                               <img :src="exeImgs[0]" :id="'img' + '-' + scene.sceneId+'-'+case_wrapper.caseId">
-                              <p :title="case_wrapper.casecode">{{case_wrapper.casecode}}</p>
+                              <p :title="case_wrapper.casecode">{{case_wrapper.caseCode}}</p>
                               <input type="checkbox" v-bind:value="scene.sceneId+'-'+case_wrapper.caseId" class="check-case check-case-inscene" v-model="selectedSceneCases" @change="checkFlowNode($event)">
                             </div>
                             <div class="case-main">
