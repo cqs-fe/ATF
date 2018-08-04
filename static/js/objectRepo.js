@@ -219,7 +219,7 @@ var template_obj = `
                             <h4 class="modal-title">操作失败</h4>
                         </div>
                         <div class="modal-body">
-                            <h4>操作失败！</h4>
+                            <h4>{{faliMSG}}</h4>
                         </div>
                         <div class="modal-footer">
                             <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
@@ -297,6 +297,7 @@ var objectRepo =  Vue.extend({
             objId: '',
             objName: '',
             objTitle: '对象',
+            faliMSG:'操作失败啦。糟糕的是没有返回信息，难道是ajax请求失败了',
             propTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             classtypeList: [],
             /*objtree start*/
@@ -430,6 +431,7 @@ var objectRepo =  Vue.extend({
 
                             },
                             error: function() {
+                                _this.faliMSG=data.respMsg;
                                 $('#failModal').modal();
                             }
                         });
@@ -640,11 +642,13 @@ var objectRepo =  Vue.extend({
                         $('#successModal').modal();
                         _this.getObjTree();
                     } else {
+                        _this.faliMSG=data.respMsg;
                         $('#failModal').modal();
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                        _this.faliMSG=data.respMsg;
+                        $('#failModal').modal();
                 }
             });
         },
@@ -672,11 +676,13 @@ var objectRepo =  Vue.extend({
                         $('#successModal').modal();
                         _this.getObjTree();
                     } else {
+                        _this.faliMSG=data.respMsg;
                         $('#failModal').modal();
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                        _this.faliMSG=data.respMsg;
+                        $('#failModal').modal();
                 }
             });
         },
@@ -764,11 +770,13 @@ var objectRepo =  Vue.extend({
                         $('#obj').css('display','none');
                         $('#blank').css('display','block');
                     } else {
+                        _this.faliMSG=data.respMsg;
                         $('#failModal').modal();
                     }
                 },
                 error: function() {
-                    $('#failModal').modal();
+                        _this.faliMSG=data.respMsg;
+                        $('#failModal').modal();
                 }
             });
         },
@@ -900,7 +908,8 @@ var objectRepo =  Vue.extend({
 
                 },
                 error: function() {
-                    $('#failModal').modal();
+                        _this.faliMSG=data.respMsg;
+                        $('#failModal').modal();
                 }
             });
         },
