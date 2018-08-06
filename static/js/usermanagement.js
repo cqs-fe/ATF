@@ -62,7 +62,10 @@ $(document).ready(function() {
         };
         document.getElementById("btn-gotoPage").onclick = function(){
             var page = document.getElementById("gotoPage").value;
-            if(parseInt(page) > totalPage){return;}
+            if(parseInt(page) > totalPage || parseInt(page)<1){
+                Vac.alert("超出页码范围");
+                return;
+            }
             sendQuery(page,updatePagination); 
         };
         // document.getElementById("btn-freshTable").onclick = function(){
@@ -335,12 +338,14 @@ function updatePagination(totalRows, page){
     var currentMaxPage = totalPage <= maxPage ? totalPage : maxPage;
     var i = 0;
     for(i = 0; i < maxPage; i++){
+        //控制只有7个按钮显示
         if(i < currentMaxPage){
             lis[i].style.display = "inline";
         }else{
             lis[i].style.display = "none";
         }
         // lis[i].getElementsByTagName("a")[0].innerHTML = currentPage - currentMaxPage + 1 + i;
+        //改变页码显示
         if(currentPage < minShowPage){
             lis[i].getElementsByTagName("a")[0].innerHTML = currentPage + i;
         }else if(currentPage > maxShowPage){
@@ -529,13 +534,15 @@ function search(){
                 dataSet = data.list;
                 totalRows = data.totalCount;
                 createTable(dataSet);
-                updatePagination(data.totalCount,data.currentPage);
+                updatePagination(data.totalCount,1);
                 // func(totalRows, page);
             } else {
                 Vac.alert('搜索结果不存在');
                 let tbody = $("#example tbody");
                 tbody.empty();
-                updatePagination(0,1);
+                for(var i = 0;i<maxPage;i++) lis[i].style.display = "none";
+                $("#nextPage").parent("li").addClass("disabled");
+                $("#lastPage").parent("li").addClass("disabled");
             }
         }
     });
