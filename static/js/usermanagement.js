@@ -62,8 +62,8 @@ $(document).ready(function() {
         };
         document.getElementById("btn-gotoPage").onclick = function(){
             var page = document.getElementById("gotoPage").value;
-            if(parseInt(page) > totalPage || parseInt(page)<1){
-                Vac.alert("超出页码范围");
+            if(parseInt(page) > totalPage || parseInt(page)<1 || page == ""){
+                Vac.alert("不在页码范围");
                 return;
             }
             sendQuery(page,updatePagination); 
@@ -543,6 +543,7 @@ function search(){
                 for(var i = 0;i<maxPage;i++) lis[i].style.display = "none";
                 $("#nextPage").parent("li").addClass("disabled");
                 $("#lastPage").parent("li").addClass("disabled");
+                totalPage = 0;
             }
         }
     });
