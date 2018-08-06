@@ -371,6 +371,10 @@ var vBody = new Vue({
 				roundFlag: 2,
 				scopeFlag: 1
 			};
+			if(!this.testPlanId) {
+				Vac.alert("请选择测试计划");
+				return;
+			}
 			var _this = this;
 			Vac.ajax({
 				url: address3 + 'caseExecuteInstance/queryCaseExecuteInstance',
