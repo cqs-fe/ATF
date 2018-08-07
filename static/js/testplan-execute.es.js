@@ -264,7 +264,7 @@ var vBody = new Vue({
 		},
 		removeSceneAndCase: function() {
 			var _this = this;
-			if (!this.selectedScenes.length && !this.selectedCases) {
+			if (!this.selectedScenes.length) {
 				Vac.alert('请选择要删除的场景或用例，只选择场景中的用例无效！');
 				return;
 			}
@@ -385,16 +385,17 @@ var vBody = new Vue({
 					Vue.nextTick(() => {
 						_this.setDraggable()
 					})
-					if(!(data.testCaseList && data.testCaseList.length)) {
+					/*if(!(data.testCaseList && data.testCaseList.length)) {
 						// Vac.alert('未查询到相关的用例信息！')
 						return;
-					}
-					if(!(data.testSceneList && data.testSceneList.length)) {
+					}*/
+					if(!(_this.testSceneList && _this.testSceneList.length)) {
 						// Vac.alert('未查询到相关的场景信息！')
 						return;
 					}
 					_this.caseIds.length = 0
 					_this.flowNodeIds.clear();
+					if(_this.testCaseList != null){
 					_this.testCaseList.forEach((value) => {
 						Vac.pushNoRepeat(_this.caseIds, value.caseId)
 						if(value.caseCompositeType == 2) {
@@ -405,6 +406,7 @@ var vBody = new Vue({
 							_this.flowNodeIds.set(+value.caseId, arr)
 						}
 					})
+				}
 
 					_this.sceneIds.length = []
 					_this.sceneCaseMap.clear()
