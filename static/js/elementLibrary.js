@@ -12,7 +12,7 @@ var app = new Vue({
             UILinked: '',
             eleParent: '',
             eleLinked: '',
-            faliMSG:'操作失败啦。糟糕的是没有返回信息，难道是ajax请求失败了',
+            failMSG:'操作失败啦。糟糕的是没有返回信息，难道是ajax请求失败了',
             mainPropTr: '<tr><td><input type="checkbox" name="mainProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             addiPropTr: '<tr><td><input type="checkbox" name="addiProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
             assiPropTr: '<tr><td><input type="checkbox" name="assiProp"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
@@ -475,13 +475,13 @@ var app = new Vue({
                             _this.getElementTree();
                             $("#addUIName").val('');
                         } else {
-                            _this.faliMSG=data.respMsg;
+                            _this.failMSG=data.respMsg;
                             $('#failModalEle').modal('show');
                             $("#addUIName").val('');
                         }
                     },
                     error: function() {
-                        _this.faliMSG=data.respMsg;
+                        _this.failMSG=data.respMsg;
                         $('#failModalEle').modal('show');
                         $("#addUIName").val('');
                     }
@@ -506,12 +506,12 @@ var app = new Vue({
                         $('#successModalEle').modal();
                         _this.getElementTree();
                     } else {
-                       _this.faliMSG=data.respMsg;
+                       _this.failMSG=data.respMsg;
                       $('#failModalEle').modal('show');
                     }
                 },
                 error: function() {
-                   _this.faliMSG=data.respMsg;
+                   _this.failMSG=data.respMsg;
                    $('#failModalEle').modal('show');
                 }
             });
@@ -559,12 +559,12 @@ var app = new Vue({
                         $('#UI').css('display', 'none');
                         $('#ele').css('display', 'none');
                     } else {
-                       _this.faliMSG=data.respMsg;
+                       _this.failMSG=data.respMsg;
                        $('#failModalEle').modal('show');
                     }
                 },
                 error: function() {
-                    _this.faliMSG=data.respMsg;
+                    _this.failMSG=data.respMsg;
                     $('#failModalEle').modal('show');
                     $('#blank').css('display', 'block');
                     $('#UI').css('display', 'none');
@@ -624,12 +624,12 @@ var app = new Vue({
                             _this.getElementTree(selectedUIName);
                              
                         } else {
-                           _this.faliMSG=data.respMsg;
+                           _this.failMSG=data.respMsg;
                            $('#failModalEle').modal('show');
                         }
                     },
                     error: function() {
-                       _this.faliMSG=data.respMsg;
+                       _this.failMSG=data.respMsg;
                        $('#failModalEle').modal('show');
                     }
                 });
@@ -657,12 +657,12 @@ var app = new Vue({
                         $('#successModalEle').modal();
                         _this.getElementTree(UIName);
                     } else {
-                        _this.faliMSG=data.respMsg;
+                        _this.failMSG=data.respMsg;
                         $('#failModalEle').modal('show');
                     }
                 },
                 error: function() {
-                    _this.faliMSG=data.respMsg;
+                    _this.failMSG=data.respMsg;
                     $('#failModalEle').modal('show');
                 }
             });
@@ -790,12 +790,12 @@ var app = new Vue({
                         $('#UI').css('display', 'none');
                         $('#ele').css('display', 'none');
                     } else {
-                       _this.faliMSG=data.respMsg;
+                       _this.failMSG=data.respMsg;
                        $('#failModalEle').modal('show');
                     }
                 },
                 error: function() {
-                    _this.faliMSG=data.respMsg;
+                    _this.failMSG=data.respMsg;
                     $('#failModalEle').modal('show');
                     $('#blank').css('display', 'block');
                     $('#UI').css('display', 'none');

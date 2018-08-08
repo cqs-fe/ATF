@@ -1,20 +1,22 @@
 var address='http://10.108.223.23:8080/atfcloud2.0a';
 var app = new Vue({
     el: '#component',
-    data: {
+    data: function() {
+        var _this = this;
+        return {
         className: '控件类型',
         classId: '',
         methodId: '',
         methodName: '方法',
         classList: [],
         methodList: [],
+        failMSG: '操作失败啦！',
         classPropTr: '<tr><td><input type="radio" name="class"/></td><td ></td><td ></td></tr>',
         methodPropTr: '<tr><td><input type="radio" name="method"/></td><td ></td><td ></td></tr>',
         supRecParaTr: '<tr><td><input type="checkbox" name="supRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         runtimeArgsParaTr: '<tr><td><input type="checkbox" name="runtimeArgs_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         selfRecParaTr: '<tr><td><input type="checkbox" name="selfRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
         assistRecParaTr: '<tr><td><input type="checkbox" name="assistRec_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',        
-        
         methodParaTr: '<tr><td><input type="checkbox" name="chk_list"/></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>',
         autId: '',
         autName: '被测系统名称',
@@ -23,6 +25,7 @@ var app = new Vue({
         runtimeArgsList: [],
         selfRecList: [],
         assistRecList: [],
+        }
     },
     ready: function() {
         this.getAutId();
@@ -42,7 +45,8 @@ var app = new Vue({
         },
         //添加控件类型
         addClass: function() {
-            var name = $('#addClassForm input[name="name"]').val(),
+            var _this = this,
+                name = $('#addClassForm input[name="name"]').val(),
                 chsName = $('#addClassForm input[name="chsName"]').val(),
                 descShort = $('#addClassForm input[name="descShort"]').val();
             var that=this;
@@ -62,6 +66,7 @@ var app = new Vue({
                         $('#successModal').modal();
                         getClass();
                     } else {
+                        _this.failMSG=data.respMsg;
                         $('#failModal').modal();
                     }
                 },

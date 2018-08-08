@@ -562,8 +562,8 @@ $(document).ready(function() {
                                 return
                             }
                             // 拖拽停止后，改变绑定的数组中元素的顺序
-                            var target = ui.item[0].rowIndex - 1
-                            console.log(target)
+                            var _this = this;
+                            var target = ui.item[0].rowIndex - 1;
                             var start = ui.item[0].getAttribute('data-index');
                             // console.log(`target: ${target} -- start: ${start}--end: ${end}`)
                             if (target < 0) {

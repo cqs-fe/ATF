@@ -1488,12 +1488,12 @@ $(document).ready(function(e) {
     yiji(); //第一级函数
     erji(); //第二级函数
     sanji(); //第三极函数
-    $('select[name="autid"]').change(function() {
+    $('select[id="caseautid"]').change(function() {
         //var target = $(this);
         erji();
         sanji();
     })
-    $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').change(function() {
+    $('select[id="caseautid"]').parent().parent().next().find('select[id="casetransid"]').change(function() {
 
         sanji();
     })
@@ -1515,7 +1515,7 @@ function yiji() {
                 str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
             }
 
-            $('select[name="autid"]').html(str);
+            $('select[id="caseautid"]').html(str);
 
         }
     });
@@ -1523,7 +1523,7 @@ function yiji() {
 
 //二级 功能点
 function erji() {
-    var val = $('select[name="autid"]').val();
+    var val = $('select[id="caseautid"]').val();
     $.ajax({
         async: false,
         url: address3 + 'transactController/pagedBatchQueryTransact',
@@ -1543,7 +1543,7 @@ function erji() {
 
                 str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
             }
-            $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').html(str);
+            $('select[id="casetransid"]').html(str);
 
         }
 
@@ -1553,7 +1553,7 @@ function erji() {
 //三级 模板脚本
 function sanji() {
 
-    var val = $('select[name="autid"]').parent().parent().next().find('select[name="transid"]').val();
+    var val = $('select[id="caseautid"]').parent().parent().next().find('select[id="casetransid"]').val();
 
     $.ajax({
         url: address3 + "scripttemplateController/queryTemplateByTransId",
@@ -1567,7 +1567,7 @@ function sanji() {
 
                 str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
             }
-            $('select[name="autid"]').parent().parent().next().find('select[name="scriptmodeflag"]').html(str);
+            $('select[id="caseautid"]').parent().parent().next().find('select[name="scriptmodeflag"]').html(str);
 
 
         }
