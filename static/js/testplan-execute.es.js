@@ -325,8 +325,8 @@ var vBody = new Vue({
 				url: address3 + 'caseExecuteInstance/insertCaseExecuteInstance',
 				data: data,
 				success: function(data){
+					$('#add-modal').modal('hide');
 					if(data.respCode === '0000'){
-						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
 						_this.getCases()
 						// _this.alertShow = true;
@@ -336,6 +336,7 @@ var vBody = new Vue({
 					}
 				},
 				error: function() {
+					$('#add-modal').modal('hide');
 					Vac.alert("添加失败");
 				}
 			});

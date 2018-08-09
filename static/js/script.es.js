@@ -12,6 +12,7 @@ $(document).ready(function() {
             templateList: [],
             checkedTemplate: [],
             lastCheckedTemplate: null,
+            showScripttemplateTableArgs:null,
             script_id: '',
             // ids: '',
             // 新增模板绑定数据
@@ -676,9 +677,8 @@ $(document).ready(function() {
             //参数化
             para: function() {
                var sendData = this.generateScriptString();
-                ajax2({
+               Vac.ajax({
                     url: address3 + 'scripttemplateController/showscripttemplateTableSave',
-                    type: 'post',
                     data: {
                         'autId': mainVue.autId,
                         'script_id': mainVue.script_id|| mainVue.templateList[0].id,
@@ -687,7 +687,10 @@ $(document).ready(function() {
                     success: function(data) {
                         if (data.success == true) {
                             Vac.alert(data.msg);
-                           mainVue.showScripttemplateTable(mainVue.showScripttemplateTableArgs);
+                           mainVue.showScripttemplateTable({
+                            "aut_id": mainVue.autId, 
+                            "script_id": mainVue.script_id|| mainVue.templateList[0].id
+                        });
                             return;
                         }
                     },
