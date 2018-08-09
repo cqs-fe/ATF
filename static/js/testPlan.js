@@ -155,7 +155,7 @@ var app = new Vue({
         },
         getTestPlans() {
             Vac.ajax({
-				url: address3 + 'testPlanController/queryTestPlan',
+				url: address3 + 'testPlanController/pagedBatchQueryTestPlan',
 				data: {
                     "pageSize":this.page.pageSize,
                     "currentPage":this.page.currentPage,
