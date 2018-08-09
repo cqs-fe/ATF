@@ -82,8 +82,7 @@ var vBody = new Vue({
 				},
 				success: function(data){
 					if (data.respCode === '0000') {
-						_this.testPlans = data.testPlanEntityList;
-						if (_this.testPlans.length) {
+						if (data.testPlanEntityList && data.testPlanEntityList.length) {
 							_this.testPlanId = data.testPlanEntityList[0].id;
 							resolve();
 						} else {
