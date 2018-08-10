@@ -82,8 +82,7 @@ var vBody = new Vue({
 				},
 				success: function(data){
 					if (data.respCode === '0000') {
-						_this.testPlans = data.testPlanEntityList;
-						if (_this.testPlans.length) {
+						if (data.testPlanEntityList && data.testPlanEntityList.length) {
 							_this.testPlanId = data.testPlanEntityList[0].id;
 							resolve();
 						} else {
@@ -325,8 +324,8 @@ var vBody = new Vue({
 				url: address3 + 'caseExecuteInstance/insertCaseExecuteInstance',
 				data: data,
 				success: function(data){
+					$('#add-modal').modal('hide');
 					if(data.respCode === '0000'){
-						$('#add-modal').modal('hide');
 						Vac.alert('添加成功')
 						_this.getCases()
 						// _this.alertShow = true;
@@ -336,6 +335,7 @@ var vBody = new Vue({
 					}
 				},
 				error: function() {
+					$('#add-modal').modal('hide');
 					Vac.alert("添加失败");
 				}
 			});
