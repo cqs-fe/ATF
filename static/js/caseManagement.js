@@ -1,6 +1,6 @@
 var app = new Vue({
     el: '#caseManagement',
-    data: {
+    data : {
         isShow: false,
         iconflag: true,
         caseNodeNum: 0, 
@@ -23,10 +23,11 @@ var app = new Vue({
         casecode: '', //搜索时输入的案例编号
         sortparam: '', //排序参数
         tt: 0, //总条数
-        pageSize: 10, //页面大小
+        pageSize: 5, //页面大小
         currentPage: 1, //当前页
         totalPage: 1, //总页数
-        listnum: 10, //页面大小
+      //  listnum: 5, //页面大小
+        queryflag:true,//判断当前页面数据拉取方式，用于turnToPage
         order: 'id',
         sort: 'asc',
         isPageNumberError: false,
@@ -38,7 +39,7 @@ var app = new Vue({
     },
     ready: function() {
         this.getCase(this.currentPage, this.pageSize, this.order, this.sort);
-        this.changeListNum();
+      //  this.changeListNum();
         this.downloadTemplate();
         this.getUsers();
         this.getCaseLibId();
@@ -690,7 +691,7 @@ var app = new Vue({
     },
     methods: {
         //获取案例
-        getCase:function(currentPage, listnum, order, sort) {
+        getCase:function(currentPage, pageSize, order, sort) {
             let caseLibId=sessionStorage.getItem('caselibId');
             $.ajax({
                 url: address3 + 'testcase/pagedBatchQueryTestCase',
@@ -699,7 +700,7 @@ var app = new Vue({
                 data: JSON.stringify({
                     'caseLibId': caseLibId,
                     'currentPage': currentPage,
-                    'pageSize': listnum,
+                    'pageSize': pageSize,
                     'orderColumns': order,
                     'orderType': sort
                 }),
@@ -707,8 +708,9 @@ var app = new Vue({
                     // console.log(data);
                     app.caseList = data.testcaseViewRespDTOList;
                     app.tt = data.totalCount;
-                    app.totalPage = Math.ceil(app.tt / listnum);
-                    app.pageSize = listnum;
+                    app.totalPage = Math.ceil(app.tt / pageSize);
+                    app.pageSize = pageSize;
+                    app.queryflag = true;
                 }
             });
         },  
@@ -934,15 +936,15 @@ var app = new Vue({
                 }
             });
         },
-        //改变页面大小
-        changeListNum:function() {
-            $('#mySelect').change(function() {
-                listnum = $(this).children('option:selected').val();
-                $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
-                app.currentPage = 1;
-                app.getCase(1, listnum, 'id', 'asc');
-            });
-        },
+        // //改变页面大小
+        // changeListNum:function() {
+        //     $('#mySelect').change(function() {
+        //         listnum = $(this).children('option:selected').val();
+        //         $("#mySelect").find("option[text='" + listnum + "']").attr("selected", true);
+        //         app.currentPage = 1;
+        //         app.getCase(1, listnum, 'id', 'asc');
+        //     });
+        // },
 
         //获取caseLibid
         getCaseLibId: function() {
@@ -1227,6 +1229,9 @@ var app = new Vue({
             ts.currentPage = pageNum;
 
             //页数变化时的回调
+            if(ts.queryflag===false)
+            this.filterCase(ts.currentPage);
+            else
             this.getCase(ts.currentPage, ts.pageSize, 'id', 'asc');
             // ts.queryCase();
         },
@@ -1260,44 +1265,44 @@ var app = new Vue({
             });
         },
         //筛选查询案例
-        queryCase:function() {
+        // queryCase:function() {
 
-            $.ajax({
-                url: address3 + 'testcase/pagedQueryTestCaseByCondition',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    'page': app.currentPage,
-                    'rows': app.listnum,
-                    'order': app.order,
-                    'sort': app.sort,
-                    'caselibid': app.caselibid,
-                    'caseCompositeType': app.caseCompositeType.join(","),
-                    'priority': app.priority.join(","),
-                    'executemethod': app.executeMethod.join(","),
-                    'usestatus': app.useStatus.join(","),
-                    'casecode': app.casecode,
-                    'informationtype': 'testcase',
-                    'testpoint': app.testpoint,
-                    'author': app.author?app.currentUserId:'',
-                    'executor': app.executor?app.currentUserId:'',
-                    'testDesign': app.testDesign,
-                    'autid': app.autid,
-                    'transid': app.transid,
-                    'scriptmodeflag': app.scriptmodeflag,
-                }),
-                success: function(data) {
-                    app.caseList = data.o.rows;
-                    app.tt = data.o.total;
-                    app.totalPage = Math.ceil(app.tt / app.listnum);
-                    app.listnum = app.pageSize;
-                    app.currentPage = 1;
-                },
-                error: function() {
-                    $('#failModal').modal();
-                }
-            });
-        },
+        //     $.ajax({
+        //         url: address3 + 'testcase/pagedQueryTestCaseByCondition',
+        //         type: 'POST',
+        //         contentType: 'application/json',
+        //         data: JSON.stringify({
+        //             'page': app.currentPage,
+        //             'rows': app.listnum,
+        //             'order': app.order,
+        //             'sort': app.sort,
+        //             'caselibid': app.caselibid,
+        //             'caseCompositeType': app.caseCompositeType.join(","),
+        //             'priority': app.priority.join(","),
+        //             'executemethod': app.executeMethod.join(","),
+        //             'usestatus': app.useStatus.join(","),
+        //             'casecode': app.casecode,
+        //             'informationtype': 'testcase',
+        //             'testpoint': app.testpoint,
+        //             'author': app.author?app.currentUserId:'',
+        //             'executor': app.executor?app.currentUserId:'',
+        //             'testDesign': app.testDesign,
+        //             'autid': app.autid,
+        //             'transid': app.transid,
+        //             'scriptmodeflag': app.scriptmodeflag,
+        //         }),
+        //         success: function(data) {
+        //             app.caseList = data.o.rows;
+        //             app.tt = data.o.total;
+        //             app.totalPage = Math.ceil(app.tt / app.listnum);
+        //             app.listnum = app.pageSize;
+        //             app.currentPage = 1;
+        //         },
+        //         error: function() {
+        //             $('#failModal').modal();
+        //         }
+        //     });
+        // },
         //获取添加案例任务编号下拉列表
         getMission: function(){
             $.ajax({
@@ -1355,7 +1360,7 @@ var app = new Vue({
             });
         },
         //筛选案例
-        filterCase(){
+        filterCase(currentPage){
                 let data=[];
                 let list=$(".filterList>li");
                 let that=this;
@@ -1391,8 +1396,8 @@ var app = new Vue({
                     data: JSON.stringify({
                         'filterType': parseInt(filterType),
                         'conditionList': data,
-                        'currentPage': 1,
-                        'pageSize': 10,
+                        'currentPage': currentPage,
+                        'pageSize': this.pageSize,
                         'orderType': 'asc',
                         'orderColumn': 'id'
                      }),
@@ -1400,9 +1405,11 @@ var app = new Vue({
                     success:function(res){
                         // console.log(res)
                         app.caseList = res.testcaseViewRespDTOList;
-                        appappapp.tt = res.testcaseViewRespDTOList.length;
-                        appapp.totalPage = Math.ceil(that.tt / that.listnum);
-                        app.pageSize = that.listnum;
+                        app.currentPage=currentPage;
+                        app.tt = res.totalCount;
+                        app.totalPage = res.totalPage;
+                        app.pageSize = that.pageSize;
+                        app.queryflag = false;
                     }
 
                 });
