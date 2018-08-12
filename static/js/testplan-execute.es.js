@@ -84,6 +84,7 @@ var vBody = new Vue({
 					if (data.respCode === '0000') {
 						if (data.testPlanEntityList && data.testPlanEntityList.length) {
 							_this.testPlanId = data.testPlanEntityList[0].id;
+							_this.testPlans = data.testPlanEntityList;
 							resolve();
 						} else {
 							reject('请添加测试计划！');
@@ -264,7 +265,7 @@ var vBody = new Vue({
 		removeSceneAndCase: function() {
 			var _this = this;
 			if (!this.selectedScenes.length) {
-				Vac.alert('请选择要删除的场景或用例，只选择场景中的用例无效！');
+				Vac.alert('请选择要删除的场景!');
 				return;
 			}
 			// let sceneList = this.selectedScenes.length === 0 ? '' : JSON.stringify(this.selectedScenes);
@@ -300,8 +301,9 @@ var vBody = new Vue({
 					success: function(data){
 						if(data.respCode === '0000'){
 							$('#add-modal').modal('hide');
+							_this.selectedScenes = [];
 							Vac.alert('移除成功')
-							_this.getCases()
+							_this.getCases();
 						}else {
 							Vac.alert("移除失败")
 						}
