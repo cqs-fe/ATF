@@ -1134,13 +1134,15 @@ var app = new Vue({
                         "id": id
                     }),
                     success: function(res){
-                        // console.log(res)
                         var caseData=res.testcaseViewRespDTO;
+                        console.log("ooppppp"+caseData.transName);
                         $('#detailForm input[name="casecode"]').val(caseData.casecode);
                         $('#detailForm select[name="missionId"]').val(caseData.missionId);
                         $('#detailForm select[name="autid"]').val(caseData.autId);
+                        erji();
+                        $('#detailForm select[id="casetransid"]').val(caseData.transName);
+                        sanji();
                         $('#detailForm input[name="versioncode"]').val(caseData.version);
-                        $('#detailForm select[name="transid"]').val(caseData.transId);
                         $('#detailForm select[name="scriptmodeflag"]').val(caseData.scriptModeFlag);
                         $('#detailForm input[name="testpoint"]').val(caseData.testPoint);
                         $('#detailForm textarea[name="testDesign"]').val(caseData.testDesign);
@@ -1159,6 +1161,7 @@ var app = new Vue({
                         $('#detailForm select[name="scriptmode"]').val(caseData.scriptMode);
                         $('#detailForm select[name="usestatus"]').val(caseData.useStatus);
                         $('#detailForm textarea[name="note"]').val(caseData.note);
+
                     }
                 });
         },
