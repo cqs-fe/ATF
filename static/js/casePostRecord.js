@@ -20,6 +20,7 @@ var app = new Vue({
         subCaseList: [], //流程节点
         caselibid:sessionStorage.getItem('caselibId'), //案例库id
         userId:sessionStorage.getItem('userId'),
+        failMSG:"操作失败啦",
     },
     ready: function() {
         this.getAllUploadUser();
@@ -43,7 +44,7 @@ var app = new Vue({
         //获取案例
         getAllUploadUser:function(){
         	 $.ajax({
-                url:   'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/queryAllUploadUser' , 
+                url:   address3+'testcase/batchImport/queryAllUploadUser' , 
                 type: 'post',
                 data: {
                    },
@@ -58,19 +59,21 @@ var app = new Vue({
             });
         	},
         getCase:function() {
+            var _this=this;
             $.ajax({ 
-                url:   'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImport/queryBatchImportStatus', 
+                url: address3+'testcase/batchImport/queryBatchImportStatus', 
                 type: 'post',
-                 contentType: 'application/json',
+                contentType: 'application/json',
                 data: JSON.stringify({
-                    'pageNum': this.currentPage,
-                    'pageSize': this.pageSize,
+                    'pageNum': _this.currentPage,
+                    'pageSize': _this.pageSize,
                     'orderColumn': 'create_time',
                     'orderType':'desc',
                     'uploadUserReallyName': $('#sortuploadUserName').val(),
                     'importStatus': $('#importStatus').val(),
                     'createTimeLower': $('#createTimeLower').val().replace( '-','/' ).replace( '-','/' ) ,
-                    'createTimeUpper': $('#createTimeUpper').val().replace( '-','/' ).replace( '-','/' ) 
+                    'createTimeUpper': $('#createTimeUpper').val().replace( '-','/' ).replace( '-','/' ) ,
+                    'caseLibId': _this.caselibid,
                 }),
                 success: function(data) {
                     app.tt = data.totalCount; 
@@ -120,21 +123,27 @@ var app = new Vue({
         
          //上传
           upload:function() {
-							  $.ajax({
-						    url: address3+'testcase/batchImportTestcase',
-						    type: 'POST',
-						    cache: false,
-						    data: new FormData($('#importForm')[0]),
-						    processData: false,
-						    contentType: false, 
-						    success: function(data) {               		 
-               		 	$('#importModal').modal('hide');
-               		 	$('#successModal').modal('show');
-                	 }, error: function(data) { 
-               		 $('#importModal').modal('hide');
-               		 	$('#failModal').modal('show');
-                }
-						}) ;  
+                            var _this=this;
+							$.ajax({
+    						    url: address3+'testcase/batchImportTestcase',
+    						    type: 'POST',
+    						    cache: false,
+    						    data: new FormData($('#importForm')[0]),
+    						    processData: false,
+    						    contentType: false, 
+    						    success: function(data) {
+                       		 	$('#importModal').modal('hide');
+                       		 	if (data.respCode==0000) {
+                                            $('#successModal').modal('show');
+                                        } else {
+                                            _this.failMSG=data.respMsg;
+                                            $('#failModal2').modal('show');
+                                        }
+                        	    }, error: function(data) { 
+                           		 $('#importModal').modal('hide');
+                           		 	$('#failModal').modal('show');
+                                    }
+    						}) ;  
         },
 
           downloadError :function (ID) {

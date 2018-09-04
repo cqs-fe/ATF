@@ -36,6 +36,7 @@ var app = new Vue({
         subCaseList: [], //流程节点
         caselibid: sessionStorage.getItem('caselibId'), //案例库id
         userId:sessionStorage.getItem('userId'),
+        failMSG:"操作失败啦",
     },
     ready: function() {
         this.getCase(this.currentPage, this.pageSize, this.order, this.sort);
@@ -835,20 +836,26 @@ var app = new Vue({
         },
         //上传
         upload:function() {
+                        var _this=this;
                         $.ajax({
-                            url: 'http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase',
+                            url: address3+'testcase/batchImportTestcase',
                             type: 'POST',
                             cache: false,
                             data: new FormData($('#importForm')[0]),
                             processData: false,
                             contentType: false, 
                             success: function(data) {                        
-                        $('#importModal').modal('hide');
-                        $('#successModal').modal('show');
-                     }, error: function(data) { 
-                     $('#importModal').modal('hide');
-                        $('#failModal').modal('show');
-                }
+                                $('#importModal').modal('hide');
+                                if (data.respCode==0000) {
+                                    $('#successModal').modal('show');
+                                } else {
+                                    _this.failMSG=data.respMsg;
+                                    $('#failModal2').modal('show');
+                                }
+                         }, error: function(data) { 
+                         $('#importModal').modal('hide');
+                         $('#failModal').modal('show');
+                    }
                         }) ;  
         },
         //添加单案例
@@ -1391,7 +1398,12 @@ var app = new Vue({
                         }
                         data.push(listItem);
                 }
-                // console.log(data)
+                let listItem={};
+				listItem.propertyName="caseLibId";
+				listItem.compareType="=";
+				listItem.propertyValueList=[];
+				listItem.propertyValueList.push(sessionStorage.getItem('caselibId'));
+				data.push(listItem);
                 var filterType=$('input[name="filterType"]').val();
                 $.ajax({
                     url:address3 + 'testcase/pagedQueryTestCaseByCondition',
@@ -1402,7 +1414,8 @@ var app = new Vue({
                         'currentPage': currentPage,
                         'pageSize': this.pageSize,
                         'orderType': 'asc',
-                        'orderColumn': 'id'
+                        'orderColumn': 'id',
+                        'caseLibId': sessionStorage.getItem('caselibId'),
                      }),
                     type:'post',
                     success:function(res){
