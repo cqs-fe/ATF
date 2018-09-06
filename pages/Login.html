@@ -199,6 +199,7 @@
                     dataType: "json",
                     success: function(data) {
                         // console.info(data);
+                        //获取token  cookie = Request.cookie["token"].value;
                         if (data.success) {
                             $.ajax({
                                             url: address3 + 'userController/getUser',
