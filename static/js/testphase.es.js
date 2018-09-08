@@ -4,8 +4,8 @@ var vBody = new Vue({
 		rowData: null,
 		selectedRows: [],
 		addRowData: {
-			phaseName: '',
-			phaseDesc: ''
+			name: '',
+			descShort: ''
 		},
 		// tooltipMessage: '',
 		// alertShow: false
@@ -14,8 +14,8 @@ var vBody = new Vue({
 		var _this = this;
 		this.getData();
 		$('.modal').on('hide.bs.modal', function () {
-		  _this.addRowData.phaseDesc = '';
-		  _this.addRowData.phaseName = '';
+		  _this.addRowData.descShort = '';
+		  _this.addRowData.name = '';
 		});
 		$('.1').addClass('open')
     $('.1 .arrow').addClass('open')
@@ -79,15 +79,15 @@ var vBody = new Vue({
 			const data = this.rowData.find((v) => {
 				return v.id === +this.selectedRows[0];
 			});
-			$('#edit-name').val(data.phaseName);
-			$('#edit-desc').val(data.phaseDesc);			
+			$('#edit-name').val(data.name);
+			$('#edit-desc').val(data.descShort);			
 		},
 		saveRow: function(){
 			var _this = this;
 			let data = {};
 			data.id = $('#edit-id').val();
-			data.phaseName = $('#edit-name').val();
-			data.phaseDesc = $('#edit-desc').val();
+			data.name = $('#edit-name').val();
+			data.descShort = $('#edit-desc').val();
 			Vac.ajax({
 				url: address3 + "testphaseController/updateTestphase",
 				data: data,

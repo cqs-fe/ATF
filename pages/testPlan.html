@@ -142,7 +142,7 @@
                                     <div class="col-sm-10">
                                         <select name="testPhaseId" id="" class="form-control" v-model="addRowData.testPhaseId">
                                             <option v-for="testPhase in testPhaseArray" :value="testPhase.id" :key="testPhase.id">
-                                                {{testPhase.phaseName}}</option>
+                                                {{testPhase.name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
                                                 <option
                                                     v-for="testRound in testRoundArray"
                                                     :key="testRound.id"
-                                                    :label="testRound.roundName"
+                                                    :label="testRound.name"
                                                     :value="testRound.id">
                                                 </option>
                                             </select>
