@@ -693,6 +693,7 @@ var app = new Vue({
     methods: {
         //获取案例
         getCase:function(currentPage, pageSize, order, sort) {
+
             let caseLibId=sessionStorage.getItem('caselibId');
             $.ajax({
                 url: address3 + 'testcase/pagedBatchQueryTestCase',
@@ -708,10 +709,13 @@ var app = new Vue({
                 success: function(data) {
                     // console.log(data);
                     app.caseList = data.testcaseViewRespDTOList;
+                    console.log(app.caseList);
                     app.tt = data.totalCount;
                     app.totalPage = Math.ceil(app.tt / pageSize);
                     app.pageSize = pageSize;
                     app.queryflag = true;
+                    $(".subShow").remove();;
+
                 }
             });
         },  
@@ -1023,16 +1027,16 @@ var app = new Vue({
                             autTd.html(that.subCaseList[i].autName);
                             transTd.html(that.subCaseList[i].transName);
                             compositeTd.html('流程节点');
-                            useTd.html(that.subCaseList[i].useStatus);
+                            useTd.html(that.subCaseList[i].useStatus=='0'?'新增':'评审通过' );
                             scriptTd.html(that.subCaseList[i].scriptTemplateName);
                             authorTd.html(that.subCaseList[i].authorName);
                             executorTd.html(that.subCaseList[i].executorName);
                             reviewerTd.html(that.subCaseList[i].reviewerName);
-                            executeMethodTd.html(that.subCaseList[i].executeMethod);
+                            executeMethodTd.html(that.convertExecMe(that.subCaseList[i].executeMethod));
                             misssionTd.html(that.subCaseList[i].missionName);
-                            priorityTd.html(that.subCaseList[i].priority);
-                            caseTypeTd.html(that.subCaseList[i].caseType);
-                            casePropertyTd.html(that.subCaseList[i].caseProperty);
+                            priorityTd.html(that.$options.methods.convertPri(that.subCaseList[i].priority));
+                            caseTypeTd.html(that.$options.methods.convertCaseType(that.subCaseList[i].caseType) );
+                            casePropertyTd.html(that.$options.methods.convertCasePro(that.subCaseList[i].caseProperty));
                             testPointTd.html(that.subCaseList[i].testpoint);
                             subTr.append(iconTd, checkTd, codeTd, autTd, transTd, compositeTd, useTd, scriptTd, authorTd, executorTd, reviewerTd, executeMethodTd, misssionTd, priorityTd, caseTypeTd, casePropertyTd, testPointTd);
                             flowTr.after(subTr);
@@ -1768,7 +1772,7 @@ function disan() {
 //重新排序
 function resort(target) {
     var spans = target.parentNode.getElementsByTagName("span");
-    for (var span in spans) {
+    for (var span in spans) {               //清空箭头
         if (spans[span].nodeName === "SPAN") {
             spans[span].setAttribute("class", "");
         }

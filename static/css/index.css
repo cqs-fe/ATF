@@ -123,4 +123,9 @@
     top: 0px;
     opacity: 0;
     -ms-filter: 'alpha(opacity=0)';
+} 
+.center{
+    text-align:center;
+    background-color: #fff;
+    height: 50px;
 }

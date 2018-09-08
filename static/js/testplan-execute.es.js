@@ -9,6 +9,7 @@ var vBody = new Vue({
 		recordflag: 2,			// 记录单
 		exeScope: null,			// 执行范围
 		selectState: '',		// 选择状态
+		userId:sessionStorage.getItem('userId'),
 
 		// save the value obtained from back end and will set to the selects' options
 		testPlans: [], 

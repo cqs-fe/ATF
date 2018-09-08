@@ -10,7 +10,9 @@ var app = new Vue({
         order: 'id',
         sort: 'asc',
         isPageNumberError: false,
-        ids: []
+        ids: [],
+        userId: sessionStorage.getItem('userId'),
+        failMSG:"操作失败！",
     },
     ready: function() {
         autSelect();
@@ -59,29 +61,59 @@ var app = new Vue({
         //添加功能点
         insert: function() {
             $('#insertForm input[name="autId"]').val($('#autSelect').val());
-            var self=this;
-            $.ajax({
-                url: address3 + 'transactController/addSingleTransact',
-                type: 'post',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    autId: $("#insertForm input[name='autId']").val(),
-                    code: $("#insertForm input[name='code']").val(),
-                    nameMedium: $("#insertForm input[name='nameMedium']").val(),
-                    descShort: $("#insertForm textarea[name='descShort']").val()
-                }),
-                success: function(data) {
-                    if (data.respCode=='0000') {
-                        $('#successModal').modal();
-                        queryTransact();
-                    } else {
+            var self=this,
+            transType=$("#insertForm input[name='transType']").val();
+            if(transType==1){
+                $.ajax({
+                    url: address3 + 'transactController/addSingleTransact',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        autId: $("#insertForm input[name='autId']").val(),
+                        code: $("#insertForm input[name='code']").val(),
+                        nameMedium: $("#insertForm input[name='nameMedium']").val(),
+                        descShort: $("#insertForm textarea[name='descShort']").val(),
+                    }),
+                    success: function(data) {
+                        if (data.respCode=='0000') {
+                            $('#successModal').modal();
+                            queryTransact();
+                        } else {
+                            alert(data.respMsg)
+                        }
+                    },
+                    error: function() {
                         alert(data.respMsg)
                     }
-                },
-                error: function() {
-                    alert(data.respMsg)
-                }
-            });
+                });
+            }
+            else
+            {
+              $.ajax({
+                    url: address3 + 'interface/addSingleInterface',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: $("#insertForm input[name='nameMedium']").val(),
+                        systemId: $("#insertForm input[name='autId']").val(),
+                        interfaceCode: $("#insertForm input[name='code']").val(),
+                        creatorId: self.userId,
+                        description: $("#insertForm textarea[name='descShort']").val(),
+                    }),
+                    success: function(data) {
+                        if (data.respCode=='0000') {
+                            $('#successModal').modal();
+                            queryTransact();
+                        } else {
+                            app.failMSG=data.respMsg;
+                            $('#failModal2').modal('show');
+                        }
+                    },
+                    error: function() {
+                        alert(data.respMsg)
+                    }
+                });  
+            }
         },
 
         checkDel:()=>{
@@ -145,7 +177,7 @@ var app = new Vue({
                     id: $('#updateForm input[name="id"]').val(),
                     code: $('#updateForm input[name="code"]').val(),
                     nameMedium: $('#updateForm input[name="nameMedium"]').val(),
-                    descShort: $('#updateForm textarea[name="descShort"]').val()
+                    descShort: $('#updateForm textarea[name="descShort"]').val(),
                 }),
                 success: function(data) {
                     // console.info(data);
@@ -167,7 +199,7 @@ var app = new Vue({
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             $('#updateForm input[name="id"]').val(selectedId);
-            $('#updateForm input[name="code"]').val(selectedInput.parent().next().next().html());
+            $('#updateForm input[name="code"]').val(selectedInput.parent().next().next().children().html());
             $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().next().html());
             $('#updateForm textarea[name="descShort"]').val(selectedInput.parent().next().next().next().next().html());
         },
@@ -224,6 +256,25 @@ var app = new Vue({
             }else{
                 return '';
             }     
+        },
+        //跳转到详情页面
+        goToDetail: function(code,transType) {
+             if(transType==1)
+             {
+                var transactId = code;
+                var autId = $('#autSelect').val();
+                sessionStorage.setItem("transactId",transactId);
+                sessionStorage.setItem("autId",autId);
+                location.href = "transactDetail.html";
+             }
+             else
+             {
+                var transactId = code;
+                var autId = $('#autSelect').val();
+                sessionStorage.setItem("transactId",transactId);
+                sessionStorage.setItem("autId",autId);
+                location.href = "interfacesManagement.html";
+             }
         }
     },
 
@@ -244,12 +295,20 @@ function getTransact(page, listnum, order, sort) {
             "orderType":"DESC",
         }),
         success: function(data) {
-            console.info(data);
-            // var data = JSON.parse(data);
-            app.transactList = data.list;
-            app.tt = data.totalCount;
-            app.totalPage = Math.ceil(app.tt / listnum);
-            app.pageSize = listnum;
+            if (data.respCode=='0000') {
+                var transactList=data.list;
+                for (var i = transactList.length - 1; i >= 0; i--) {
+                    if (transactList[i].transType==null)
+                        transactList[i].transType=1;
+                }
+                app.transactList = transactList;
+                app.tt = data.totalCount;
+                app.totalPage = Math.ceil(app.tt / listnum);
+                app.pageSize = listnum;
+            } else {
+                app.failMSG=data.respMsg;
+                $('#failModal2').modal('show');
+            }
         }
     });
 
@@ -332,11 +391,20 @@ function setval() {
             'autId': $('#autSelect').val(),
         }),
         success: function(data) {
-            console.log(data)
-            app.transactList = data.list;
-            app.tt = data.totalCount;
-            app.totalPage = Math.ceil(app.tt / app.listnum);
-            app.pageSize = app.listnum;
+            if (data.respCode=='0000') {
+                var transactList=data.list;
+                for (var i = transactList.length - 1; i >= 0; i--) {
+                    if (transactList[i].transType==null)
+                        transactList[i].transType=1;
+                }
+                app.transactList = transactList;
+                app.tt = data.totalCount;
+                app.totalPage = Math.ceil(app.tt / app.listnum);
+                app.pageSize = app.listnum;
+            } else {
+                app.failMSG=data.respMsg;
+                $('#failModal2').modal('show');
+            }
         },
         error: function() {
             alert(data.respMsg)
@@ -357,13 +425,27 @@ function queryTransact() {
             'autId': $('#autSelect').val(),
         }),
         success: function(data) {
-            app.transactList = data.list;
-            app.tt = data.totalCount;
-            app.totalPage = Math.ceil(app.tt / app.listnum);
-            // app.pageSize = app.listnum;
+            if (data.respCode=='0000') {
+                var transactList=data.list;
+                for (var i = transactList.length - 1; i >= 0; i--) {
+                    if (transactList[i].transType==null)
+                        transactList[i].transType=1;
+                }
+                app.transactList = transactList;
+                app.tt = data.totalCount;
+                app.totalPage = Math.ceil(app.tt /app.listnum);
+                app.pageSize = app.listnum;
+            } else {
+                app.failMSG=data.respMsg;
+                $('#failModal2').modal('show');
+            }
         },
         error: function() {
             alert(data.respMsg)
         }
     });
+}
+//通过选择被测系统筛选查询功能点 
+function know() {
+     alert("you know what");
 }

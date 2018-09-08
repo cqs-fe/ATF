@@ -6,6 +6,13 @@
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <title>transact</title>
+    <style type="text/css">
+        /*用例详情超链接*/
+        .detail-link{
+            color: #428bca;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body id="v-transact" v-cloak>
@@ -67,6 +74,16 @@
                                                     <div class="col-lg-5">
                                                         <input type="text" class="form-control" name="nameMedium">
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-lg-3 control-label">类型</label>  
+                                                    <div class="col-lg-5">
+                                                        <select class="form-control" name="transType">
+                                                            <option>--请选择类型--</option> 
+                                                            <option value="1">UI</option>
+                                                            <option value="2">接口</option>
+                                                        </select>
+                                                    </div>                                                      
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-lg-3 control-label">描述</label>
@@ -191,6 +208,24 @@
                             </div>
                         </div>
                         <!-- failModal end -->
+                         <!-- failModal start -->
+                        <div class="modal fade" id="failModal2" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">操作失败</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>{{failMSG}}</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- failModal end -->
                     </div>
                 </div>
                 <!--topbutton end-->
@@ -227,13 +262,11 @@
                             <table class="table table-striped table-bordered border-top text-center" id="sample_1">
                                 <thead>
                                     <tr>
-                                        <th style="width:8px;">
-                                           
-                                        </th>
+                                        <th style="width:8px;"></th>
                                         <th class="text-center">序号</th>
                                         <th class="hidden-phone text-center" data-order="" data-sort="desc" onclick="resort(this)">编码 <span class="icon-sort-up" aria-hidden="true"></span></th>
                                         <th class="text-center">名称</th>
-                                        <!-- <th class="hidden-phone text-center" width="10%">类型</th> -->
+                                        <th class="hidden-phone text-center" width="10%">类型</th>
                                         <th class="hidden-phone text-center">描述</th>
                                         <th class="hidden-phone text-center">创建时间</th>
                                         <th class="hidden-phone text-center">修改时间</th>
@@ -244,13 +277,13 @@
                                         <td width="5%">
                                             <input type="radio" v-model="" name="chk_list" id="{{transact.id}}" />
                                         </td>
-                                        <td width="5%">{{index+1}}</td>
-                                        <td class="center" width="15%">{{ transact.code }}</td>
+                                        <td class="center hidden-phone" width="5%">{{index+1}}</td>
+                                        <td class="center" width="15%"><a @click="goToDetail(transact.id,transact.transType)" class="detail-link">{{ transact.code}}</a></td>
                                         <td width="15%">{{ transact.nameMedium }}</td>
-                                        <!-- <td class="hidden-phone">{{ transact.transacttype }}</td> -->
+                                        <td width="10%" >{{(transact.transType==1)?'UI':'接口'}}</td> 
                                         <td width="20%">{{ transact.descShort}}</td>
-                                        <td width="20%">{{ formatDate(transact.createTime) }}</td>
-                                        <td width="20%">{{ formatDate(transact.modifiedTime) }}</td>
+                                        <td width="15%">{{ formatDate(transact.createTime) }}</td>
+                                        <td width="15%">{{ formatDate(transact.modifiedTime) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
