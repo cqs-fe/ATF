@@ -168,7 +168,7 @@
                         :value="scene.sceneId" v-model="checkallSceneIds" style="position: relative; top: 3px;">
                     </div>
                     <div class="sortable_scene_caselist">
-                      <div class="case-lib" v-for="case_wrapper in scene.testCaseList">
+                      <div class="case-lib" v-for="case_wrapper in scene.testCaseList" :key="case_wrapper.orderNumber">
                         <template v-if="case_wrapper.caseCompositeType == '1'">
                         <div class="checkbox-wrapper">
                           <i class="icon-move handle1" style="color: #ff6c60;"></i>&nbsp;&nbsp;
