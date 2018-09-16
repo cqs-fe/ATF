@@ -211,6 +211,12 @@ var app = new Vue({
                 location.href = "transact.html";
             }
         },
+                //传递当前页选中测试系统id到功能点页面
+        linkToTransact: function(selectedId,selectedName) {
+            sessionStorage.setItem("autId", selectedId);
+            sessionStorage.setItem("autName", selectedName); 
+            location.href = "transact.html";
+        },
         //传递当前页选中测试系统id到自动化构件维护页面
         toComponent: function() {
             var selectedInput = $('input[name="chk_list"]:checked');

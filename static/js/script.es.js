@@ -9,6 +9,7 @@ $(document).ready(function() {
             autIds: [],
             transId: '',
             transIds: [],
+            
             templateList: [],
             checkedTemplate: [],
             lastCheckedTemplate: null,

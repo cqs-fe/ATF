@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="import" href="./common/header.html?__inline">
+    <link rel="stylesheet" type="text/css" href="../static/css/script.scss">
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <title>transactDetail</title>
+</head>
+<body id="transactDetail" v-cloak>
+    <div class="content">
+        <!--header start-->
+        <link rel="import" href="./common/header-guide.html?__inline">
+        <!--header end-->
+        <!--sidebar start-->
+        <link rel="import" href="./common/aside-guide.html?__inline">
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <div>
+                    <!-- breadcrumb start -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <ul class="breadcrumb">
+                                <li><a href="aut.html"><i class="icon-home"></i> 被测系统管理</a></li>
+                                <li><a href="transact.html">功能点</a></li>
+                                <li class="active">UI管理</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- breadcrumb end -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <section class="panel panel-pad">
+                                <!-- select start -->
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-xs-2 control-label">被测系统</label>
+                                        <div class="col-xs-2">
+                                            <select class="form-control" id="autSelect">
+                                            </select>
+                                        </div>
+                                        <label class="col-xs-1 control-label">功能点</label>
+                                        <div class="col-xs-2">
+                                            <select class="form-control" id="transactSelect" v-model="transid">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- select end -->
+                            </section>
+                        </div>
+                    </div>
+                    <div class="row">
+                    	<div class="col-xs-12">	
+                    		<ul id="myTab" class="nav nav-tabs">
+							<li class="active">
+								<a href="#detail" data-toggle="tab">详情	</a>
+							</li>
+							<li><a href="#elementLibrary" data-toggle="tab">元素库</a></li>
+							<li><a href="#object-repo" data-toggle="tab">对象库</a></li>
+							<li><a href="#script" data-toggle="tab">基础脚本</a></li>
+							</ul>
+							<div id="myTabContent" class="tab-content">
+								<div class="tab-pane fade in active" id="detail">
+									<div class="row">
+											<div class="col-xs-12" >
+												<div  style="background:white;">
+													<br/>
+			                                        <form id="updateForm" class="form-horizontal" role="form">
+			                                            <div class="form-group hidden">
+			                                                <label class="col-lg-3 control-label">功能点id</label>
+			                                                <div class="col-lg-5">
+			                                                    <input type="text" class="form-control" name="id">
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="col-lg-3 control-label">编码</label>
+			                                                <div class="col-lg-5">
+			                                                    <input type="text" class="form-control" name="code" id="code">
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="col-lg-3 control-label">名称</label>
+			                                                <div class="col-lg-5">
+			                                                    <input type="text" class="form-control" name="nameMedium" id="nameMedium">
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="col-lg-3 control-label">描述</label>
+			                                                <div class="col-lg-5">
+			                                                    <textarea class="form-control" rows="3" name="descShort" id="descShort"></textarea>
+			                                                </div>
+			                                            </div>
+			                                        </form>
+				                                    <div class="center">
+				                                        <label class="col-lg-3 control-label"></label>
+				                                        <div class="col-lg-4 ">
+					                                        <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+					                                        <button data-dismiss="modal" class="btn btn-success" type="button" v-on:click="update">修改</button>
+					                                     </div>
+				                                        <label class="col-lg-5 control-label"></label>
+				                                    </div>
+			                                    </div>
+			                                </div>
+	                                </div>
+								</div>
+								<div class="tab-pane fade" id="elementLibrary">
+									<div class="row">
+				                        <div class="col-xs-4">
+				                            <section class="panel tree-panel">
+				                                <header class="panel-heading">
+				                                    元素列表
+				                                </header>
+				                                <div id="menuContent" class="menuContent treeMenu">
+				                                    <div class="form-group panel-pad form-horizontal">
+				                                        <div class="col-xs-10">
+				                                            <input type="text" name="" id="keyword" value="" class="form-control" placeHolder="输入搜索关键字">
+				                                        </div>
+				                                        <br>
+				                                    </div>
+				                                    <div class="form-group form-horizontal">
+				                                        <div class="col-xs-12">
+				                                            <a class="btn btn-info btn-sm" data-toggle="modal" href="#addUIModal">添加UI</a>
+				                                            <a class="btn btn-info btn-sm" @click="delUI">删除UI</a>
+				                                            <a class="btn btn-info btn-sm" data-toggle="modal" @click="addElementsingle">添加元素</a>
+				                                            <a class="btn btn-info btn-sm" @click="delElement">删除元素</a>
+				                                        </div>
+				                                    </div>
+				                                    <ul id="elementtree" class="ztree tree"></ul>
+				                                </div>
+				                            </section>
+				                        </div>
+				                        <div class="col-xs-8">
+				                            <section class="panel" id="blank">
+				                                <header class="panel-heading">
+				                                        名称
+				                                </header>
+				                                <div class="elementContent">
+				                                    <p class="chooseTip">请选择UI或元素</p>
+				                                </div>
+				                            </section>
+				                            <section class="panel" id="UI" style="display: none;">
+				                                <header class="panel-heading">
+				                                        {{UITitle}}
+				                                </header>
+				                                <div class="elementContent">
+				                                    <form class="form-horizontal panel-pad" id="UIForm">
+				                                        <div class="form-group">
+				                                            <label class="col-xs-2 control-label">UI名称：</label>
+				                                            <div class="col-xs-3">
+				                                                <input type="text" name="UIName" class="form-control" :value="UIName" id="RUIName">
+				                                            </div>
+				                                        </div>
+				                                        <div class="form-group">
+				                                            <label class="col-xs-3 control-label">关联对象库中对象：</label>
+				                                            <div class="col-xs-3">
+				                                                <input type="text" id="UILinkedInput" class="form-control" :value="UILinked" disabled>
+				                                            </div>
+				                                            <div class="col-xs-2">
+				                                                <a class="btn btn-info" data-toggle="modal" href="#UILinkedModal">关联对象</a>
+				                                            </div>
+				                                            <div class="col-xs-2">
+				                                                <a class="btn btn-info" @click="removeUILinked()">解除关联</a>
+				                                            </div>
+				                                            <div class="col-xs-2">
+				                                                <a class="btn btn-info" @click="updateUI">保存</a>
+				                                            </div>
+				                                        </div>
+				                                    </form>
+				                                </div>
+				                            </section>
+				                            <section class="panel" id="ele" style="display: none;">
+				                                <header class="panel-heading">
+				                                    {{eleName}}
+				                                </header>
+				                                <div class="elementContent">
+				                                    <form class="form-horizontal panel-pad" id="eleForm">
+				                                        <div class="form-group">
+				                                            <label class="col-xs-3 control-label">元素名称</label>
+				                                            <div class="col-xs-3">
+				                                                <input type="text" name="" class="form-control" :value="eleName" id="rEleName">
+				                                            </div>
+				                                            <label for="" class="col-xs-2 control-label">类型</label>
+				                                            <div class="col-xs-3">
+				                                                <select class="form-control" id="classtypeSelect">
+				                                                    <option value="">--选择控件类型--</option>
+				                                                    <option v-for="item in classtypeList" :value="item.name">{{item.name}}</option>
+				                                                </select>
+				                                            </div>
+				                                        </div>
+				                                        <div class="form-group">
+				                                            <label class="col-xs-3 control-label">对象库中父对象</label>
+				                                            <div class="col-xs-3">
+				                                                <input type="text" name="" id="eleParentInput" class="form-control" :value="eleParent" disabled>
+				                                            </div>
+				                                            <div class="col-xs-2">
+				                                                <a class="btn btn-info" data-toggle="modal" href="#eleParentModal">设置父对象</a>
+				                                            </div>
+				                                            <div class="col-xs-2">
+				                                                <a class="btn btn-info" @click="removeEleParent">解除关联</a>
+				                                            </div>
+				                                        </div>
+				                                        <div class="form-group">
+				                                            <label class="col-xs-3 control-label">对象库中关联对象</label>
+				                                            <div class="col-xs-3">
+				                                                <input type="text" name="" id="eleLinkedInput" class="form-control" :value="eleLinked" disabled>
+				                                            </div>
+				                                            <div class="col-xs-2">
+				                                                <a class="btn btn-info" data-toggle="modal" href="#eleLinkedModal">设置关联对象</a>
+				                                            </div>
+				                                            <div class="col-xs-2">
+				                                                <a class="btn btn-info" @click="removeEleLinked">解除关联</a>
+				                                            </div>
+				                                        </div>
+				                                    </form>
+				                                    <section class="panel small-panel">
+				                                        <header class="panel-heading">属性</header>
+				                                        <div class="property">
+				                                            主属性
+				                                            <a class="btn btn-white btn-sm pull-right" @click="addMainProp"><i class="icon-plus"></i></a>
+				                                            <a class="btn btn-white btn-sm pull-right" @click="delMainProp"><i class="icon-minus"></i></a>
+				                                        </div>
+				                                        <div class="property">
+				                                            <table class="table table-bordered">
+				                                                <thead>
+				                                                    <tr>
+				                                                        <th style="width:5%"></th>
+				                                                        <th>属性名</th>
+				                                                        <th>属性值</th>
+				                                                    </tr>
+				                                                </thead>
+				                                                <tbody id="mainTbody">
+				                                                    <tr class="text-center">
+				                                                        <td colspan="3">暂无数据</td>
+				                                                    </tr>
+				                                                </tbody>
+				                                            </table>
+				                                        </div>
+
+				                                        <div class="property">
+				                                            附加属性
+				                                            <a class="btn btn-white btn-sm pull-right" @click="addAddiProp"><i class="icon-plus"></i></a>
+				                                            <a class="btn btn-white btn-sm pull-right" @click="delAddiProp"><i class="icon-minus"></i></a>
+				                                        </div>
+				                                        <div class="property">
+				                                            <table class="table table-bordered">
+				                                                <thead>
+				                                                    <tr>
+				                                                        <th style="width:5%"></th>
+				                                                        <th>属性名</th>
+				                                                        <th>属性值</th>
+				                                                    </tr>
+				                                                </thead>
+				                                                <tbody id="addiTbody">
+				                                                    <tr class="text-center">
+				                                                        <td colspan="3">暂无数据</td>
+				                                                    </tr>
+				                                                </tbody>
+				                                            </table>
+				                                        </div>
+
+				                                        <div class="property">
+				                                            辅助属性
+				                                            <a class="btn btn-white btn-sm pull-right" @click="addAssiProp"><i class="icon-plus"></i></a>
+				                                            <a class="btn btn-white btn-sm pull-right" @click="delAssiProp"><i class="icon-minus"></i></a>
+				                                        </div>
+				                                        <div class="property">
+				                                            <table class="table table-bordered">
+				                                                <thead>
+				                                                    <tr>
+				                                                        <th style="width:5%"></th>
+				                                                        <th>属性名</th>
+				                                                        <th>属性值</th>
+				                                                    </tr>
+				                                                </thead>
+				                                                <tbody id="assiTbody">
+				                                                    <tr class="text-center">
+				                                                        <td colspan="3">暂无数据</td>
+				                                                    </tr>
+				                                                </tbody>
+				                                            </table>
+				                                        </div>
+
+				                                        <div class="property">
+				                                            关联属性
+				                                            <a class="btn btn-white btn-sm pull-right" @click="addLinkedProp"><i class="icon-plus"></i></a>
+				                                            <a class="btn btn-white btn-sm pull-right" @click="delLinkedProp"><i class="icon-minus"></i></a>
+				                                        </div>
+				                                        <div class="property">
+				                                            <table class="table table-bordered">
+				                                                <thead>
+				                                                    <tr>
+				                                                        <th style="width:5%"></th>
+				                                                        <th>属性名</th>
+				                                                        <th>属性值</th>
+				                                                    </tr>
+				                                                </thead>
+				                                                <tbody id="relatePropTbody">
+				                                                    <tr class="text-center">
+				                                                        <td colspan="3">暂无数据</td>
+				                                                    </tr>
+				                                                </tbody>
+				                                            </table>
+				                                        </div>
+				                                    </section>
+
+				                                    <a class="btn btn-info" @click="updateElement">保存</a>
+				                                </div>
+				                            </section>
+				                        </div>
+                    				</div>
+								</div>
+								<div class="tab-pane fade" id="object-repo">
+									<div class="row">
+								        <div class="col-xs-4">
+								            <section class="panel tree-panel">
+								                <header class="panel-heading"  >
+								                    对象库
+								                </header>
+								                <div id="menuContent" class="menuContent treeMenu">
+								                    <div class="form-group panel-pad form-horizontal">
+								                        <div class="col-xs-6">
+								                            <input type="text" name="" placeholder="请输入对象名称" value="" class="form-control empty input-sm"  id="keyword">
+								                        </div>
+								                        <a class="btn btn-info btn-sm" id="search-btn">搜索</a>
+								                    </div>
+								                    <div class="form-group form-horizontal">
+								                        <div class="col-xs-12">
+								                            <a class="btn btn-info btn-sm" data-toggle="modal" href="#addObjModal">添加对象</a>
+								                            <a class="btn btn-info btn-sm" @click="delObj">删除对象</a>
+								                        </div>
+								                    </div>
+								                    <ul id="objectTree" class="ztree tree"></ul>
+								                </div>
+								            </section>
+								        </div>
+								        <div class="col-xs-8">
+								            <section class="panel" id="objblank">
+								                <header class="panel-heading">
+								                    对象名称
+								                 </header>
+								                 <div class="elementContent">
+								                    <p class="chooseTip">请选择对象</p>
+								                 </div>
+								            </section>
+								            <section class="panel" id="obj" style="display:none;">
+								                <header class="panel-heading">
+								                    {{objTitle}}
+								                </header>
+								                <div class="elementContent">
+								                    <form class="form-horizontal panel-pad" id="objForm">
+								                        <div class="form-group">
+								                            <label class="col-xs-2 control-label">名称</label>
+								                            <div class="col-xs-3">
+								                                <input type="text" name="name" class="form-control" :value="objName">
+								                            </div>
+								                            <label for="" class="col-xs-2 control-label">类型</label>
+								                            <div class="col-xs-3">
+								                                <select class="form-control" id="objclasstypeSelect">
+								                                    <option value="">--选择控件类型--</option>
+								                                    <option v-for="item in classtypeList" :value="item.name">{{item.name}}</option>
+								                                </select>
+								                            </div>
+								                        </div>
+								                    </form>
+								                    <section class="panel small-panel">
+								                        <header class="panel-heading">属性</header>
+								                        <div class="property">
+								                            主属性
+								                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+								                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+								                        </div>
+								                        <div class="property">
+								                            <table class="table table-bordered">
+								                                <thead>
+								                                    <tr>
+								                                        <th style="width:5%"></th>
+								                                        <th>属性名</th>
+								                                        <th>属性值</th>
+								                                    </tr>
+								                                </thead>
+								                                <tbody id="objmainProp">
+								                                    <tr>
+								                                        <td>
+								                                            <input type="checkbox" name="chk_list" />
+								                                        </td>
+								                                        <td contenteditable="true"></td>
+								                                        <td contenteditable="true"></td>
+								                                    </tr>
+								                                </tbody>
+								                            </table>
+								                        </div>
+								                        <div class="property">
+								                            附加属性
+								                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+								                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+								                        </div>
+								                        <div class="property">
+								                            <table class="table table-bordered">
+								                                <thead>
+								                                    <tr>
+								                                        <th style="width:5%"></th>
+								                                        <th>属性名</th>
+								                                        <th>属性值</th>
+								                                    </tr>
+								                                </thead>
+								                                <tbody id="addiProp">
+								                                    <tr>
+								                                        <td>
+								                                            <input type="checkbox" name="chk_list" />
+								                                        </td>
+								                                        <td contenteditable="true"></td>
+								                                        <td contenteditable="true"></td>
+								                                    </tr>
+								                                </tbody>
+								                            </table>
+								                        </div>
+								                        <div class="property">
+								                            辅助属性
+								                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+								                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+								                        </div>
+								                        <div class="property">
+								                            <table class="table table-bordered">
+								                                <thead>
+								                                    <tr>
+								                                        <th style="width:5%"></th>
+								                                        <th>属性名</th>
+								                                        <th>属性值</th>
+								                                    </tr>
+								                                </thead>
+								                                <tbody id="assisProp">
+								                                    <tr>
+								                                        <td>
+								                                            <input type="checkbox" name="chk_list" />
+								                                        </td>
+								                                        <td contenteditable="true"></td>
+								                                        <td contenteditable="true"></td>
+								                                    </tr>
+								                                </tbody>
+								                            </table>
+								                        </div>
+
+								                        <div class="property">
+								                            关联属性
+								                            <a class="btn btn-white btn-sm pull-right" @click="addProp($event)"><i class="icon-plus"></i></a>
+								                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+								                        </div>
+								                        <div class="property">
+								                            <table class="table table-bordered">
+								                                <thead>
+								                                    <tr>
+								                                        <th style="width:5%"></th>
+								                                        <th>属性名</th>
+								                                        <th>属性值</th>
+								                                    </tr>
+								                                </thead>
+								                                <tbody id="relProp">
+								                                    <tr>
+								                                        <td>
+								                                            <input type="checkbox" name="chk_list" />
+								                                        </td>
+								                                        <td contenteditable="true"></td>
+								                                        <td contenteditable="true"></td>
+								                                    </tr>
+								                                </tbody>
+								                            </table>
+								                        </div>
+								                    </section>
+								                    <a class="btn btn-info" @click="updateObj">保存</a>
+								                </div>
+								            </section>
+								        </div>
+        							</div>
+								</div>
+								<div class="tab-pane fade" id="script">
+						          <div class="row">
+						            <div class="col-xs-12">
+						              <section class="panel">
+						                  <header class="panel-heading">
+						                      脚本模板
+						                  </header>
+						                    <div class="row">
+						                    	<div class="col-xs-12 top-btn">
+							                    	<a class="btn btn-white" id="template_add" data-toggle="modal" href="#addtemplateModal"><i class="icon-plus"></i> 新增模板</a>
+      												<a class="btn btn-white" id="template_remove" @click="deleteTemplate();"><i class="icon-ban-circle"></i> 删除模板</a>
+      											</div>
+						                    </div>
+						                <table v-if="templateList.length" id="top_table" style="margin-left: 0; width: 100%;" class="table table-bordered text-center table-striped">
+						                  <thead>
+						                    <tr>
+						                      <th class="index" style="text-align: center;">选择</th>
+						                      <th class="number" style="text-align: center;">脚本</th>
+						                      <th style="text-align: center;">描述</th>
+						                    </tr>
+						                  </thead>
+						                  <tbody>
+						                    <tr v-for="(index,template) in templateList">
+						                      <td class="index">
+						                        <input type="checkbox" name="chk_list" :value="index" @click="change($event)" v-model="checkedTemplate" id="{{template.id}}">
+						                      </td>
+						                      <td class="number">{{template.name}}</td>
+						                      <td>{{template.description}}</td>
+						                    </tr>
+						                  </tbody>
+						                </table>
+						                <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
+						              </section>
+						            </div>
+						           </div>
+								<!--top-table end-->
+						        <!-- table start -->
+						        <div class="row">
+						          <div class="col-sm-12">
+						            <div class="panel">
+						                <header class="panel-heading">
+						                    脚本数据
+						                </header>
+						                <div id="table2" class="table-wrapper operation-wrapper" style="margin-top: 0px;">
+						                    <div v-show="selectedScript>0">
+						                      <div class="row" style="margin-bottom: 15px;padding: 0 15px;">
+						                        <div class="col-xs-12 top-btn">
+						                          <a class="btn btn-white" data-toggle="modal" @click="showUIModal();">
+						                            <i class="icon-plus"></i> 添加多项</a>
+						                          <a class="btn btn-white" id="script_remove" @click="removeRow($event)">
+						                            <i class=" icon-trash"></i> 删除</a>
+						                          <a class="btn btn-white" id="up" @click="moveUp($event)">
+						                            <i class=" icon-double-angle-up"></i> 上移</a>
+						                          <a class="btn btn-white" id="down" @click="moveDown($event)">
+						                            <i class=" icon-double-angle-down"></i> 下移</a>
+						                          <a class="btn btn-white" @click="tableSave()">
+						                            <i class="icon-save"></i> 保存</a>
+						                          <a class="btn btn-white" @click="para()">
+						                            <i class="icon-retweet"></i> 参数化</a>
+						                        </div>
+						                      </div>
+						                      <table v-if="operationRows.length" class="newtable table table-bordered table-condensed table-striped" id="newtable" style="width: 100%;">
+						                        <thead>
+						                          <tr>
+						                            <th class="move">排序</th>
+						                            <th class="check">选择
+						                            </th>
+						                            <th class="index">行号</th>
+						                            <th class="operations">操作项</th>
+						                            <th class="functions">方法</th>
+						                            <th class="parameters">参数</th>
+						                            <th class="add-row" style="width: 50px;text-align: center;">
+						                              <i class="icon-plus" @click="addRow()" style="font-size: 18px;display: inline-block;height: 22px;width: 22px;"></i>
+						                            </th>
+						                          </tr>
+						                        </thead>
+						                        <tbody class="ui-sortable" id="sortable">
+						                          <tr v-for="(index, row) in operationRows" class="before-operation-row ui-sortable-handle" track-by="id" data-index={{index}}>
+						                            <td class="move">
+						                              <span class="icon-move"></span>
+						                            </td>
+						                            <td class="check" @mousedown.stop="1">
+						                              <input type="checkbox" class="checkone">
+						                            </td>
+						                            <td class="index">{{index + 1}}</td>
+						                            <td class="operations" @mousedown.stop="1">
+						                              <!-- <i class="icon-edit" @click="showUiAndElement($event)" style="color: #ff6c60;"></i>
+						                              <label>UI:</label>
+						                              <span class="operation-ui">{{row.operation.ui}}</span>
+						                              <label>元素:</label>
+						                              <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span> -->
+						          
+						                              <template v-if="row.operation.ui != '' && row.operation.element != ''">
+						                                <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+						                                <label>UI:</label>
+						                                <span class="operation-ui">{{row.operation.ui}}</span>
+						                                <label>元素:</label>
+						                                <span class="operation-element" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+						                              </template>
+						                              <template v-else>
+						                                <i class="icon-edit" @click="showUiAndElement($event, 1)" style="color: #ff6c60;"></i>
+						                                <label>公共函数:</label>
+						                                <span class="operation-ui" style="display: none;">{{row.operation.ui}}</span>
+						                                <span class="operation-element" style="display: none;" :data-classtype="row.operation.classType">{{row.operation.element}}</span>
+						                              </template>
+						                            </td>
+						                            <td class="functions" @mousedown.stop="1" data-index={{index}}>
+						                              <select class="functions-select form-control" style="width: 90%;" @change="changeFunction($event.target, index)">
+						                                <template v-for="function in row.functions">
+						                                  <option v-if="row.selectedFunc == function.name" :value="function.name" :data-parameters="function.parameterlist" selected>{{function.name}}</option>
+						                                  <option v-else :value="function.name" :data-parameters="function.parameterlist">{{function.name}}</option>
+						                                </template>
+						                              </select>
+						                            </td>
+						                            <td class="parameters" @mousedown.stop="1">
+						                              <span class="icon-edit edit-param" style="color: #ff6c60" @click="editParameter($event)"></span>
+						                              <div>
+						                                <div class="param-show">
+						                                  <span v-for="parameter in row.parameters" class="param-name-show">{{parameter.Name}}:
+						                                    <b class="param-value-show">{{parameter.Value}}</b>;&nbsp;&nbsp;</span>
+						                                </div>
+						                                <table class="param-table table table-condensed table-bordered" style="display: none;">
+						                                  <thead>
+						                                    <tr>
+						                                      <td>名称</td>
+						                                      <td>参数值</td>
+						                                    </tr>
+						                                  </thead>
+						                                  <tbody class="">
+						                                    <tr v-for="parameter in row.parameters" class="param-row">
+						                                      <td class="param-name">{{parameter.Name}}</td>
+						                                      <td class="param-value" contenteditable="true">{{parameter.Value}}</td>
+						                                    </tr>
+						                                    <tr class="bottom-row">
+						                                      <td colspan="2">
+						                                        <button @click="cancelEditParam($event)">取消</button>
+						                                        <button style="margin-left: 10px;" @click="saveParam($event)">保存</button>
+						                                      </td>
+						                                    </tr>
+						                                  </tbody>
+						                                </table>
+						                              </div>
+						                            </td>
+						                            <td class="delete-row" style="width: 60px;" @mousedown.stop="1">
+						                              <i class="icon-plus" @click="insertRow(index)"></i>
+						                              <i class="icon-minus" @click="deleteRow(index)"></i>
+						                            </td>
+						                          </tr>
+						                        </tbody>
+						                      </table>
+						                      <div v-else style="text-align: center;margin: 20px auto;">暂无数据</div>
+						                    </div>
+						                    <div v-show="selectedScript<=0" style="text-align: center;margin: 20px auto;">请选择脚本！</div>
+						                  </div>
+						            </div>
+						          </div>
+						        </div>
+						       <div style="flex: 1 1 auto;"></div>
+						        <!-- table end -->
+								</div>
+							</div>
+						</div>		
+                    </div>
+                    <!--模态框 start-->
+
+                    <!-- addUIModal start -->
+                    <div class="modal fade" id="addUIModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">添加UI</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- modal-body start -->
+                                    <section class="panel">
+                                        <form id="addUIForm" class="form-horizontal" role="form">
+                                            <div class="form-group">
+                                                <label class="col-xs-3 control-label">UI名称</label>
+                                                <div class="col-xs-5">
+                                                    <input type="text" class="form-control" name="UIName" id="addUIName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-xs-3 control-label"></label>
+                                                <div class="col-xs-5">
+                                                    若要添加多个，请以英文逗号“,”隔开。
+                                                </div>
+                                            </div>
+                                            <div class="form-group hidden">
+                                                <label class="col-xs-3 control-label">relateIdentifyObjectId</label>
+                                                <div class="col-xs-5">
+                                                    <input type="text" class="form-control" name="relateIdentifyObjectId" id="addRelateIdentifyObjectId">
+                                                </div>
+                                            </div>
+                                            <div class="form-group hidden">
+                                                <label class="col-xs-3 control-label"> relateParentIdentifyObjectId</label>
+                                                <div class="col-xs-5">
+                                                    <input type="text" class="form-control" name="relateParentIdentifyObjectId" id="addRelateParentIdentifyObjectId">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </section>
+                                    <!-- modal-body end -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                                    <button data-dismiss="modal" class="btn btn-success" @click="addUI">添加</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- addUIModal end -->
+		            <!-- addElementModal start -->
+		            <div class="modal fade" id="addElementModal" tabindex="-1" role="dialog" aria-hidden="true">
+		                <div class="modal-dialog">
+		                    <div class="modal-content">
+		                        <div class="modal-header">
+		                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                            <h4 class="modal-title">添加元素</h4>
+		                        </div>
+		                        <div class="modal-body" >
+		                            <!-- modal-body start -->
+		                            
+		                            <section class="panel">
+		                                <form id="addElementForm" class="form-horizontal" role="form">
+		                                    <div class="form-group">
+		                                        <label class="col-xs-3 control-label">元素名称</label>
+		                                        <div class="col-xs-5">
+		                                            <input type="text" class="form-control" name="ElementName" id="addElementName">
+		                                        </div>
+		                                    </div>
+		                                    <div class="form-group ">
+		                                        <label class="col-xs-3 control-label">控件类型</label>
+		                                        <div class="col-xs-5"> 
+	        							  		    <select class="form-control" id="addEleClassType">
+	                                                    <option value="">--选择控件类型--</option>
+	                                                    <option v-for="item in classtypeList" :value="item.name">{{item.name}}</option>
+	                                                </select>
+		                                        </div>
+		                                    </div>
+		                                    <div class="form-group ">
+		                                        <label class="col-xs-3 control-label">主属性名</label>
+		                                        <div class="col-xs-5">
+		                                            <input type="text" class="form-control" name="ClassType" id="addElemainattributename">
+		                                        </div>
+		                                    </div>
+		                                    <div class="form-group ">
+		                                        <label class="col-xs-3 control-label">主属性值</label>
+		                                        <div class="col-xs-5">
+		                                            <input type="text" class="form-control" name="ClassType" id="addElemainattributeid">
+		                                        </div>
+		                                    </div>
+		                                    <div class="form-group hidden">
+		                                        <label class="col-xs-3 control-label">relateIdentifyObjectId</label>
+		                                        <div class="col-xs-5">
+		                                            <input type="text" class="form-control" name=" relateIdentifyObjectId" id="addEleRelateIdentifyObjectId">
+		                                        </div>
+		                                    </div>
+		                                    <div class="form-group hidden">
+		                                        <label class="col-xs-3 control-label"> relateParentIdentifyObjectId</label>
+		                                        <div class="col-xs-5">
+		                                            <input type="text" class="form-control" name="relateParentIdentifyObjectId" id="addEleRelateParentIdentifyObjectId">
+		                                        </div>
+		                                    </div>
+		                                </form>
+		                            </section>
+		                           
+		                            <!-- modal-body end -->
+		                        </div>
+		                        <div class="modal-footer">
+		                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementbatch" style="float:left">批量添加</button>
+		                            <button  data-dismiss="modal"  class="btn btn-default"    type="button">取消</button>
+		                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementinsingle">添加</button>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		            <!-- addElementModal end -->
+		            <!-- addElementModalbatch start -->
+		            <div class="modal fade" id="addElementModalbatch" tabindex="-1" role="dialog" aria-hidden="true">
+		                <div class="modal-dialog">
+		                    <div class="modal-content">
+		                        <div class="modal-header">
+		                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                            <h4 class="modal-title">批量添加元素</h4>
+		                        </div>
+		                        <div class="modal-body" >
+		                            <!-- modal-body start -->
+		                            <div class="property">
+		                            元素
+		                            <a class="btn btn-white btn-sm pull-right" @click="addeleProp($event)"><i class="icon-plus"></i></a>
+		                            <a class="btn btn-white btn-sm pull-right" @click="delProp($event)"><i class="icon-minus"></i></a>
+		                        </div>
+		                        <div class="property">
+		                            <table class="table table-bordered">
+		                                <thead>
+		                                    <tr>
+		                                        <th style="width:5%"></th>
+		                                        <th>元素名</th>
+		                                        <th>元素类别</th>
+		                                        <th>主属性名</th>
+		                                        <th>主属性值</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody id="ElementTbody">
+		                                    <tr>
+		                                    	<td>  <input type="checkbox" name="chk_list" /> </td>
+		                                        <td contenteditable="true"> </td>
+		                                        <td  style="width:125px;"  > 
+                                        			<select class="form-control " style="width:125px;" name="ClassType" id="addEleClassType">
+						                                    <option value="">--选择类型--</option>
+						                                    <option v-for="item in classtypeList" :value="item.name">{{item.name}}</option>
+                                					</select>
+		                                		</td>
+		                                        <td contenteditable="true"> </td>
+		                                         <td contenteditable="true"> </td>
+		                                    </tr>
+		                               </tbody>
+		                            </table>
+		                        </div>
+		                            <!-- modal-body end -->
+		                        </div>
+		                        <div class="modal-footer">
+		                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementsingle" style="float:left">单个添加</button>	 
+		                            <button  data-dismiss="modal"  class="btn btn-default"  data-toggle="modal" href="#addUIModal type="button">取消</button>
+		                            <button data-dismiss="modal" class="btn btn-success" type="button" @click="addElementinbatch">添加</button>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		            <!-- addElementModalbatch end -->
+                    <!-- successModal start -->
+                    <div class="modal fade" id="successModalEle" tabindex="-1" style="" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">操作成功</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>操作成功！</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- successModal end -->
+                                        <!-- successModal start -->
+                    <div class="modal fade" id="successModal" tabindex="-1" style="" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">操作成功</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>操作成功！</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- successModal end -->
+                    <!-- elementAlertModal start -->
+                    <div class="modal fade" id="elementAlertModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">操作失败</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>请先选中UI！</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- elementAlertModal end -->
+		            <!-- failModal start -->
+		            <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+		                <div class="modal-dialog">
+		                    <div class="modal-content">
+		                        <div class="modal-header">
+		                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                            <h4 class="modal-title">操作失败</h4>
+		                        </div>
+		                        <div class="modal-body">
+		                            <h4>{{failMSG}}</h4>
+		                        </div>
+		                        <div class="modal-footer">
+		                            <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		            <!-- failModal end -->
+		            <!-- addObjModal start -->
+		            <div class="modal fade" id="addObjModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+		                <div class="modal-dialog">
+		                    <div class="modal-content">
+		                        <div class="modal-header">
+		                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                            <h4 class="modal-title">添加对象</h4>
+		                        </div>
+		                        <div class="modal-body">
+		                            <!-- modal-body start -->
+		                            <section class="panel">
+		                                <form id="addUIForm" class="form-horizontal" role="form">
+		                                    <div class="form-group">
+		                                        <label class="col-xs-3 control-label">名称</label>
+		                                        <div class="col-xs-5">
+		                                            <input type="text" class="form-control" name="objName" id="addObjName">
+		                                        </div>
+		                                    </div>
+		                                    <div class="form-group">
+		                                        <label class="col-xs-3 control-label"></label>
+		                                        <div class="col-xs-5">
+		                                            若要添加多个，请以英文逗号“,”隔开。
+		                                        </div>
+		                                    </div>
+		                                </form>
+		                            </section>
+		                            <!-- modal-body end -->
+		                            </div>
+		                            <div class="modal-footer">
+		                                <button data-dismiss="modal" class="btn btn-default">取消</button>
+		                                <button data-dismiss="modal" class="btn btn-success" @click="addObj">添加</button>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		                <!-- addUIModal end -->
+			          <!-- 新增模板 start-->
+			          <div class="modal fade" id="addtemplateModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+			            <div class="modal-dialog">
+			              <div class="modal-content">
+			                <div class="modal-header">
+			                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			                  <h4 class="modal-title">新增模板</h4>
+			                </div>
+			                <div class="modal-body">
+			                  <div>
+			                    <form id="templateAdd">
+			                      <div>
+			                        <label for="scriptName">脚本名称</label>
+			                        <input id="scriptName" type="text" name="name" required="required" v-model="newTemplate.name">
+			                      </div>
+			                      <div>
+			                        <label for="scriptDescription">脚本描述</label>
+			                        <input id="scriptDescription" type="text" name="description" required="required" v-model="newTemplate.description">
+			                      </div>
+			                    </form>
+			                  </div>
+			                </div>
+			                <div class="modal-footer">
+			                  <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+			                  <button data-dismiss="modal" class="btn btn-success" type="submit" @click=" saveTemplate();">保存</button>
+			                </div>
+			              </div>
+			            </div>
+			          </div>
+			          <!-- 新增模板 end -->
+			          <!-- 添加操作项 start-->
+			          <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+			            <div class="modal-dialog">
+			              <div class="modal-content">
+			                <div class="modal-header">
+			                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			                  <h4 class="modal-title">添加操作项</h4>
+			                </div>
+			                <div class="modal-body" style="height: 280px;">
+			                  <div id="classPart1">
+			                    <div id="elementWord">
+			                      <label>元素库</label>
+			                      <ul class="ztree" id="element"></ul>
+			                    </div>
+			                  </div>
+			                  <div id="classPart2">
+			                    <div id="p_functionWord">
+			                      <label>公共函数</label>
+			                      <ul id="p_function" class="ztree"></ul>
+			                    </div>
+			                  </div>
+			                </div>
+			                <div class="modal-footer">
+			                  <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+			                  <button class="btn btn-success" id="confirm" data-dismiss="modal" type="button" type="submit">确认</button>
+			                </div>
+			              </div>
+			            </div>
+			          </div>
+			          <!-- 添加操作项 end -->
+			          <!-- 添加多项操作项 start-->
+			          <div class="modal fade" id="addMultiModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+			            <div class="modal-dialog">
+			              <div class="modal-content">
+			                <div class="modal-header"> 
+			                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			                  <h4 class="modal-title">添加多项操作项</h4>
+			                </div>
+			                <div class="modal-body" style="height: 280px;">
+			                  <div style="height:250px;">
+			                    <div id="multiclassPart1">
+			                      <label>元素库</label>
+			                      <ul class="ztree" id="elementMulti"></ul>
+			                    </div>
+			                    <div id="multiclassPart2">
+			                      <label>公共函数</label>
+			                      <ul id="p_functionMulti" class="ztree"></ul>
+			                    </div>
+			                  </div>
+			                </div>
+			                <div class="modal-footer">
+			                  <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+			                  <button class="btn btn-success" id="confirmMulti" data-dismiss="modal" type="button" type="submit">确认</button>
+			                </div>
+			              </div>
+			            </div>
+			          </div>
+			          <!-- 添加多项操作项 end -->
+			          <!-- 显示参数 start-->
+			          <div class="modal fade" id="parameterList" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+			            <div class="modal-dialog">
+			              <div class="modal-content">
+			                <div class="modal-header">
+			                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			                  <h4 class="modal-title">参数列表</h4>
+			                </div>
+			                <div class="modal-body">
+			                  <div id="ParaMeterL">
+			                  </div>
+			                </div>
+			                <div class="modal-footer">
+			                  <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+			                  <button data-dismiss="modal" id="paraConfirm" class="btn btn-success" type="button">确认</button>
+			                </div>
+			              </div>
+			            </div>
+			          </div>
+			          <!--显示参数 end -->
+			          <!-- 操作成功提示模态框 start-->
+			          <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+			            <div class="modal-dialog">
+			              <div class="modal-content">
+			                <div class="modal-header">
+			                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			                  <h4 class="modal-title">操作成功</h4>
+			                </div>
+			                <div class="modal-body">
+			                  <div>
+			                    操作成功
+			                  </div>
+			                </div>
+			                <div class="modal-footer">
+			                  <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+			                  <button data-dismiss="modal" class="btn btn-success" type="button">确认</button>
+			                </div>
+			              </div>
+			            </div>
+			          </div>
+			          <!--操作成功提示模态框 end -->
+			          <!-- 操作失败提示模态框 start-->
+			          <div class="modal fade" id="fail" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+			            <div class="modal-dialog">
+			              <div class="modal-content">
+			                <div class="modal-header">
+			                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			                  <h4 class="modal-title">操作失败</h4>
+			                </div>
+			                <div class="modal-body">
+			                  <div>
+			                    操作失败
+			                  </div>
+			                </div>
+			                <div class="modal-footer">
+			                  <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+			                  <button data-dismiss="modal" class="btn btn-success" type="button">确认</button>
+			                </div>
+			              </div>
+			            </div>
+			          </div>
+			          <!--操作失败提示模态框 end -->
+                    <!--main content end-->
+				    <div class="modal fade" tabindex="-1" role="dialog" id="ui-ele-modal">
+				      <div class="modal-dialog" role="document">
+				        <div class="modal-content">
+				          <div class="modal-header">
+				            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+				              <span aria-hidden="true">&times;</span>
+				            </button>
+				            <h4 class="modal-title">选择操作项与方法</h4>
+				          </div>
+				          <div class="modal-body">
+				            <div class="ui-element">
+				              <h5>UI与元素</h5>
+				              <ul id="ui-element-ul" class="ztree"></ul>
+				            </div>
+				            <div class="function-div">
+				              <h5>公共函数集</h5>
+				              <ul id="functions-ul" class="ztree"></ul>
+				            </div>
+				          </div>
+				          <div class="modal-footer">
+				            <button class="btn btn-default" data-dismiss="modal">取消</button>
+				            <button class="btn btn-primary" @click="editRow()">确定</button>
+				          </div>
+				        </div>
+				      </div>
+				    </div>
+				    <!-- modal end -->
+                    <!-- 多项选择的UI与element -->
+				    <div class="modal fade" tabindex="-1" role="dialog" id="ui-ele-modal2">
+				      <div class="modal-dialog" role="document">
+				        <div class="modal-content">
+				          <div class="modal-header">
+				            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+				              <span aria-hidden="true">&times;</span>
+				            </button>
+				            <h4 class="modal-title">选择操作项与方法</h4>
+				          </div>
+				          <div class="modal-body">
+				            <div class="ui-element">
+				              <h5>UI与元素</h5>
+				              <ul id="ui-element-ul2" class="ztree"></ul>
+				            </div>
+				            <div class="function-div">
+				              <h5>公共函数集</h5>
+				              <ul id="functions-ul2" class="ztree"></ul>
+				            </div>
+				          </div>
+				          <div class="modal-footer">
+				            <button class="btn btn-default" data-dismiss="modal">取消</button>
+				            <button class="btn btn-primary" data-dismiss="modal" @click="editRowMultiple()">确定</button>
+				          </div>
+				        </div>
+				      </div>
+				    </div>
+                    <!-- <link rel="import" href="./common/copy-right.html?__inline"> -->
+                    <div class="modal fade" id="UILinkedModal" tabindex="-1" role="dialog" aria-labelledby="objectModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">对象库</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="menuContent" class="menuContent treeMenu">
+                                        <ul id="UILinkedTree" class="ztree tree"></ul>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                                    <button data-dismiss="modal" class="btn btn-success" @click="setUILinked()">确认</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--UILinked objectmodal end -->
+                    <!--eleParent objectmodal start -->
+                    <div class="modal fade" id="eleParentModal" tabindex="-1" role="dialog" aria-labelledby="objectModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">对象库</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="menuContent" class="menuContent treeMenu">
+                                        <ul id="eleParentTree" class="ztree tree"></ul>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                                    <button data-dismiss="modal" class="btn btn-success" @click="setEleParent()">确认</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--eleParent objectmodal end -->
+                    <!--eleLinked objectmodal start -->
+                    <div class="modal fade" id="eleLinkedModal" tabindex="-1" role="dialog" aria-labelledby="objectModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">对象库</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="menuContent" class="menuContent treeMenu">
+                                        <ul id="eleLinkedTree" class="ztree tree"></ul>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button data-dismiss="modal" class="btn btn-default">取消</button>
+                                    <button data-dismiss="modal" class="btn btn-success" @click="setEleLinked()">确认</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--eleLinked objectmodal end -->
+                </div>
+            </section>
+        </section>
+        <!--main content end-->
+        <div class="footer">
+            <link rel="import" href="./common/copy-right.html?__inline">
+        </div>
+    </div>
+    <!--UILinked objectmodal start -->
+</body>
+</html>
+<link rel="import" href="./common/footer.html?__inline">
+    <script src="../lib/vue-resource.min.js"></script>
+    <script src="../static/js/vac-functions.es.js"></script>
+    <script src="../static/js/config.js"></script>
+    <script src="../../lib/common-scripts.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/jquery-ui.js"></script>
+	<script type="text/javascript" src="../static/js/transactDetail.js"></script>
+	<script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
+	<script type="text/javascript" src="../static/js/fuzzysearch.js"></script>
+	<script type="text/javascript" src="../lib/jquery.ztree.exhide.min.js"></script>

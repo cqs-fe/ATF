@@ -417,11 +417,11 @@ $(document).ready(function () {
 		                            }),
 		                            success:function(data){
 		                                if(data.respCode=='0000'){
-		                                    let userList=data.list;
+											let userList=data.list;
 		                                    for(let item of userList){
-		                                        $('#authorVal').append(`<option value="${item.id}">${item.username}</option>`);
+		                                        $('#reviewerVal').append(`<option value="${item.id}">${item.username}</option>`);
 		                                    }
-		                                    $('#authorVal').selectpicker('refresh');
+		                                    $('#reviewerVal').selectpicker('refresh');
 		                                }
 		                            }
 		                        });
@@ -752,9 +752,6 @@ $(document).ready(function () {
 		                                                        <option value="priority">优先级</option>
 		                                                        <option value="author">作者</option>
 		                                                        <option value="reviewer">评审者</option>
-		                                                        <option value="executor">执行者</option>
-		                                                        <option value="executeMethod">执行方式</option>
-		                                                        <option value="scriptMode">脚本管理方式</option>
 		                                                        <option value="scriptModeFlag">所属模板</option>
 		                                                    </select>                
 		                                                    <select name="compareType" class="selectpicker compare_select">
@@ -804,14 +801,20 @@ $(document).ready(function () {
 		                    }
 	                    }
 	                    data.push(listItem);
-	                }
+					}
+					let listItem={};
+					listItem.propertyName="caseLibId";
+					listItem.compareType="=";
+					listItem.propertyValueList=[];
+					listItem.propertyValueList.push(sessionStorage.getItem('caselibId'));
+					data.push(listItem);
 					// console.log(data)
 					vac_conditionList = data;
 	                $.ajax({
 	                    url:address3 + 'dataCenter/queryFilterTree',
 	                    contentType: 'application/json',
 	                    data: JSON.stringify({
-	                        'conditionList': data
+							'conditionList': data,
 	                     }),
 	                    type:'post',
 	                    success: function (data) {
@@ -1682,7 +1685,7 @@ $(document).ready(function () {
 				checkedArray: [],
 				systemInfo: {
 					executorId: 63,
-					caseLibId: 1,
+					caseLibId: sessionStorage.getItem('caselibId'),
 					valueList: '[]',
 					propertyName: 'testPoint'
 				},

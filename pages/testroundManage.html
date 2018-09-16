@@ -273,8 +273,8 @@
                                         <td width="5%">
                                             <input type="radio" v-model="" name="chk_list" id="{{testround.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="20%">{{ testround.roundName }}</td>
-                                        <td width="35%">{{ testround.roundDesc }}</td>
+                                        <td class="center hidden-phone" width="20%">{{ testround.name }}</td>
+                                        <td width="35%">{{ testround.descShort }}</td>
                                         <td width="" :data-value="testround.recordmanagementflag">{{ +testround.recordmanagementflag === 1 ? '仅保存一份' : '保存多份' }}</td>
                                         <td width="">{{ testround.timeexecutesetting }}</td>
                                     </tr>
