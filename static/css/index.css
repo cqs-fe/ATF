@@ -129,3 +129,7 @@
     background-color: #fff;
     height: 50px;
 }
+.detail-link{
+            color: #428bca;
+            cursor: pointer;
+        }

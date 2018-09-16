@@ -277,7 +277,7 @@
                                         <td width="5%">
                                             <input type="radio" v-model="" name="chk_list" id="{{aut.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="10%">{{ aut.code }}</td>
+                                        <td class="center hidden-phone" width="10%"><a @click="linkToTransact(aut.id,aut.nameMedium)" class="detail-link">{{ aut.code }}</a></td>
                                         <td width="15%">{{ aut.nameMedium }}</td>
                                         <td width="15%" data-id="{{aut.inheriteArcId}}">{{ aut.inheriteArcName }}</td>
                                         <td class="hidden-phone" width="25%">{{ aut.descShort }}</td>

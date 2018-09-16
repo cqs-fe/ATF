@@ -61,8 +61,8 @@ var app = new Vue({
         //添加功能点
         insert: function() {
             $('#insertForm input[name="autId"]').val($('#autSelect').val());
-            var self=this,
-            transType=$("#insertForm input[name='transType']").val();
+            var self=this;
+            var transType=$("#insertForm select[name='transType']").val();
             if(transType==1){
                 $.ajax({
                     url: address3 + 'transactController/addSingleTransact',

@@ -798,9 +798,7 @@ var objectRepo =  Vue.extend({
                 contentType: 'application/json',
                 data: JSON.stringify({ "transactId": transid }),
                 success: function(data) {
-                    if (data !== null) {
                         var objects = data.objects;
-                        console.log(objects)
                         $.fn.zTree.init($("#objectTree"), _this.setting1, objects);
                         _this.repositoryId = data.repositoryId;
                     }
