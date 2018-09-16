@@ -521,6 +521,23 @@ var vBody = new Vue({
 			}
 			this.setBackground(this.selectedSceneCases)
 		},
+		saveSort:function(sceneId){
+			var domNodes = $("input[value^=sort-"+sceneId+"]");
+			var arrSortId=[];
+			for(var i = 0;i<domNodes.length;i++){
+				arrSortId.push(+$(domNodes[i]).attr('name'));
+			}
+			Vac.ajax({
+				url:address3 +"sceneController/sceneTestcaseSortSave",
+				data:{"sceneId":sceneId,"caseIdList":arrSortId},
+				success:function(data){
+					if(data.respCode === '0000'){
+						Vac.alert('排序保存成功')
+					}else
+					Vac.alert('排序保存失败')
+				}
+			})
+		},
 		viewCase: function (sceneId, caseid, sourcechannel, testPhase, testRound, recorderStatus) {
 			var o = {
 				sceneId, caseid,

@@ -501,7 +501,8 @@
                 <div id="collapse1" class="panel-collapse collpase">
                     <div class="panel-body">
                         <div class="filterButtons">
-                            <button class="btn btn-primary" @click="filterCase">查询</button>
+                            <button class="btn btn-primary" @click="filterCase">查询&nbsp;&nbsp;</button>
+                            <button class="btn btn-primary btn-xs" @click="addFilter()" id="add_btn"><i class="icon-plus"></i></button>
                         </div>
                         <ul class="filterList">
                             <li>
@@ -532,7 +533,6 @@
                                 <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button>
                             </li>
                         </ul>
-                        <button class="btn btn-primary btn-xs" @click="addFilter()" id="add_btn"><i class="icon-plus"></i></button>
                     </div>
                 </div>
             </div>
