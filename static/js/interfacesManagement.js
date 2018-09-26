@@ -12,23 +12,50 @@ var template_int = `
 </div>
 <div class="row">
     <div class="col-xs-12">
+        <section class="panel panel-pad panel-bottom bar">
+            <!-- select start -->
+            <form class="form-horizontal">
+                <div class="form-group bar ">
+                    <label class="col-xs-2 control-label">被测系统</label>
+                    <div class="col-xs-2">
+                        <select class="form-control" id="autSelect">
+                        </select>
+                    </div>
+                    <label class="col-xs-1 control-label">功能点</label>
+                    <div class="col-xs-2">
+                        <select class="form-control" id="transactSelect" v-model="transid">
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <!-- select end -->
+        </section>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
         <section class="panel">
             <header class="panel-heading">
                 接口管理
             </header>
             <form class="form-horizontal panel-pad">
                 <div class="form-group">
+                <label class="col-xs-1 control-label">接口编码</label>
+                    <div class="col-xs-2">
+                        <input class="form-control" type="text" id="intIdInput" >
+                    </div>
                     <label class="col-xs-1 control-label">接口名称</label>
                     <div class="col-xs-2">
                         <input class="form-control" type="text" id="intNameInput" >
                     </div>
                     <label class="col-xs-1 control-label">创建者</label>
                     <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intCreatorIdInput" >
+                        <select class="form-control" type="text" id="intCreatorIdInput" >
+                        </select>
                     </div>
                     <label class="col-xs-1 control-label">创建时间</label>
                     <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intCreatTimeInput" >
+                        <input class="form-control" type="text" id="intCreatTimeInput" readonly >
                     </div>
                 </div>
                 <div class="form-group">
@@ -38,11 +65,12 @@ var template_int = `
                     </div>
                     <label class="col-xs-1 control-label">维护者</label>
                     <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intMaintainerIdInput" >
+                        <select class="form-control" type="text" id="intMaintainerIdInput" >
+                        </select>
                     </div>
                     <label class="col-xs-1 control-label">修改时间</label>
                     <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intModifyTimeInput" >
+                        <input class="form-control" type="text" id="intModifyTimeInput" readonly>
                     </div>
                 </div>
                 <div class="form-group">
@@ -57,8 +85,8 @@ var template_int = `
                     <label class="col-xs-1 control-label">通信类型</label>
                     <div class="col-xs-2">
                         <select class="form-control" size="1" id="intProtocolSelect" style="height:34px">
-                            <option value="0">HTTP</option>
-                            <option value="1">FTP</option>
+                            <option value="1">HTTP</option>
+                            <option value="2">FTP</option>
                         </select>                    
                     </div>
                     <label class="col-xs-1 control-label">请求方法</label>
@@ -81,7 +109,7 @@ var template_int = `
                 <div class="form-group">
                     <label class="col-xs-1 control-label">接口简介</label>
                     <div class="col-xs-8">
-                        <textarea class="form-control" id="intDecTextArea"></textarea>
+                        <textarea class="form-control" id="intDecTextArea" style="max-width: 1022px;"></textarea>
                     </div>
                 </div>   
                 <div class="form-group">
@@ -169,6 +197,24 @@ var template_int = `
         </section>
     </div>
 </div>
+<!-- failModal start -->
+<div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">操作失败</h4>
+            </div>
+            <div class="modal-body">
+                <h4>{{failMSG}}</h4>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- failModal end -->
 `;
 var interfacesManagement = Vue.extend({
 
@@ -181,15 +227,152 @@ var interfacesManagement = Vue.extend({
         }, 
     },
     data: function() {
-
-
+        var _this = this;
+        return {
+            autId: '',
+            transid: '',
+            failMSG:'操作出问题了呢！',
+        }
     },
     ready: function() {
+        var _this = this;
+        _this.getAutandTrans();
+        _this.getUser();
+        $('#autSelect').change(function() {
+            _this.transactSelect();
+            _this.autId = $('#autSelect').val(); 
+            _this.transid = $('#transactSelect').val();
+           
+        });
+        $('#transactSelect').change(function() {
+            _this.transid = $('#transactSelect').val();
+            _this.getInterfaces();
+        });
         $('input[name="queryParaName"]').last().change(queryParaAdd);
         $('input[name="headerParaName"]').last().change(headerParaAdd);
-        
     },
     methods: {
+        getAutandTrans: function() {
+            var _this = this;
+            $.ajax({
+                url: address3 + "aut/queryListAut",
+                type: "POST",
+                contentType:'application/json',
+                success: function(data) {
+                    if (data.respCode !== '0000') {
+                        Vac.alert('查询测试系统失败');
+                        return;
+                    }
+                    var autList = data.autRespDTOList;
+                    var str = "";
+                    for (var i = 0; i < autList.length; i++) {
+                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
+                    }
+                    $('#autSelect').html(str);
+                    _this.autId = sessionStorage.getItem("autId");
+                    $("#autSelect").val(_this.autId);
+                    $.ajax({
+                        url: address3 + 'transactController/queryTransactsByAutId',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({'id': _this.autId}),
+                        success: function(data) {
+                            if (data.respCode !== '0000') {
+                                Vac.alert('查询测试系统失败');
+                                return;
+                            }
+                            var transactList = data.transactRespDTOs;
+                            var str = "";
+                            for (var i = 0; i < transactList.length; i++) {
+                                if(transactList[i].transType!=null&&transactList[i].transType==2)
+                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
+                            }
+                            _this.interfacesExist(str);
+                            $('#transactSelect').html(str);
+                            _this.transid = sessionStorage.getItem("transactId");
+                            $("#transactSelect").val(_this.transid);
+                            _this.getInterfaces();
+                        }
+ 
+                    });
+                }
+            });
+        },
+        transactSelect: function() {
+            var val = $('#autSelect').val();
+            var _this = this;
+            Vac.ajax({
+                async: true,
+                url: address3 + 'transactController/queryTransactsByAutId',
+                data: JSON.stringify({'id': val}),
+                type: "POST",
+                success: function(data) {
+                    if (data.respCode === '0000') {
+                        var transactList = data.transactRespDTOs;
+                        var str = "";
+                        for (var i = 0; i < transactList.length; i++) {
+                            if(transactList[i].transType!=null&&transactList[i].transType==2)
+                            str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
+                        }
+                        _this.interfacesExist(str);
+                        $('#transactSelect').html(str);
+                        _this.transid = $('#transactSelect').val();
+                    } else {
+                        Vac.alert(respMsg);
+                    }
+                }
+            });
+        },
+        getInterfaces: function() {
+            var _this = this;
+            var val = this.transid;
+            Vac.ajax({
+                async: true,
+                url: address3 + 'interface/querySingleInterface',
+                data: JSON.stringify({'id': val}),
+                type: "POST",
+                success: function(data) {
+                    if (data.respCode === '0000') {
+                        $("#intNameInput").val(data.name);
+                        $("#intIdInput").val(data.interfaceCode);
+                        $("#intVersionInput").val(data.version);
+                        $("#intProtocolSelect").val(data.protocol);
+                        $("#intUrlPathInput").val(data.urlPath);
+                        $("#intDecTextArea").val(data.description);
+                        $("#intCreatorIdInput").val(data.creatorId);
+                        $("#intCreatTimeInput").val(getDate(data.createTime));
+                        $("#intModifyTimeInput").val(getDate(data.modifyTime));
+                        $("#intStatusSelect").val(data.status);
+                        $("#intMethodSelect").val(data.method);
+                        $("#intMethodSelect").val(data.method);
+
+                        status
+                    } else {
+                        alert(data.respMsg+"ss");
+                    }
+                }
+            });
+        },
+        getUser: function(){
+            $.ajax({
+                url: address3+"userController/selectAllUsername",
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    
+                }),
+                success:function(data){
+                    if(data.respCode=='0000'){
+                        let userList=data.list;
+                        for(let item of userList){
+                            $('#intCreatorIdInput').append(`<option value="${item.id}">${item.username}</option>`);
+                            $('#intMaintainerIdInput').append(`<option value="${item.id}">${item.username}</option>`);
+                        }
+                        $('#authorVal').selectpicker('refresh');
+                    }
+                }
+            });
+        },
         navSwitch: function(tag) {
             var tmp = $('#navSwitchBar').find('li');
             for (let index = 0; index < tmp.length; index++) {
@@ -205,7 +388,48 @@ var interfacesManagement = Vue.extend({
         },
 
         intInfoSave :function() {
-            alert("intInfoSave-Button Clicked!");
+            var _this = this;
+            var val = this.transid;
+            Vac.ajax({
+                async: true,
+                url: address3 + 'interface/modifySingleInterface',
+                data: JSON.stringify({
+                    "id": $("#transactSelect").val(),
+                    "name": $("#intNameInput").val(),
+                    "interfaceCode": $("#intIdInput").val(),
+                    "systemId": $("#autSelect").val(),
+                    "groupName": null,
+                    "protocol":  $("#intProtocolSelect").val(),
+                    "urlPath": $("#intUrlPathInput").val(),
+                    "status":  $("#intStatusSelect").val(),
+                    "description": $("#intDecTextArea").val(),
+                    "version": $("#intVersionInput").val(),
+                    "creatorId": 3,
+                    "maintainerId": 3,
+                    "createTime": $("#intCreatTimeInput").val(),
+                    "modifyTime": $("#intmodifyTimeInput").val(),
+                    "method":$("#intMethodSelect").val(),
+                    "authType": null,
+                    "authContent": null,
+                    "query": null,
+                    "header": null,
+                    "bodyFormat": null,
+                    "rawFormat": 2,
+                    "bodyContent": '{"id":321313,"age":23,"weight":"50kg","high":"160cm"}"',
+                    "bodyParseContent": null,
+                    "dataDictList": null,
+                    "preRequestScript":null,
+                }),
+                type: "POST",
+                success: function(data) {
+                    if (data.respCode === '0000') {
+                        $('#successModal').modal();
+                        _this.getInterfaces();
+                    } else {
+                        alert(data.respMsg+"ss");
+                    }
+                }
+            });
         },
 
         queryParaListSave: function() {
@@ -215,10 +439,18 @@ var interfacesManagement = Vue.extend({
         headerParaListSave: function() {
             alert("headerParaListSave-Button Clicked!");
         },
-
+        interfacesExist: function( str ) {
+            if(str==""){
+                this.failMSG="该测试系统中不存在接口类型的功能点";
+                $('#failModal').modal();
+            }
+        },
     } 
 });
-
+function getDate(time) {
+    var date = new Date(time);
+    return date.toLocaleDateString() + ' ' + date.toTimeString().slice(0, 8);
+}
 function queryParaAdd() {
     $('input[name="queryParaName"]').last().unbind('change',queryParaAdd);    
     

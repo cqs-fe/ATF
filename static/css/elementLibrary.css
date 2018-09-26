@@ -1,8 +1,13 @@
 .panel-pad {
-    padding-top: 10px;
+    padding-top: 5px;
     padding-bottom: 1px;
 }
-
+.panel-bottom {
+    margin-bottom: 1px;
+}
+.bar {
+    margin-bottom: 5px;
+}
 #menuContent {
     height: 70vh;
     overflow: auto;
