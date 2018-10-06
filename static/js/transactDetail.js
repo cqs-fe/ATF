@@ -5,6 +5,7 @@ var app = new Vue({
         return {
             autId: '',
             transactId: '',
+            transid: '',
             elementRepositoryId: 6,
             UIName: '',
             UITitle: 'UI',
@@ -503,7 +504,6 @@ var app = new Vue({
     ready: function() {
         this.getAutandTrans();
         var _this = this;
-
         $('#autSelect').change(function() {
             _this.transactSelect();
             _this.autId = $('#autSelect').val(); 
@@ -562,25 +562,19 @@ var app = new Vue({
                     _this.autId = sessionStorage.getItem("autId");
                     $("#autSelect").val(_this.autId);
                     $.ajax({
-                        url: address3 + 'transactController/pagedBatchQueryTransact',
+                        url: address3 + 'transactController/queryTransactsByAutId',
                         type: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({
-                            'currentPage': 1,
-                            'pageSize': 100000,
-                            'orderColumns': 'id',
-                            'orderType': 'asc',
-                            'autId': _this.autId
-                        }),
+                        data: JSON.stringify({'id': _this.autId}),
                         success: function(data) {
                             if (data.respCode !== '0000') {
                                 Vac.alert('查询测试系统失败');
                                 return;
                             }
-                            var transactList = data.list;
+                            var transactList = data.transactRespDTOs;
                             var str = "";
                             for (var i = 0; i < transactList.length; i++) {
-
+                                if(transactList[i].transType==null||transactList[i].transType==1)
                                 str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
                             }
                             $('#transactSelect').html(str);
@@ -616,7 +610,6 @@ var app = new Vue({
                                         // console.log(nodes)
                                         $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
                                         app.elementRepositoryId = data.elementRepositoryId;
-                                        console.log("aaaaa");
                                         fuzzySearch('elementtree','#keyword',null,true); 
                                     }
                                 }
@@ -654,36 +647,10 @@ var app = new Vue({
                 }
             });
         },
-        //测试系统改变的监听函数
-        transactSelect: function() {
-            var val = $('#autSelect').val();
-            $.ajax({
-                async: false,
-                url: address3 + 'transactController/pagedBatchQueryTransact',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    'currentPage': 1,
-                    'pageSize': 100000,
-                    'orderColumns': 'id',
-                    'orderType': 'asc',
-                    'autId': val,
-                }),
-                success: function(data) {
-                    var transactList = data.list;
-                    var str = "";
-                    for (var i = 0; i < transactList.length; i++) {
-
-                        str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
-                    }
-                    $('#transactSelect').html(str);
-                }
-
-            });
-        },
         //详情tab页的刷新
         detailTabFresh: function() {
-            var id = $('#transactSelect').val()?$('#transactSelect').val():sessionStorage.getItem("transactId");;
+            var id = $('#transactSelect').val()!=null?$('#transactSelect').val():sessionStorage.getItem("transactId");
+            console.log(id+"===="+$('#transactSelect').val());
             $.ajax({
                 async: false,
                 url: address3 + 'transactController/querySingleTransact',
@@ -738,7 +705,7 @@ var app = new Vue({
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    id: $('#updateForm input[name="id"]').val(),
+                    id: $('#transactSelect').val(),
                     code: $('#updateForm input[name="code"]').val(),
                     nameMedium: $('#updateForm input[name="nameMedium"]').val(),
                     descShort: $('#updateForm textarea[name="descShort"]').val(),
@@ -747,8 +714,6 @@ var app = new Vue({
                     // console.info(data);
                     if (data.respCode=='0000') {
                         $('#successModal').modal();
-                        // getTransact(self.currentPage, self.pageSize, 'id', 'asc');
-                        queryTransact();
                     } else {
                         alert(data.respMsg)
                     }
@@ -929,7 +894,7 @@ var app = new Vue({
                 object.parentObjectId=parentid;
                 objects.push(object);
             }
-            // console.log(objects) 
+             console.log(objects) ;
             $.ajax({
                 url: address2 + '/objectRepository/batchAddOrModifyObject',
                 type: 'post',
@@ -1151,6 +1116,59 @@ var app = new Vue({
                     } else {
                         app.failMSG=data.respMsg;
                         $('#failModalEle').modal();
+                    }
+                },
+                error: function() {
+                    $('#failModal').modal();
+                }
+            });
+        },
+        addElementinbatch: function() {
+            var _this = this;
+            var transid = !this.componentMode ?  _this.transactId : _this.transid;
+            var elements=[];
+            $('#ElementTbody').find('tr').each(function() {
+                let ElementTD = $(this).children(),
+                element={};
+                element.elementName=ElementTD.eq(1).html();
+                element.classType=ElementTD.eq(2).find("option:selected").val();
+                element.relateIdentifyObjectId='';
+                element.relateParentIdentifyObjectId='';
+                let mainProperties=[                
+                    {
+                    "name":ElementTD.eq(3).html(),
+                    "value":ElementTD.eq(4).html(),
+                    "method": "", 
+                    "isRelative": null, 
+                    "toolName": "",
+                    }
+                ];
+                element.mainProperties=mainProperties;
+                console.log(element);
+                elements.push(element);
+            });
+            console.log(elements);
+            var treeObj = $.fn.zTree.getZTreeObj("elementtree"),
+                nodes = treeObj.getSelectedNodes(),
+                selectedUIName = nodes[0].name,
+                uiId=nodes[0].id;
+            $.ajax({
+                url: address2+ 'elementRepository/batchAddOrModifyElement',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "repositoryId": _this.elementRepositoryId,
+                    "uiId": uiId,
+                    "elements":elements
+                }),
+                success: function(data) {
+                    console.info(data);
+                    if (data.respCode=="0000") {
+                        $('#successModalEle').modal();
+                        _this.getElementTree();
+                    } else {
+                        app.failMSG=data.respMsg;
+                        $('#failModal').modal();
                     }
                 },
                 error: function() {
@@ -1555,21 +1573,23 @@ var app = new Vue({
                     if (data !== null) {
                         var nodes = [];
                         var uis = data.uis;
-                        for (var i = 0; i < uis.length; i++) {
-                            var uiNode = {};
-                            uiNode.id = uis[i].uiId; 
-                            uiNode.name = uis[i].uiName;                          
-                            let elements = uis[i].elements;
-                            if (elements) {
-                                uiNode.children = [];
-                                for (var j = 0; j < elements.length; j++) {
-                                    var eleNode = {};
-                                    eleNode.id=elements[j].elementId;
-                                    eleNode.name = elements[j].elementName;
-                                    uiNode.children.push(eleNode);
+                        if(uis!=null){
+                            for (var i = 0; i < uis.length; i++) {
+                                var uiNode = {};
+                                uiNode.id = uis[i].uiId; 
+                                uiNode.name = uis[i].uiName;                          
+                                let elements = uis[i].elements;
+                                if (elements) {
+                                    uiNode.children = [];
+                                    for (var j = 0; j < elements.length; j++) {
+                                        var eleNode = {};
+                                        eleNode.id=elements[j].elementId;
+                                        eleNode.name = elements[j].elementName;
+                                        uiNode.children.push(eleNode);
+                                    }
                                 }
+                                nodes.push(uiNode);
                             }
-                            nodes.push(uiNode);
                         }
                         $.fn.zTree.init($("#elementtree"), _this.setting1, nodes);
                         app.elementRepositoryId = data.elementRepositoryId;
@@ -1583,7 +1603,6 @@ var app = new Vue({
                     }
                 }
             });
-            console.log("aaaaa");
             fuzzySearch('elementtree','#keyword',null,true); 
         },
         //禁止拖动
@@ -1682,7 +1701,6 @@ var app = new Vue({
         // 页面初始化获取对象库
         getEleLinkedObjectTree: function() {
             var _this = this;
-            console.log(this.componentMode+"aaa" );
             var transid = !this.componentMode ? $("#transactSelect").val() : this.transid;
             $.ajax({
                 url: address3 + 'objectRepository/queryAllObjectForATransact',
@@ -1723,31 +1741,27 @@ var app = new Vue({
         transactSelect: function() {
             var val = $('#autSelect').val();
             var _this = this;
-            // var val = sessionStorage.getItem('autId');
-            // console.log(this.autId);
             Vac.ajax({
                 async: true,
                 url: address3 + 'transactController/queryTransactsByAutId',
-                data: { 'id': val },
+                data: JSON.stringify({'id': val}),
                 type: "POST",
                 success: function(data) {
                     if (data.respCode === '0000') {
                         var transactList = data.transactRespDTOs;
                         var str = "";
                         for (var i = 0; i < transactList.length; i++) {
-
+                            if(transactList[i].transType==null||transactList[i].transType==1)
                             str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
                         }
                         $('#transactSelect').html(str);
                         _this.transactId = $('#transactSelect').val();
-                        _this.getScriptTemplate()
+                        _this.detailTabFresh();
                     } else {
                         Vac.alert(respMsg);
                     }
-                    
                 }
             });
-            
         },
         getScriptTemplate: function() {
                 var _this = this;

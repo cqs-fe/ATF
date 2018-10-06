@@ -1,5 +1,5 @@
 .panel-pad {
-    padding-top: 10px;
+    padding-top: 5px;
     padding-bottom: 1px;
 }
 
@@ -9,4 +9,14 @@
 
 #decTextArea {
     height: 100px;
+}
+
+.bar {
+    margin-bottom: 5px;
+}
+
+.breadcrumb {
+    margin: 0 0 5px;
+    font-size: 13px;
+    background-color: #fff;
 }
