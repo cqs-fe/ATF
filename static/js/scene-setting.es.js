@@ -846,12 +846,36 @@ var vBody = new Vue({
 			}
 		
 			$.ajax({
-				url: address + 'executeController/scenedubug',
+				url: address3 + 'executeController/scenedubug',
 				data: data,
 				type: 'post',
 				dataType: 'json',
 				success: function(data, textStatux) {
 		
+				}
+			})
+		},
+		saveSort: function(){
+			var _this = this;
+			var domNodes = $("input[name=sort]");
+			var arrCaseIds = [];
+			for(var i = 0;i<domNodes.length;i++){
+				var caseId = $(domNodes[i]).attr("value");
+				arrCaseIds.push(+caseId);
+			} 	
+			Vac.ajax({
+				url:address3+"sceneController/sceneTestcaseSortSave",
+				data:{
+					sceneId: _this.sceneid,
+					caseIdList:arrCaseIds
+				},
+				success:function(data){
+					if (data.respCode === '0000'){
+						Vac.alert("排序保存成功");
+					}
+				},
+				error:function(){
+					Vac.alert("排序保存失败");
 				}
 			})
 		}
