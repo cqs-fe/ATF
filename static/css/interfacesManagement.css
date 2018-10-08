@@ -1,3 +1,5 @@
+textarea{ resize: vertical; }
+
 .panel-pad {
     padding-top: 5px;
     padding-bottom: 1px;

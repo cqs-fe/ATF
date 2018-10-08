@@ -508,15 +508,15 @@ var app = new Vue({
             _this.transactSelect();
             _this.autId = $('#autSelect').val(); 
             _this.transactId = $('#transactSelect').val();
-            _this.getElementTree();
-            _this.classtypeSelect();
-            _this.getObjTree();
+
         });
         $('#transactSelect').change(function() {
             _this.transactId = $('#transactSelect').val();
             _this.getElementTree();
             _this.detailTabFresh();
             _this.getObjTree();
+            
+            _this.getScriptTemplate();
         });
         $('#addtemplateModal').on('hidden.bs.modal', function(e) {
             _this.newTemplate = {
@@ -1757,6 +1757,10 @@ var app = new Vue({
                         $('#transactSelect').html(str);
                         _this.transactId = $('#transactSelect').val();
                         _this.detailTabFresh();
+                        _this.getElementTree();
+                        _this.classtypeSelect();
+                        _this.getObjTree();
+                        _this.getScriptTemplate();
                     } else {
                         Vac.alert(respMsg);
                     }

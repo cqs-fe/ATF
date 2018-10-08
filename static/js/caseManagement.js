@@ -1,6 +1,7 @@
 var app = new Vue({
     el: '#caseManagement',
     data : {
+        ids:[],
         isShow: false,
         iconflag: true,
         caseNodeNum: 0, 
@@ -919,7 +920,6 @@ var app = new Vue({
                     'scriptmode': scriptmode,
                     'usestatus': usestatus,
                     'note': note,
-
                     'subcasecode': '',
                     'actioncode': '',
                     'steporder': '',
@@ -1055,13 +1055,13 @@ var app = new Vue({
         getIds: function() {
             var id_array = new Array();
             $('input[name="chk_list"]:checked').each(function() {
-                id_array.push($(this).attr('id'));
+                id_array.push(parseInt($(this).attr('id')));
             });
-            //app.ids = id_array.join(',');
-            $('input[name="ids"]').val(id_array.join(','));
+            app.ids = id_array;
+            console.log(id_array)
         },
-
-        checkExport: () => {
+        checkExport: function()  {
+            console.log("motu");
             app.getIds();
             var selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
@@ -1070,7 +1070,32 @@ var app = new Vue({
                 $('#exportModal').modal();
             }
         },
-
+        //导出
+        export: function() {
+            var _this=this,
+                ids=_this.ids;
+            var id_array = new Array();
+            $('input[name="chk_list"]:checked').each(function() {
+                id_array.push(parseInt($(this).attr('id')));
+            });
+            $.ajax({
+                url: address2+"testcase/exportTestCase",
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "testCaseIdList":id_array,
+                }),
+                success:function(data){
+                    if(data.respCode=='0000'){
+                        let userList=data.list;
+                        for(let item of userList){
+                            $('#intCreatorIdInput').append(`<option value="${item.id}">${item.username}</option>`);
+                            $('#intMaintainerIdInput').append(`<option value="${item.id}">${item.username}</option>`);
+                        }
+                    }
+                }
+            });
+        },
         checkExe: () => {
             app.getIds();
             var selectedInput = $('input[name="chk_list"]:checked');

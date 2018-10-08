@@ -293,6 +293,7 @@ function getTransact(page, listnum, order, sort) {
             'pageSize': listnum,
             'orderColumns': "modified_time",
             "orderType":"DESC",
+            'autId': $('#autSelect').val(),
         }),
         success: function(data) {
             if (data.respCode=='0000') {
@@ -347,7 +348,7 @@ function resort(target) {
         target.setAttribute("data-sort", "desc");
     }
     app.order = target.getAttribute("data-order");
-    getTransact(1, 10, app.order, app.sort);
+    getTransact(1, app.pageSize, app.order, app.sort);
 }
 //重新排序 结束
 

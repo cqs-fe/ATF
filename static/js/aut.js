@@ -335,7 +335,7 @@ function resort(target) {
         target.setAttribute("data-sort", "desc");
     }
     app.order = target.getAttribute("data-order");
-    getAut(1, 10, app.order, app.sort);
+    getAut(1, app.pageSize, app.order, app.sort);
 }
 //重新排序 结束
 

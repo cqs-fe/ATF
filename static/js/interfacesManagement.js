@@ -48,10 +48,9 @@ var template_int = `
                     <div class="col-xs-2">
                         <input class="form-control" type="text" id="intNameInput" >
                     </div>
-                    <label class="col-xs-1 control-label">创建者</label>
+                    <label class="col-xs-1 control-label">版本号</label>
                     <div class="col-xs-2">
-                        <select class="form-control" type="text" id="intCreatorIdInput" >
-                        </select>
+                        <input class="form-control" type="text" id="intVersionInput" >
                     </div>
                     <label class="col-xs-1 control-label">创建时间</label>
                     <div class="col-xs-2">
@@ -59,14 +58,25 @@ var template_int = `
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-1 control-label">版本号</label>
-                    <div class="col-xs-2">
-                        <input class="form-control" type="text" id="intVersionInput" >
-                    </div>
+                <label class="col-xs-1 control-label">创建者</label>
+                <div class="col-xs-2">
+                    <select class="form-control" type="text" id="intCreatorIdInput" >
+                    </select>
+                </div>
                     <label class="col-xs-1 control-label">维护者</label>
                     <div class="col-xs-2">
                         <select class="form-control" type="text" id="intMaintainerIdInput" >
                         </select>
+                    </div>
+                    <label class="col-xs-1 control-label">认证方法</label>
+                    <div class="col-xs-2">
+                        <select class="form-control" size="1" id="authType" style="height:34px">
+                            <option value="0">HTTP Basic</option>
+                            <option value="1">HTTP Digest</option>
+                            <option value="2">WSSE(WS-Security)</option>
+                            <option value="3">API KEY</option>
+                            <option value="4">OAUTH2</option>
+                        </select>                    
                     </div>
                     <label class="col-xs-1 control-label">修改时间</label>
                     <div class="col-xs-2">
@@ -109,23 +119,41 @@ var template_int = `
                 <div class="form-group">
                     <label class="col-xs-1 control-label">接口简介</label>
                     <div class="col-xs-8">
-                        <textarea class="form-control" id="intDecTextArea" style="max-width: 1022px;"></textarea>
-                    </div>
-                </div>   
-                <div class="form-group">
-                    <div class="col-xs-8">
-                    </div>
-                    <div class="col-xs-1">
-                        <button class="btn btn-info" type="button" @click="intInfoSave">
-                            <span>保存</span>
-                        </button>
+                        <textarea class="form-control" id="intDecTextArea" ></textarea>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-xs-1 control-label">报文编码</label>
+                    <div class="col-xs-2">
+                        <select class="form-control" type="text" id="bodyDecode" >
+                        <option value="0">？</option>
+                        <option value="1">？？</option>
+                        <option value="2">？？？</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-1">
+                    <button class="btn btn-info" type="button" @click="queryParaListSave">
+                        <span>编码</span>
+                    </button>
+                    </div>
+                    <label class="col-xs-1 control-label">报文解码</label>
+                    <div class="col-xs-2">
+                        <select class="form-control" type="text" id="bodyDecode" >
+                        <option value="0">？</option>
+                        <option value="1">？？</option>
+                        <option value="2">？？？</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-1">
+                    <button class="btn btn-info" type="button" @click="queryParaListSave">
+                        <span>解码</span>
+                    </button>
+                    </div>
+                </div> 
                 <ul class="nav nav-tabs" id="navSwitchBar" style="padding-left:10px">
                     <li role="presentation" class="active"><a @click="navSwitch(0)">Query</a></li>
                     <li role="presentation"><a @click="navSwitch(1)">Header</a></li>
-                    <li role="presentation"><a @click="navSwitch(2)">Messages</a></li>
-                    <li role="presentation"><a @click="navSwitch(3)">Messages1</a></li>                    
+                    <li role="presentation"><a @click="navSwitch(2)">Body</a></li>                 
                 </ul>
 
 
@@ -147,7 +175,7 @@ var template_int = `
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="display:none">
                         <div class="col-xs-1"></div>
                         <div class="col-xs-0">
                             <button class="btn btn-info" type="button" @click="queryParaListSave">
@@ -171,7 +199,7 @@ var template_int = `
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="display:none">
                         <div class="col-xs-1"></div>
                         <div class="col-xs-0">
                             <button class="btn btn-info" type="button" @click="headerParaListSave">
@@ -181,15 +209,41 @@ var template_int = `
                     </div>  
                 </div>
                 <div class="form-group switchSupPage" id="messagesPage" style="display:none">
-                    <label class="col-xs-1 control-label">messages</label>
-                    <div class="col-xs-2">
-                        <input class="form-control" type="text" name="intName" >
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <label class="col-xs-1 control-label">报文格式</label>
+                        <div class="col-xs-2">
+                            <select class="form-control" type="text" id="bodyFormat" >
+                            <option value="1">JSON</option>
+                            <option value="2">XML</option>
+                            <option value="3">JavaScript</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-5">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <label class="col-xs-1 control-label">报文内容</label>
+                        <div class="col-xs-5">
+                        <textarea class="form-control" id="bodyContent" style="height:532;" ></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group switchSupPage" id="messages1Page" style="display:none">
                     <label class="col-xs-1 control-label">messages1</label>
                     <div class="col-xs-2">
                         <input class="form-control" type="text" name="intName" >
+                    </div>
+                    </div>
+                <div class="form-group">
+                    <div class="col-xs-8">
+                    </div>
+                    <div class="col-xs-1">
+                        <button class="btn btn-info" type="button" @click="intInfoSave">
+                            <span>保存</span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -344,7 +398,8 @@ var interfacesManagement = Vue.extend({
                         $("#intModifyTimeInput").val(getDate(data.modifyTime));
                         $("#intStatusSelect").val(data.status);
                         $("#intMethodSelect").val(data.method);
-                        $("#intMethodSelect").val(data.method);
+                        $("#bodyContent").val(data.bodyContent);
+                        $("#bodyFormat").val(data.bodyFormat);
 
                         status
                     } else {
@@ -368,7 +423,6 @@ var interfacesManagement = Vue.extend({
                             $('#intCreatorIdInput').append(`<option value="${item.id}">${item.username}</option>`);
                             $('#intMaintainerIdInput').append(`<option value="${item.id}">${item.username}</option>`);
                         }
-                        $('#authorVal').selectpicker('refresh');
                     }
                 }
             });
@@ -390,6 +444,53 @@ var interfacesManagement = Vue.extend({
         intInfoSave :function() {
             var _this = this;
             var val = this.transid;
+             // $('#queryParaListBody').find('.queryParaRow').each(function() {
+            //     var queryParaName=$(this).find("input[name=queryParaName]").val(),
+            //     queryParaDec=$(this).find("input[name=queryParaDec]").val(),
+            //     checkboxVal=$(this).find("input[type=checkbox]").val(),
+            //     singerQuery={};
+            //     if(queryParaName!=""){
+            //         singerQuery.name=queryParaName;
+            //         singerQuery.desc=queryParaDec;
+            //         singerQuery.val=checkboxVal;
+            //         query.push(singerQuery);
+            //     }
+            // });
+            // var header=[];
+            // $('#headerParaListBody').find('.headerParaRow').each(function() {
+            //     var headerParaName=$(this).find("input[name=headerParaName]").val(),
+            //     headerParaVal=$(this).find("input[name=headerParaVal]").val(),
+            //     headerParaDec=$(this).find("input[name=headerParaDec]").val(),
+            //     singerHeader={};
+            //     if(headerParaName!=""){
+            //         singerHeader.name=headerParaName;
+            //         singerHeader.val=headerParaVal;
+            //         singerHeader.desc=headerParaDec;
+            //         header.push(singerHeader);
+            //     }
+            // });
+            var header='[';
+            $('#headerParaListBody').find('.headerParaRow').each(function() {
+                var headerParaName=$(this).find("input[name=headerParaName]").val(),
+                headerParaVal=$(this).find("input[name=headerParaVal]").val(),
+                headerParaDec=$(this).find("input[name=headerParaDec]").val(),
+                singerHeader={};
+                if(headerParaName!=""){
+                    header +='{"name":"'+headerParaName+'"desc":"'+headerParaDec+'"val":"'+headerParaVal+'"},';
+                }
+            });
+            var query='[';
+            $('#queryParaListBody').find('.queryParaRow').each(function() {
+                var queryParaName=$(this).find("input[name=queryParaName]").val(),
+                queryParaDec=$(this).find("input[name=queryParaDec]").val(),
+                checkboxVal=$(this).find("input[type=checkbox]").val(),
+                singerQuery={};
+                if(queryParaName!=""){
+                   query +='{"name":"'+queryParaName+'"desc":"'+queryParaDec+'"val":"'+queryParaVal+'"},';
+                }
+            });
+            query =query.slice(0,query.length-1)
+            query +=']';
             Vac.ajax({
                 async: true,
                 url: address3 + 'interface/modifySingleInterface',
@@ -411,11 +512,11 @@ var interfacesManagement = Vue.extend({
                     "method":$("#intMethodSelect").val(),
                     "authType": null,
                     "authContent": null,
-                    "query": null,
-                    "header": null,
-                    "bodyFormat": null,
+                    "query": query,
+                    "header": header,
+                    "bodyFormat": 1,
                     "rawFormat": 2,
-                    "bodyContent": '{"id":321313,"age":23,"weight":"50kg","high":"160cm"}"',
+                    "bodyContent": $("#bodyContent").val(),
                     "bodyParseContent": null,
                     "dataDictList": null,
                     "preRequestScript":null,
@@ -433,11 +534,37 @@ var interfacesManagement = Vue.extend({
         },
 
         queryParaListSave: function() {
-            alert("queryParaListSave-Button Clicked!");
+            var query=[],
+            singerQuery={};
+            $('#queryParaListBody').find('.queryParaRow').each(function() {
+                 var queryParaName=$(this).find("input[name=queryParaName]").val(),
+                 queryParaDec=$(this).find("input[name=queryParaDec]").val(),
+                 checkboxVal=$(this).find("input[type=checkbox]").val();
+                 if(queryParaName!=""){
+                    singerQuery.name=queryParaName;
+                    singerQuery.desc=queryParaDec;
+                    singerQuery.val=checkboxVal;
+                    query.push(singerQuery);
+                }
+            });
+            console.log(query);
         },
 
         headerParaListSave: function() {
-            alert("headerParaListSave-Button Clicked!");
+            var header=[],
+            singerHeader={};
+            $('#headerParaListBody').find('.headerParaRow').each(function() {
+                var headerParaName=$(this).find("input[name=headerParaName]").val(),
+                headerParaVal=$(this).find("input[name=headerParaVal]").val(),
+                headerParaDec=$(this).find("input[name=headerParaDec]").val();
+                if(headerParaName!=""){
+                    singerHeader.name=headerParaName;
+                    singerHeader.val=headerParaVal;
+                    singerHeader.desc=headerParaDec;
+                    header.push(singerHeader);
+                }
+            });
+            console.log(header);
         },
         interfacesExist: function( str ) {
             if(str==""){
