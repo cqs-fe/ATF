@@ -211,6 +211,8 @@
               数据资源池配置</button>
               <button class="btn btn-white" @click="debug();"><i class="icon-wrench"></i>
               调试</button>
+              <button class="btn btn-white" @click="saveSort();"><i class="icon-refresh"></i>
+                保存顺序</button>
               <!--  <button class="btn btn-white"><i class="icon-file"></i>
               生成报告</button> -->
             </div>
@@ -251,7 +253,7 @@
                         <div class="checkbox-wrapper">
                           <i class="icon-move handle" style="color: #ff6c60;"></i> &nbsp;&nbsp;
                           <div style="display: inline-block; width: 20px; height: 20px;" @mousedown.stop="1">
-                            <input type="checkbox" :value="case_wrapper.id" class="checkall" v-model="selectedCases">
+                            <input type="checkbox" :value="case_wrapper.id" name="sort" class="checkall" v-model="selectedCases">
                           </div>
                         </div>
                         <div v-for="time in case_wrapper">
@@ -346,7 +348,6 @@
             <span v-show="tooltipType===2">触发器设置</span>
             <span v-show="tooltipType===3">执行过程控制</span>
             <span v-show="tooltipType===4">数据资源池配置</span>
-            <span v-show="tooltipType===5">调试</span>
             <button type="button" class="close" id="btn-closetooltip" @click="toggleTooltip">
             <i :class="{'icon-resize-full':tooltipFlag,'icon-resize-small':!tooltipFlag}"></i>
             </button>

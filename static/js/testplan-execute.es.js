@@ -417,6 +417,10 @@ var vBody = new Vue({
 					if (_this.testSceneList) {
 						for (var j = 0; j<_this.testSceneList.length;j++) {
 							var scene = _this.testSceneList[j]
+							//对testCaseList根据orderNumber字段排序
+							_this.testSceneList[j].testCaseList.sort(function(obj1,obj2){
+								return obj1.orderNumber>obj2.orderNumber
+							})
 							// sceneIds save the id of scene  [4,5,6]
 							_this.sceneIds.push(scene.sceneId)
 							var caselist = []
@@ -520,6 +524,23 @@ var vBody = new Vue({
 				}
 			}
 			this.setBackground(this.selectedSceneCases)
+		},
+		saveSort:function(sceneId){
+			var domNodes = $("input[value^=sort-"+sceneId+"]");
+			var arrSortId=[];
+			for(var i = 0;i<domNodes.length;i++){
+				arrSortId.push(+$(domNodes[i]).attr('name'));
+			}
+			Vac.ajax({
+				url:address3 +"sceneController/sceneTestcaseSortSave",
+				data:{"sceneId":sceneId,"caseIdList":arrSortId},
+				success:function(data){
+					if(data.respCode === '0000'){
+						Vac.alert('排序保存成功')
+					}else
+					Vac.alert('排序保存失败')
+				}
+			})
 		},
 		viewCase: function (sceneId, caseid, sourcechannel, testPhase, testRound, recorderStatus) {
 			var o = {
