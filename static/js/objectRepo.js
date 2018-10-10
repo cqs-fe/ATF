@@ -802,7 +802,6 @@ var objectRepo =  Vue.extend({
                         $.fn.zTree.init($("#objectTree"), _this.setting1, objects);
                         _this.repositoryId = data.repositoryId;
                     }
-                }
             });
         },
         //禁止拖动

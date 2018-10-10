@@ -256,7 +256,7 @@
                                         <td width="5%">
                                             <input type="radio" v-model="" name="chk_list" id="{{project.id}}" />
                                         </td>
-                                        <td class="center hidden-phone" width="10%">{{ project.codeLong }}</td>
+                                        <td class="center hidden-phone detail-link"" width="10%" @click="to(project.id,project.caseLibId)">{{ project.codeLong }}</td>
                                         <td width="20%">{{ project.nameMedium }}</td>
                                         <td class="hidden-phone" width="25%">{{ project.descMedium }}</td>
                                         <td class="hidden">{{project.caseLibId}}</td>

@@ -1,6 +1,7 @@
 var app = new Vue({
     el: '#casePostRecord',
     data: {
+        importUrl:address3+'testcase/batchImportTestcase',
         isShow: false,
         iconflag: true,
         caseNodeNum: 0,

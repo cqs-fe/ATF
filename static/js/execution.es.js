@@ -1,5 +1,3 @@
-// var address = 'http://10.108.223.23:8080/atfcloud2.0a/'; 
-// var address = 'http://10.205.25.141:8080/atfcloud/'
 function generateConst(from, to, ...values) {
     let o = {}, index = 0;
     for (let i = +from; i <= +to; i++) {

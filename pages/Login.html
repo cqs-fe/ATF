@@ -161,15 +161,7 @@
     }
     $(document).ready(function() {
         // console.log(address3);
-        $.ajax({
-            type: 'post',
-            url: address3 + "userController/getSessionId",
-            dataType: 'json',
-            success: function(data) {
-                sessionStorage.setItem('sessionId', data.obj.sessionId);
-                $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()+"&sessionId=" + sessionStorage.getItem('sessionId'));
-            }
-        });
+        getautocode();
         $('#authCode').blur(function() {
             checkAuthcode();       
         });
@@ -206,6 +198,18 @@
                     } else {
                         setHtml("#result", data.msg);
                     }
+                }
+            });
+        }
+
+        function getautocode(){
+            $.ajax({
+                type: 'post',
+                url: address3 + "userController/getSessionId",
+                dataType: 'json',
+                success: function(data) {
+                    sessionStorage.setItem('sessionId', data.obj.sessionId);
+                    $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()+"&sessionId=" + sessionStorage.getItem('sessionId'));
                 }
             });
         }
@@ -277,6 +281,7 @@
                                         })
                                 } else {
                                     setHtml("#result", data.msg);
+                                    getautocode();
                                 }
                             }
                         });

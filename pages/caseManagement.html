@@ -527,7 +527,7 @@
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                         <h4 class="modal-title">导入</h4>
                                     </div>
-                                    <form role="form" id="importForm" method='post' action='http://10.108.223.23:8080/atfcloud2.0a/testcase/batchImportTestcase' enctype="multipart/form-data" >
+                                    <form role="form" id="importForm" method='post' :action="importUrl" enctype="multipart/form-data" >
                                         
                                     <div class="modal-body">
                                             
@@ -564,7 +564,6 @@
                                                           </div>  
                                               </div> 
                                         </div> 
-                                     
                                     <div class="modal-footer">
                                          <a class="  btn  btn-white" style="float:left" id="exampleDownload">模板下载</a>  
                                        <a class="  btn  btn-white"     id="submitFile"  @click="upload()">导入</a>  
@@ -577,32 +576,38 @@
                         <!-- importModal end -->
                         <!-- exportModal start -->
                         <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">导出</h4>
-                                    </div>
-                                    <form role="form" id="exportForm" class="form-horizontal">
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label class="control-label col-lg-2">导出范围</label>
-                                                <div class="col-lg-4">
-                                                    <select class="form-control" name="fanwei">
-                                                        <option value="part">部分</option>
-                                                        <option value="all">全部</option>
-                                                    </select>
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">导出</h4>
+                                        </div>
+                                        <form role="form" id="exportForm" class="form-horizontal" :action="exportUrl" method="post">
+                                            <div class="modal-body">
+                                                <div class="form-group hidden">
+                                                    <label class="col-lg-2 control-label">id列表</label>
+                                                    <div class="col-lg-4">
+                                                        <input type="text" name="testCaseIdList" class="form-control" value="{{id}}" v-for="id in ids">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-lg-2">导出范围</label>
+                                                    <div class="col-lg-4">
+                                                        <select class="form-control" name="fanwei" disabled="disabled" >
+                                                            <option value="part">部分</option>
+                                                            <option value="all">全部</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                                            <button class="btn btn-success" @click="export()">确认</button>
-                                        </div>
-                                    </form>
+                                            <div class="modal-footer">
+                                                <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                                                <button class="btn btn-success" type="submit">确认</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         <!-- exportModal end -->
                         <!-- assignModal start -->
                         <div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="assignModalLabel" aria-hidden="true">

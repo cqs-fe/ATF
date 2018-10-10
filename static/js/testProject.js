@@ -169,12 +169,20 @@ var app = new Vue({
             $('#updateForm textarea[name="descMedium"]').val(selectedInput.parent().next().next().next().html());
         },
         //进入
-        to: function() {
-            var selectedInput = $('input[name="chk_list"]:checked');
+        to: function(id,caseLibId) {
+            var selectedInput;
+            var caseLibId;
+            if(id!=null){
+                selectedInput=id;
+                caseLibId=caseLibId;
+            }
+            else
+                selectedInput = $('input[name="chk_list"]:checked');
             if (selectedInput.length === 0) {
                 $('#selectAlertModal').modal();
             } else {
-                var caseLibId = selectedInput.parent().next().next().next().next().html();
+                if(caseLibId==null)
+                    caseLibId= selectedInput.parent().next().next().next().next().html();
                 //存储测试项目id到sessionstorage
                 sessionStorage.setItem("caselibId", caseLibId);
                 location.href = "caseManagement.html";
