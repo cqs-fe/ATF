@@ -360,11 +360,21 @@ var vBody = new Vue({
 					handle: '.handle'
 				})
 				$( "#sortable_caselist" ).disableSelection();
-		
+
+				$('#sortable_sceneslist').sortable({
+					handle: '.handle2'
+				})
+				$( "#sortable_caselist" ).disableSelection();
+
 				$('.sortable_scene_caselist').sortable({
 					handle: '.handle1'
 				})
 				$( '.sortable_scene_caselist' ).disableSelection();
+
+
+				
+
+
 				$('#testround-main').disableSelection();
 		},
 		getCases() {
@@ -414,8 +424,10 @@ var vBody = new Vue({
 					_this.sceneIds.length = []
 					_this.sceneCaseMap.clear()
 					_this.flowNodesMap.clear()
+					_this.testSceneList.sort(_this.compare("orderNum"));	//更新排序后的场景列表
 					if (_this.testSceneList) {
 						for (var j = 0; j<_this.testSceneList.length;j++) {
+							
 							var scene = _this.testSceneList[j]
 							//对testCaseList根据orderNumber字段排序
 							_this.testSceneList[j].testCaseList.sort(function(obj1,obj2){
@@ -455,6 +467,13 @@ var vBody = new Vue({
 					}
 				}
 			});
+		},
+		compare: function(property){		//排序所需要的函数
+			return function(obj1,obj2){		//比较两个对象相应的元素，按照升序排序
+				var value1 = obj1[property];
+				var value2 = obj2[property];
+				return value1-value2;
+			}
 		},
 		hideCaseList: function(event){
 			var _this = this
@@ -542,6 +561,26 @@ var vBody = new Vue({
 				}
 			})
 		},
+
+		saveScenesSort:function(){					//保存场景排序
+			var domNodes = $("input.checkscene");	//使用jQuery找到包含场景信息的元素
+			var keyIdList=[];
+			for(var i = 0;i<domNodes.length;i++){
+				keyIdList.push(+$(domNodes[i]).attr('name'));	//将属性值为name的变量中的值取出来，为id值
+			}
+
+			Vac.ajax({
+				url:address3 +"sceneController/sceneSortSave",
+				data:{"keyIdList":keyIdList},
+				success:function(data){
+					if(data.respCode === '0000'){
+						Vac.alert('场景排序保存成功')
+					}else
+					Vac.alert('场景排序保存失败')
+				}
+			})
+		},
+
 		viewCase: function (sceneId, caseid, sourcechannel, testPhase, testRound, recorderStatus) {
 			var o = {
 				sceneId, caseid,
