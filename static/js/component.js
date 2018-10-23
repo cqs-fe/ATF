@@ -50,7 +50,7 @@ var app = new Vue({
                 descShort = $('#addClassForm input[name="descShort"]').val();
             var that=this;
             $.ajax({
-                url: address + '/omClass/addSingleAutOmClass',
+                url: address3 + '/omClass/addSingleAutOmClass',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -82,7 +82,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: address + '/omClass/deleteSingleAutOmClass',
+                    url: address3 + '/omClass/deleteSingleAutOmClass',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -109,7 +109,7 @@ var app = new Vue({
             var that=this;
             // console.log(that.classId)
             $.ajax({
-                url: address + '/omMethod/queryAutDirectOmMethods',
+                url: address3 + '/omMethod/queryAutDirectOmMethods',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -155,7 +155,7 @@ var app = new Vue({
                 // inputargdesc = $('#addMethodForm input[name="inputargdesc"]').val();
             var that=this;
             $.ajax({
-                url: address + '/omMethod/addSingleAutOmMethod',
+                url: address3 + '/omMethod/addSingleAutOmMethod',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -200,7 +200,7 @@ var app = new Vue({
                 $('#selectAlertModal').modal();
             } else {
                 $.ajax({
-                    url: address + '/omMethod/deleteSingleAutOmMethod ',
+                    url: address3 + '/omMethod/deleteSingleAutOmMethod ',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -372,7 +372,7 @@ var app = new Vue({
 
             var that = this;
             $.ajax({
-                url: address + '/omClass/modifySingleAutOmClass',
+                url: address3 + '/omClass/modifySingleAutOmClass',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -438,7 +438,7 @@ var app = new Vue({
             console.log(paraList)
             var that=this;
             $.ajax({
-                url: address + '/omMethod/modifySingleAutOmMethod',
+                url: address3 + '/omMethod/modifySingleAutOmMethod',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -484,7 +484,7 @@ function getClass() {
     var autId=sessionStorage.getItem("autId");
     $('.autName').html(autName);
     $.ajax({        
-        url: address + '/aut/queryAutVisibleOmClasses',
+        url: address3 + '/aut/queryAutVisibleOmClasses',
         type: 'post',
         data: JSON.stringify({ 'id': autId }),
         contentType: 'application/json',
@@ -538,7 +538,7 @@ function classClick(event, i) {
         app.classId = $(event.target).parent().parent().attr('id');
         let overideFlag=$(event.target).parent().next().attr('id');
         $.ajax({
-            url: address + '/aut/queryAutVisibleOmMethods',
+            url: address3 + '/aut/queryAutVisibleOmMethods',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify({

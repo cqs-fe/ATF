@@ -192,7 +192,7 @@ var app = new Vue({
             var selectedInput = $('input[name="chk_list"]:checked');
             var selectedId = selectedInput.attr('id');
             $('input[name="id"]').val(selectedId);
-            $('#updateForm input[name="code"]').val(selectedInput.parent().next().html());
+            $('#updateForm input[name="code"]').val(selectedInput.parent().next().children().html());
             $('#updateForm input[name="nameMedium"]').val(selectedInput.parent().next().next().html());
             $('#updateForm select[name="inheriteArcId"]').val(selectedInput.parent().next().next().next().data('id'));
             $('#updateForm textarea[name="descShort"]').val(selectedInput.parent().next().next().next().next().html());

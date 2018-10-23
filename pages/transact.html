@@ -5,9 +5,21 @@
     <link rel="import" href="./common/header.html?__inline">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
+    <link rel="stylesheet" href="../static/css/bootstrap-select.min.css">
     <title>transact</title>
+    <style type="text/css">
+    .btn-default {
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+    }
+    .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+        color: #333;
+        background-color: #ebebeb;
+        border-color: #adadad;
+    }
+    </style>
 </head>
-
 <body id="v-transact" v-cloak>
     <div class="content">
         <!--header start-->
@@ -236,7 +248,9 @@
                                         <div class="form-group">
                                             <label class="col-lg-2 control-label">所属被测系统</label>
                                             <div class="col-lg-2">
-                                                <select class="form-control" size="1" id="autSelect"></select>
+                                                <select class="selectpicker prop_select form-control"  id="autSelect" data-live-search="true">
+
+                                                </select>
                                             </div>
                                             <!-- <label class="col-lg-2 col-lg-offset-2 control-label">展示条目</label>
                                             <div class="col-lg-2">
@@ -395,3 +409,4 @@
 <link rel="import" href="./common/footer.html?__inline">
 <script src="../lib/vue-resource.min.js"></script>
 <script type="text/javascript" src="../static/js/transact.js"></script>
+<script type="text/javascript" src="../lib/bootstrap-select.min.js"></script>

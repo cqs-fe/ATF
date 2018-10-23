@@ -4,7 +4,9 @@ var app = new Vue({
         var _this = this;
         return {
             autId: '',
+            autList:[],
             transactId: '',
+            transactList:[],
             transid: '',
             elementRepositoryId: 6,
             UIName: '',
@@ -545,25 +547,27 @@ var app = new Vue({
             $.ajax({
                 url: address3 + "aut/queryListAut",
                 type: "POST",
+                async:false, 
                 contentType:'application/json',
                 success: function(data) {
                     if (data.respCode !== '0000') {
                         Vac.alert('查询测试系统失败');
                         return;
                     }
-                    var autList = data.autRespDTOList;
-                    var str = "";
-                    for (var i = 0; i < autList.length; i++) {
+                    _this.autList = data.autRespDTOList;
+                    // var str = "";
+                    // for (var i = 0; i < autList.length; i++) {
 
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
-                    }
+                    //     str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
+                    // }
 
-                    $('#autSelect').html(str);
+                    // $('#autSelect').html(str);
                     _this.autId = sessionStorage.getItem("autId");
                     $("#autSelect").val(_this.autId);
                     $.ajax({
                         url: address3 + 'transactController/queryTransactsByAutId',
                         type: 'POST',
+                        async:false,
                         contentType: 'application/json',
                         data: JSON.stringify({'id': _this.autId}),
                         success: function(data) {
@@ -571,15 +575,19 @@ var app = new Vue({
                                 Vac.alert('查询测试系统失败');
                                 return;
                             }
-                            var transactList = data.transactRespDTOs;
+                            _this.transactList = data.transactRespDTOs;
+                            let transactList = data.transactRespDTOs;
                             var str = "";
-                            for (var i = 0; i < transactList.length; i++) {
+                            for (var i = 0; i <transactList.length; i++) {
                                 if(transactList[i].transType==null||transactList[i].transType==1)
                                 str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
                             }
                             $('#transactSelect').html(str);
                             _this.transactId = sessionStorage.getItem("transactId");
                             $("#transactSelect").val(_this.transactId);
+                            console.log($('#autSelect').find("option:selected").attr('value')+"111111111111");
+                            console.log($('#transactSelect').val()+"222222222222222");
+                            
                             // 获取ui和element
                             $.ajax({
                                 url: address3 + 'elementRepository/queryAllElementsForATransact',
@@ -633,16 +641,17 @@ var app = new Vue({
                 async: false,
                 url: address3 + "aut/queryListAut",
                 type: "POST",
+                async:false, 
                 contentType:'application/json',
                 success: function(data) {
-                    var autList = data.autRespDTOList;
-                    var str = "";
-                    for (var i = 0; i < autList.length; i++) {
+                    this.autList = data.autRespDTOList;
+                    // var str = "";
+                    // for (var i = 0; i < autList.length; i++) {
 
-                        str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
-                    }
+                    //     str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
+                    // }
 
-                    $('#autSelect').html(str);
+                    // $('#autSelect').html(str);
 
                 }
             });
@@ -675,12 +684,12 @@ var app = new Vue({
         }, 
         //获取classtype
         classtypeSelect: function() {
-            // var val = $('#autSelect').val();
-           // var _this = this;
+            var autId = $('#autSelect').val();
+            var _this = this;
             $.ajax({
                 url: address3 + 'aut/queryAutVisibleOmClasses',
                 contentType: 'application/json',
-                data: JSON.stringify({ 'id': app.autId }),
+                data: JSON.stringify({ 'id': autId }),
                 type: "POST",
                 success: function(data) {
                     // console.log(data)
@@ -1746,21 +1755,33 @@ var app = new Vue({
                 url: address3 + 'transactController/queryTransactsByAutId',
                 data: JSON.stringify({'id': val}),
                 type: "POST",
+                async:false, 
                 success: function(data) {
                     if (data.respCode === '0000') {
-                        var transactList = data.transactRespDTOs;
+                        _this.transactList = data.transactRespDTOs;
+                        let transactList = data.transactRespDTOs;
                         var str = "";
                         for (var i = 0; i < transactList.length; i++) {
-                            if(transactList[i].transType==null||transactList[i].transType==1)
-                            str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
+                            if(transactList[i].transType==null||transactList[i].transType==1){
+                                if( i == 0)
+                                    str += " <option value='" + transactList[i].id + "' selected='selected' >" + transactList[i].nameMedium + "</option> ";
+                                else
+                                    str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
+                            }
                         }
                         $('#transactSelect').html(str);
+                        $('#transactSelect').selectpicker('refresh');
+                        if(str==""){
+                            Vac.alert("该测试系统无UI功能点");
+                            return;
+                        }
                         _this.transactId = $('#transactSelect').val();
                         _this.detailTabFresh();
                         _this.getElementTree();
                         _this.classtypeSelect();
                         _this.getObjTree();
                         _this.getScriptTemplate();
+
                     } else {
                         Vac.alert(respMsg);
                     }
@@ -1970,22 +1991,25 @@ var app = new Vue({
         saveTemplate: function() {
             var _this = this;
             _this.newTemplate.transId = _this.transactId
-            Vac.ajax({
-                url: address3 + 'scripttemplateController/insert',
-                data: _this.newTemplate,
-                success: function(data) {
-                    if (data.respCode === '0000') {
-                    Vac.alert('添加成功！')
-                    $('#addtemplateModal').modal('hide')
-                    _this.getScriptTemplate();
-                    } else {
+            if(_this.newTemplate.name=="")
+                Vac.alert('请输入名称');
+            else
+                Vac.ajax({
+                    url: address3 + 'scripttemplateController/insert',
+                    data: _this.newTemplate,
+                    success: function(data) {
+                        if (data.respCode === '0000') {
+                        Vac.alert('添加成功！')
+                        $('#addtemplateModal').modal('hide')
+                        _this.getScriptTemplate();
+                        } else {
+                            Vac.alert('添加失败！');
+                        }
+                    },
+                    error: function() {
                         Vac.alert('添加失败！');
                     }
-                },
-                error: function() {
-                    Vac.alert('添加失败！');
-                }
-            })
+                })
         },
         deleteTemplate: function() {
             var _this = this;

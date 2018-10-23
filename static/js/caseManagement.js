@@ -5,7 +5,11 @@ var app = new Vue({
         importUrl:address3+'testcase/batchImportTestcase',
         ids:[],
         isShow: false,
+        caseshow: true,
+        flowcaseshow: true,
         iconflag: true,
+        caseflag: true,
+        flowcaseflag: true,
         caseNodeNum: 0, 
         caseNode: '</h3><div class="form-group"><label class="col-lg-2 control-label hidden">案例组成类型</label><div class="col-lg-4 hidden"><input type="text" class="form-control" name="caseCompositeType" value="3"></div><label class="col-lg-2 control-label">流程节点编号</label><div class="col-lg-4"><input type="text" class="form-control" name="subcasecode"></div><label class="col-lg-2 control-label">动作标识</label><div class="col-lg-4"><input type="text" class="form-control" name="actioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">被测系统</label><div class="col-lg-4"><select class="form-control" size="1" name="subautid" id=""></select></div><label class="col-lg-2 control-label">被测系统版本号</label><div class="col-lg-4"><input class="form-control" name="subversioncode"></div></div><div class="form-group"><label class="col-lg-2 control-label">功能码</label><div class="col-lg-4"><select class="form-control" size="1" name="subtransid"><option></option></select></div><label class="col-lg-2 control-label">所属模板</label><div class="col-lg-4"><select class="form-control" size="1" name="subscriptmodeflag"></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行方式</label><div class="col-lg-4"><select class="form-control" size="1" name="executemethod"><option>手工</option><option>自动化</option><option>配合</option></select></div><label class="col-lg-2 control-label">脚本管理方式</label><div class="col-lg-4"><select class="form-control" size="1" name="scriptmode"><option>模板</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">执行者</label><div class="col-lg-4"><select class="form-control" size="1" name="executor"><option v-for="user in users" value="{{user.id}}">{{user.reallyname}}</option></select></div><label class="col-lg-2 control-label">测试顺序</label><div class="col-lg-4"><input class="form-control" name="steporder"></div></div><div class="form-group"><label class="col-lg-2 control-label">案例使用状态</label><div class="col-lg-4"><select class="form-control" size="1" name="subusestatus"><option value="1">新增</option><option value="2">评审通过</option></select></div></div><div class="form-group"><label class="col-lg-2 control-label">备注</label><div class="col-lg-10"><textarea class="form-control" rows="3" name="note"></textarea></div></div>',
         caseList: [], //案例
@@ -958,7 +962,13 @@ var app = new Vue({
         //         app.getCase(1, listnum, 'id', 'asc');
         //     });
         // },
-
+        
+        //跳转至测试系统
+        linkToTransact: function(selectedId,selectedName) {
+            sessionStorage.setItem("autId", selectedId);
+            sessionStorage.setItem("autName", selectedName); 
+            location.href = "transact.html";
+        },
         //获取caseLibid
         getCaseLibId: function() {
             var caselibid = sessionStorage.getItem('caselibId');
@@ -1157,6 +1167,15 @@ var app = new Vue({
             } else {
                 $('#transid').modal();
             }
+        },        
+        modifyMore: () => {
+            app.getIds();
+            var selectedInput = $('input[name="chk_list"]:checked');
+            if (selectedInput.length === 0) {
+                $('#selectAlertModal').modal();
+            } else {
+                $('#modifyMore').modal();
+            }
         },
         showDetail(event){
                 document.getElementsByTagName('fieldset')[0].setAttribute('disabled', true);
@@ -1177,7 +1196,8 @@ var app = new Vue({
                         $('#detailForm select[name="missionId"]').val(caseData.missionId);
                         $('#detailForm select[name="autid"]').val(caseData.autId);
                         erji();
-                        $('#detailForm select[id="casetransid"]').val(caseData.transName);
+                        $('#casetransid').val(caseData.transId);
+                        $('#casetransid').selectpicker('refresh');
                         sanji();
                         $('#detailForm input[name="versioncode"]').val(caseData.version);
                         $('#detailForm select[name="scriptmodeflag"]').val(caseData.scriptModeFlag);
@@ -1363,37 +1383,37 @@ var app = new Vue({
         addFilter(){
             // this.filterList.push('c');
             let liStr=`<li>
-                                                    <label>筛选项目</label>
-                                                    <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
-                                                        <option value="">请选择</option>
-                                                        <option value="caseCompositeType">用例组成类型</option>
-                                                        <option value="casecode">用例编号</option>
-                                                        <option value="missionId">测试任务</option>
-                                                        <option value="autId">被测系统</option>
-                                                        <option value="testDesign">测试意图</option>
-                                                        <option value="preRequisites">前置条件</option>
-                                                        <option value="dataRequest">数据需求</option>
-                                                        <option value="testStep">测试步骤</option>
-                                                        <option value="expectResult">预期结果</option>
-                                                        <option value="checkPoint">附加检查点</option>
-                                                        <option value="caseProperty">用例性质</option>
-                                                        <option value="caseType">测试用例类型</option>
-                                                        <option value="priority">优先级</option>
-                                                        <option value="author">作者</option>
-                                                        <option value="reviewer">评审者</option>
-                                                        <option value="executor">执行者</option>
-                                                        <option value="executeMethod">执行方式</option>
-                                                        <option value="scriptMode">脚本管理方式</option>
-                                                        <option value="scriptModeFlag">所属模板</option>
-                                                    </select>                
-                                                    <select name="compareType" class="selectpicker compare_select">
-                                                        <option value="">请选择</option>
-                                                    </select> 
-                                                    <label>值</label>
-                                                    <select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple>
-                                                    </select>
-                                                    <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button> 
-                                                </li>`;
+                        <label>筛选项目</label>
+                        <select name="propertyName" class="selectpicker prop_select" data-live-search="true">
+                            <option value="">请选择</option>
+                            <option value="caseCompositeType">用例组成类型</option>
+                            <option value="casecode">用例编号</option>
+                            <option value="missionId">测试任务</option>
+                            <option value="autId">被测系统</option>
+                            <option value="testDesign">测试意图</option>
+                            <option value="preRequisites">前置条件</option>
+                            <option value="dataRequest">数据需求</option>
+                            <option value="testStep">测试步骤</option>
+                            <option value="expectResult">预期结果</option>
+                            <option value="checkPoint">附加检查点</option>
+                            <option value="caseProperty">用例性质</option>
+                            <option value="caseType">测试用例类型</option>
+                            <option value="priority">优先级</option>
+                            <option value="author">作者</option>
+                            <option value="reviewer">评审者</option>
+                            <option value="executor">执行者</option>
+                            <option value="executeMethod">执行方式</option>
+                            <option value="scriptMode">脚本管理方式</option>
+                            <option value="scriptModeFlag">所属模板</option>
+                        </select>                
+                        <select name="compareType" class="selectpicker compare_select">
+                            <option value="">请选择</option>
+                        </select> 
+                        <label>值</label>
+                        <select name="propertyValue" class="selectpicker val_select" data-live-search="true" multiple>
+                        </select>
+                        <button class="btn btn-xs btn-danger" @click="removeFilter($index,$event)"><i class="glyphicon glyphicon-remove"></i></button> 
+                    </li>`;
             $('.filterList').append(liStr);
             Vue.nextTick(function(){
                 $('.selectpicker').selectpicker('refresh')
@@ -1529,6 +1549,73 @@ var app = new Vue({
             }
         });
     }
+    //更改多用例信息
+    function modifyMore() {
+        var id_array = new Array();
+        $('input[name="chk_list"]:checked').each(function() {
+            id_array.push($(this).attr('id'));
+        });
+        $('#executorForm input[name="ids"]').val(id_array.join(','));
+        $.ajax({//executor
+            url: address3 + 'testcase/batchModifyTestCaseProperty',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                testcaseIds: id_array,
+                property: 'executor',
+                value: $("#transidForm select[name='executor']").val()
+            }),
+            success: function(data) {
+                // console.info(data.msg);
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
+            }
+            
+        });
+        $.ajax({//executeMethod
+                    url: address3 + 'testcase/batchModifyTestCaseProperty',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'testcaseIds': id_array,
+                        'property': 'executeMethod',
+                        'value': $("#transidForm select[name='executeMethod']").val()
+                    }),
+                    success: function(data) {
+                        // console.info(data.msg);
+                        app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
+                    }
+                
+                });
+        $.ajax({//transId
+            url: address3 + 'testcase/batchModifyTestCaseProperty',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                testcaseIds: id_array,
+                property: 'transId',
+                value: $("#transidForm select[name='transid1']").val()
+            }),
+            success: function(data) {
+                // console.info(data.msg);
+                $('#successModal').modal();
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
+            }
+        });
+        $.ajax({//scriptModeFlag
+            url: address3 + 'testcase/batchModifyTestCaseProperty',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                testcaseIds: id_array,
+                property: 'scriptModeFlag',
+                value: $("#transidForm select[name='scriptmodeflag1']").val()
+            }),
+            success: function(data) {
+                app.getCase(app.currentPage, app.pageSize, app.order, app.sort);
+            }
+        });
+    }
+
 //全选反选
 $("#chk_all").click(function() {　　
     $("input[name='chk_list']").prop("checked", $(this).prop("checked"));　
@@ -1541,12 +1628,12 @@ $(document).ready(function(e) {
     yiji(); //第一级函数
     erji(); //第二级函数
     sanji(); //第三极函数
-    $('select[id="caseautid"]').change(function() {
+    $('#caseautid').change(function() {
         //var target = $(this);
         erji();
         sanji();
     })
-    $('select[id="caseautid"]').parent().parent().next().find('select[id="casetransid"]').change(function() {
+    $('#casetransid').change(function() {
 
         sanji();
     })
@@ -1569,6 +1656,7 @@ function yiji() {
             }
 
             $('select[id="caseautid"]').html(str);
+            $('select[id="caseautid"]').selectpicker('refresh');
 
         }
     });
@@ -1594,9 +1682,10 @@ function erji() {
             var str = "";
             for (var i = 0; i < transactList.length; i++) {
 
-                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
+                    str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
             }
-            $('select[id="casetransid"]').html(str);
+            $('#casetransid').html(str);
+            $('#casetransid').selectpicker('refresh');
 
         }
 
@@ -1606,7 +1695,7 @@ function erji() {
 //三级 模板脚本
 function sanji() {
 
-    var val = $('select[id="caseautid"]').parent().parent().next().find('select[id="casetransid"]').val();
+    var val = $('#casetransid').val();
 
     $.ajax({
         url: address3 + "scripttemplateController/queryTemplateByTransId",
@@ -1620,7 +1709,8 @@ function sanji() {
 
                 str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
             }
-            $('select[id="caseautid"]').parent().parent().next().find('select[name="scriptmodeflag"]').html(str);
+            $('#scriptmodeflag').html(str);
+            $('#scriptmodeflag').selectpicker('refresh');
 
 
         }
@@ -1659,8 +1749,6 @@ function first() {
             }
 
             $("#1ji").html(str);
-
-
         }
     });
 }
@@ -1789,6 +1877,7 @@ function disan() {
                 str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
             }
             $('select[name="subautid"]').parent().parent().next().find('select[name="subscriptmodeflag"]').html(str);
+            $('select[name="subautid"]').parent().parent().next().find('select[name="subscriptmodeflag"]').selectpicker('refresh');
 
         }
 
