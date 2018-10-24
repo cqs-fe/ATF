@@ -684,12 +684,10 @@ var app = new Vue({
         }, 
         //获取classtype
         classtypeSelect: function() {
-            var autId = $('#autSelect').val();
-            var _this = this;
             $.ajax({
                 url: address3 + 'aut/queryAutVisibleOmClasses',
                 contentType: 'application/json',
-                data: JSON.stringify({ 'id': autId }),
+                data: JSON.stringify({ 'id': _this.autId }),
                 type: "POST",
                 success: function(data) {
                     // console.log(data)
