@@ -18,12 +18,12 @@ var template_int = `
                 <div class="form-group bar ">
                     <label class="col-xs-2 control-label">被测系统</label>
                     <div class="col-xs-2">
-                        <select class="form-control" id="autSelect">
+                        <select class="form-control selectpicker" id="autSelect" data-live-search="true">
                         </select>
                     </div>
                     <label class="col-xs-1 control-label">功能点</label>
                     <div class="col-xs-2">
-                        <select class="form-control" id="transactSelect" v-model="transid">
+                        <select class="form-control selectpicker" id="transactSelect" v-model="transid" data-live-search="true">
                         </select>
                     </div>
                 </div>
@@ -151,26 +151,65 @@ var template_int = `
                     </div>
                 </div> 
                 <ul class="nav nav-tabs" id="navSwitchBar" style="padding-left:10px">
-                    <li role="presentation" class="active"><a @click="navSwitch(0)">Query</a></li>
+                    <li role="presentation" class="active"><a @click="navSwitch(0)">Authorization</a></li>
+                    <!--
+                        <li role="presentation" class="active"><a @click="navSwitch(0)">Query</a></li>
+                    -->
                     <li role="presentation"><a @click="navSwitch(1)">Header</a></li>
                     <li role="presentation"><a @click="navSwitch(2)">Body</a></li>                 
                 </ul>
-
-
-                <div class="form-group switchSupPage" id="queryPage" style="display:block">
+                <div class="form-group switchSupPage" id="authorization" style="display:block">
                     <div class="form-group" id="queryParaListBody">
-                        <div class="form-group queryParaRow">
-                            <div class="col-xs-1"></div>
-                            <div class="col-xs-3">
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
-                                    <span class="input-group-addon">
-                                        <input type="checkbox" aria-label="query参数名称">
-                                        必输参数
-                                    </span>                         
-                                </div>
+                        <div class="row">
+                            <label class="col-xs-1 control-label">type</label>
+                            <div class="col-xs-2">
+                                <select class="form-control" type="text" id="authorizationType" >
+                                <option value="1">inherit auth from parent</option>
+                                <option value="2">No Auth</option>
+                                <option value="3">Bearer Token</option>
+                                <option value="4">Basic Auth</option>
+                                <option value="5">Digest Auth</option>
+                                <option value="6">OAuth 1.0</option>
+                                <option value="7">OAuth 2.0</option>
+                                <option value="8">Hawk Authentication</option>
+                                <option value="9">AWS Signature</option>
+                                <option value="10">NTLM Authentication[Beta]</option>
+                                </select>
                             </div>
                             <div class="col-xs-5">
+                            </div>
+                        </div>
+                    </div>           
+                </div>
+                <!--
+                <div class="form-group switchSupPage" id="queryPage" style="display:block">
+                    <div class="form-group" id="queryParaListBody">
+                        <div class="form-group queryParaRow" v-for="singleQuery in query">
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称" value ="{{singleQuery.name}}">   
+                            </div>
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="queryParaVal" placeholder="请填写value" value ="{{singleQuery.val}}">
+                            </div>
+                            <div class="col-xs-4">
+                                <input class="form-control" type="text" name="queryParaDec" placeholder="请填写备注" value ="{{singleQuery.desc}}">
+                            </div>
+                            <div class="col-xs-0">
+                                <button class="btn" type="button" onclick="queryParaRowDelete(event)" style="color:red;background:transparent">
+                                    <i class="icon-remove"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group queryParaRow" name ="editQueryDiv">
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
+                            </div>
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="queryParaVal" placeholder="请填写value">
+                            </div>
+                            <div class="col-xs-4">
                                 <input class="form-control" type="text" name="queryParaDec" placeholder="请填写备注">
                             </div>
                         </div>
@@ -184,20 +223,38 @@ var template_int = `
                         </div>
                     </div>             
                 </div>
+                -->
                 <div class="form-group switchSupPage" id="headerPage" style="display:none">
                     <div class="form-group" id="headerParaListBody">
-                        <div class="form-group headerParaRow">
+                        <div class="form-group headerParaRow" v-for="singleHeader in header">
                             <div class="col-xs-1"></div>
                             <div class="col-xs-2">
-                                <input class="form-control" type="text" name="headerParaName" placeholder="请填写header">   
+                                <input class="form-control" type="text" name="headerParaName" placeholder="请填写header" value="{{singleHeader.name}}">   
+                            </div>
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="headerParaVal" placeholder="请填写value" value="{{singleHeader.val}}">
+                            </div>
+                            <div class="col-xs-4">
+                                <input class="form-control" type="text" name="headerParaDec" placeholder="请填写备注" value="{{singleHeader.desc}}">
+                            </div>
+                            <div class="col-xs-0">
+                                <button class="btn" type="button" onclick="queryParaRowDelete(event)" style="color:red;background:transparent">
+                                    <i class="icon-remove"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group headerParaRow" name ="editHeaderDiv" >
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-2">
+                                <input class="form-control" type="text" name="headerParaName" placeholder="请填写header" >   
                             </div>
                             <div class="col-xs-2">
                                 <input class="form-control" type="text" name="headerParaVal" placeholder="请填写value">
                             </div>
                             <div class="col-xs-4">
-                                <input class="form-control" type="text" name="headerParaDec" placeholder="请填写备注">
+                                <input class="form-control" type="text" name="headerParaDec" placeholder="请填写备注" >
                             </div>
-                        </div>
+                        </div>                        
                     </div>
                     <div class="form-group" style="display:none">
                         <div class="col-xs-1"></div>
@@ -219,7 +276,10 @@ var template_int = `
                             <option value="3">JavaScript</option>
                             </select>
                         </div>
-                        <div class="col-xs-5">
+                        <div class="col-xs-1">
+                            <button class="btn btn-info" type="button" @click="jiema()">
+                                <span>解码</span>
+                            </button>
                         </div>
                     </div>
                     <br>
@@ -238,6 +298,7 @@ var template_int = `
                     </div>
                     </div>
                 <div class="form-group">
+                    <hr>
                     <div class="col-xs-8">
                     </div>
                     <div class="col-xs-1">
@@ -286,17 +347,19 @@ var interfacesManagement = Vue.extend({
             autId: '',
             transid: '',
             failMSG:'操作出问题了呢！',
+            header:[],
+            query:[],
+
         }
     },
     ready: function() {
         var _this = this;
-        _this.getAutandTrans();
         _this.getUser();
+        _this.getAutandTrans();
         $('#autSelect').change(function() {
             _this.transactSelect();
             _this.autId = $('#autSelect').val(); 
             _this.transid = $('#transactSelect').val();
-           
         });
         $('#transactSelect').change(function() {
             _this.transid = $('#transactSelect').val();
@@ -343,6 +406,7 @@ var interfacesManagement = Vue.extend({
                             }
                             _this.interfacesExist(str);
                             $('#transactSelect').html(str);
+                            $('#transactSelect').selectpicker('refresh');
                             _this.transid = sessionStorage.getItem("transactId");
                             $("#transactSelect").val(_this.transid);
                             _this.getInterfaces();
@@ -370,6 +434,7 @@ var interfacesManagement = Vue.extend({
                         }
                         _this.interfacesExist(str);
                         $('#transactSelect').html(str);
+                        $('#transactSelect').selectpicker('refresh');
                         _this.transid = $('#transactSelect').val();
                     } else {
                         Vac.alert(respMsg);
@@ -377,7 +442,7 @@ var interfacesManagement = Vue.extend({
                 }
             });
         },
-        getInterfaces: function() {
+        getInterfaces: function() {//查询接口信息
             var _this = this;
             var val = this.transid;
             Vac.ajax({
@@ -400,8 +465,36 @@ var interfacesManagement = Vue.extend({
                         $("#intMethodSelect").val(data.method);
                         $("#bodyContent").val(data.bodyContent);
                         $("#bodyFormat").val(data.bodyFormat);
-
-                        status
+                        var dataHeader=data.header;//header的赋值  query下同
+                        if(dataHeader!=null&&dataHeader.length>2){//header不为空
+                            dataHeader=dataHeader.slice(2,dataHeader.length-2);
+                            var headerArray=dataHeader.split("},{"),
+                                Header=[];
+                            for(var i=0;i<headerArray.length;i++){
+                                let header ='{'+headerArray[i]+'}';
+                                Header.push(JSON.parse(header))
+                            }
+                            console.log(Header);
+                            console.log("QQQQQQQ");
+                            console.log(_this.header);
+                            _this.header=Header;
+                            console.log(_this.header);
+                        }
+                        else//header为空
+                            _this.header=[];
+                        var dataquery=data.query;                        
+                        if(dataquery!=null&&dataquery.length>2){
+                            dataquery=dataquery.slice(2,dataquery.length-2);
+                            var queryArray=dataquery.split("},{"),
+                                Query=[];
+                            for(var i=0;i<queryArray.length;i++){
+                                let query ='{'+queryArray[i]+'}';
+                                Query.push(JSON.parse(query));
+                            }
+                            _this.query=Query;
+                        }
+                        else
+                            _this.query=[];
                     } else {
                         alert(data.respMsg+"ss");
                     }
@@ -444,31 +537,6 @@ var interfacesManagement = Vue.extend({
         intInfoSave :function() {
             var _this = this;
             var val = this.transid;
-             // $('#queryParaListBody').find('.queryParaRow').each(function() {
-            //     var queryParaName=$(this).find("input[name=queryParaName]").val(),
-            //     queryParaDec=$(this).find("input[name=queryParaDec]").val(),
-            //     checkboxVal=$(this).find("input[type=checkbox]").val(),
-            //     singerQuery={};
-            //     if(queryParaName!=""){
-            //         singerQuery.name=queryParaName;
-            //         singerQuery.desc=queryParaDec;
-            //         singerQuery.val=checkboxVal;
-            //         query.push(singerQuery);
-            //     }
-            // });
-            // var header=[];
-            // $('#headerParaListBody').find('.headerParaRow').each(function() {
-            //     var headerParaName=$(this).find("input[name=headerParaName]").val(),
-            //     headerParaVal=$(this).find("input[name=headerParaVal]").val(),
-            //     headerParaDec=$(this).find("input[name=headerParaDec]").val(),
-            //     singerHeader={};
-            //     if(headerParaName!=""){
-            //         singerHeader.name=headerParaName;
-            //         singerHeader.val=headerParaVal;
-            //         singerHeader.desc=headerParaDec;
-            //         header.push(singerHeader);
-            //     }
-            // });
             var header='[';
             $('#headerParaListBody').find('.headerParaRow').each(function() {
                 var headerParaName=$(this).find("input[name=headerParaName]").val(),
@@ -476,20 +544,24 @@ var interfacesManagement = Vue.extend({
                 headerParaDec=$(this).find("input[name=headerParaDec]").val(),
                 singerHeader={};
                 if(headerParaName!=""){
-                    header +='{"name":"'+headerParaName+'"desc":"'+headerParaDec+'"val":"'+headerParaVal+'"},';
+                    header +='{"name":"'+headerParaName+'","desc":"'+headerParaDec+'","val":"'+headerParaVal+'"},';
                 }
             });
+            if (header.length>1)
+                header =header.slice(0,header.length-1)
+            header +=']';
             var query='[';
             $('#queryParaListBody').find('.queryParaRow').each(function() {
                 var queryParaName=$(this).find("input[name=queryParaName]").val(),
                 queryParaDec=$(this).find("input[name=queryParaDec]").val(),
-                checkboxVal=$(this).find("input[type=checkbox]").val(),
+                queryParaVal=$(this).find("input[name=queryParaVal]").val(),
                 singerQuery={};
                 if(queryParaName!=""){
-                   query +='{"name":"'+queryParaName+'"desc":"'+queryParaDec+'"val":"'+queryParaVal+'"},';
+                   query +='{"name":"'+queryParaName+'","desc":"'+queryParaDec+'","val":"'+queryParaVal+'"},';
                 }
             });
-            query =query.slice(0,query.length-1)
+            if (query.length>1)
+                query =query.slice(0,query.length-1)
             query +=']';
             Vac.ajax({
                 async: true,
@@ -525,7 +597,17 @@ var interfacesManagement = Vue.extend({
                 success: function(data) {
                     if (data.respCode === '0000') {
                         $('#successModal').modal();
-                        _this.getInterfaces();
+                        //_this.getInterfaces();
+                        // var parentQuery=document.getElementById("queryParaListBody"),
+                        //     parentHeader=document.getElementById("headerParaListBody"),
+                        //     childHeader=document.getElementsByName("editHeaderDiv");
+                        //     childQuery=document.getElementsByName("editQueryDiv");
+                        // if(childHeader.length>1)
+                        //     for(var i=0;i<childHeader.length-1;)
+                        //         parentHeader.removeChild(childHeader[i]);
+                        // if(childQuery.length>1)
+                        //     for(var i=0;i<childQuery.length-1;)
+                        //         parentQuery.removeChild(childQuery[i]);
                     } else {
                         alert(data.respMsg+"ss");
                     }
@@ -590,23 +672,18 @@ function queryParaAdd() {
     $('.queryParaRow').last().append(deleteButtonTr);
 
     var queryParaTr = `
-                <div class="form-group queryParaRow">
-                    <div class="col-xs-1">
-                
-                    </div>
-                    <div class="col-xs-3">
-                        <div class="input-group">
-                            <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
-                            <span class="input-group-addon">
-                                <input type="checkbox" aria-label="query参数名称">
-                                必输参数
-                            </span>                         
-                        </div>
-                    </div>
-                    <div class="col-xs-5">
-                        <input class="form-control" type="text" name="queryParaDec" placeholder="请填写备注">
-                    </div>
-                </div>`;
+        <div class="form-group queryParaRow" name ="editQueryDiv">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-2">
+                <input class="form-control" type="text" name="queryParaName" placeholder="请填写参数名称">   
+            </div>
+            <div class="col-xs-2">
+                <input class="form-control" type="text" name="queryParaVal" placeholder="请填写value">
+            </div>
+            <div class="col-xs-4">
+                <input class="form-control" type="text" name="queryParaDec" placeholder="请填写备注">
+            </div>
+        </div>`;
     $('#queryParaListBody').append(queryParaTr);
 
     $('input[name="queryParaName"]').last().change(queryParaAdd);    
@@ -629,7 +706,7 @@ function headerParaAdd() {
     $('.headerParaRow').last().append(deleteButtonTr);
 
     var headerParaTr = `
-                <div class="form-group headerParaRow">
+                <div class="form-group headerParaRow"  name ="editHeaderDiv">
                     <div class="col-xs-1"></div>
                     <div class="col-xs-2">
                         <input class="form-control" type="text" name="headerParaName" placeholder="请填写header">   

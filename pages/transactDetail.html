@@ -7,8 +7,10 @@
     <link rel="stylesheet" type="text/css" href="../static/css/elementLibrary.css">
     <link rel="stylesheet" type="text/css" href="../static/css/pagination.css">
     <link rel="stylesheet" type="text/css" href="../static/css/metroStyle.css">
+    <link rel="stylesheet" href="../static/css/bootstrap-select.min.css">
 	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-    <title>transactDetail</title>
+	<title>transactDetail</title>
+	
 </head>
 <body id="transactDetail" v-cloak>
     <div class="content">
@@ -41,13 +43,17 @@
                                     <div class="form-group bar ">
                                         <label class="col-xs-2 control-label">被测系统</label>
                                         <div class="col-xs-2">
-                                            <select class="form-control" id="autSelect">
+                                            <select class="selectpicker form-control"  v-model="autId" id="autSelect" data-live-search="true">
+												<option v-for="aut in autList" :value='aut.id'> {{aut.nameMedium}} </option>
                                             </select>
                                         </div>
                                         <label class="col-xs-1 control-label">功能点</label>
                                         <div class="col-xs-2">
-                                            <select class="form-control" id="transactSelect" v-model="transid">
-                                            </select>
+                                            <select class="selectpicker form-control" id="transactSelect" v-model="transid" data-live-search="true">
+												<!--
+												<option v-if="transact.transType==null||transact.transType==1" v-for="transact in transactList"   :value='transact.id'> {{transact.nameMedium}} </option>
+												-->
+											</select>
                                         </div>
                                     </div>
                                 </form>
@@ -1208,3 +1214,4 @@
 	<script type="text/javascript" src="../lib/jquery.ztree.all.min.js"></script>
 	<script type="text/javascript" src="../static/js/fuzzysearch.js"></script>
 	<script type="text/javascript" src="../lib/jquery.ztree.exhide.min.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap-select.min.js"></script>
