@@ -175,6 +175,8 @@ var vBody = new Vue({
 				success: function(data){
 					if(data.respCode == '0000'){
 						let caseGroup = {}, caseMaxLength = {};
+						var caseDtosTmep = data.selectSceneDto.caseDtos
+						caseDtosTmep.sort(function(a,b){return a.orderNum>b.orderNum})
 						for(var i = 0; i < data.selectSceneDto.caseDtos.length; i++) {
 							if(caseGroup[data.selectSceneDto.caseDtos[i].group]) {
 								// 已经有 group
