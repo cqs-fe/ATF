@@ -898,11 +898,11 @@ $(document).ready(function () {
 						},
 						data: {
 							key: {
-								name: "mname",
+								name: "name",
 							},
 							simpleData: {
 								enable: true,
-								idKey: 'methodid',
+								idKey: 'id',
 								pIdKey: 'parentid',
 								rootPId: 0
 							}
@@ -930,11 +930,11 @@ $(document).ready(function () {
 						callback: {},
 						data: {
 							key: {
-								name: "mname",
+								name: "name",
 							},
 							simpleData: {
 								enable: true,
-								idKey: 'methodid',
+								idKey: 'id',
 								pIdKey: 'parentid',
 								rootPId: 0
 							}
@@ -1197,7 +1197,7 @@ $(document).ready(function () {
 					var setting = +type === 1 ? this.zTreeSettings : this.zTreeSettings2
 					Vac.ajax({
 						url: address3 + 'elementRepository/queryAllElementsForATransact',
-						data: { transactId: 126 },
+						data: { transactId: transid },
 						success: (data) => {
 							if ('0000' === data.respCode) {
 								let treeDate = data.uis.map((ui) => {
@@ -1255,7 +1255,7 @@ $(document).ready(function () {
 					} else {
 						this.uiOrFunctions.type = 'function'
 						// 获取节点的全部内容
-						this.uiOrFunctions.function = { name: treeNode.mname, parameterlist: treeNode.arguments }
+						this.uiOrFunctions.function = { name: treeNode.name, parameterlist: treeNode.arguments }
 					}
 					this.uiOrFunctions.changed = true;			// 已经在模态框中点击了树节点
 				},
@@ -1499,7 +1499,7 @@ $(document).ready(function () {
 					  if (data.ommethod) {
 						for (let m of data.ommethod) {
 						  var o = {};
-						  o.name = m.mname;
+						  o.name = m.name;
 						  o.parameterlist = m.arguments;
 						  functions.push(o);
 						}
@@ -1577,7 +1577,7 @@ $(document).ready(function () {
 								classType: ''
 							}
 							newRow.functions = []
-							newRow.functions.push({  name: node.mname, parameterlist: node.arguments })
+							newRow.functions.push({  name: node.name, parameterlist: node.arguments })
 
 							newRow.parameters = []
 							try {
@@ -2034,6 +2034,7 @@ $(document).ready(function () {
 									({
 										id: data.testcaseId,
 										expectResult: data.expectresult,
+										caseCompositeType: data.caseCompositeType,
 										testPoint: data.testpoint,
 										testStep: data.teststep,
 										checkPoint: data.checkpoint,
@@ -2107,6 +2108,7 @@ $(document).ready(function () {
 												var data = {};
 												// data.testcaseId = handsontable.getDataAtRowProp(value[0], 'casecode');
 												data.testcaseId = dataSource[value[0]].testcaseId;
+												data.caseCompositeType = dataSource[value[0]].caseCompositeType;
 												data.tbHead = value[1];
 												data.value = value[3];
 												var changedIndex;

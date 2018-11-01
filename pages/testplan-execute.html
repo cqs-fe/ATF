@@ -70,6 +70,17 @@
                   </select>
                 </div>
               </div>
+              <div class="form-group col-sm-6">
+                <label class="option-name col-sm-3 control-label">
+                  执行机选择
+                </label>
+                <div class="col-sm-9">
+                  <select class="execute-range form-control" v-model="runner">
+                    <option  v-for="runner in runners" :value="runner.identifiableName" >{{runner.runnerName}}</option>
+                    <!-- <option value="2">已选择</option> -->
+                  </select>
+                </div>
+              </div>
               <!-- <div class="form-group col-sm-6">
                 <label class="option-name col-sm-3 control-label">
                   caseLibId

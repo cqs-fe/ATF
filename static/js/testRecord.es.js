@@ -107,7 +107,7 @@ var app = new Vue({
         //合并
         merge: function(){
             $.ajax({
-                url: address+'testrecordController/merge',
+                url: address3+'testrecordController/merge',
                 type:'post',
                 data: $('#mergeForm').serializeArray(),
                 success:function(data){
@@ -124,7 +124,7 @@ var app = new Vue({
             this.getIds();
             console.log(app.ids);
             $.ajax({
-                url: address+'testrecordController/batchDelete',
+                url: address3+'testrecordController/batchDelete',
                 type: 'post',
                 data: {
                     'ids': app.ids
@@ -163,7 +163,7 @@ function getRecord(page, listnum, order, sort) {
     //获取list通用方法，只需要传入多个所需参数
     $.ajax({
         // url: address + 'testrecordController/selectAllByPage',
-        url: address2+'testRecordController/selectByTestPhase',
+        url: address3+'testRecordController/selectByTestPhase',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -192,7 +192,7 @@ function getRecord(page, listnum, order, sort) {
 //获取测试阶段
 function getTestPhase(resolve){
     $.ajax({
-        url: address+'testphaseController/selectAll',
+        url: address3+'testphaseController/selectAllTestphase',
         type: 'get',
         success:function(data){
             app.testPhaseList=data.obj;
@@ -206,7 +206,7 @@ function getTestPhase(resolve){
 //获取测试轮次
 function getTestRound(resolve){
     $.ajax({
-        url: address+'testroundController/selectAll',
+        url: address3+'testroundController/selectAllTestround',
         type: 'get',
         success: function(data){
             app.testRoundList=data.obj;
@@ -220,7 +220,7 @@ function getTestRound(resolve){
 //获取场景
 function getScene(){
     $.ajax({
-        url: address+'sceneController/selectAll',
+        url: address3+'sceneController/selectAllScene',
         type: 'get',
         success:function(data){
             app.sceneList=data.obj;
@@ -246,7 +246,7 @@ $("#chk_all").click(function() {　　
 //搜索测试记录
 function queryRecord() {
     $.ajax({
-        url: address+'testrecordController/selectByPage',
+        url: address3+'testrecordController/selectByPage',
         type: 'POST',
         data: {
             'page': app.currentPage,

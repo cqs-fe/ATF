@@ -1,4 +1,5 @@
-<!DOCTYPE  >
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -137,7 +138,7 @@
     <script type="text/javascript">
     var authcode = false;
 
-    function chageCode() {
+    function chageCodes() {
         $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()); //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
         //获取sessionId并将其存放在sessionstorage之中
         $.ajax({
@@ -150,39 +151,55 @@
         });
     }
 
+    function chageCode() {
+         //链接后添加Math.random，确保每次产生新的验证码，避免缓存问题。
+        //获取sessionId并将其存放在sessionstorage之中
+        $.ajax({
+            type: 'post',
+            url: address3 + "userController/getSessionId", //
+            dataType: 'json',
+            success: function(data) {
+                sessionStorage.setItem('sessionId', data.obj.sessionId);
+                $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()+"&sessionId=" + sessionStorage.getItem('sessionId'));
+            }
+        });
+    }
+
     function setHtml(id, msg) {
         $(id).html(msg);
 
     }
+    function checkAuthcode() {
+        $.ajax({
+            type: 'post',
+            url: address3 + "userController/checkauthcode",
+            data: { 
+                "authCode": $("#authCode").val(), 
+                "sessionId": sessionStorage.getItem('sessionId') 
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data.success) {
+                    authcode = true;
+                        $(".autherror").html("");
+                } else {
+                        $(".autherror").html("验证码错误");
+                }
+            }
+        });
+    }
     $(document).ready(function() {
-        $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random());
         $.ajax({
             type: 'post',
             url: address3 + "userController/getSessionId",
             dataType: 'json',
             success: function(data) {
                 sessionStorage.setItem('sessionId', data.obj.sessionId);
-            }
+                $('#codeImage').attr('src', address3 + 'userController/authCode?abc=' + Math.random()+"&sessionId=" + sessionStorage.getItem('sessionId'));
+             }
         });
         $('#authCode').blur(function() {
-            $.ajax({
-                type: 'post',
-                url: address3 + "userController/checkauthcode",
-                data: { "authCode": $("#authCode").val(), "sessionId": sessionStorage.getItem('sessionId') },
-                dataType: "json",
-                success: function(data) {
-                    if (data.success) {
-                        authcode = true;
-                        console.info(true);
-                        $(".autherror").html("");
-                    } else {
-                        console.info("验证码错误");
-                        $(".autherror").html("验证码错误");
-                    }
-
-                }
-            });
-
+            checkAuthcode();
         });
         $('#submit').click(function() {
             console.info("$form.valid()" + $("#form").valid());
@@ -203,6 +220,8 @@
                     }
                 });
             }
+            else
+                console.log("1234567777");
         });
     });
     </script>

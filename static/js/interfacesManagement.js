@@ -267,27 +267,26 @@ var template_int = `
                 </div>
                 <div class="form-group switchSupPage" id="messagesPage" style="display:none">
                     <div class="row">
-                        <div class="col-xs-1"></div>
                         <label class="col-xs-1 control-label">报文格式</label>
                         <div class="col-xs-2">
-                            <select class="form-control" type="text" id="bodyFormat" >
+                            <select class="form-control" type="text" id="bodyFormat" v-model="bodyFormat">
                             <option value="1">JSON</option>
                             <option value="2">XML</option>
-                            <option value="3">JavaScript</option>
                             </select>
                         </div>
+                        <!-- vb
                         <div class="col-xs-1">
                             <button class="btn btn-info" type="button" @click="jiema()">
                                 <span>解码</span>
                             </button>
                         </div>
+                        -->
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-xs-1"></div>
                         <label class="col-xs-1 control-label">报文内容</label>
-                        <div class="col-xs-5">
-                        <textarea class="form-control" id="bodyContent" style="height:532;" ></textarea>
+                        <div class="col-xs-9">
+                        <textarea class="form-control" id="bodyContent" style="height:532;" rows="30" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -474,11 +473,7 @@ var interfacesManagement = Vue.extend({
                                 let header ='{'+headerArray[i]+'}';
                                 Header.push(JSON.parse(header))
                             }
-                            console.log(Header);
-                            console.log("QQQQQQQ");
-                            console.log(_this.header);
-                            _this.header=Header;
-                            console.log(_this.header);
+                            //console.log(Header);
                         }
                         else//header为空
                             _this.header=[];
@@ -586,7 +581,7 @@ var interfacesManagement = Vue.extend({
                     "authContent": null,
                     "query": query,
                     "header": header,
-                    "bodyFormat": 1,
+                    "bodyFormat": _this.bodyFormat,
                     "rawFormat": 2,
                     "bodyContent": $("#bodyContent").val(),
                     "bodyParseContent": null,
@@ -630,6 +625,47 @@ var interfacesManagement = Vue.extend({
                 }
             });
             console.log(query);
+        },
+        //报文体保存
+        jiema: function() {
+            var _this=this;
+            if(this.bodyFormat==1){
+                Vac.ajax({
+                    async: true,
+                    url: address3 + 'interface/parseJsonBody',
+                    data: JSON.stringify({
+                        "interfaceId":_this.transid,
+                        "jsonBody":$("#bodyContent").val()
+                    }),
+                    type: "POST",
+                    success: function(data) {
+                        if (data.respCode === '0000') {
+                            $('#successModal').modal();
+                        } else {
+                            alert(data.respMsg);
+                        }
+                    }
+                });
+            }
+            else if(this.bodyFormat==2){
+                Vac.ajax({
+                    async: true,
+                    url: address3 + 'interface/parseXmlBody',
+                    data: JSON.stringify({
+                        "interfaceId":_this.transid,
+                        "xmlBody":$("#bodyContent").val()
+                    }),
+                    type: "POST",
+                    success: function(data) {
+                        if (data.respCode === '0000') {
+                            $('#successModal').modal();
+                            
+                        } else {
+                            Vac.alert(data.respMsg);
+                        }
+                    }
+                });
+            }
         },
 
         headerParaListSave: function() {

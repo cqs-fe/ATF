@@ -146,12 +146,12 @@
                         <!-- addModal start -->
                         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
-                                <div class="modal-content" style="width: 800px;">
+                                <div class="modal-content" style="width: 860px;">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                         <h4 class="modal-title">添加案例</h4>
                                     </div>
-                                    <div class="modal-body" style="width: 800px;">
+                                    <div class="modal-body" style="width: 860px;">
                                         <!-- modal-body start -->
                                         <section class="panel nopadding">
                                             <header class="panel-heading tab-bg-dark-navy-blue">
@@ -177,20 +177,20 @@
                                                             <div class="form-group">
                                                                 <div class="col-lg-3 nopadding"></div>
                                                                 <div class="col-lg-4 nopadding">
-                                                                    <label class="col-lg-3 control-label">案例编号</label>
+                                                                    <label class="col-lg-3 control-label"><i>案例编号*</i></label>
                                                                     <div class="col-lg-9">
                                                                         <input type="text" class="form-control" name="casecode">
                                                                     </div>
                                                                 </div>
                                                                 <a class="btn btn-white" v-on:click="caseshow=!caseshow, caseflag=!caseflag">
-                                                                        <span v-if="caseflag">显示细节</span>
-                                                                        <span v-else>收起细节</span>
+                                                                        <span v-if="caseflag">显示详情</span>
+                                                                        <span v-else>收起详情</span>
                                                                         <i :class="{'icon-angle-down':caseflag, 'icon-angle-up':!caseflag}"></i>
                                                                 </a>
                                                             </div>
                                                           <div class="row" v-show="caseshow">
                                                                 <div style=" width:100%; text-align:left; margin-left:15px; margin-right:15px;">
-                                                                        <hr class="hrLine" style="width:43%;"/>  必填项目  <hr class="hrLine" style="width:43%;"/>
+                                                                        <hr class="hrLine" style="width:40%;"/>  后缀有*为必填项目  <hr class="hrLine" style="width:43%;"/>
                                                                 </div>  
                                                                 <div class="form-group">
                                                                     <label class="col-lg-2 control-label hidden">案例组成类型</label>
@@ -198,13 +198,13 @@
                                                                         <input type="text" class="form-control" name="casecompositetype" value="1">
                                                                     </div>
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">测试点</label>
+                                                                        <label class="col-lg-3 control-label"><i>测试点*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <input type="text" class="form-control" name="testpoint">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">测试任务</label>
+                                                                        <label class="col-lg-3 control-label"><i>测试任务*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <!-- <input type="text" class="form-control" name="submissionId"> -->
                                                                             <select type="text" class="form-control" name="submissionId">
@@ -219,15 +219,15 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
+                                                                <div class="form-group" name = "boundGroup">
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">被测系统</label>
+                                                                        <label class="col-lg-3 control-label"><i>被测系统*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <select type="text" class="form-control" name="autid"></select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">功能点</label>
+                                                                        <label class="col-lg-3 control-label"><i>功能点*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <select class="form-control" id="" name="transid">
                                                                             </select>
@@ -241,83 +241,6 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div style=" width:100%; text-align:left; margin-left:15px; margin-right:15px;">
-                                                                        <hr class="hrLine" style="width:43%;"/>  选填项目  <hr class="hrLine" style="width:43%;"/>
-                                                                </div>  
-                                                                <div class="form-group">
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">测试意图</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="testDesign"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                            <label class="col-lg-2 control-label">前置条件</label>
-                                                                            <div class="col-lg-10">
-                                                                                <textarea class="form-control" rows="2" name="preRequisites"></textarea>
-                                                                            </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">数据需求</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="dataRequest"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">测试步骤</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="testStep"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">预期结果</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="expectResult"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                            <label class="col-lg-2 control-label">附加检查点</label>
-                                                                            <div class="col-lg-10">
-                                                                                <textarea class="form-control" rows="2" name="checkPoint"></textarea>
-                                                                            </div>
-                                                                    </div>
-                                                                </div>
-                                                                <!--
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">前置条件</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="preRequisites"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">数据需求</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="dataRequest"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">测试步骤</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="testStep"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">预期结果</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="expectResult"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">附加检查点</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="checkPoint"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                -->
                                                                 <div class="form-group">
                                                                     <div class="col-lg-4 nopadding">
                                                                         <label class="col-lg-3 control-label">案例性质</label>
@@ -386,6 +309,15 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="col-lg-4 nopadding">
+                                                                        <label class="col-lg-3 control-label"><i>案例使用状态*</i></label>
+                                                                        <div class="col-lg-9">
+                                                                            <select class="form-control" size="1" name="usestatus">
+                                                                                <option value="1">新增</option>
+                                                                                <option value="2">评审通过</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 nopadding">
                                                                         <label class="col-lg-3 control-label">执行方式</label>
                                                                         <div class="col-lg-9">
                                                                             <select class="form-control" size="1" name="executemethod">
@@ -403,99 +335,50 @@
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">案例使用状态</label>
-                                                                        <div class="col-lg-9">
-                                                                            <select class="form-control" size="1" name="usestatus">
-                                                                                <option value="1">新增</option>
-                                                                                <option value="2">评审通过</option>
-                                                                            </select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label"><i>测试意图*</i></label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="testDesign"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                            <label class="col-lg-2 control-label">前置条件</label>
+                                                                            <div class="col-lg-10">
+                                                                                <textarea class="form-control" rows="2" name="preRequisites"></textarea>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label"><i>测试步骤*</i></label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="testStep"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label">数据需求</label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="dataRequest"></textarea>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <!--
                                                                 <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">案例性质</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="caseProperty">
-                                                                            <option value="1">正常值</option>
-                                                                            <option value="2">错误值</option>
-                                                                            <option value="3">边界值</option>
-                                                                            <option value="4">要素级</option>
-                                                                            <option value="5">流程级</option>
-                                                                        </select>
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label"><i>预期结果*</i></label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="expectResult"></textarea>
+                                                                        </div>
                                                                     </div>
-                                                                    <label class="col-lg-2 control-label">测试案例类型</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="caseType">
-                                                                            <option value="1">联机</option>
-                                                                            <option value="2">批量</option>
-                                                                            <option value="3">接口</option>
-                                                                        </select>
+                                                                    <div class="col-lg-6">
+                                                                            <label class="col-lg-2 control-label">附加检查点</label>
+                                                                            <div class="col-lg-10">
+                                                                                <textarea class="form-control" rows="2" name="checkPoint"></textarea>
+                                                                            </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">优先级</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="priority">
-                                                                            <option value="1">1级</option>
-                                                                            <option value="2">2级</option>
-                                                                            <option value="3">3级</option>
-                                                                            <option value="4">4级</option>
-                                                                            <option value="5">5级</option>
-                                                                            <option value="6">6级</option>
-                                                                            <option value="7">7级</option>
-                                                                            <option value="8">8级</option>
-                                                                            <option value="9">9级</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-lg-2 control-label">作者</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="author">
-                                                                            <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">评审者</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" name="reviewer">
-                                                                            <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-lg-2 control-label">执行者</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" name="executor">
-                                                                            <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">执行方式</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="executemethod">
-                                                                            <option value="1">手工</option>
-                                                                            <option value="2">自动化</option>
-                                                                            <option value="3">配合</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-lg-2 control-label">脚本管理方式</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" name="scriptmode">
-                                                                            <option value="0">模板</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">案例使用状态</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="usestatus">
-                                                                            <option value="1">新增</option>
-                                                                            <option value="2">评审通过</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                -->
+                                                                
                                                                 <div class="form-group">
                                                                     <label class="col-lg-1 control-label">备注</label>
                                                                     <div class="col-lg-11">
@@ -511,20 +394,20 @@
                                                             <div class="form-group">
                                                                 <div class="col-lg-3 nopadding"></div>
                                                                 <div class="col-lg-4 nopadding">
-                                                                    <label class="col-lg-3 control-label">案例编号</label>
+                                                                    <label class="col-lg-3 control-label"><i>案例编号*</i></label>
                                                                     <div class="col-lg-9">
                                                                         <input type="text" class="form-control" name="casecode">
                                                                     </div>
                                                                 </div>
                                                                 <a class="btn btn-white" v-on:click="flowcaseshow=!flowcaseshow, flowcaseflag=!flowcaseflag">
-                                                                        <span v-if="flowcaseflag">显示细节</span>
-                                                                        <span v-else>收起细节</span>
+                                                                        <span v-if="flowcaseflag">显示详情</span>
+                                                                        <span v-else>收起详情</span>
                                                                         <i :class="{'icon-angle-down':flowcaseflag, 'icon-angle-up':!flowcaseflag}"></i>
                                                                 </a>
                                                             </div>
                                                             <div class="row" v-show="flowcaseshow">
                                                                 <div style=" width:100%; text-align:left; margin-left:15px; margin-right:15px;">
-                                                                        <hr class="hrLine" style="width:43%;"/>  必填项目  <hr class="hrLine" style="width:43%;"/>
+                                                                        <hr class="hrLine" style="width:40%;"/>  后缀有*为必填项目  <hr class="hrLine" style="width:43%;"/>
                                                                 </div>  
                                                                 <div class="form-group">
                                                                     <label class="col-lg-2 control-label hidden">案例组成类型</label>
@@ -532,13 +415,13 @@
                                                                         <input type="text" class="form-control" name="casecompositetype" value="1">
                                                                     </div>
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">测试点</label>
+                                                                        <label class="col-lg-3 control-label"><i>测试点*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <input type="text" class="form-control" name="testpoint">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">测试任务</label>
+                                                                        <label class="col-lg-3 control-label"><i>测试任务*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <!-- <input type="text" class="form-control" name="submissionId"> -->
                                                                             <select type="text" class="form-control" name="submissionId">
@@ -553,15 +436,15 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
+                                                                <div class="form-group" name = "boundGroup">
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">被测系统</label>
+                                                                        <label class="col-lg-3 control-label"><i>被测系统*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <select type="text" class="form-control" name="autid"></select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">功能点</label>
+                                                                        <label class="col-lg-3 control-label"><i>功能点*</i></label>
                                                                         <div class="col-lg-9">
                                                                             <select class="form-control" id="" name="transid">
                                                                             </select>
@@ -575,83 +458,6 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div style=" width:100%; text-align:left; margin-left:15px; margin-right:15px;">
-                                                                        <hr class="hrLine" style="width:43%;"/>  选填项目  <hr class="hrLine" style="width:43%;"/>
-                                                                </div>  
-                                                                <div class="form-group">
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">测试意图</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="testDesign"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                            <label class="col-lg-2 control-label">前置条件</label>
-                                                                            <div class="col-lg-10">
-                                                                                <textarea class="form-control" rows="2" name="preRequisites"></textarea>
-                                                                            </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">数据需求</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="dataRequest"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">测试步骤</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="testStep"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <div class="col-lg-6">
-                                                                        <label class="col-lg-2 control-label">预期结果</label>
-                                                                        <div class="col-lg-10">
-                                                                            <textarea class="form-control" rows="2" name="expectResult"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                            <label class="col-lg-2 control-label">附加检查点</label>
-                                                                            <div class="col-lg-10">
-                                                                                <textarea class="form-control" rows="2" name="checkPoint"></textarea>
-                                                                            </div>
-                                                                    </div>
-                                                                </div>
-                                                                <!--
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">前置条件</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="preRequisites"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">数据需求</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="dataRequest"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">测试步骤</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="testStep"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">预期结果</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="expectResult"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">附加检查点</label>
-                                                                    <div class="col-lg-10">
-                                                                        <textarea class="form-control" rows="3" name="checkPoint"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                -->
                                                                 <div class="form-group">
                                                                     <div class="col-lg-4 nopadding">
                                                                         <label class="col-lg-3 control-label">案例性质</label>
@@ -720,6 +526,15 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="col-lg-4 nopadding">
+                                                                        <label class="col-lg-3 control-label"><i>案例使用状态*</i></label>
+                                                                        <div class="col-lg-9">
+                                                                            <select class="form-control" size="1" name="usestatus">
+                                                                                <option value="1">新增</option>
+                                                                                <option value="2">评审通过</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4 nopadding">
                                                                         <label class="col-lg-3 control-label">执行方式</label>
                                                                         <div class="col-lg-9">
                                                                             <select class="form-control" size="1" name="executemethod">
@@ -737,99 +552,50 @@
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-lg-4 nopadding">
-                                                                        <label class="col-lg-3 control-label">案例使用状态</label>
-                                                                        <div class="col-lg-9">
-                                                                            <select class="form-control" size="1" name="usestatus">
-                                                                                <option value="1">新增</option>
-                                                                                <option value="2">评审通过</option>
-                                                                            </select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label"><i>测试意图*</i></label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="testDesign"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                            <label class="col-lg-2 control-label">前置条件</label>
+                                                                            <div class="col-lg-10">
+                                                                                <textarea class="form-control" rows="2" name="preRequisites"></textarea>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label"><i>测试步骤*</i></label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="testStep"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label">数据需求</label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="dataRequest"></textarea>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <!--
                                                                 <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">案例性质</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="caseProperty">
-                                                                            <option value="1">正常值</option>
-                                                                            <option value="2">错误值</option>
-                                                                            <option value="3">边界值</option>
-                                                                            <option value="4">要素级</option>
-                                                                            <option value="5">流程级</option>
-                                                                        </select>
+                                                                    <div class="col-lg-6">
+                                                                        <label class="col-lg-2 control-label"><i>预期结果*</i></label>
+                                                                        <div class="col-lg-10">
+                                                                            <textarea class="form-control" rows="2" name="expectResult"></textarea>
+                                                                        </div>
                                                                     </div>
-                                                                    <label class="col-lg-2 control-label">测试案例类型</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="caseType">
-                                                                            <option value="1">联机</option>
-                                                                            <option value="2">批量</option>
-                                                                            <option value="3">接口</option>
-                                                                        </select>
+                                                                    <div class="col-lg-6">
+                                                                            <label class="col-lg-2 control-label">附加检查点</label>
+                                                                            <div class="col-lg-10">
+                                                                                <textarea class="form-control" rows="2" name="checkPoint"></textarea>
+                                                                            </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">优先级</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="priority">
-                                                                            <option value="1">1级</option>
-                                                                            <option value="2">2级</option>
-                                                                            <option value="3">3级</option>
-                                                                            <option value="4">4级</option>
-                                                                            <option value="5">5级</option>
-                                                                            <option value="6">6级</option>
-                                                                            <option value="7">7级</option>
-                                                                            <option value="8">8级</option>
-                                                                            <option value="9">9级</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-lg-2 control-label">作者</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="author">
-                                                                            <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">评审者</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" name="reviewer">
-                                                                            <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-lg-2 control-label">执行者</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" name="executor">
-                                                                            <option v-for="user in users" value="{{user.id}}">{{user.username}}</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">执行方式</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="executemethod">
-                                                                            <option value="1">手工</option>
-                                                                            <option value="2">自动化</option>
-                                                                            <option value="3">配合</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-lg-2 control-label">脚本管理方式</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" name="scriptmode">
-                                                                            <option value="0">模板</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-lg-2 control-label">案例使用状态</label>
-                                                                    <div class="col-lg-4">
-                                                                        <select class="form-control" size="1" name="usestatus">
-                                                                            <option value="1">新增</option>
-                                                                            <option value="2">评审通过</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                -->
+                                                                
                                                                 <div class="form-group">
                                                                     <label class="col-lg-1 control-label">备注</label>
                                                                     <div class="col-lg-11">
@@ -1036,7 +802,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-lg-2 control-label">功能点</label>
+                                                <label class="col-lg-3 control-label">功能点</label>
                                                 <div class="col-lg-3">
                                                     <select class="form-control" name="transid" id="2ji">
                                                     </select>

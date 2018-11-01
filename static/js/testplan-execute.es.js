@@ -3,6 +3,8 @@ var vBody = new Vue({
 	el: '#v-body',
 	data: {
 		// tooltipMessage:'',
+		runners:[],
+		runner:"",
 		caselibIds: [],			
 		caselibId: 3,			// caselibId 
 		executionround: '1',		// 执行轮次 
@@ -112,6 +114,7 @@ var vBody = new Vue({
 	ready: function(){
 		// console.log("ready")
 		this.setSelectListener();
+		this.queryRunners();
 		Vue.nextTick(() => {
 			this.setDraggable()
 		})
@@ -143,6 +146,31 @@ var vBody = new Vue({
 		},
 	},
 	methods: {
+		queryRunners: function(){
+			 var _this=this;
+			$.ajax({
+				url: address3 + 'executeController/queryRunners ',
+				type: 'post',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					"serviceName":"web.ui"
+				}),
+				success: function(data) {
+					if (data.respCode=="0000") {
+						_this.runners=data.runners;
+						if(data.runners.length==0)
+							Vac.alert('查询不到执行机');
+						else
+							_this.runner=data.runners[0].identifiableName;
+					} else {
+						Vac.alert(data.respMsg);
+						}
+				},
+				error: function() {
+					Vac.alert('网络错误！请点击重新查询！');
+				}
+			});
+		},
 		hideAlert: function(){
 			this.alertShow = false;
 		},
@@ -160,16 +188,22 @@ var vBody = new Vue({
 			if (!this.testPlanId) {
 				Vac.alert('请选择测试计划');return;
 			}
-			var data = {
-				userId: this.userId,
-				recordflag: this.recordflag,
-				exeScope: this.exeScope,
-				selectState: this.selectState,
-				testPlanId: this.testPlanId
+			if(this.runner=="")
+			{
+				Vac.alert('请选择执行机');return;
 			}
 			Vac.ajax({
 				url: address2 + 'executeController/t1',
-				data: data,
+				type: 'post',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					"userId": this.userId,
+					"recordflag": this.recordFlag,
+					"exeScope": this.exeScope, 
+					"selectState": this.selectState,
+					"testPlanId": this.testPlanId,
+					"identifiableRunnerName":this.runner
+				}),
 				success: function(data) {
 					if (data.respCode === '0000') {
 						_this.startQueryResult(data.respMsg);
