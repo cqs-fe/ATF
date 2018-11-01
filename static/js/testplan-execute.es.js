@@ -463,10 +463,6 @@ var vBody = new Vue({
 						for (var j = 0; j<_this.testSceneList.length;j++) {
 							
 							var scene = _this.testSceneList[j]
-							//对testCaseList根据orderNumber字段排序
-							_this.testSceneList[j].testCaseList.sort(function(obj1,obj2){
-								return obj1.orderNumber>obj2.orderNumber
-							})
 							// sceneIds save the id of scene  [4,5,6]
 							_this.sceneIds.push(scene.sceneId)
 							var caselist = []

@@ -1299,45 +1299,7 @@ var app = new Vue({
                 }
             });
         },
-        //筛选查询案例
-        // queryCase:function() {
-
-        //     $.ajax({
-        //         url: address3 + 'testcase/pagedQueryTestCaseByCondition',
-        //         type: 'POST',
-        //         contentType: 'application/json',
-        //         data: JSON.stringify({
-        //             'page': app.currentPage,
-        //             'rows': app.listnum,
-        //             'order': app.order,
-        //             'sort': app.sort,
-        //             'caselibid': app.caselibid,
-        //             'caseCompositeType': app.caseCompositeType.join(","),
-        //             'priority': app.priority.join(","),
-        //             'executemethod': app.executeMethod.join(","),
-        //             'usestatus': app.useStatus.join(","),
-        //             'casecode': app.casecode,
-        //             'informationtype': 'testcase',
-        //             'testpoint': app.testpoint,
-        //             'author': app.author?app.currentUserId:'',
-        //             'executor': app.executor?app.currentUserId:'',
-        //             'testDesign': app.testDesign,
-        //             'autid': app.autid,
-        //             'transid': app.transid,
-        //             'scriptmodeflag': app.scriptmodeflag,
-        //         }),
-        //         success: function(data) {
-        //             app.caseList = data.o.rows;
-        //             app.tt = data.o.total;
-        //             app.totalPage = Math.ceil(app.tt / app.listnum);
-        //             app.listnum = app.pageSize;
-        //             app.currentPage = 1;
-        //         },
-        //         error: function() {
-        //             $('#failModal').modal();
-        //         }
-        //     });
-        // },
+        
         //获取添加案例任务编号下拉列表
         getMission: function(){
             $.ajax({
@@ -1454,7 +1416,96 @@ var app = new Vue({
                     }
 
                 });
+        },
+        groupBound:function(){
+            $("input[name='boundGroup']").each(function(i){
+                $(this).attr("checked",true);
+                first(); //第一级函数
+                second(); //第二级函数
+                third(); //第三极函数
+                $(this).change(function() {
+                    second();
+                    third();
+                })
+                $("#2ji").change(function() {
+                    third();
+                })
+                //一级 测试系统
+                function first() {
+                    $.ajax({
+                        async: false,
+                        url:address3+"aut/queryListAut",
+                        type: "POST",
+                        contentType: 'application/json',
+                        success: function(data) {
+                            var autList = data.autRespDTOList;
+                            var str = "";
+                            for (var i = 0; i < autList.length; i++) {
+
+                                str += " <option value='" + autList[i].id + "' >" + autList[i].nameMedium + "</option> ";
+                            }
+
+                            $("#1ji").html(str);
+                        }
+                    });
+                }
+
+                //二级 功能点
+                function second() {
+                    var val = $("#1ji").val();
+                    $.ajax({
+                        async: false,
+                        url: address3 + 'transactController/pagedBatchQueryTransact',
+                        data: JSON.stringify({ 
+                            autId: val,
+                            currentPage: 1,
+                            orderColumns: 'id',
+                            orderType: 'asc',
+                            pageSize: 100000
+                        }),
+                        type: "POST",
+                        contentType: 'application/json',
+                        success: function(data) {
+                            var transactList = data.list;
+                            var str = "";
+                            for (var i = 0; i < transactList.length; i++) {
+
+                                str += " <option value='" + transactList[i].id + "'>" + transactList[i].nameMedium + "</option> ";
+                            }
+                            $("#2ji").html(str);
+
+                        }
+
+                    });
+                }
+
+                //三级 模板脚本
+                function third() {
+
+                    var val = $("#2ji").val();
+                    $.ajax({
+                        url: address3 + "scripttemplateController/queryTemplateByTransId",
+                        data: JSON.stringify({ "id": val }),
+                        type: "POST",
+                        contentType: 'application/json',
+                        success: function(data) {
+
+                            var lie = data.scriptTemplateList;
+                            var str = "";
+                            for (var i = 0; i < lie.length; i++) {
+
+                                str += " <option value='" + lie[i].id + "'>" + lie[i].name + "</option> ";
+                            }
+                            $("#3ji").html(str);
+
+
+                        }
+
+                    });
+                }
+             });
         }
+
     },
 
 });
